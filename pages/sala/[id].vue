@@ -19,39 +19,44 @@
       <!-- Componente Mesa -->
       <PlayerTable :room-id="roomId" :players="players" />
 
-      <!-- Panel de Control (Host) -->
-      <div v-if="isHost" class="mt-16 flex flex-col items-center controls-anim opacity-0">
-        <h3 class="text-gray-400 mb-4 font-medium uppercase tracking-widest text-sm">Seleccionar Juego</h3>
-        <div class="flex gap-4">
-          <div class="bg-[#2b2d31] p-4 rounded-2xl border-2 border-primary neon-glow cursor-pointer hover:scale-105 transition-transform">
-            <div class="w-24 h-24 bg-red-500 rounded-xl flex items-center justify-center font-black text-white text-3xl shadow-lg transform rotate-3">
-              UNO
+      <!-- Zona de Control Dinámica -->
+      <div class="mt-16 w-full flex justify-center">
+        <Transition name="fade" mode="out-in">
+          <!-- Panel de Control (Host) -->
+          <div v-if="isHost" class="flex flex-col items-center">
+            <h3 class="text-gray-400 mb-4 font-medium uppercase tracking-widest text-sm">Seleccionar Juego</h3>
+            <div class="flex gap-4">
+              <div class="bg-[#2b2d31] p-4 rounded-2xl border-2 border-primary neon-glow cursor-pointer hover:scale-105 transition-transform">
+                <div class="w-24 h-24 bg-red-500 rounded-xl flex items-center justify-center font-black text-white text-3xl shadow-lg transform rotate-3">
+                  UNO
+                </div>
+              </div>
+              <!-- Placeholder para próximos juegos -->
+              <div class="bg-[#2b2d31] p-4 rounded-2xl border border-gray-700 opacity-50 flex items-center justify-center cursor-not-allowed">
+                 <div class="w-24 h-24 flex items-center justify-center text-gray-500 font-bold">
+                   PRÓXIMAMENTE
+                 </div>
+              </div>
             </div>
+            
+            <UButton 
+              size="xl" 
+              color="primary" 
+              class="mt-8 px-12 h-14 text-lg font-bold shadow-lg shadow-primary/30"
+              :disabled="players.length < 2"
+            >
+              Empezar Partida
+            </UButton>
+            <p v-if="players.length < 2" class="text-sm text-gray-500 mt-2">Esperando más jugadores...</p>
           </div>
-          <!-- Placeholder para próximos juegos -->
-          <div class="bg-[#2b2d31] p-4 rounded-2xl border border-gray-700 opacity-50 flex items-center justify-center cursor-not-allowed">
-             <div class="w-24 h-24 flex items-center justify-center text-gray-500 font-bold">
-               PRÓXIMAMENTE
-             </div>
+          
+          <!-- Panel de Espera (Invitados) -->
+          <div v-else class="text-center">
+            <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
+            <h3 class="text-xl font-bold text-gray-200">Esperando al Host...</h3>
+            <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
           </div>
-        </div>
-        
-        <UButton 
-          size="xl" 
-          color="primary" 
-          class="mt-8 px-12 h-14 text-lg font-bold shadow-lg shadow-primary/30"
-          :disabled="players.length < 2"
-        >
-          Empezar Partida
-        </UButton>
-        <p v-if="players.length < 2" class="text-sm text-gray-500 mt-2">Esperando más jugadores...</p>
-      </div>
-      
-      <!-- Panel de Espera (Invitados) -->
-      <div v-else class="mt-16 text-center controls-anim opacity-0">
-        <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
-        <h3 class="text-xl font-bold text-gray-200">Esperando al Host...</h3>
-        <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
+        </Transition>
       </div>
 
     </div>
@@ -154,20 +159,12 @@ const initRoom = () => {
   playerStore.setRoom(roomId)
   connect(roomId)
   
-  // Animaciones de entrada
+  // Animaciones de entrada (solo el header, el panel de control usa Transición de Vue)
   setTimeout(() => {
     anime({
       targets: '.header-anim',
       opacity: [0, 1],
       translateY: [-20, 0],
-      duration: 800,
-      easing: 'easeOutExpo'
-    })
-    anime({
-      targets: '.controls-anim',
-      opacity: [0, 1],
-      translateY: [20, 0],
-      delay: 400,
       duration: 800,
       easing: 'easeOutExpo'
     })
@@ -178,4 +175,15 @@ const leaveRoom = () => {
   disconnect()
   router.push('/')
 }
-</script>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>
+
