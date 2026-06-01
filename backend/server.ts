@@ -58,30 +58,40 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("Usuario desconectado:", socket.id);
+    console.log("Usuario desconectado (esperando reconexión):", socket.id);
     const roomId = socket.data?.roomId;
     const userId = socket.data?.userId;
     
     if (roomId && rooms.has(roomId)) {
-      const room = rooms.get(roomId);
-      
-      // En lugar de borrarlo de inmediato, podríamos dar un margen de gracia, 
-      // pero por ahora lo quitamos visualmente de los online.
-      room.users = room.users.filter((u: any) => u.userId !== userId);
-      
-      if (room.users.length === 0) {
-        rooms.delete(roomId);
-        console.log(`Sala ${roomId} eliminada por estar vacía.`);
-      } else {
-        // Si el host se fue, le pasamos el host al siguiente jugador en la lista
-        if (room.hostUserId === userId) {
-          room.hostUserId = room.users[0].userId;
+      // PERIODO DE GRACIA (3 segundos) para evitar que el host se pierda con F5
+      setTimeout(() => {
+        const room = rooms.get(roomId);
+        if (!room) return;
+
+        const currentUser = room.users.find((u: any) => u.userId === userId);
+        
+        // Si el usuario no ha vuelto (su socketId sigue siendo el que se desconectó)
+        if (currentUser && currentUser.socketId === socket.id) {
+          console.log(`Usuario ${userId} expiró. Removiendo de la sala ${roomId}.`);
+          
+          room.users = room.users.filter((u: any) => u.userId !== userId);
+          
+          if (room.users.length === 0) {
+            rooms.delete(roomId);
+            console.log(`Sala ${roomId} eliminada por estar vacía.`);
+          } else {
+            // Si el host se fue definitivamente, le pasamos el host al siguiente jugador en la lista
+            if (room.hostUserId === userId) {
+              room.hostUserId = room.users[0].userId;
+              console.log(`Host migrado a ${room.hostUserId}`);
+            }
+            io.to(roomId).emit("room_update", { 
+              users: room.users,
+              hostUserId: room.hostUserId
+            });
+          }
         }
-        io.to(roomId).emit("room_update", { 
-          users: room.users,
-          hostUserId: room.hostUserId
-        });
-      }
+      }, 3000); // 3 segundos de tolerancia para F5
     }
   });
 });
