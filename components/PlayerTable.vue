@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full max-w-4xl aspect-video sm:aspect-[2/1] mx-auto mt-10 player-table-container">
     <!-- Mesa de Billar Vectorial 2D -->
-    <div class="absolute inset-10 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex p-3 md:p-5 relative table-surface">
+    <div class="absolute inset-10 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex p-3 md:p-5 table-surface">
       <!-- Paño Verde -->
       <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2.5rem] shadow-[inset_0_0_30px_rgba(0,0,0,0.4)] relative flex items-center justify-center border-4 border-[#0a662c]">
         
@@ -32,7 +32,6 @@
           </button>
         </div>
       </div>
-    </div>
     </div>
 
     <!-- Avatares de Jugadores -->
