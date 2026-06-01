@@ -24,7 +24,8 @@ export const useSocket = () => {
       socket.value?.emit('join_room', {
         roomId,
         nickname: playerStore.nickname,
-        avatarId: playerStore.avatarId
+        avatarId: playerStore.avatarId,
+        color: playerStore.color
       })
     })
 

@@ -22,12 +22,17 @@
     <div 
       v-for="(player, index) in players" 
       :key="player.id"
-      class="absolute player-avatar w-16 h-16 md:w-20 md:h-20 bg-[#1e1f22] rounded-2xl border-2 shadow-lg flex flex-col items-center"
-      :style="getAvatarPosition(index, players.length)"
-      :class="`border-[hsl(${player.avatarId * 60},70%,50%)]`"
+      class="absolute player-avatar w-16 h-16 md:w-20 md:h-20 bg-black rounded-full border-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-visible"
+      :style="[
+        getAvatarPosition(index, players.length),
+        { borderColor: player.color || '#f97316' }
+      ]"
     >
-      <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-xl" />
-      <span class="absolute -bottom-6 text-xs font-bold text-white whitespace-nowrap bg-black/50 px-2 py-1 rounded-md">
+      <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" />
+      <span 
+        class="absolute -bottom-6 text-[10px] font-black text-white whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider"
+        :style="{ backgroundColor: player.color || '#f97316' }"
+      >
         {{ player.nickname }}
       </span>
     </div>

@@ -1,0 +1,73 @@
+<template>
+  <div class="flex flex-col items-center gap-6 w-full">
+    <!-- Avatar Grande Seleccionado -->
+    <div 
+      class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative"
+      :style="{ borderColor: color }"
+    >
+      <img :src="`/avatars/avatar-${avatarId}.svg?v=2`" alt="Avatar" class="w-20 h-20 object-contain absolute bottom-0" />
+    </div>
+
+    <!-- Fila 1: Avatares -->
+    <div class="flex gap-2 flex-wrap justify-center w-full px-2">
+      <button 
+        v-for="i in 8" :key="i"
+        @click="$emit('update:avatarId', i)"
+        class="w-10 h-10 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
+        :class="[
+          avatarId === i 
+            ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515]' 
+            : 'opacity-50 hover:opacity-100 border border-white/10'
+        ]"
+      >
+        <img :src="`/avatars/avatar-${i}.svg?v=2`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
+      </button>
+    </div>
+
+    <!-- Fila 2: Colores -->
+    <div class="flex gap-3 justify-center w-full mt-1">
+      <button
+        v-for="c in colors" :key="c.val"
+        @click="$emit('update:color', c.val)"
+        class="w-6 h-6 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
+        :style="{ backgroundColor: c.val }"
+        :class="[
+          color === c.val
+            ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
+            : 'opacity-60 hover:opacity-100'
+        ]"
+      ></button>
+    </div>
+
+    <!-- Input de Usuario -->
+    <div class="w-full flex flex-col gap-1.5 mt-2">
+      <label class="text-orange-500 text-[10px] font-bold tracking-[0.2em] uppercase ml-3">Nombre de Usuario</label>
+      <input 
+        :value="nickname"
+        @input="$emit('update:nickname', ($event.target as HTMLInputElement).value)"
+        type="text"
+        placeholder="Ej: Impostor"
+        class="w-full bg-black text-white px-5 py-3.5 rounded-2xl outline-none focus:ring-1 focus:ring-orange-500/50 transition-all placeholder:text-gray-700 font-bold text-center tracking-wide"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+defineProps({
+  avatarId: { type: Number, required: true },
+  color: { type: String, required: true },
+  nickname: { type: String, required: true }
+})
+defineEmits(['update:avatarId', 'update:color', 'update:nickname'])
+
+const colors = [
+  { val: '#ffffff' }, // Blanco
+  { val: '#8b4513' }, // Marrón
+  { val: '#ff69b4' }, // Rosa
+  { val: '#4caf50' }, // Verde
+  { val: '#9c27b0' }, // Morado
+  { val: '#3b82f6' }, // Azul
+  { val: '#f97316' }  // Naranja
+]
+</script>

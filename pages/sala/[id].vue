@@ -55,19 +55,23 @@
     </div>
 
     <!-- Modal Obligatorio si entra directo con link sin nickname -->
-    <UModal v-model="showSetupModal" prevent-close>
-      <div class="p-8 bg-[#1e1f22] rounded-3xl border border-gray-700">
-        <h2 class="text-2xl font-bold text-white text-center mb-6">¡Únete a la Sala!</h2>
-        <AvatarSelector v-model="tempAvatarId" />
-        <PlayerSetupForm v-model="tempNickname" />
-        <UButton 
-          class="mt-8 w-full h-12 text-lg font-bold" 
-          color="primary"
-          :disabled="tempNickname.length < 2"
+    <UModal v-model="showSetupModal" prevent-close :ui="{ background: 'bg-transparent', shadow: 'shadow-none' }">
+      <div class="w-full max-w-[380px] mx-auto bg-[#151515] p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-6 border border-white/5">
+        <h2 class="text-xl font-black text-white text-center tracking-widest uppercase mt-2">Únete a la Sala</h2>
+        
+        <ProfileSetup 
+          v-model:avatarId="tempAvatarId"
+          v-model:color="tempColor"
+          v-model:nickname="tempNickname"
+        />
+
+        <button 
           @click="saveAndJoin"
+          :disabled="tempNickname.trim().length < 2"
+          class="w-full bg-[#f97316] hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(249,115,22,0.3)] mt-2"
         >
           Entrar a Jugar
-        </UButton>
+        </button>
       </div>
     </UModal>
   </div>
@@ -91,6 +95,7 @@ const showSetupModal = ref(false)
 // Estado temporal para el modal
 const tempNickname = ref('')
 const tempAvatarId = ref(1)
+const tempColor = ref('#f97316')
 
 const players = computed(() => playerStore.playersInRoom)
 
@@ -109,7 +114,7 @@ onUnmounted(() => {
 })
 
 const saveAndJoin = () => {
-  playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value)
+  playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value)
   showSetupModal.value = false
   initRoom()
 }

@@ -17,12 +17,12 @@ io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
 
   socket.on("join_room", (data) => {
-    const { roomId, nickname, avatarId } = data;
+    const { roomId, nickname, avatarId, color } = data;
     
     socket.join(roomId);
     
     // Guardar datos en el socket
-    socket.data = { nickname, avatarId, roomId };
+    socket.data = { nickname, avatarId, color, roomId };
 
     if (!rooms.has(roomId)) {
       rooms.set(roomId, { users: [] });
@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     // Añadir usuario o actualizar si reconecta
     const existingIndex = room.users.findIndex((u: any) => u.id === socket.id);
     if (existingIndex === -1) {
-      room.users.push({ id: socket.id, nickname, avatarId });
+      room.users.push({ id: socket.id, nickname, avatarId, color });
     }
 
     // Emitir estado actualizado a toda la sala
