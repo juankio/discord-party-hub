@@ -17,7 +17,7 @@
         class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative"
         :style="{ borderColor: selectedColor }"
       >
-        <img :src="`/avatars/avatar-${avatarId}.svg`" alt="Avatar" class="w-20 h-20 object-contain absolute bottom-0" />
+        <img :src="`/avatars/avatar-${avatarId}.svg?v=2`" alt="Avatar" class="w-20 h-20 object-contain absolute bottom-0" />
       </div>
 
       <!-- Fila 1: Avatares -->
@@ -32,7 +32,7 @@
               : 'opacity-50 hover:opacity-100 border border-white/10'
           ]"
         >
-          <img :src="`/avatars/avatar-${i}.svg`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
+          <img :src="`/avatars/avatar-${i}.svg?v=2`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
         </button>
       </div>
 
