@@ -1,21 +1,38 @@
 <template>
   <div class="relative w-full max-w-4xl aspect-video sm:aspect-[2/1] mx-auto mt-10 player-table-container">
-    <!-- Mesa Virtual -->
-    <div class="absolute inset-8 bg-[#151515] rounded-[3rem] border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex items-center justify-center table-surface overflow-hidden">
-      <!-- Glow sutil en el centro -->
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"></div>
-      
-      <div class="text-center relative z-10 flex flex-col items-center">
-        <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-[0.4em] font-black">Código de la sala</p>
-        <h2 class="text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] mb-4">{{ roomId }}</h2>
-        <button 
-          @click="copyLink"
-          class="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 border border-white/10 hover:border-white/20"
-        >
-          <UIcon name="i-lucide-copy" class="w-4 h-4" />
-          Copiar Link
-        </button>
+    <!-- Mesa de Billar Vectorial 2D -->
+    <div class="absolute inset-10 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex p-3 md:p-5 relative table-surface">
+      <!-- Paño Verde -->
+      <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2.5rem] shadow-[inset_0_0_30px_rgba(0,0,0,0.4)] relative flex items-center justify-center border-4 border-[#0a662c]">
+        
+        <!-- Buchacas (Agujeros negros) -->
+        <!-- Superior Izquierda -->
+        <div class="absolute -top-3 -left-3 md:-top-4 md:-left-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+        <!-- Superior Medio -->
+        <div class="absolute -top-4 md:-top-5 left-1/2 -translate-x-1/2 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+        <!-- Superior Derecha -->
+        <div class="absolute -top-3 -right-3 md:-top-4 md:-right-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+        <!-- Inferior Izquierda -->
+        <div class="absolute -bottom-3 -left-3 md:-bottom-4 md:-left-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+        <!-- Inferior Medio -->
+        <div class="absolute -bottom-4 md:-bottom-5 left-1/2 -translate-x-1/2 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+        <!-- Inferior Derecha -->
+        <div class="absolute -bottom-3 -right-3 md:-bottom-4 md:-right-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"></div>
+
+        <!-- Centro de la mesa (Info) -->
+        <div class="text-center relative z-10 flex flex-col items-center p-6 bg-black/20 rounded-3xl backdrop-blur-sm border border-white/10">
+          <p class="text-[10px] md:text-xs text-green-100 mb-2 uppercase tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
+          <h2 class="text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-4">{{ roomId }}</h2>
+          <button 
+            @click="copyLink"
+            class="flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 border border-white/20"
+          >
+            <UIcon name="i-lucide-copy" class="w-4 h-4" />
+            Copiar Link
+          </button>
+        </div>
       </div>
+    </div>
     </div>
 
     <!-- Avatares de Jugadores -->
