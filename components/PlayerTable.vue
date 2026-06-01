@@ -1,16 +1,19 @@
 <template>
   <div class="relative w-full max-w-4xl aspect-video sm:aspect-[2/1] mx-auto mt-10 player-table-container">
     <!-- Mesa Virtual -->
-    <div class="absolute inset-8 bg-[#2b2d31] rounded-[3rem] border border-gray-700 shadow-2xl flex items-center justify-center table-surface">
-      <div class="text-center">
-        <p class="text-sm text-gray-400 mb-2 uppercase tracking-widest">Código de la sala</p>
-        <h2 class="text-4xl md:text-5xl font-mono font-black text-white tracking-widest">{{ roomId }}</h2>
+    <div class="absolute inset-8 rounded-[4rem] border-[12px] border-[#151515] flex items-center justify-center table-surface shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_0_60px_rgba(0,0,0,0.8)] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-700 via-green-800 to-green-950 overflow-hidden">
+      <!-- Textura de la mesa (sutil) -->
+      <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+      
+      <div class="text-center relative z-10 p-6 rounded-3xl bg-black/30 backdrop-blur-md border border-white/5 shadow-2xl">
+        <p class="text-xs md:text-sm text-green-200/60 mb-1 uppercase tracking-[0.3em] font-black drop-shadow-md">Sala de Juego</p>
+        <h2 class="text-4xl md:text-6xl font-mono font-black text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">{{ roomId }}</h2>
         <UButton 
           icon="i-lucide-copy" 
           size="sm" 
-          color="gray" 
+          color="white" 
           variant="ghost" 
-          class="mt-2"
+          class="mt-4 hover:bg-white/10 text-white font-bold transition-all hover:scale-105 active:scale-95"
           @click="copyLink"
         >
           Copiar Link

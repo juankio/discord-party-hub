@@ -175,6 +175,7 @@ const leaveRoom = () => {
   disconnect()
   router.push('/')
 }
+</script>
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
