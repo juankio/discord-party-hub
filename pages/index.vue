@@ -124,6 +124,13 @@ const handleJoinRoom = () => {
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'
   
+  playerStore.loadPlayerSetup()
+  if (playerStore.nickname) {
+    nickname.value = playerStore.nickname
+    avatarId.value = playerStore.avatarId
+    selectedColor.value = playerStore.color
+  }
+
   anime({
     targets: '.header-anim',
     opacity: [0, 1],
