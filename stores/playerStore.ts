@@ -37,10 +37,22 @@ export const usePlayerStore = defineStore('player', {
         if (data) {
           try {
             const parsed = JSON.parse(data)
-            this.userId = parsed.userId || generateId()
             this.nickname = parsed.nickname || ''
             this.avatarId = parsed.avatarId || 1
             this.color = parsed.color || '#f97316'
+            
+            // Si el usuario viene de la versión anterior y no tiene userId, se lo creamos y guardamos
+            if (!parsed.userId) {
+              this.userId = generateId()
+              localStorage.setItem('party-hub-user', JSON.stringify({ 
+                userId: this.userId,
+                nickname: this.nickname, 
+                avatarId: this.avatarId, 
+                color: this.color 
+              }))
+            } else {
+              this.userId = parsed.userId
+            }
           } catch (e) {
             console.error('Error parsing user data', e)
           }
