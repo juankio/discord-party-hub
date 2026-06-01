@@ -1,23 +1,20 @@
 <template>
   <div class="relative w-full max-w-4xl aspect-video sm:aspect-[2/1] mx-auto mt-10 player-table-container">
     <!-- Mesa Virtual -->
-    <div class="absolute inset-8 rounded-[4rem] border-[12px] border-[#151515] flex items-center justify-center table-surface shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_0_60px_rgba(0,0,0,0.8)] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-700 via-green-800 to-green-950 overflow-hidden">
-      <!-- Textura de la mesa (sutil) -->
-      <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+    <div class="absolute inset-8 bg-[#151515] rounded-[3rem] border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex items-center justify-center table-surface relative overflow-hidden">
+      <!-- Glow sutil en el centro -->
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"></div>
       
-      <div class="text-center relative z-10 p-6 rounded-3xl bg-black/30 backdrop-blur-md border border-white/5 shadow-2xl">
-        <p class="text-xs md:text-sm text-green-200/60 mb-1 uppercase tracking-[0.3em] font-black drop-shadow-md">Sala de Juego</p>
-        <h2 class="text-4xl md:text-6xl font-mono font-black text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">{{ roomId }}</h2>
-        <UButton 
-          icon="i-lucide-copy" 
-          size="sm" 
-          color="white" 
-          variant="ghost" 
-          class="mt-4 hover:bg-white/10 text-white font-bold transition-all hover:scale-105 active:scale-95"
+      <div class="text-center relative z-10 flex flex-col items-center">
+        <p class="text-[10px] text-gray-500 mb-2 uppercase tracking-[0.4em] font-black">Código de la sala</p>
+        <h2 class="text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] mb-4">{{ roomId }}</h2>
+        <button 
           @click="copyLink"
+          class="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 border border-white/10 hover:border-white/20"
         >
+          <UIcon name="i-lucide-copy" class="w-4 h-4" />
           Copiar Link
-        </UButton>
+        </button>
       </div>
     </div>
 
