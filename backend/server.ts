@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
     let finalNickname = nickname;
     let counter = 1;
     while (room.users.some((u: any) => u.nickname === finalNickname && u.id !== socket.id)) {
-      finalNickname = `${nickname} (${counter})`;
+      finalNickname = `${nickname} (copión ${counter})`;
       counter++;
     }
 

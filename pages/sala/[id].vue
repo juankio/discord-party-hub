@@ -117,6 +117,10 @@ const players = computed(() => playerStore.playersInRoom)
 
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'
+  
+  // Cargar estado guardado de recargas anteriores
+  playerStore.loadPlayerSetup()
+
   // Verificar si tiene setup completo
   if (!playerStore.nickname) {
     showSetupModal.value = true
