@@ -23,6 +23,7 @@ export const useSocket = () => {
       // Unirse a la sala enviando los datos guardados en Pinia
       socket.value?.emit('join_room', {
         roomId,
+        userId: playerStore.userId,
         nickname: playerStore.nickname,
         avatarId: playerStore.avatarId,
         color: playerStore.color
@@ -30,7 +31,7 @@ export const useSocket = () => {
     })
 
     socket.value.on('room_update', (data) => {
-      playerStore.updatePlayers(data.users)
+      playerStore.updateRoomState(data.users, data.hostUserId)
     })
 
     socket.value.on('disconnect', () => {

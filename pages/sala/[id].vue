@@ -20,7 +20,7 @@
       <PlayerTable :room-id="roomId" :players="players" />
 
       <!-- Panel de Control (Host) -->
-      <div v-if="players.length > 0 && players[0].nickname === playerStore.nickname" class="mt-16 flex flex-col items-center controls-anim opacity-0">
+      <div v-if="playerStore.userId === playerStore.hostUserId" class="mt-16 flex flex-col items-center controls-anim opacity-0">
         <h3 class="text-gray-400 mb-4 font-medium uppercase tracking-widest text-sm">Seleccionar Juego</h3>
         <div class="flex gap-4">
           <div class="bg-[#2b2d31] p-4 rounded-2xl border-2 border-primary neon-glow cursor-pointer hover:scale-105 transition-transform">

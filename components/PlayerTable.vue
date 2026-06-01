@@ -21,7 +21,7 @@
     <!-- Avatares de Jugadores -->
     <div 
       v-for="(player, index) in players" 
-      :key="player.id"
+      :key="player.userId"
       class="absolute player-avatar w-16 h-16 md:w-20 md:h-20 bg-black rounded-full border-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-visible"
       :style="[
         getAvatarPosition(index, players.length),
