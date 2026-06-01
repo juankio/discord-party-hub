@@ -26,7 +26,7 @@
       :style="getAvatarPosition(index, players.length)"
       :class="`border-[hsl(${player.avatarId * 60},70%,50%)]`"
     >
-      <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-full h-full rounded-xl" />
+      <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-xl" />
       <span class="absolute -bottom-6 text-xs font-bold text-white whitespace-nowrap bg-black/50 px-2 py-1 rounded-md">
         {{ player.nickname }}
       </span>
