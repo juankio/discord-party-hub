@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
       counter++;
     }
 
-    // Comprobar si el usuario ya estaba en la sala (por F5 o reconexión)
+    // Añadir usuario o actualizar si reconecta
     const existingIndex = room.users.findIndex((u: any) => u.userId === userId);
     
     if (existingIndex === -1) {
@@ -47,6 +47,12 @@ io.on("connection", (socket) => {
     } else {
       // Actualizar su socketId y estado en caso de reconexión
       room.users[existingIndex] = { socketId: socket.id, userId, nickname: finalNickname, avatarId, color };
+    }
+
+    // Doble validación: Si el host no existe en la sala (se perdió por un bug), asignar al primero
+    const hostStillExists = room.users.some((u: any) => u.userId === room.hostUserId);
+    if (!hostStillExists && room.users.length > 0) {
+      room.hostUserId = room.users[0].userId;
     }
 
     // Emitir estado actualizado a toda la sala, incluyendo quién es el host

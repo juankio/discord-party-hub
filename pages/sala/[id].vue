@@ -20,7 +20,7 @@
       <PlayerTable :room-id="roomId" :players="players" />
 
       <!-- Panel de Control (Host) -->
-      <div v-if="playerStore.userId === playerStore.hostUserId" class="mt-16 flex flex-col items-center controls-anim opacity-0">
+      <div v-if="isHost" class="mt-16 flex flex-col items-center controls-anim opacity-0">
         <h3 class="text-gray-400 mb-4 font-medium uppercase tracking-widest text-sm">Seleccionar Juego</h3>
         <div class="flex gap-4">
           <div class="bg-[#2b2d31] p-4 rounded-2xl border-2 border-primary neon-glow cursor-pointer hover:scale-105 transition-transform">
@@ -114,6 +114,11 @@ const tempAvatarId = ref(1)
 const tempColor = ref('#f97316')
 
 const players = computed(() => playerStore.playersInRoom)
+const isHost = computed(() => {
+  return playerStore.userId !== '' && 
+         playerStore.hostUserId !== '' && 
+         playerStore.userId === playerStore.hostUserId
+})
 
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'
