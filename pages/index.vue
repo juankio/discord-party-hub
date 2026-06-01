@@ -150,8 +150,3 @@ onMounted(() => {
 })
 </script>
 
-<style>
-body {
-  background-color: #0A0A0A !important;
-}
-</style>

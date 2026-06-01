@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Doodles sutiles (Opacidad 4% para que no distraigan) -->
+  <g stroke="#ffffff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.04">
+    <!-- Cruz / Equis -->
+    <path d="M 20 20 L 40 40 M 40 20 L 20 40" />
+    
+    <!-- Círculo flotante -->
+    <circle cx="160" cy="30" r="12" />
+    
+    <!-- Triángulo -->
+    <path d="M 90 170 L 110 170 L 100 150 Z" />
+    
+    <!-- Onda / Squiggle -->
+    <path d="M 150 160 Q 165 140 180 160 T 210 160" />
+    
+    <!-- Estrellita -->
+    <path d="M 100 30 L 105 45 L 120 45 L 108 55 L 112 70 L 100 60 L 88 70 L 92 55 L 80 45 L 95 45 Z" />
+    
+    <!-- Puntitos / Polvo de estrellas -->
+    <circle cx="40" cy="110" r="2" fill="#ffffff" />
+    <circle cx="50" cy="100" r="2" fill="#ffffff" />
+    <circle cx="60" cy="110" r="2" fill="#ffffff" />
+    <circle cx="180" cy="90" r="2" fill="#ffffff" />
+    <circle cx="10" cy="90" r="2" fill="#ffffff" />
+
+    <!-- Mini mando de consola / Mando Retro -->
+    <path d="M 130 90 h 24 a 10 10 0 0 1 10 10 v 8 a 10 10 0 0 1 -10 10 h -24 a 10 10 0 0 1 -10 -10 v -8 a 10 10 0 0 1 10 -10 z" />
+    <path d="M 136 100 v 8 M 132 104 h 8" /> <!-- D-pad -->
+    <circle cx="154" cy="100" r="2" fill="#ffffff" /> <!-- Botón A -->
+    <circle cx="150" cy="106" r="2" fill="#ffffff" /> <!-- Botón B -->
+
+    <!-- Zigzag -->
+    <path d="M 10 160 L 20 170 L 30 160 L 40 170 L 50 160" />
+  </g>
+</svg>
