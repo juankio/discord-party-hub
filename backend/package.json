@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch server.ts"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.5"
+  }
+}

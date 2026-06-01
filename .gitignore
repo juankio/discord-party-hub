@@ -1,0 +1,13 @@
+# Nuxt dev/build outputs
+.nuxt
+.output
+dist
+.env
+
+# Node dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.lockb
+*.log
