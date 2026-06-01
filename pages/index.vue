@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4 overflow-hidden relative">
+  <div class="min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden relative">
     
     <!-- Header Decorativo -->
     <div class="absolute top-12 text-center header-anim opacity-0 -translate-y-5">

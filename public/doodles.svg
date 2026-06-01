@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
   <!-- Doodles sutiles (Opacidad 4% para que no distraigan) -->
-  <g stroke="#ffffff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.04">
+  <g stroke="#ffffff" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.08">
     <!-- Cruz / Equis -->
     <path d="M 20 20 L 40 40 M 40 20 L 20 40" />
     

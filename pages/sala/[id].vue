@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#0A0A0A] overflow-hidden">
+  <div class="min-h-screen overflow-hidden">
     <!-- Contenido de la sala (Oculto hasta configurar perfil) -->
     <div v-if="hasSetup" class="flex flex-col items-center pt-8 md:pt-16 p-4">
       <div class="w-full max-w-6xl">
