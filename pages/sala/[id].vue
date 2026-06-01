@@ -1,7 +1,9 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center pt-8 md:pt-16 p-4">
-    <div class="w-full max-w-6xl">
-      <!-- Header de la Sala -->
+  <div class="min-h-screen bg-[#0A0A0A] overflow-hidden">
+    <!-- Contenido de la sala (Oculto hasta configurar perfil) -->
+    <div v-if="hasSetup" class="flex flex-col items-center pt-8 md:pt-16 p-4">
+      <div class="w-full max-w-6xl">
+        <!-- Header de la Sala -->
       <div class="flex items-center justify-between mb-8 header-anim opacity-0">
         <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span></h1>
         <UButton 
@@ -53,6 +55,7 @@
       </div>
 
     </div>
+    </div>
 
     <!-- Modal Obligatorio si entra directo con link sin nickname -->
     <UModal v-model="showSetupModal" prevent-close :ui="{ background: 'bg-transparent', shadow: 'shadow-none' }">
@@ -91,6 +94,7 @@ const { connect, disconnect } = useSocket()
 
 const roomId = route.params.id as string
 const showSetupModal = ref(false)
+const hasSetup = ref(false)
 
 // Estado temporal para el modal
 const tempNickname = ref('')
@@ -100,10 +104,12 @@ const tempColor = ref('#f97316')
 const players = computed(() => playerStore.playersInRoom)
 
 onMounted(() => {
+  document.body.style.backgroundColor = '#0A0A0A'
   // Verificar si tiene setup completo
   if (!playerStore.nickname) {
     showSetupModal.value = true
   } else {
+    hasSetup.value = true
     initRoom()
   }
 })
@@ -116,7 +122,11 @@ onUnmounted(() => {
 const saveAndJoin = () => {
   playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value)
   showSetupModal.value = false
-  initRoom()
+  hasSetup.value = true
+  // Pequeño delay para que vue renderice el DOM antes de animar
+  setTimeout(() => {
+    initRoom()
+  }, 50)
 }
 
 const initRoom = () => {

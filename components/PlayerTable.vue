@@ -48,6 +48,8 @@ const props = defineProps({
   players: { type: Array as () => any[], required: true }
 })
 
+const toast = useToast()
+
 // Calcula posiciones en un óvalo (mesa)
 const getAvatarPosition = (index: number, total: number) => {
   // Ajuste para el primer jugador abajo al centro
@@ -98,6 +100,12 @@ onMounted(() => {
 const copyLink = () => {
   if (import.meta.client) {
     navigator.clipboard.writeText(window.location.href)
+    toast.add({
+      title: '¡Link copiado!',
+      description: 'Envíalo a tus amigos por Discord para que se unan.',
+      color: 'primary',
+      icon: 'i-lucide-check-circle'
+    })
   }
 }
 </script>

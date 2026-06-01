@@ -29,10 +29,21 @@ io.on("connection", (socket) => {
     }
 
     const room = rooms.get(roomId);
+    
+    // Evitar nombres duplicados
+    let finalNickname = nickname;
+    let counter = 1;
+    while (room.users.some((u: any) => u.nickname === finalNickname && u.id !== socket.id)) {
+      finalNickname = `${nickname} (${counter})`;
+      counter++;
+    }
+
     // Añadir usuario o actualizar si reconecta
     const existingIndex = room.users.findIndex((u: any) => u.id === socket.id);
     if (existingIndex === -1) {
-      room.users.push({ id: socket.id, nickname, avatarId, color });
+      room.users.push({ id: socket.id, nickname: finalNickname, avatarId, color });
+    } else {
+      room.users[existingIndex] = { id: socket.id, nickname: finalNickname, avatarId, color };
     }
 
     // Emitir estado actualizado a toda la sala
