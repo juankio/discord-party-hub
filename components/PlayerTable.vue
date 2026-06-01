@@ -1,7 +1,7 @@
 <template>
   <div class="relative w-full max-w-4xl aspect-video sm:aspect-[2/1] mx-auto mt-10 player-table-container">
     <!-- Mesa Virtual -->
-    <div class="absolute inset-8 bg-[#151515] rounded-[3rem] border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex items-center justify-center table-surface relative overflow-hidden">
+    <div class="absolute inset-8 bg-[#151515] rounded-[3rem] border border-white/5 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex items-center justify-center table-surface overflow-hidden">
       <!-- Glow sutil en el centro -->
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"></div>
       
