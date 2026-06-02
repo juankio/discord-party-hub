@@ -3,7 +3,7 @@
     <!-- Componente unificado de configuración de perfil -->
     <ProfileSetup 
       :avatarId="avatarId"
-      :color="selectedColor"
+      :color="color"
       :nickname="nickname"
       @update:avatarId="$emit('update:avatarId', $event)"
       @update:color="$emit('update:color', $event)"
