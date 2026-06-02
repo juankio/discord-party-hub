@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
+import { useUnoStore } from '~/stores/games/unoStore'
+
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
 
@@ -32,6 +34,10 @@ export const useSocket = () => {
 
     socket.value.on('room_update', (data) => {
       playerStore.updateRoomState(data.users, data.hostUserId)
+    })
+
+    socket.value.on('game_state_update', (data) => {
+      useUnoStore().updateState(data)
     })
 
     socket.value.on('disconnect', () => {
