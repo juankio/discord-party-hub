@@ -22,126 +22,86 @@
         <Transition name="fade" mode="out-in">
           <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
-            <h3 class="text-amber-500/80 mb-6 font-bold uppercase tracking-[0.3em] text-sm drop-shadow-md">Estante de Juegos</h3>
             
-            <!-- Estante de Billar -->
-            <div class="relative w-full bg-[#3b2512] rounded-xl border-8 border-[#1a0f07] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_10px_20px_rgba(0,0,0,0.5)] z-20 overflow-hidden">
-              <!-- Textura de madera (Simulada con gradientes) -->
-              <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-              
-              <!-- Repisas -->
-              <div class="absolute top-1/2 left-0 right-0 h-4 bg-[#201005] -translate-y-1/2 shadow-[inset_0_4px_10px_rgba(0,0,0,0.8),0_2px_0_rgba(255,255,255,0.1)] z-0"></div>
-              
-              <!-- Contenedor de Bolas -->
-              <div class="flex flex-wrap justify-center gap-8 relative z-10">
-                <button
-                  v-for="game in games"
-                  :key="game.id"
-                  @click="selectedGame = game.id"
-                  class="relative group outline-none focus:outline-none transition-transform duration-300"
-                  :class="[
-                    selectedGame === game.id ? '-translate-y-4 scale-110' : 'hover:-translate-y-2 hover:scale-105',
-                    game.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer'
-                  ]"
-                  :disabled="game.disabled"
-                >
-                  <!-- Efecto de Brillo al Seleccionar -->
-                  <div v-if="selectedGame === game.id" class="absolute -inset-2 bg-yellow-400/30 rounded-full blur-md animate-pulse"></div>
-
-                  <!-- Bola Sólida -->
-                  <div 
-                    v-if="game.style === 'solid'"
-                    class="relative w-20 h-20 rounded-full flex items-center justify-center shadow-[inset_-15px_-15px_25px_rgba(0,0,0,0.6),inset_10px_10px_20px_rgba(255,255,255,0.3),0_15px_20px_rgba(0,0,0,0.6)]"
-                    :class="[game.color, selectedGame === game.id ? 'ring-4 ring-yellow-400 ring-offset-4 ring-offset-[#3b2512]' : 'ring-1 ring-black/50']"
-                  >
-                    <!-- Centro de la bola -->
-                    <div class="w-10 h-10 bg-[#f8f9fa] rounded-full flex items-center justify-center shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)] border border-gray-300/50">
-                      <span class="font-black" :class="[game.textColor, game.textSize]">{{ game.number }}</span>
-                    </div>
-                    <!-- Brillo de la bola (Reflejo de luz) -->
-                    <div class="absolute top-2 left-3 w-5 h-4 bg-white/50 rounded-[50%] rotate-[-45deg] blur-[1px]"></div>
-                  </div>
-
-                  <!-- Bola Rayada -->
-                  <div 
-                    v-else
-                    class="relative w-20 h-20 rounded-full overflow-hidden flex flex-col justify-center items-center shadow-[inset_-15px_-15px_25px_rgba(0,0,0,0.6),inset_10px_10px_20px_rgba(255,255,255,0.3),0_15px_20px_rgba(0,0,0,0.6)] bg-[#f8f9fa]"
-                    :class="[selectedGame === game.id ? 'ring-4 ring-yellow-400 ring-offset-4 ring-offset-[#3b2512]' : 'ring-1 ring-black/50']"
-                  >
-                    <!-- Franja de color -->
-                    <div class="absolute w-full h-[55%] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),inset_0_-2px_4px_rgba(0,0,0,0.2)]" :class="game.color">
-                      <div class="w-10 h-10 bg-[#f8f9fa] rounded-full flex items-center justify-center shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)] border border-gray-300/50 relative z-10">
-                        <span class="font-black text-black" :class="game.textSize">{{ game.number }}</span>
-                      </div>
-                    </div>
-                    <!-- Brillo (encima de todo) -->
-                    <div class="absolute top-2 left-3 w-5 h-4 bg-white/60 rounded-[50%] rotate-[-45deg] blur-[1px] z-20"></div>
-                  </div>
-
-                  <!-- Etiqueta del nombre (Hover/Select) -->
-                  <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity" :class="selectedGame === game.id ? 'opacity-100' : ''">
-                    <span class="text-xs font-bold text-amber-200 tracking-wider bg-black/50 px-2 py-1 rounded-md">{{ game.name }}</span>
-                  </div>
-                </button>
-              </div>
+            <!-- Games Cards Selector -->
+            <div class="w-full flex gap-4 overflow-x-auto pb-4 custom-scrollbar px-4 snap-x">
+              <button
+                v-for="game in games"
+                :key="game.id"
+                @click="selectedGame = game.id"
+                class="min-w-[140px] md:min-w-[160px] h-[200px] md:h-[240px] bg-black/40 backdrop-blur-xl border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 transition-all duration-300 relative group outline-none focus:outline-none snap-center overflow-hidden shadow-2xl"
+                :class="[
+                  selectedGame === game.id ? 'scale-105 z-20' : 'hover:scale-105 opacity-50 hover:opacity-100',
+                  game.disabled ? 'cursor-not-allowed grayscale' : 'cursor-pointer'
+                ]"
+                :style="selectedGame === game.id ? { borderColor: 'var(--theme-color)', boxShadow: '0 0 40px rgba(var(--theme-color-rgb), 0.2)' } : {}"
+                :disabled="game.disabled"
+              >
+                <!-- Glow interior al seleccionar -->
+                <div v-if="selectedGame === game.id" class="absolute inset-0 opacity-20 pointer-events-none" :style="{ background: 'radial-gradient(circle at top, var(--theme-color), transparent 70%)' }"></div>
+                
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-500 shadow-xl" :class="game.bgColor">
+                  <UIcon :name="game.icon" class="w-10 h-10 md:w-12 md:h-12 text-white drop-shadow-md" />
+                </div>
+                
+                <h3 class="font-black text-lg md:text-xl tracking-wider uppercase text-white drop-shadow-lg z-10">{{ game.name }}</h3>
+                <span v-if="game.disabled" class="absolute bottom-4 text-[10px] font-bold text-gray-500 tracking-widest uppercase">Próximamente</span>
+              </button>
             </div>
             
-            <!-- Configuración de Reglas (Tablón de Madera Desplegable) -->
+            <!-- Panel de Reglas Glassmorphism -->
             <Transition name="slide-panel">
-              <div v-if="selectedGame === 'uno'" class="w-full max-w-lg mx-auto relative z-10 -mt-2">
-                <div class="bg-[#4a3018] rounded-b-2xl border-4 border-t-0 border-[#2a1a0b] p-6 pt-10 shadow-[0_20px_40px_rgba(0,0,0,0.7),inset_0_0_40px_rgba(0,0,0,0.5)] bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] relative">
-                  <!-- Clavos decorativos -->
-                  <div class="absolute bottom-4 left-4 w-3 h-3 bg-gray-800 rounded-full shadow-[inset_1px_1px_2px_rgba(255,255,255,0.3),_1px_1px_2px_rgba(0,0,0,0.8)]"></div>
-                  <div class="absolute bottom-4 right-4 w-3 h-3 bg-gray-800 rounded-full shadow-[inset_1px_1px_2px_rgba(255,255,255,0.3),_1px_1px_2px_rgba(0,0,0,0.8)]"></div>
+              <div v-if="selectedGame === 'uno'" class="w-full max-w-lg mt-8 relative z-10">
+                <div class="bg-black/30 backdrop-blur-2xl rounded-3xl border border-white/10 p-6 shadow-2xl relative overflow-hidden">
+                  <!-- Efecto de cristal -->
+                  <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
                   
-                  <h4 class="text-amber-400 font-black text-sm tracking-[0.2em] uppercase mb-6 text-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Reglas de la Mesa</h4>
-                  <div class="flex flex-col gap-4">
-                    <div class="flex items-center justify-between group bg-black/20 p-3 rounded-lg border border-white/5 hover:bg-black/30 transition-colors">
-                      <span class="text-amber-100/80 group-hover:text-amber-100 transition-colors text-sm font-bold tracking-wide">Acumular +2 y +4</span>
-                      <UToggle v-model="unoRules.stackDrawCards" color="amber" class="scale-110 shadow-lg" />
+                  <h4 class="text-white font-black text-xs tracking-[0.3em] uppercase mb-6 text-center opacity-80 flex items-center justify-center gap-2">
+                    <UIcon name="i-lucide-settings-2" class="w-4 h-4" />
+                    Reglas de la Casa
+                  </h4>
+                  
+                  <div class="flex flex-col gap-3">
+                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
+                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Acumular +2 y +4</span>
+                      <UToggle v-model="unoRules.stackDrawCards" :ui="{ active: 'bg-[var(--theme-color)]' }" />
                     </div>
-                    <div class="flex items-center justify-between group bg-black/20 p-3 rounded-lg border border-white/5 hover:bg-black/30 transition-colors">
-                      <span class="text-amber-100/80 group-hover:text-amber-100 transition-colors text-sm font-bold tracking-wide">Tirar dobles (Varios números iguales)</span>
-                      <UToggle v-model="unoRules.playMultipleSame" color="amber" class="scale-110 shadow-lg" />
+                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
+                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Tirar dobles (Mismo número)</span>
+                      <UToggle v-model="unoRules.playMultipleSame" :ui="{ active: 'bg-[var(--theme-color)]' }" />
                     </div>
-                    <div class="flex items-center justify-between group bg-black/20 p-3 rounded-lg border border-white/5 hover:bg-black/30 transition-colors">
-                      <span class="text-amber-100/80 group-hover:text-amber-100 transition-colors text-sm font-bold tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
-                      <UToggle v-model="unoRules.zeroAndSevenRules" color="amber" class="scale-110 shadow-lg" />
+                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
+                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
+                      <UToggle v-model="unoRules.zeroAndSevenRules" :ui="{ active: 'bg-[var(--theme-color)]' }" />
                     </div>
-                    <div class="flex items-center justify-between group bg-black/20 p-3 rounded-lg border border-white/5 hover:bg-black/30 transition-colors">
-                      <span class="text-amber-100/80 group-hover:text-amber-100 transition-colors text-sm font-bold tracking-wide">Robar hasta que salga carta</span>
-                      <UToggle v-model="unoRules.drawUntilPlayable" color="amber" class="scale-110 shadow-lg" />
+                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
+                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Robar hasta que salga carta</span>
+                      <UToggle v-model="unoRules.drawUntilPlayable" :ui="{ active: 'bg-[var(--theme-color)]' }" />
                     </div>
-                    <div class="flex items-center justify-between group bg-black/20 p-3 rounded-lg border border-white/5 hover:bg-black/30 transition-colors">
-                      <span class="text-amber-100/80 group-hover:text-amber-100 transition-colors text-sm font-bold tracking-wide">Intercepción exacta (Corte)</span>
-                      <UToggle v-model="unoRules.interceptExact" color="amber" class="scale-110 shadow-lg" />
+                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
+                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Intercepción exacta (Corte)</span>
+                      <UToggle v-model="unoRules.interceptExact" :ui="{ active: 'bg-[var(--theme-color)]' }" />
                     </div>
                   </div>
                 </div>
               </div>
             </Transition>
             
-            <UButton 
-              size="xl" 
-              color="amber" 
-              class="mt-12 px-16 h-16 text-xl font-black uppercase tracking-widest shadow-[0_10px_30px_rgba(245,158,11,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(245,158,11,0.5)] active:translate-y-1 active:shadow-[0_5px_15px_rgba(245,158,11,0.3)]"
+            <button 
+              class="mt-12 px-16 h-16 rounded-full text-xl font-black uppercase tracking-widest text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
               :disabled="players.length < 2 || selectedGame !== 'uno'"
               @click="startGame"
+              style="background-color: var(--theme-color); box-shadow: 0 0 20px rgba(var(--theme-color-rgb), 0.4);"
+              onmouseover="if(!this.disabled) { this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 30px rgba(var(--theme-color-rgb), 0.6)'; }"
+              onmouseout="if(!this.disabled) { this.style.filter='none'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.4)'; }"
             >
-              Repartir Cartas
-            </UButton>
-            <p v-if="players.length < 2" class="text-sm text-amber-500/60 mt-4 font-bold tracking-widest uppercase">Esperando más jugadores...</p>
-            <p v-else-if="selectedGame !== 'uno'" class="text-sm text-red-400 mt-4 font-bold tracking-widest uppercase">Juego no disponible aún</p>
+              <UIcon name="i-lucide-play" class="w-6 h-6 group-hover:scale-110 transition-transform" />
+              Empezar Partida
+            </button>
+            
+            <p v-if="players.length < 2" class="text-xs text-gray-500 mt-4 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
+            <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-4 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
           </div>
-          
-          <!-- Panel de Espera (Invitados) -->
-          <div v-else class="text-center">
-            <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
-            <h3 class="text-xl font-bold text-gray-200">Esperando al Host...</h3>
-            <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
-          </div>
-        </Transition>
-      </div>
 
     </div>
   </div>
