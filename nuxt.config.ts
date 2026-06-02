@@ -13,6 +13,9 @@ export default defineNuxtConfig({
       title: 'Discord Party Hub',
       meta: [
         { name: 'description', content: 'Tu hub de juegos en tiempo real' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
       ]
     }
   },
