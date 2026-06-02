@@ -40,7 +40,7 @@
                 <!-- Glow interior al seleccionar -->
                 <div v-if="selectedGame === game.id" class="absolute inset-0 opacity-20 pointer-events-none" :style="{ background: 'radial-gradient(circle at top, var(--theme-color), transparent 70%)' }"></div>
                 
-                <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-500 shadow-xl" :class="game.bgColor">
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-500 shadow-xl" :class="game.color">
                   <UIcon :name="game.icon" class="w-10 h-10 md:w-12 md:h-12 text-white drop-shadow-md" />
                 </div>
                 
@@ -102,7 +102,8 @@
             <p v-if="players.length < 2" class="text-xs text-gray-500 mt-4 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
             <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-4 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
           </div>
-
+        </Transition>
+      </div>
     </div>
   </div>
 </template>
@@ -139,11 +140,11 @@ const unoRules = ref({
 const selectedGame = ref('uno')
 
 const games = [
-  { id: 'uno', name: 'UNO', color: 'bg-red-500', textColor: 'text-red-500', textSize: 'text-xs', number: 'UNO', style: 'solid', disabled: false },
-  { id: 'parchis', name: 'Parchís', color: 'bg-yellow-500', textColor: 'text-black', textSize: 'text-lg', number: '1', style: 'solid', disabled: true },
-  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', textColor: 'text-black', textSize: 'text-lg', number: '8', style: 'solid', disabled: true },
-  { id: 'stop', name: 'Stop', color: 'bg-blue-500', textColor: 'text-black', textSize: 'text-lg', number: '4', style: 'solid', disabled: true },
-  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-purple-600', textColor: 'text-black', textSize: 'text-lg', number: '11', style: 'striped', disabled: true },
+  { id: 'uno', name: 'UNO', color: 'bg-red-500', icon: 'i-lucide-layers', textColor: 'text-red-500', textSize: 'text-xs', number: 'UNO', style: 'solid', disabled: false },
+  { id: 'parchis', name: 'Parchís', color: 'bg-yellow-500', icon: 'i-lucide-crosshair', textColor: 'text-black', textSize: 'text-lg', number: '1', style: 'solid', disabled: true },
+  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', icon: 'i-lucide-skull', textColor: 'text-black', textSize: 'text-lg', number: '8', style: 'solid', disabled: true },
+  { id: 'stop', name: 'Stop', color: 'bg-blue-500', icon: 'i-lucide-hand', textColor: 'text-black', textSize: 'text-lg', number: '4', style: 'solid', disabled: true },
+  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-purple-600', icon: 'i-lucide-paintbrush', textColor: 'text-black', textSize: 'text-lg', number: '11', style: 'striped', disabled: true },
 ]
 
 const startGame = () => {
