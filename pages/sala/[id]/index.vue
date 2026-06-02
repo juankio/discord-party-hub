@@ -22,27 +22,112 @@
         <Transition name="fade" mode="out-in">
           <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
+            <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
             
-            <!-- Games Cards Selector -->
-            <div class="w-full flex gap-4 overflow-x-auto pb-4 custom-scrollbar px-4 snap-x">
-              <button
-                v-for="game in games"
-                :key="game.id"
-                @click="selectedGame = game.id"
-                class="min-w-[140px] md:min-w-[160px] h-[200px] md:h-[240px] bg-black/40 backdrop-blur-xl border border-white/5 rounded-3xl flex flex-col items-center justify-center gap-4 transition-all duration-300 relative group outline-none focus:outline-none snap-center overflow-hidden shadow-2xl"
-                :class="[
-                  selectedGame === game.id ? 'scale-105 z-20' : 'hover:scale-105 opacity-50 hover:opacity-100',
-                  game.disabled ? 'cursor-not-allowed grayscale' : 'cursor-pointer'
-                ]"
-                :style="selectedGame === game.id ? { borderColor: 'var(--theme-color)', boxShadow: '0 0 40px rgba(var(--theme-color-rgb), 0.2)' } : {}"
-                :disabled="game.disabled"
-              >
-                <!-- Glow interior al seleccionar -->
-                <div v-if="selectedGame === game.id" class="absolute inset-0 opacity-20 pointer-events-none" :style="{ background: 'radial-gradient(circle at top, var(--theme-color), transparent 70%)' }"></div>
-                
-                <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-500 shadow-xl" :class="game.color">
-                  <UIcon :name="game.icon" class="w-10 h-10 md:w-12 md:h-12 text-white drop-shadow-md" />
+            <!-- Estante de Billar (Flat 2D Vectorial) -->
+            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
+              
+              <!-- Fondo del estante (Oscuro) -->
+              <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"></div>
+              
+              <!-- Repisa Horizontal Madera Oscura -->
+              <div class="absolute top-1/2 left-0 w-full h-3 bg-[#4a2e1b] -translate-y-1/2 border-y border-[#3a2212] shadow-[0_5px_5px_rgba(0,0,0,0.5)] z-0"></div>
+
+              <!-- Contenedor de Bolas -->
+              <div class="flex flex-wrap justify-center gap-6 relative z-10">
+                <button
+                  v-for="game in games"
+                  :key="game.id"
+                  @click="selectedGame = game.id"
+                  class="relative group outline-none focus:outline-none transition-transform duration-300"
+                  :class="[
+                    selectedGame === game.id ? '-translate-y-6 scale-110' : 'hover:-translate-y-2',
+                    game.disabled ? 'opacity-40 cursor-not-allowed grayscale' : 'cursor-pointer'
+                  ]"
+                  :disabled="game.disabled"
+                >
+                  <!-- Flecha indicadora flotante (Estilo Arcade) -->
+                  <div v-if="selectedGame === game.id" class="absolute -top-6 left-1/2 -translate-x-1/2 animate-bounce">
+                    <svg class="w-6 h-6 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 21l-7-7h14l-7 7z" />
+                    </svg>
+                  </div>
+
+                  <!-- Bola Flat 2D -->
+                  <div 
+                    class="relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-2 border-black/80 shadow-[inset_-5px_-5px_10px_rgba(0,0,0,0.5),_0_8px_10px_rgba(0,0,0,0.6)]"
+                    :class="[game.color]"
+                  >
+                    <!-- Centro blanco de la bola -->
+                    <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] border border-black/10">
+                      <span class="font-black text-black" :class="game.textSize">{{ game.number }}</span>
+                    </div>
+                    
+                    <!-- Brillo Blanco (Estilo Vector Flat) -->
+                    <div class="absolute top-1 right-2 w-3 h-2 bg-white/60 rounded-full rotate-[45deg]"></div>
+                  </div>
+
+                  <!-- Sombra en la repisa -->
+                  <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/60 rounded-full blur-[2px] -z-10"></div>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Panel de Reglas (Pizarra Verde) -->
+            <Transition name="slide-panel">
+              <div v-if="selectedGame === 'uno'" class="w-full max-w-lg mx-auto relative z-10 -mt-4">
+                <div class="bg-[#109041] rounded-b-2xl border-4 border-[#8b5a2b] p-6 pt-10 shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.4)] relative">
+                  
+                  <h4 class="text-white/90 font-black text-xs tracking-[0.3em] uppercase mb-6 text-center drop-shadow-md">
+                    Reglas de la Casa
+                  </h4>
+                  
+                  <div class="flex flex-col gap-3">
+                    <!-- Filas con diseño flat y bordes sutiles -->
+                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Acumular +2 y +4</span>
+                      <UToggle v-model="unoRules.stackDrawCards" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                    </div>
+                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Tirar dobles (Mismo número)</span>
+                      <UToggle v-model="unoRules.playMultipleSame" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                    </div>
+                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Regla del 0 (Pasa) y 7 (Cambia)</span>
+                      <UToggle v-model="unoRules.zeroAndSevenRules" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                    </div>
+                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Robar hasta que salga carta</span>
+                      <UToggle v-model="unoRules.drawUntilPlayable" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                    </div>
+                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Intercepción exacta (Corte)</span>
+                      <UToggle v-model="unoRules.interceptExact" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </Transition>
+            
+            <!-- Botón Arcade 2D Macizo -->
+            <button 
+              class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest text-white transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
+              :disabled="players.length < 2 || selectedGame !== 'uno'"
+              @click="startGame"
+              style="
+                background-color: var(--theme-color); 
+                box-shadow: 0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4);
+              "
+              onmousedown="if(!this.disabled) { this.style.transform='translateY(8px)'; this.style.boxShadow='0 0px 0 rgba(0,0,0,0.6), 0 5px 10px rgba(0,0,0,0.4)'; }"
+              onmouseup="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4)'; }"
+              onmouseleave="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4)'; }"
+            >
+              Empezar Partida
+            </button>
+            
+            <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
+            <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
+          </div>
                 
                 <h3 class="font-black text-lg md:text-xl tracking-wider uppercase text-white drop-shadow-lg z-10">{{ game.name }}</h3>
                 <span v-if="game.disabled" class="absolute bottom-4 text-[10px] font-bold text-gray-500 tracking-widest uppercase">Próximamente</span>
