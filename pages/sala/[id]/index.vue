@@ -79,82 +79,72 @@
               </div>
             </div>
             
-            <!-- Panel de Reglas (Pizarra Verde Premium) -->
+            <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
             <Transition name="slide-panel">
-              <div v-if="selectedGame === 'uno'" class="w-full max-w-[550px] mx-auto relative z-10 -mt-4">
-                <div class="bg-gradient-to-b from-[#109041] to-[#0a5c27] rounded-b-[2rem] border-[6px] border-t-0 border-[#5c3a21] p-6 pt-10 shadow-[0_20px_50px_rgba(0,0,0,0.9),inset_0_0_30px_rgba(0,0,0,0.6)] relative overflow-hidden">
+              <div v-if="selectedGame === 'uno'" class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-8">
+                <!-- Cajón de madera (mismo ancho y color que el estante principal) -->
+                <div class="bg-[#8b5a2b] rounded-b-3xl border-4 border-t-0 border-[#5c3a21] p-6 pt-8 shadow-[0_15px_30px_rgba(0,0,0,0.8)] relative">
                   
-                  <!-- Textura del paño de la pizarra -->
-                  <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay pointer-events-none"></div>
+                  <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase mb-5 text-center drop-shadow-sm">
+                    Reglas de la Mesa
+                  </h4>
                   
-                  <div class="flex items-center justify-center gap-3 mb-6 relative z-10">
-                    <UIcon name="i-lucide-gavel" class="w-5 h-5 text-amber-300 drop-shadow-md" />
-                    <h4 class="text-amber-100 font-black text-[11px] tracking-[0.4em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                      Reglas de la Mesa
-                    </h4>
-                    <UIcon name="i-lucide-gavel" class="w-5 h-5 text-amber-300 drop-shadow-md" />
-                  </div>
-                  
-                  <div class="flex flex-col gap-2 relative z-10">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
                     
                     <!-- Regla 1 -->
-                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.stackDrawCards = !unoRules.stackDrawCards">
-                      <span class="text-white font-bold text-sm tracking-wide">Acumular +2 y +4</span>
-                      
-                      <!-- Switch Flat -->
-                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
-                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
-                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
-                             :class="unoRules.stackDrawCards ? 'right-1' : 'left-1'"></div>
+                    <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
+                      <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Acumular +2 y +4</span>
+                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
+                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
+                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
+                             :class="unoRules.stackDrawCards ? 'right-0.5' : 'left-0.5'"></div>
                       </div>
+                      <!-- Checkbox Oculto para accesibilidad y funcionalidad Vue -->
+                      <input type="checkbox" v-model="unoRules.stackDrawCards" class="hidden" />
                     </label>
 
                     <!-- Regla 2 -->
-                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.playMultipleSame = !unoRules.playMultipleSame">
-                      <span class="text-white font-bold text-sm tracking-wide">Tirar dobles (Mismo número)</span>
-                      
-                      <!-- Switch Flat -->
-                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
-                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
-                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
-                             :class="unoRules.playMultipleSame ? 'right-1' : 'left-1'"></div>
+                    <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
+                      <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Tirar dobles (Mismo número)</span>
+                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
+                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
+                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
+                             :class="unoRules.playMultipleSame ? 'right-0.5' : 'left-0.5'"></div>
                       </div>
+                      <input type="checkbox" v-model="unoRules.playMultipleSame" class="hidden" />
                     </label>
 
                     <!-- Regla 3 -->
-                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.zeroAndSevenRules = !unoRules.zeroAndSevenRules">
-                      <span class="text-white font-bold text-sm tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
-                      
-                      <!-- Switch Flat -->
-                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
-                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
-                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
-                             :class="unoRules.zeroAndSevenRules ? 'right-1' : 'left-1'"></div>
+                    <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
+                      <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
+                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
+                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
+                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
+                             :class="unoRules.zeroAndSevenRules ? 'right-0.5' : 'left-0.5'"></div>
                       </div>
+                      <input type="checkbox" v-model="unoRules.zeroAndSevenRules" class="hidden" />
                     </label>
 
                     <!-- Regla 4 -->
-                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.drawUntilPlayable = !unoRules.drawUntilPlayable">
-                      <span class="text-white font-bold text-sm tracking-wide">Robar hasta que salga carta</span>
-                      
-                      <!-- Switch Flat -->
-                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
-                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
-                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
-                             :class="unoRules.drawUntilPlayable ? 'right-1' : 'left-1'"></div>
+                    <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
+                      <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Robar hasta que salga carta</span>
+                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
+                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
+                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
+                             :class="unoRules.drawUntilPlayable ? 'right-0.5' : 'left-0.5'"></div>
                       </div>
+                      <input type="checkbox" v-model="unoRules.drawUntilPlayable" class="hidden" />
                     </label>
 
                     <!-- Regla 5 -->
-                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.interceptExact = !unoRules.interceptExact">
-                      <span class="text-white font-bold text-sm tracking-wide">Intercepción exacta (Corte)</span>
-                      
-                      <!-- Switch Flat -->
-                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
-                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
-                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
-                             :class="unoRules.interceptExact ? 'right-1' : 'left-1'"></div>
+                    <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)] md:col-span-2">
+                      <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Intercepción exacta (Corte)</span>
+                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
+                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
+                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
+                             :class="unoRules.interceptExact ? 'right-0.5' : 'left-0.5'"></div>
                       </div>
+                      <input type="checkbox" v-model="unoRules.interceptExact" class="hidden" />
                     </label>
 
                   </div>
