@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client'
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
@@ -38,6 +39,14 @@ export const useSocket = () => {
 
     socket.value.on('game_state_update', (data) => {
       useUnoStore().updateState(data)
+    })
+
+    socket.value.on('return_to_lobby', () => {
+      const router = useRouter()
+      const route = useRoute()
+      if (route.path !== `/sala/${roomId}`) {
+        router.push(`/sala/${roomId}`)
+      }
     })
 
     socket.value.on('disconnect', () => {

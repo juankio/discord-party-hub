@@ -58,6 +58,9 @@ io.on("connection", (socket) => {
     if (room.gameEngine && room.gameType === 'uno') {
       room.gameEngine.addPlayer(userId, socket.id, finalNickname, avatarId, color);
       room.gameEngine.broadcastState();
+    } else {
+      // Si el frontend se reconecta (ej. por F5) pero no hay juego corriendo en el server
+      io.to(socket.id).emit("return_to_lobby");
     }
   });
 
