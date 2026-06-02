@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ['@nuxt/ui', '@pinia/nuxt'],
+  css: ['~/assets/css/uno-cards.css'],
   colorMode: {
     preference: 'dark' // Forzar modo oscuro
   },
