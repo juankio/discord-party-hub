@@ -4,7 +4,8 @@
       
       <!-- Deck (Mazo para Robar) -->
       <div class="absolute left-8 md:left-16 flex flex-col items-center gap-2">
-        <div class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer transition-transform"
+        <div
+class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer transition-transform"
              :class="pendingDraws > 0 ? 'border-red-500 animate-pulse hover:scale-105' : 'hover:scale-105'"
              @click="drawCard">
           
@@ -18,14 +19,16 @@
           </span>
 
         </div>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest uppercase"
+        <span
+class="text-[10px] md:text-xs font-bold tracking-widest uppercase"
               :class="pendingDraws > 0 ? 'text-red-500 animate-pulse' : 'text-gray-500'">
           {{ pendingDraws > 0 ? '¡Comer!' : 'Robar' }}
         </span>
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
-      <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
+      <div
+v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
            :class="[`card-${topCard.color === 'wild' ? 'black' : topCard.color}`]"
            :style="currentColor && topCard.color === 'wild' ? `box-shadow: 0 0 30px var(--color-${currentColor}); border-color: var(--color-${currentColor})` : ''">
          <div class="inner-oval"><span class="card-value">{{ getCardDisplay(topCard) }}</span></div>

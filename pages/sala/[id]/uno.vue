@@ -3,8 +3,8 @@
     
     <!-- Top Bar -->
     <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <UButton @click="surrender" color="red" variant="soft" icon="i-heroicons-flag">Rendirse</UButton>
-      <UButton @click="exitGame" color="gray" variant="ghost" icon="i-heroicons-arrow-left">Salir al Lobby</UButton>
+      <UButton color="red" variant="soft" icon="i-heroicons-flag" @click="surrender">Rendirse</UButton>
+      <UButton color="gray" variant="ghost" icon="i-heroicons-arrow-left" @click="exitGame">Salir al Lobby</UButton>
     </div>
 
     <!-- Rivals Area -->

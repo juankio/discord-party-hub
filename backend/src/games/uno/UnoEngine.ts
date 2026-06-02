@@ -1,4 +1,4 @@
-import { type Player, type UnoRules, type GameState, type Card, type CardColor } from './UnoTypes.js';
+import type { Player, UnoRules, GameState, Card, CardColor } from './UnoTypes.js';
 import { UnoDeckManager } from './UnoDeck.js';
 import { UnoActions } from './UnoActions.js';
 
@@ -57,7 +57,7 @@ export class UnoEngine {
     this.deckManager.reset();
     this.pendingDraws = 0; this.playDirection = 1; this.currentTurnIndex = 0;
     
-    for (let p of this.players) { p.hand = this.deckManager.drawCards(7); p.hasYelledUno = false; }
+    for (const p of this.players) { p.hand = this.deckManager.drawCards(7); p.hasYelledUno = false; }
 
     let firstCard = this.deckManager.drawCards(1)[0];
     if (!firstCard) return;

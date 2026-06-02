@@ -33,7 +33,7 @@ export const usePlayerStore = defineStore('player', {
           avatarId, 
           color 
         }))
-      } catch (e) {}
+      } catch {}
     },
     loadPlayerSetup() {
       try {
@@ -66,13 +66,13 @@ export const usePlayerStore = defineStore('player', {
             } else {
               this.userId = parsed.userId
             }
-          } catch (e) {
+          } catch {
             console.error('Error parsing user data', e)
           }
         } else {
           this.userId = generateId()
         }
-      } catch (e) {}
+      } catch {}
     },
     setRoom(id: string) {
       this.roomId = id
@@ -102,7 +102,7 @@ export const usePlayerStore = defineStore('player', {
           totalWins: this.totalWins,
           picture: this.picture
         }))
-      } catch (e) {}
+      } catch {}
     },
     logout() {
       this.token = ''

@@ -1,4 +1,5 @@
-import { io, Socket } from 'socket.io-client'
+import type { Socket } from 'socket.io-client';
+import { io } from 'socket.io-client'
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#app'
@@ -47,7 +48,7 @@ export const useSocket = () => {
       // Usaremos un custom event para que los componentes puedan reaccionar a acciones físicas
       try {
         window.dispatchEvent(new CustomEvent('uno:action', { detail: data }))
-      } catch(e) {}
+      } catch {}
     })
 
     socket.value.on('uno:rival_hover', (data) => {

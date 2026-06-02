@@ -4,11 +4,11 @@
     <div class="grid grid-cols-3 sm:grid-cols-6 gap-4 p-4 bg-[#2b2d31] rounded-2xl border border-gray-700 shadow-xl">
       <div 
         v-for="i in 6" :key="i"
-        @click="selectAvatar(i)"
         class="avatar-item cursor-pointer transition-all duration-300 transform relative"
         :class="{ 'scale-110 neon-glow z-10': modelValue === i, 'opacity-50 hover:opacity-100 hover:scale-105': modelValue !== i }"
+        @click="selectAvatar(i)"
       >
-        <img :src="`/avatars/avatar-${i}.svg`" class="w-16 h-16 rounded-xl" :alt="`Avatar ${i}`" />
+        <img :src="`/avatars/avatar-${i}.svg`" class="w-16 h-16 rounded-xl" :alt="`Avatar ${i}`" >
         <div v-if="modelValue === i" class="absolute -bottom-2 -right-2 bg-[#5865F2] rounded-full p-1 border-2 border-[#1e1f22]">
           <UIcon name="i-lucide-check" class="text-white w-4 h-4" />
         </div>

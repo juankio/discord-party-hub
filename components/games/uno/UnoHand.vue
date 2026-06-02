@@ -1,13 +1,15 @@
 <template>
-  <div class="flex-1 flex justify-center items-end pb-8 z-10 relative w-full" ref="handContainer">
+  <div ref="handContainer" class="flex-1 flex justify-center items-end pb-8 z-10 relative w-full">
     <div class="flex justify-center items-end -space-x-12 sm:-space-x-10">
-      <div v-for="(card, index) in myHand" :key="card.id" 
+      <div
+v-for="(card, index) in myHand" :key="card.id" 
            class="card-wrapper"
            :style="{ 
              transform: `rotate(${(index - (myHand.length - 1)/2) * 4}deg) translateY(${Math.abs(index - (myHand.length - 1)/2) * 3}px)`
            }">
         
-        <div class="uno-card hand-card cursor-pointer"
+        <div
+class="uno-card hand-card cursor-pointer"
              :class="[`card-${card.color === 'wild' ? 'black' : card.color}`, !isPlayable(card) ? 'unplayable' : '']"
              @click="playCard(card, $event)"
              @mouseenter="$emit('hover-card', index)"
@@ -18,14 +20,15 @@
           <span class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
           
           <!-- Bloqueo visual oscuro si no es jugable y es tu turno -->
-          <div v-if="!isPlayable(card)" class="absolute inset-0 bg-black/60 rounded-[4px] md:rounded-[6px]"></div>
+          <div v-if="!isPlayable(card)" class="absolute inset-0 bg-black/60 rounded-[4px] md:rounded-[6px]"/>
         </div>
       </div>
     </div>
 
     <!-- Botón Yell UNO -->
-    <div class="absolute right-4 md:right-12 bottom-12" v-if="myHand.length <= 2">
-      <button class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform"
+    <div v-if="myHand.length <= 2" class="absolute right-4 md:right-12 bottom-12">
+      <button
+class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform"
               @click="$emit('yell-uno')">
         UNO!
       </button>
