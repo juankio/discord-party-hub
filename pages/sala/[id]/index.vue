@@ -94,22 +94,49 @@
                     <!-- Regla 1 -->
                     <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
                       <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Acumular +2 y +4</span>
-                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
-                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
-                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
-                             :class="unoRules.stackDrawCards ? 'right-0.5' : 'left-0.5'"></div>
+                      
+                      <!-- Billiard Switch Custom -->
+                      <div class="w-16 h-8 rounded-full border-[3px] border-[#201005] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8),_0_2px_0_rgba(255,255,255,0.1)] relative transition-colors duration-300"
+                           :class="unoRules.stackDrawCards ? 'bg-[#109041]' : 'bg-[#151515]'">
+                        <!-- Rail Line (Taco / Riel) -->
+                        <div class="absolute top-1/2 left-2 right-2 h-1 -translate-y-1/2 rounded-full transition-colors duration-300 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]"
+                             :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#333' }"></div>
+                        
+                        <!-- La Bola (Thumb) -->
+                        <div class="absolute top-[-1px] bottom-[-1px] w-8 h-8 rounded-full shadow-[inset_-3px_-3px_5px_rgba(0,0,0,0.6),_inset_2px_2px_4px_rgba(255,255,255,0.4),_0_3px_5px_rgba(0,0,0,0.6)] transition-all duration-300 flex items-center justify-center border border-black/20"
+                             :class="unoRules.stackDrawCards ? 'right-[-1px] bg-[#111] rotate-180' : 'left-[-1px] bg-[#f8f9fa] rotate-0'">
+                             <!-- Centro de la bola -->
+                             <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                               <span class="font-black text-[8px]" :class="unoRules.stackDrawCards ? 'text-black' : 'text-gray-400'">8</span>
+                             </div>
+                             <!-- Brillo esférico -->
+                             <div class="absolute top-1 left-1.5 w-2 h-1.5 bg-white/60 rounded-full rotate-[-45deg] blur-[0.5px]"></div>
+                        </div>
                       </div>
-                      <!-- Checkbox Oculto para accesibilidad y funcionalidad Vue -->
                       <input type="checkbox" v-model="unoRules.stackDrawCards" class="hidden" />
                     </label>
 
                     <!-- Regla 2 -->
                     <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
                       <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Tirar dobles (Mismo número)</span>
-                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
-                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
-                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
-                             :class="unoRules.playMultipleSame ? 'right-0.5' : 'left-0.5'"></div>
+                      
+                      <!-- Billiard Switch Custom -->
+                      <div class="w-16 h-8 rounded-full border-[3px] border-[#201005] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8),_0_2px_0_rgba(255,255,255,0.1)] relative transition-colors duration-300"
+                           :class="unoRules.playMultipleSame ? 'bg-[#109041]' : 'bg-[#151515]'">
+                        <!-- Rail Line -->
+                        <div class="absolute top-1/2 left-2 right-2 h-1 -translate-y-1/2 rounded-full transition-colors duration-300 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]"
+                             :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#333' }"></div>
+                        
+                        <!-- La Bola (Thumb) -->
+                        <div class="absolute top-[-1px] bottom-[-1px] w-8 h-8 rounded-full shadow-[inset_-3px_-3px_5px_rgba(0,0,0,0.6),_inset_2px_2px_4px_rgba(255,255,255,0.4),_0_3px_5px_rgba(0,0,0,0.6)] transition-all duration-300 flex items-center justify-center border border-black/20"
+                             :class="unoRules.playMultipleSame ? 'right-[-1px] bg-[#111] rotate-180' : 'left-[-1px] bg-[#f8f9fa] rotate-0'">
+                             <!-- Centro de la bola -->
+                             <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                               <span class="font-black text-[8px]" :class="unoRules.playMultipleSame ? 'text-black' : 'text-gray-400'">8</span>
+                             </div>
+                             <!-- Brillo esférico -->
+                             <div class="absolute top-1 left-1.5 w-2 h-1.5 bg-white/60 rounded-full rotate-[-45deg] blur-[0.5px]"></div>
+                        </div>
                       </div>
                       <input type="checkbox" v-model="unoRules.playMultipleSame" class="hidden" />
                     </label>
@@ -117,10 +144,24 @@
                     <!-- Regla 3 -->
                     <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
                       <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
-                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
-                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
-                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
-                             :class="unoRules.zeroAndSevenRules ? 'right-0.5' : 'left-0.5'"></div>
+                      
+                      <!-- Billiard Switch Custom -->
+                      <div class="w-16 h-8 rounded-full border-[3px] border-[#201005] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8),_0_2px_0_rgba(255,255,255,0.1)] relative transition-colors duration-300"
+                           :class="unoRules.zeroAndSevenRules ? 'bg-[#109041]' : 'bg-[#151515]'">
+                        <!-- Rail Line -->
+                        <div class="absolute top-1/2 left-2 right-2 h-1 -translate-y-1/2 rounded-full transition-colors duration-300 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]"
+                             :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#333' }"></div>
+                        
+                        <!-- La Bola (Thumb) -->
+                        <div class="absolute top-[-1px] bottom-[-1px] w-8 h-8 rounded-full shadow-[inset_-3px_-3px_5px_rgba(0,0,0,0.6),_inset_2px_2px_4px_rgba(255,255,255,0.4),_0_3px_5px_rgba(0,0,0,0.6)] transition-all duration-300 flex items-center justify-center border border-black/20"
+                             :class="unoRules.zeroAndSevenRules ? 'right-[-1px] bg-[#111] rotate-180' : 'left-[-1px] bg-[#f8f9fa] rotate-0'">
+                             <!-- Centro de la bola -->
+                             <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                               <span class="font-black text-[8px]" :class="unoRules.zeroAndSevenRules ? 'text-black' : 'text-gray-400'">8</span>
+                             </div>
+                             <!-- Brillo esférico -->
+                             <div class="absolute top-1 left-1.5 w-2 h-1.5 bg-white/60 rounded-full rotate-[-45deg] blur-[0.5px]"></div>
+                        </div>
                       </div>
                       <input type="checkbox" v-model="unoRules.zeroAndSevenRules" class="hidden" />
                     </label>
@@ -128,10 +169,24 @@
                     <!-- Regla 4 -->
                     <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)]">
                       <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Robar hasta que salga carta</span>
-                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
-                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
-                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
-                             :class="unoRules.drawUntilPlayable ? 'right-0.5' : 'left-0.5'"></div>
+                      
+                      <!-- Billiard Switch Custom -->
+                      <div class="w-16 h-8 rounded-full border-[3px] border-[#201005] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8),_0_2px_0_rgba(255,255,255,0.1)] relative transition-colors duration-300"
+                           :class="unoRules.drawUntilPlayable ? 'bg-[#109041]' : 'bg-[#151515]'">
+                        <!-- Rail Line -->
+                        <div class="absolute top-1/2 left-2 right-2 h-1 -translate-y-1/2 rounded-full transition-colors duration-300 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]"
+                             :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#333' }"></div>
+                        
+                        <!-- La Bola (Thumb) -->
+                        <div class="absolute top-[-1px] bottom-[-1px] w-8 h-8 rounded-full shadow-[inset_-3px_-3px_5px_rgba(0,0,0,0.6),_inset_2px_2px_4px_rgba(255,255,255,0.4),_0_3px_5px_rgba(0,0,0,0.6)] transition-all duration-300 flex items-center justify-center border border-black/20"
+                             :class="unoRules.drawUntilPlayable ? 'right-[-1px] bg-[#111] rotate-180' : 'left-[-1px] bg-[#f8f9fa] rotate-0'">
+                             <!-- Centro de la bola -->
+                             <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                               <span class="font-black text-[8px]" :class="unoRules.drawUntilPlayable ? 'text-black' : 'text-gray-400'">8</span>
+                             </div>
+                             <!-- Brillo esférico -->
+                             <div class="absolute top-1 left-1.5 w-2 h-1.5 bg-white/60 rounded-full rotate-[-45deg] blur-[0.5px]"></div>
+                        </div>
                       </div>
                       <input type="checkbox" v-model="unoRules.drawUntilPlayable" class="hidden" />
                     </label>
@@ -139,10 +194,24 @@
                     <!-- Regla 5 -->
                     <label class="group flex items-center justify-between bg-black/20 hover:bg-black/30 p-3 rounded-xl cursor-pointer transition-colors border border-black/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.3)] md:col-span-2">
                       <span class="text-[#f2f3f5] font-bold text-xs tracking-wide">Intercepción exacta (Corte)</span>
-                      <div class="w-12 h-6 rounded-full border-2 border-black/40 relative transition-colors duration-200"
-                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#3a2212' }">
-                        <div class="absolute top-0.5 bottom-0.5 w-4 bg-white rounded-full shadow-[0_2px_2px_rgba(0,0,0,0.4)] transition-transform duration-300"
-                             :class="unoRules.interceptExact ? 'right-0.5' : 'left-0.5'"></div>
+                      
+                      <!-- Billiard Switch Custom -->
+                      <div class="w-16 h-8 rounded-full border-[3px] border-[#201005] shadow-[inset_0_5px_10px_rgba(0,0,0,0.8),_0_2px_0_rgba(255,255,255,0.1)] relative transition-colors duration-300"
+                           :class="unoRules.interceptExact ? 'bg-[#109041]' : 'bg-[#151515]'">
+                        <!-- Rail Line -->
+                        <div class="absolute top-1/2 left-2 right-2 h-1 -translate-y-1/2 rounded-full transition-colors duration-300 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]"
+                             :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: '#333' }"></div>
+                        
+                        <!-- La Bola (Thumb) -->
+                        <div class="absolute top-[-1px] bottom-[-1px] w-8 h-8 rounded-full shadow-[inset_-3px_-3px_5px_rgba(0,0,0,0.6),_inset_2px_2px_4px_rgba(255,255,255,0.4),_0_3px_5px_rgba(0,0,0,0.6)] transition-all duration-300 flex items-center justify-center border border-black/20"
+                             :class="unoRules.interceptExact ? 'right-[-1px] bg-[#111] rotate-180' : 'left-[-1px] bg-[#f8f9fa] rotate-0'">
+                             <!-- Centro de la bola -->
+                             <div class="w-4 h-4 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                               <span class="font-black text-[8px]" :class="unoRules.interceptExact ? 'text-black' : 'text-gray-400'">8</span>
+                             </div>
+                             <!-- Brillo esférico -->
+                             <div class="absolute top-1 left-1.5 w-2 h-1.5 bg-white/60 rounded-full rotate-[-45deg] blur-[0.5px]"></div>
+                        </div>
                       </div>
                       <input type="checkbox" v-model="unoRules.interceptExact" class="hidden" />
                     </label>
