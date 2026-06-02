@@ -79,11 +79,11 @@ const unoRules = ref({
 })
 const selectedGame = ref('uno')
 const games = [
-  { id: 'uno', name: 'UNO', color: 'bg-red-500', textSize: 'text-xs', number: 'UNO', disabled: false },
-  { id: 'parchis', name: 'Parchís', color: 'bg-yellow-500', textSize: 'text-lg', number: '1', disabled: true },
-  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', textSize: 'text-lg', number: '8', disabled: true },
-  { id: 'stop', name: 'Stop', color: 'bg-blue-500', textSize: 'text-lg', number: '4', disabled: true },
-  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-purple-600', textSize: 'text-lg', number: '11', disabled: true },
+  { id: 'uno', name: 'UNO', color: 'bg-[#151515]', labelColor: 'text-red-500', disabled: false },
+  { id: 'parchis', name: 'Parchís', color: 'bg-[#151515]', labelColor: 'text-yellow-500', disabled: true },
+  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', labelColor: 'text-gray-400', disabled: true },
+  { id: 'stop', name: 'Stop', color: 'bg-[#151515]', labelColor: 'text-blue-500', disabled: true },
+  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-[#151515]', labelColor: 'text-purple-500', disabled: true },
 ]
 
 const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: unoRules.value })
