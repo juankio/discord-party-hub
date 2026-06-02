@@ -17,8 +17,20 @@ const rooms = new Map();
 io.on("connection", (socket) => {
   console.log("Nuevo usuario conectado:", socket.id);
 
-  socket.on("join_room", (data) => {
-    const { roomId, userId, nickname, avatarId, color } = data;
+  socket.on("join_room", (data: any) => {
+    if (!data || typeof data !== 'object') return;
+    
+    // Validar y sanear inputs
+    const roomId = typeof data.roomId === 'string' ? data.roomId.substring(0, 50) : null;
+    const userId = typeof data.userId === 'string' ? data.userId.substring(0, 50) : null;
+    let nickname = typeof data.nickname === 'string' ? data.nickname.substring(0, 30) : 'Anon';
+    const avatarId = typeof data.avatarId === 'number' ? data.avatarId : 1;
+    const color = typeof data.color === 'string' ? data.color.substring(0, 20) : '#ffffff';
+
+    if (!roomId || !userId) {
+      console.warn(`[SECURITY] Intento de join_room inválido de socket: ${socket.id}`);
+      return;
+    }
     
     socket.join(roomId);
     socket.data = { userId, nickname, avatarId, color, roomId };
