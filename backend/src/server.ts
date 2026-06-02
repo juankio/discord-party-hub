@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
   });
 
   // ---- EVENTOS DE JUEGO (GAME DISPATCHER TEMPORAL) ----
-  socket.on("start_game", (data) => {
+  socket.on("start_game", (data) => { console.log("START GAME RECEIVED", data);
     const roomId = socket.data.roomId;
     const userId = socket.data.userId;
     const room = rooms.get(roomId);
