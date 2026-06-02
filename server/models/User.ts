@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true },
+  googleId: { type: String, unique: true, sparse: true },
+  email: { type: String, unique: true, sparse: true },
+  username: { type: String, required: true },
   avatarId: { type: Number, default: 1 },
   color: { type: String, default: '#f97316' },
+  picture: { type: String }, // Fallback para la foto de Google si prefieren usarla
   stats: {
     unoWins: { type: Number, default: 0 },
     pinturilloWins: { type: Number, default: 0 },

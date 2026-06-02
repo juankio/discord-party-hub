@@ -5,23 +5,25 @@
       class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative"
       :style="{ borderColor: color }"
     >
-      <img :src="`/avatars/avatar-${avatarId}.svg?v=2`" alt="Avatar" class="w-20 h-20 object-contain absolute bottom-0" />
+      <img :src="`/avatars/avatar-${avatarId}.svg?v=3`" alt="Avatar" class="w-20 h-20 object-contain absolute bottom-0" />
     </div>
 
     <!-- Fila 1: Avatares -->
-    <div class="flex gap-2 flex-nowrap w-full px-2 overflow-x-auto snap-x pb-2 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-orange-900/50 hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 [&::-webkit-scrollbar-thumb]:rounded-full">
-      <button 
-        v-for="i in 16" :key="i"
-        @click="$emit('update:avatarId', i)"
-        class="w-10 h-10 flex-shrink-0 snap-center rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
-        :class="[
-          avatarId === i 
-            ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515]' 
-            : 'opacity-50 hover:opacity-100 border border-white/10'
-        ]"
-      >
-        <img :src="`/avatars/avatar-${i}.svg?v=2`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
-      </button>
+    <div class="w-full overflow-x-auto pb-2 custom-scrollbar">
+      <div class="flex gap-2 w-max px-2">
+        <button 
+          v-for="i in 24" :key="i"
+          @click="$emit('update:avatarId', i)"
+          class="w-10 h-10 shrink-0 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
+          :class="[
+            avatarId === i 
+              ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515]' 
+              : 'opacity-50 hover:opacity-100 border border-white/10'
+          ]"
+        >
+          <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
+        </button>
+      </div>
     </div>
 
     <!-- Fila 2: Colores -->
