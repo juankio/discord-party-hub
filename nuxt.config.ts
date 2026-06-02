@@ -9,6 +9,12 @@ export default defineNuxtConfig({
   ui: {
     global: true,
   },
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
   app: {
     head: {
       title: 'Discord Party Hub',

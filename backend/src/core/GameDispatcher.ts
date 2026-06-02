@@ -134,6 +134,7 @@ export function startGameDispatcher(socket: Socket, roomManager: RoomManager) {
         try {
           if (event === 'game_state_update') {
             const targetSocketId = room.users.find((u:any) => u.userId === eventPayload.targetUserId)?.socketId;
+   logger.info("Emitting game_state_update to " + targetSocketId + " for " + eventPayload.targetUserId);
             if (targetSocketId) io.to(targetSocketId).emit(event, eventPayload.state);
           } else {
             io.to(roomId).emit(event, eventPayload);
