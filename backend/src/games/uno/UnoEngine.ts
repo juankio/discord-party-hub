@@ -216,6 +216,7 @@ export class UnoEngine {
       this.state = 'FINISHED';
       this.winner = player.userId;
       this.broadcastMessage(`¡${player.nickname} HA GANADO LA PARTIDA! 🎉`);
+      this.registerWin(player.userId);
       this.broadcastState();
       return;
     }
@@ -358,7 +359,10 @@ export class UnoEngine {
       const winner = this.players.find(p => p.userId !== userId);
       this.state = 'FINISHED';
       this.winner = winner?.userId || null;
-      if (winner) this.broadcastMessage(`¡${winner.nickname} HA GANADO LA PARTIDA! 🎉`);
+      if (winner) {
+        this.broadcastMessage(`¡${winner.nickname} HA GANADO LA PARTIDA! 🎉`);
+        this.registerWin(winner.userId);
+      }
     } else {
       // Remueve al jugador y el juego sigue
       this.removePlayer(userId);
@@ -369,6 +373,19 @@ export class UnoEngine {
   }
 
   // --- UTILS ---
+  private async registerWin(userId: string) {
+    try {
+      // Como mongoose no corre en este contexto, hacemos una llamada HTTP interna al frontend API
+      await fetch('http://localhost:3000/api/leaderboard/win', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, game: 'unoWins' })
+      });
+    } catch (e) {
+      console.error('Error registrando victoria en DB:', e);
+    }
+  }
+
   private applyZeroRule() {
     this.broadcastMessage(`¡REGLA DEL 0! Todas las manos rotan.`);
     const hands = this.players.map(p => p.hand);
