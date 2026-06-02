@@ -199,6 +199,20 @@ const initRoom = () => {
   playerStore.setRoom(roomId)
   connect(roomId)
   
+  // Escuchar inicio de juego
+  useSocket().socket.value?.on('game_started', (data) => {
+    anime({
+      targets: 'body',
+      opacity: 0,
+      duration: 500,
+      easing: 'easeInOutQuad',
+      complete: () => {
+        router.push(`/sala/${roomId}/${data.gameType}`)
+        setTimeout(() => { document.body.style.opacity = '1' }, 100)
+      }
+    })
+  })
+
   // Animaciones de entrada (solo el header, el panel de control usa Transición de Vue)
   setTimeout(() => {
     anime({
