@@ -400,6 +400,9 @@ export class UnoEngine {
         // Información pública de rivales
         rivals: this.players.filter(r => r.userId !== p.userId).map(r => ({
           userId: r.userId,
+          nickname: r.nickname,
+          avatarId: r.avatarId,
+          color: r.color,
           cardCount: r.hand.length,
           hasYelledUno: r.hasYelledUno
         }))

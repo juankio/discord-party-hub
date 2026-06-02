@@ -10,9 +10,9 @@
     <div class="flex-1 flex justify-center items-start pt-12 gap-8 z-10">
       <div v-for="rival in unoStore.rivals" :key="rival.userId" class="flex flex-col items-center relative">
         <div class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative"
-             :style="{ borderColor: rival.color }"
+             :style="{ borderColor: rival.color || '#f97316' }"
              :class="{'neon-glow': unoStore.currentTurnUserId === rival.userId}">
-          <img :src="`/avatars/${rival.avatarId}.webp`" class="w-full h-full object-cover rounded-full" />
+          <img :src="`/avatars/avatar-${rival.avatarId}.svg?v=2`" class="w-full h-full object-cover rounded-full bg-[#151515]" />
           <div class="absolute -bottom-2 -right-2 bg-black text-white text-xs font-bold px-2 py-1 rounded-full border border-gray-700">
             {{ rival.cardCount }}
           </div>
@@ -92,12 +92,12 @@ const { socket } = useSocket()
 
 const getCardDisplay = (card: any) => {
   if (!card) return ''
-  if (card.type === 'number') return card.value
-  if (card.type === 'skip') return '⊘'
-  if (card.type === 'reverse') return '⇄'
-  if (card.type === 'draw2') return '+2'
-  if (card.type === 'wild') return 'W'
-  if (card.type === 'wild_draw4') return '+4'
+  if (['0','1','2','3','4','5','6','7','8','9'].includes(card.value)) return card.value
+  if (card.value === 'skip') return '⊘'
+  if (card.value === 'reverse') return '⇄'
+  if (card.value === 'draw2') return '+2'
+  if (card.value === 'wild') return 'W'
+  if (card.value === 'wild_draw4') return '+4'
   return ''
 }
 
