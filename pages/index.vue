@@ -128,6 +128,19 @@ const avatarId = ref(playerStore.avatarId || 1)
 const nickname = ref(playerStore.nickname || '')
 const selectedColor = ref(playerStore.color || '#f97316') // Orange default
 
+// Hacer que el tema cambie INMEDIATAMENTE en la pantalla principal
+watch(selectedColor, (newColor) => {
+  playerStore.color = newColor
+  if (process.client) {
+    const hexToRgb = (hex: string) => {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '249, 115, 22';
+    }
+    document.documentElement.style.setProperty('--theme-color', newColor)
+    document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(newColor))
+  }
+})
+
 const roomCode = ref('')
 const activeTab = ref('guest')
 const showJoinInput = ref(false)
