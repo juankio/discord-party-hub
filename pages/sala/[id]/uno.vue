@@ -9,19 +9,30 @@
     <!-- Rivals Area (Top) -->
     <div class="flex-1 flex justify-center items-start pt-12 gap-8 z-10">
       <div v-for="rival in unoStore.rivals" :key="rival.userId" class="flex flex-col items-center relative">
-        <div class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative"
+        <div class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10"
              :style="{ borderColor: rival.color || '#f97316' }"
              :class="{'neon-glow': unoStore.currentTurnUserId === rival.userId}">
           <img :src="`/avatars/avatar-${rival.avatarId}.svg?v=2`" class="w-full h-full object-cover rounded-full bg-[#151515]" />
-          <div class="absolute -bottom-2 -right-2 bg-black text-white text-xs font-bold px-2 py-1 rounded-full border border-gray-700">
-            {{ rival.cardCount }}
+          
+          <!-- Mini Cards Hand -->
+          <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 flex justify-center w-max pointer-events-none">
+            <div class="flex -space-x-2">
+              <div v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
+                   class="w-4 h-6 bg-gray-800 border border-gray-500 rounded-[2px] shadow-md transform rotate-[-5deg]">
+                <div class="w-full h-full bg-red-800 rounded-[2px] opacity-80" 
+                     style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"></div>
+              </div>
+              <div v-if="rival.cardCount > 8" class="w-4 h-6 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[8px] font-bold text-white z-10 -ml-1">
+                +
+              </div>
+            </div>
           </div>
         </div>
-        <span class="mt-2 text-sm font-bold text-gray-300">{{ rival.nickname }}</span>
+        <span class="mt-4 text-sm font-bold text-gray-300">{{ rival.nickname }}</span>
         
         <!-- Denounce UNO button -->
         <UButton v-if="rival.cardCount === 1 && !rival.hasYelledUno" 
-                 size="xs" color="red" class="absolute -bottom-8 whitespace-nowrap animate-bounce"
+                 size="xs" color="red" class="absolute -bottom-6 whitespace-nowrap animate-bounce z-20"
                  @click="challengeUno(rival.userId)">
           ¡Denunciar!
         </UButton>
@@ -35,7 +46,7 @@
         <!-- Deck -->
         <div class="absolute left-16 flex flex-col items-center gap-2">
           <div class="w-24 h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer hover:scale-105 transition-transform"
-               @click="drawCard">
+               @click="drawCard($event)">
             <span class="text-3xl font-black text-gray-800 tracking-tighter">UNO</span>
           </div>
           <span class="text-xs text-gray-500 font-bold tracking-widest uppercase">Robar</span>
@@ -52,13 +63,13 @@
 
     <!-- My Hand (Bottom) -->
     <div class="flex-1 flex justify-center items-end pb-8 z-10 relative" ref="handContainer">
-      <div class="flex justify-center items-end -space-x-8">
+      <div class="flex justify-center items-end -space-x-12 sm:-space-x-10">
         <div v-for="(card, index) in unoStore.myHand" :key="card.id" 
              class="card-wrapper"
              :style="{ transform: `rotate(${(index - (unoStore.myHand.length - 1)/2) * 4}deg) translateY(${Math.abs(index - (unoStore.myHand.length - 1)/2) * 3}px)` }">
-          <div class="uno-card hand-card cursor-pointer hover:-translate-y-8 hover:z-50 transition-all duration-300"
+          <div class="uno-card hand-card cursor-pointer"
                :class="`card-${card.color || 'black'}`"
-               @click="playCard(card.id)">
+               @click="playCard(card.id, $event)">
             <div class="inner-oval"><span class="card-value">{{ getCardDisplay(card) }}</span></div>
             <span class="corner-value top-left">{{ getCardDisplay(card) }}</span>
             <span class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
@@ -117,14 +128,46 @@ const getCardDisplay = (card: any) => {
   return ''
 }
 
-const playCard = (id: string) => {
+const playCard = (id: string, event: Event) => {
   if (unoStore.currentTurnUserId !== playerStore.userId) return
-  socket.value?.emit('uno:play_cards', [id])
+  
+  const target = event.currentTarget as HTMLElement
+  target.style.pointerEvents = 'none'
+
+  anime({
+    targets: target,
+    translateY: -300,
+    translateX: anime.random(-50, 50),
+    scale: 0.5,
+    rotate: anime.random(-45, 45),
+    opacity: 0,
+    duration: 400,
+    easing: 'easeInCubic',
+    complete: () => {
+      socket.value?.emit('uno:play_cards', [id])
+    }
+  })
 }
 
-const drawCard = () => {
+const isDrawing = ref(false)
+const drawCard = (event: Event) => {
   if (unoStore.currentTurnUserId !== playerStore.userId) return
-  socket.value?.emit('uno:draw_card')
+  if (isDrawing.value) return
+  isDrawing.value = true
+  
+  const target = event.currentTarget as HTMLElement
+  anime({
+    targets: target,
+    scale: [1, 1.2, 1],
+    translateY: [0, -15, 0],
+    rotate: [0, 5, -5, 0],
+    duration: 400,
+    easing: 'easeOutElastic(1, .5)',
+    complete: () => {
+      socket.value?.emit('uno:draw_card')
+      setTimeout(() => isDrawing.value = false, 300)
+    }
+  })
 }
 
 const declareColor = (color: string) => {
@@ -204,7 +247,21 @@ onUnmounted(() => {
   to { filter: drop-shadow(0 0 15px currentColor); }
 }
 
-.card-wrapper { transform-origin: bottom center; transition: transform 0.3s ease; }
+.card-wrapper { 
+  transform-origin: bottom center; 
+  transition: transform 0.3s ease, z-index 0s; 
+  z-index: 1;
+}
+.card-wrapper:hover {
+  z-index: 50;
+}
+.hand-card {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+.card-wrapper:hover .hand-card {
+  transform: translateY(-40px) scale(1.15) !important;
+  box-shadow: 0 20px 30px rgba(0,0,0,0.6);
+}
 
 .uno-card {
   width: 110px; height: 160px;
@@ -230,12 +287,25 @@ onUnmounted(() => {
 .card-blue .inner-oval { color: #3b82f6; }
 .card-green .inner-oval { color: #22c55e; }
 .card-yellow .inner-oval { color: #eab308; }
-.card-black .inner-oval { color: #1f2937; }
+.card-black .inner-oval { 
+  background: #1a1a1a; 
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 5px rgba(255,255,255,0.2);
+}
 
 .card-value {
-  font-size: 3rem; font-weight: 900;
+  font-size: 2.5rem; font-weight: 900;
   text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
   transform: rotate(25deg);
+  line-height: 1;
+}
+
+.card-black .card-value {
+  background: linear-gradient(135deg, #ef4444, #eab308, #22c55e, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 4px rgba(255,255,255,0.1));
+  text-shadow: none;
 }
 
 .corner-value {
