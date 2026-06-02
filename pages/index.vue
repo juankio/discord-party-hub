@@ -10,10 +10,10 @@
     </div>
 
     <!-- Contenedor Principal y Leaderboard -->
-    <div class="flex flex-col md:flex-row items-start justify-center gap-6 mt-16 w-full max-w-4xl relative z-10 main-container opacity-0 translate-y-5">
+    <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 mt-16 w-full max-w-5xl relative z-10 main-container opacity-0 translate-y-5">
       
       <!-- Tarjeta Principal -->
-      <div class="w-full max-w-[380px] bg-[#151515] rounded-3xl shadow-2xl flex flex-col items-center border border-white/5 overflow-hidden">
+      <div class="w-full max-w-[420px] bg-[#151515] rounded-3xl shadow-2xl flex flex-col items-center border border-white/5 overflow-hidden">
         
         <!-- Tabs -->
         <div class="flex w-full bg-black/50 border-b border-white/5">

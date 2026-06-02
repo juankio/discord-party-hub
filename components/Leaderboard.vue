@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#111] border border-yellow-600/30 rounded-xl p-4 shadow-[0_0_20px_rgba(202,138,4,0.1)] w-full max-w-[380px] lg:max-w-[280px]">
+  <div class="bg-[#111] border border-yellow-600/30 rounded-xl p-5 shadow-[0_0_20px_rgba(202,138,4,0.1)] w-full max-w-[420px] lg:max-w-[320px] mt-0">
     <div class="flex items-center gap-2 border-b border-yellow-600/30 pb-2 mb-3">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.984 3.984 0 01-2.973-1.317 4.01 4.01 0 01-4.054 0A3.984 3.984 0 015 15a3.989 3.989 0 01-2.656-1.02 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1zm-5.824 9.192l-1.298-4.045c.44-.22.89-.44 1.341-.66l1.246 3.889a3.984 3.984 0 00-1.289.816zM15.824 11.192a3.984 3.984 0 00-1.289-.816l1.246-3.889c.45.22.9.44 1.341.66l-1.298 4.045z" clip-rule="evenodd" />
