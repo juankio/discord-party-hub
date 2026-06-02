@@ -45,7 +45,7 @@ const props = defineProps({
   pendingDraws: { type: Number, default: 0 }
 })
 
-const emit = defineEmits(['play-card', 'yell-uno'])
+const emit = defineEmits(['play-card', 'yell-uno', 'hover-card'])
 
 const getCardDisplay = (card: any) => {
   if (!card) return ''
