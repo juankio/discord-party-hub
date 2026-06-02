@@ -12,6 +12,8 @@ const isConnected = ref(false)
 export const useSocket = () => {
   const config = useRuntimeConfig()
   const playerStore = usePlayerStore()
+  const router = useRouter()
+  const route = useRoute()
 
   const connect = (roomId: string) => {
     if (socket.value) return
@@ -41,9 +43,18 @@ export const useSocket = () => {
       useUnoStore().updateState(data)
     })
 
+    socket.value.on('game_action', (data) => {
+      // Usaremos un custom event para que los componentes puedan reaccionar a acciones físicas
+      try {
+        window.dispatchEvent(new CustomEvent('uno:action', { detail: data }))
+      } catch(e) {}
+    })
+
+    socket.value.on('uno:rival_hover', (data) => {
+      useUnoStore().setRivalHover(data.userId, data.index)
+    })
+
     socket.value.on('return_to_lobby', () => {
-      const router = useRouter()
-      const route = useRoute()
       if (route.path !== `/sala/${roomId}`) {
         router.push(`/sala/${roomId}`)
       }

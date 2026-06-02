@@ -183,6 +183,13 @@ export class UnoEngine {
       this.discardPile.push(c);
     }
     
+    // Animar rival tirando carta
+    this.broadcastCallback("game_action", {
+      action: "rival_played",
+      userId: player.userId,
+      cardsCount: cardsToPlay.length
+    });
+
     if (firstCard.color !== 'wild') {
       this.currentColor = firstCard.color;
     }
@@ -238,6 +245,13 @@ export class UnoEngine {
       const cards = this.drawCards(this.pendingDraws);
       player.hand.push(...cards);
       this.broadcastMessage(`${player.nickname} robó ${this.pendingDraws} cartas.`);
+      
+      this.broadcastCallback("game_action", {
+        action: "rival_drew",
+        userId: player.userId,
+        cardsCount: this.pendingDraws
+      });
+
       this.pendingDraws = 0;
       this.advanceTurn(1);
     } else {
@@ -251,10 +265,22 @@ export class UnoEngine {
           drew++;
         } while (drawnCard.color !== 'wild' && drawnCard.color !== this.currentColor && drawnCard.value !== this.discardPile[this.discardPile.length-1].value);
         this.broadcastMessage(`${player.nickname} robó ${drew} cartas buscando una jugable.`);
+        
+        this.broadcastCallback("game_action", {
+          action: "rival_drew",
+          userId: player.userId,
+          cardsCount: drew
+        });
       } else {
         const card = this.drawCards(1)[0];
         player.hand.push(card);
         this.broadcastMessage(`${player.nickname} robó una carta.`);
+        
+        this.broadcastCallback("game_action", {
+          action: "rival_drew",
+          userId: player.userId,
+          cardsCount: 1
+        });
       }
       this.advanceTurn(1);
     }

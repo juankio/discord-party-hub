@@ -30,6 +30,7 @@
       :pending-draws="unoStore.pendingDraws"
       @play-card="playCard"
       @yell-uno="yellUno"
+      @hover-card="onCardHover"
     />
 
     <!-- Color Modal -->
@@ -41,6 +42,29 @@
         <div @click="declareColor('blue')" class="w-32 h-32 bg-blue-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(59,130,246,0.5)]"></div>
         <div @click="declareColor('green')" class="w-32 h-32 bg-green-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(34,197,94,0.5)]"></div>
         <div @click="declareColor('yellow')" class="w-32 h-32 bg-yellow-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(234,179,8,0.5)]"></div>
+      </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div v-if="unoStore.gameState === 'FINISHED'" 
+         class="absolute inset-0 bg-black/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-center">
+      <div class="winner-anim transform scale-50 opacity-0">
+        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 drop-shadow-[0_0_30px_rgba(249,115,22,0.8)] mb-4">
+          ¡VICTORIA!
+        </h2>
+        <p class="text-2xl text-gray-300 font-bold mb-12">
+          {{ unoStore.winner === playerStore.userId ? '¡Has ganado la partida!' : `El ganador es ${unoStore.rivals.find(r => r.userId === unoStore.winner)?.nickname || 'un rival'}.` }}
+        </p>
+        <UButton 
+          v-if="playerStore.userId === playerStore.hostUserId"
+          size="xl" 
+          color="primary" 
+          class="px-12 h-16 text-xl font-bold shadow-[0_0_20px_rgba(88,101,242,0.5)] hover:scale-105 active:scale-95 transition-all"
+          @click="exitGame"
+        >
+          Volver al Lobby
+        </UButton>
+        <p v-else class="text-gray-500 font-medium animate-pulse">Esperando a que el Host vuelva al lobby...</p>
       </div>
     </div>
   </div>
@@ -116,6 +140,11 @@ const challengeUno = (targetId: string) => {
   socket.value?.emit('uno:challenge_uno', targetId)
 }
 
+// Sincronizar el mouse (Hover) con el backend
+const onCardHover = (index: number | null) => {
+  socket.value?.emit('uno:hover_card', index)
+}
+
 const exitGame = () => {
   router.push(`/sala/${roomId}`)
 }
@@ -135,6 +164,10 @@ watch(() => unoStore.topCard, async (newCard, oldCard) => {
 }, { deep: true })
 
 onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('uno:action', handleRivalAnimation as EventListener)
+  }
+  
   socket.value?.on('game_message', (data) => {
     toast.add({
       title: 'UNO',
@@ -146,6 +179,58 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('uno:action', handleRivalAnimation as EventListener)
+  }
   socket.value?.off('game_message')
 })
+
+const handleRivalAnimation = (e: CustomEvent) => {
+  const { action, userId, cardsCount } = e.detail
+  
+  if (userId === playerStore.userId) return // Ignorar si soy yo
+
+  const rivalEl = document.querySelector(`.flex-col:has([style*="${unoStore.rivals.find(r=>r.userId===userId)?.color}"])`) // Fallback cutre para buscar el rival
+  // ... Aunque como no puedo inyectar ref fácilmente en el v-for del hijo, lo haremos con selectores CSS absolutos
+  
+  const topCardEl = document.querySelector('.top-card-placeholder')
+  const deckEl = document.querySelector('.deck-placeholder')
+  
+  if (action === 'rival_played' && topCardEl) {
+    const topRect = topCardEl.getBoundingClientRect()
+    // Animacion genérica que vuela de arriba hacia el centro
+    const clone = document.createElement('div')
+    clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]'
+    clone.style.top = `-50px` // Viene del top
+    clone.style.left = `${window.innerWidth / 2}px`
+    document.body.appendChild(clone)
+    
+    anime({
+      targets: clone,
+      top: topRect.top, left: topRect.left, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
+      duration: 400, easing: 'easeInCubic',
+      complete: () => clone.remove()
+    })
+  }
+  
+  if (action === 'rival_drew' && deckEl) {
+    const deckRect = deckEl.getBoundingClientRect()
+    for (let i = 0; i < cardsCount; i++) {
+      setTimeout(() => {
+        const clone = document.createElement('div')
+        clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]'
+        clone.style.top = `${deckRect.top}px`
+        clone.style.left = `${deckRect.left}px`
+        document.body.appendChild(clone)
+        
+        anime({
+          targets: clone,
+          top: -50, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
+          duration: 400, easing: 'easeOutCubic',
+          complete: () => clone.remove()
+        })
+      }, i * 150)
+    }
+  }
+}
 </script>

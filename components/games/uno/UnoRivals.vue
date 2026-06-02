@@ -10,8 +10,10 @@
         <!-- Mini Cards Hand -->
         <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 flex justify-center w-max pointer-events-none">
           <div class="flex -space-x-2">
+            <!-- Renderizamos las cartas y añadimos la clase de animación 'hover-bump' si coincide con el índice -->
             <div v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
-                 class="w-4 h-6 bg-gray-800 border border-gray-500 rounded-[2px] shadow-md transform rotate-[-5deg]">
+                 class="w-4 h-6 bg-gray-800 border border-gray-500 rounded-[2px] shadow-md transform rotate-[-5deg] transition-transform duration-200"
+                 :class="{'translate-y-[-10px] scale-110 z-20': useUnoStore().rivalHoverIndex[rival.userId] === (n - 1)}">
               <div class="w-full h-full bg-red-800 rounded-[2px] opacity-80" 
                    style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"></div>
             </div>
@@ -35,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+import { useUnoStore } from '~/stores/games/unoStore'
+
 defineProps({
   rivals: { type: Array as () => any[], required: true },
   currentTurnUserId: { type: String, required: true }

@@ -127,6 +127,15 @@ io.on("connection", (socket) => {
     if (room?.gameEngine) room.gameEngine.challengeUno(socket.data.userId, targetId);
   });
 
+  socket.on("uno:hover_card", (index: number | null) => {
+    const roomId = socket.data.roomId;
+    // Hacemos un broadcast rápido y ligero a todos en la sala (excepto al remitente)
+    socket.to(roomId).emit("uno:rival_hover", {
+      userId: socket.data.userId,
+      index
+    });
+  });
+
   // -----------------------------------------------------
 
   socket.on("disconnect", () => {
