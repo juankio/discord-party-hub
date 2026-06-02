@@ -1,0 +1,13 @@
+<template>
+  <div class="min-h-screen flex flex-col items-center justify-center p-4">
+    <h1 class="text-4xl font-black text-white capitalize drop-shadow-md mb-4">stop</h1>
+    <p class="text-gray-400">Cargando motor del juego...</p>
+    <UButton @click="$router.push(`/sala/${roomId}`)" color="gray" variant="soft" class="mt-8">Volver a la mesa</UButton>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const roomId = route.params.id as string
+</script>
