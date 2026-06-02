@@ -28,7 +28,10 @@
         <button 
           @click="saveAndJoin"
           :disabled="tempNickname.trim().length < 2"
-          class="w-full bg-[#f97316] hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(249,115,22,0.3)] mt-2"
+          class="w-full disabled:opacity-50 disabled:cursor-not-allowed text-white px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 mt-2"
+          style="background-color: var(--theme-color); box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);"
+          onmouseover="if(!this.disabled) { this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.5)'; }"
+          onmouseout="if(!this.disabled) { this.style.filter='none'; this.style.boxShadow='0 0 15px rgba(var(--theme-color-rgb), 0.3)'; }"
         >
           Entrar a Jugar
         </button>

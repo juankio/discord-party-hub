@@ -17,9 +17,10 @@
           class="w-10 h-10 shrink-0 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110"
           :class="[
             avatarId === i 
-              ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515] z-10' 
+              ? 'ring-2 ring-offset-2 ring-offset-[#151515] z-10' 
               : 'opacity-50 hover:opacity-100 border border-white/10'
           ]"
+          :style="avatarId === i ? { '--tw-ring-color': 'var(--theme-color)' } : {}"
         >
           <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain" />
         </button>
@@ -43,13 +44,14 @@
 
     <!-- Input de Usuario -->
     <div class="w-full flex flex-col gap-1.5 mt-2">
-      <label class="text-orange-500 text-[10px] font-bold tracking-[0.2em] uppercase ml-3">Nombre de Usuario</label>
+      <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3" style="color: var(--theme-color);">Nombre de Usuario</label>
       <input 
         :value="nickname"
         @input="$emit('update:nickname', ($event.target as HTMLInputElement).value)"
         type="text"
         placeholder="Ej: Impostor"
-        class="w-full bg-black text-white px-5 py-3.5 rounded-2xl outline-none focus:ring-1 focus:ring-orange-500/50 transition-all placeholder:text-gray-700 font-bold text-center tracking-wide"
+        class="w-full bg-black text-white px-5 py-3.5 rounded-2xl outline-none focus:ring-1 transition-all placeholder:text-gray-700 font-bold text-center tracking-wide"
+        style="--tw-ring-color: rgba(var(--theme-color-rgb), 0.5);"
       />
     </div>
   </div>

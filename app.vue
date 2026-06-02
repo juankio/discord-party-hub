@@ -7,7 +7,39 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import { watch, onMounted } from 'vue'
+import { usePlayerStore } from '~/stores/playerStore'
+
+const playerStore = usePlayerStore()
+
+const hexToRgb = (hex: string) => {
+  let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '249, 115, 22';
+}
+
+const updateThemeColor = (color: string) => {
+  if (process.client) {
+    document.documentElement.style.setProperty('--theme-color', color)
+    document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(color))
+  }
+}
+
+onMounted(() => {
+  updateThemeColor(playerStore.color || '#f97316')
+})
+
+watch(() => playerStore.color, (newColor) => {
+  updateThemeColor(newColor || '#f97316')
+})
+</script>
+
 <style>
+:root {
+  --theme-color: #f97316;
+  --theme-color-rgb: 249, 115, 22;
+}
+
 /* Estilos base Pro Max */
 body {
   background-color: #0A0A0A !important; /* Discord dark */

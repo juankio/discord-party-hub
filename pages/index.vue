@@ -19,15 +19,17 @@
         <div class="flex w-full bg-black/50 border-b border-white/5">
           <button 
             @click="activeTab = 'guest'" 
-            class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none"
-            :class="activeTab === 'guest' ? 'text-orange-500 border-b-2 border-orange-500 bg-white/5' : 'text-gray-600 hover:text-gray-300'"
+            class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2"
+            :class="activeTab === 'guest' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
+            :style="activeTab === 'guest' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
           >
             INVITADO
           </button>
           <button 
             @click="activeTab = 'account'" 
-            class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none"
-            :class="activeTab === 'account' ? 'text-orange-500 border-b-2 border-orange-500 bg-white/5' : 'text-gray-600 hover:text-gray-300'"
+            class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2"
+            :class="activeTab === 'account' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
+            :style="activeTab === 'account' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
           >
             CUENTA
           </button>
@@ -62,7 +64,10 @@
                 </button>
                 <button 
                   @click="handleCreateRoom"
-                  class="bg-[#f97316] hover:bg-orange-500 text-white px-7 py-3 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]"
+                  class="text-white px-7 py-3 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
+                  style="background-color: var(--theme-color); box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);"
+                  onmouseover="this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.5)';"
+                  onmouseout="this.style.filter='none'; this.style.boxShadow='0 0 15px rgba(var(--theme-color-rgb), 0.3)';"
                 >
                   Crear Sala
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

@@ -4,7 +4,7 @@
       <div class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors shadow-[0_0_30px_rgba(0,0,0,0.8)] relative" :style="{ borderColor: playerStore.color }">
         <img :src="playerStore.picture ? playerStore.picture : `/avatars/avatar-${playerStore.avatarId}.svg?v=3`" alt="Avatar" class="w-full h-full object-cover" />
       </div>
-      <h2 class="text-white text-2xl font-black">¡Hola, <span class="text-orange-500">{{ playerStore.nickname }}</span>!</h2>
+      <h2 class="text-white text-2xl font-black">¡Hola, <span :style="{ color: 'var(--theme-color)' }">{{ playerStore.nickname }}</span>!</h2>
       <p class="text-yellow-500 font-bold tracking-widest text-sm">🏆 VICTORIAS: {{ playerStore.totalWins || 0 }}</p>
       
       <button @click="logout" class="text-gray-500 hover:text-white text-xs font-bold transition-all mt-4 border border-white/10 px-4 py-2 rounded-full hover:bg-white/5">
