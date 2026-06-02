@@ -66,13 +66,18 @@ export class UnoEngine {
 
   // --- GESTIÓN DE JUGADORES ---
   public addPlayer(userId: string, socketId: string, nickname: string, avatarId: number, color: string) {
-    if (this.state !== 'WAITING') return;
-    if (!this.players.some(p => p.userId === userId)) {
+    const existing = this.players.find(p => p.userId === userId);
+    
+    if (!existing) {
+      // Si es un jugador nuevo y el juego ya empezó, no puede entrar
+      if (this.state !== 'WAITING') return;
       this.players.push({ userId, socketId, nickname, avatarId, color, hand: [], hasYelledUno: false });
     } else {
-      // Actualizar socket
-      const p = this.players.find(p => p.userId === userId);
-      if (p) p.socketId = socketId;
+      // Si ya existía, actualizamos su conexión (Reconexión F5)
+      existing.socketId = socketId;
+      existing.nickname = nickname;
+      existing.avatarId = avatarId;
+      existing.color = color;
     }
   }
 
