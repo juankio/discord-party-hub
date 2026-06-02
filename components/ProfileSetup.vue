@@ -9,19 +9,19 @@
     </div>
 
     <!-- Fila 1: Avatares -->
-    <div class="w-full overflow-x-auto pb-2 custom-scrollbar">
+    <div class="w-full overflow-x-auto py-2 custom-scrollbar">
       <div class="flex gap-2 w-max px-2">
         <button 
           v-for="i in 24" :key="i"
           @click="$emit('update:avatarId', i)"
-          class="w-10 h-10 shrink-0 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
+          class="w-10 h-10 shrink-0 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110"
           :class="[
             avatarId === i 
-              ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515]' 
+              ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515] z-10' 
               : 'opacity-50 hover:opacity-100 border border-white/10'
           ]"
         >
-          <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain mt-2" />
+          <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-8 h-8 object-contain" />
         </button>
       </div>
     </div>
