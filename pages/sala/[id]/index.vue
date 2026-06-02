@@ -79,37 +79,114 @@
               </div>
             </div>
             
-            <!-- Panel de Reglas (Pizarra Verde) -->
+            <!-- Panel de Reglas (Pizarra Verde Premium) -->
             <Transition name="slide-panel">
-              <div v-if="selectedGame === 'uno'" class="w-full max-w-lg mx-auto relative z-10 -mt-4">
-                <div class="bg-[#109041] rounded-b-2xl border-4 border-[#8b5a2b] p-6 pt-10 shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.4)] relative">
+              <div v-if="selectedGame === 'uno'" class="w-full max-w-[550px] mx-auto relative z-10 -mt-4">
+                <div class="bg-gradient-to-b from-[#109041] to-[#0a5c27] rounded-b-[2rem] border-[6px] border-t-0 border-[#5c3a21] p-6 pt-10 shadow-[0_20px_50px_rgba(0,0,0,0.9),inset_0_0_30px_rgba(0,0,0,0.6)] relative overflow-hidden">
                   
-                  <h4 class="text-white/90 font-black text-xs tracking-[0.3em] uppercase mb-6 text-center drop-shadow-md">
-                    Reglas de la Casa
-                  </h4>
+                  <!-- Textura del paño de la pizarra -->
+                  <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay pointer-events-none"></div>
                   
-                  <div class="flex flex-col gap-3">
-                    <!-- Filas con diseño flat y bordes sutiles -->
-                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
-                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Acumular +2 y +4</span>
-                      <UToggle v-model="unoRules.stackDrawCards" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+                  <div class="flex items-center justify-center gap-3 mb-6 relative z-10">
+                    <UIcon name="i-lucide-gavel" class="w-5 h-5 text-amber-300 drop-shadow-md" />
+                    <h4 class="text-amber-100 font-black text-[11px] tracking-[0.4em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      Reglas de la Mesa
+                    </h4>
+                    <UIcon name="i-lucide-gavel" class="w-5 h-5 text-amber-300 drop-shadow-md" />
+                  </div>
+                  
+                  <div class="flex flex-col gap-4 relative z-10">
+                    
+                    <!-- Regla 1 -->
+                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.stackDrawCards = !unoRules.stackDrawCards">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.stackDrawCards ? 'bg-black/80 border-white/10' : ''">
+                           <UIcon name="i-lucide-layers" class="w-5 h-5 transition-colors" :style="unoRules.stackDrawCards ? { color: 'var(--theme-color)' } : { color: '#888' }" />
+                        </div>
+                        <div class="flex flex-col text-left">
+                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.stackDrawCards && 'text-gray-400'">Acumular +2 y +4</span>
+                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Suma cartas de robo en cadena</span>
+                        </div>
+                      </div>
+                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
+                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
+                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                             :class="unoRules.stackDrawCards ? 'right-1' : 'left-1'"></div>
+                      </div>
                     </div>
-                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
-                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Tirar dobles (Mismo número)</span>
-                      <UToggle v-model="unoRules.playMultipleSame" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+
+                    <!-- Regla 2 -->
+                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.playMultipleSame = !unoRules.playMultipleSame">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.playMultipleSame ? 'bg-black/80 border-white/10' : ''">
+                           <UIcon name="i-lucide-copy" class="w-5 h-5 transition-colors" :style="unoRules.playMultipleSame ? { color: 'var(--theme-color)' } : { color: '#888' }" />
+                        </div>
+                        <div class="flex flex-col text-left">
+                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.playMultipleSame && 'text-gray-400'">Tirar dobles</span>
+                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Juega varios números iguales a la vez</span>
+                        </div>
+                      </div>
+                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
+                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
+                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                             :class="unoRules.playMultipleSame ? 'right-1' : 'left-1'"></div>
+                      </div>
                     </div>
-                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
-                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Regla del 0 (Pasa) y 7 (Cambia)</span>
-                      <UToggle v-model="unoRules.zeroAndSevenRules" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+
+                    <!-- Regla 3 -->
+                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.zeroAndSevenRules = !unoRules.zeroAndSevenRules">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.zeroAndSevenRules ? 'bg-black/80 border-white/10' : ''">
+                           <UIcon name="i-lucide-arrow-right-left" class="w-5 h-5 transition-colors" :style="unoRules.zeroAndSevenRules ? { color: 'var(--theme-color)' } : { color: '#888' }" />
+                        </div>
+                        <div class="flex flex-col text-left">
+                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.zeroAndSevenRules && 'text-gray-400'">Reglas del 0 y 7</span>
+                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Rotación de manos y robos de jugador</span>
+                        </div>
+                      </div>
+                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
+                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
+                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                             :class="unoRules.zeroAndSevenRules ? 'right-1' : 'left-1'"></div>
+                      </div>
                     </div>
-                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
-                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Robar hasta que salga carta</span>
-                      <UToggle v-model="unoRules.drawUntilPlayable" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+
+                    <!-- Regla 4 -->
+                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.drawUntilPlayable = !unoRules.drawUntilPlayable">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.drawUntilPlayable ? 'bg-black/80 border-white/10' : ''">
+                           <UIcon name="i-lucide-refresh-cw" class="w-5 h-5 transition-colors" :style="unoRules.drawUntilPlayable ? { color: 'var(--theme-color)' } : { color: '#888' }" />
+                        </div>
+                        <div class="flex flex-col text-left">
+                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.drawUntilPlayable && 'text-gray-400'">Robo castigo</span>
+                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Robar hasta que salga una carta jugable</span>
+                        </div>
+                      </div>
+                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
+                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
+                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                             :class="unoRules.drawUntilPlayable ? 'right-1' : 'left-1'"></div>
+                      </div>
                     </div>
-                    <div class="flex items-center justify-between bg-black/20 p-3 rounded-xl border border-black/30 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
-                      <span class="text-green-50 text-sm font-bold tracking-wide drop-shadow-sm">Intercepción exacta (Corte)</span>
-                      <UToggle v-model="unoRules.interceptExact" color="gray" class="scale-110 shadow-lg" :ui="{ active: 'bg-white', inactive: 'bg-black/50', icon: { active: 'text-[#109041]' } }" />
+
+                    <!-- Regla 5 -->
+                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.interceptExact = !unoRules.interceptExact">
+                      <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.interceptExact ? 'bg-black/80 border-white/10' : ''">
+                           <UIcon name="i-lucide-zap" class="w-5 h-5 transition-colors" :style="unoRules.interceptExact ? { color: 'var(--theme-color)' } : { color: '#888' }" />
+                        </div>
+                        <div class="flex flex-col text-left">
+                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.interceptExact && 'text-gray-400'">Intercepción (Corte)</span>
+                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Roba el turno tirando una carta idéntica</span>
+                        </div>
+                      </div>
+                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
+                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
+                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                             :class="unoRules.interceptExact ? 'right-1' : 'left-1'"></div>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
