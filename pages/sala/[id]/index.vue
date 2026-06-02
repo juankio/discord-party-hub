@@ -69,6 +69,12 @@
 
                   <!-- Sombra en la repisa -->
                   <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/60 rounded-full blur-[2px] -z-10"></div>
+                  
+                  <!-- Etiqueta del nombre (Hover/Select) -->
+                  <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-300"
+                       :class="selectedGame === game.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+                    <span class="text-[10px] font-black tracking-widest text-amber-100 bg-black/80 px-2 py-1 rounded border border-white/10 uppercase">{{ game.name }}</span>
+                  </div>
                 </button>
               </div>
             </div>
@@ -127,65 +133,6 @@
             
             <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
             <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
-          </div>
-                
-                <h3 class="font-black text-lg md:text-xl tracking-wider uppercase text-white drop-shadow-lg z-10">{{ game.name }}</h3>
-                <span v-if="game.disabled" class="absolute bottom-4 text-[10px] font-bold text-gray-500 tracking-widest uppercase">Próximamente</span>
-              </button>
-            </div>
-            
-            <!-- Panel de Reglas Glassmorphism -->
-            <Transition name="slide-panel">
-              <div v-if="selectedGame === 'uno'" class="w-full max-w-lg mt-8 relative z-10">
-                <div class="bg-black/30 backdrop-blur-2xl rounded-3xl border border-white/10 p-6 shadow-2xl relative overflow-hidden">
-                  <!-- Efecto de cristal -->
-                  <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
-                  
-                  <h4 class="text-white font-black text-xs tracking-[0.3em] uppercase mb-6 text-center opacity-80 flex items-center justify-center gap-2">
-                    <UIcon name="i-lucide-settings-2" class="w-4 h-4" />
-                    Reglas de la Casa
-                  </h4>
-                  
-                  <div class="flex flex-col gap-3">
-                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
-                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Acumular +2 y +4</span>
-                      <UToggle v-model="unoRules.stackDrawCards" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-                    </div>
-                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
-                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Tirar dobles (Mismo número)</span>
-                      <UToggle v-model="unoRules.playMultipleSame" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-                    </div>
-                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
-                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
-                      <UToggle v-model="unoRules.zeroAndSevenRules" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-                    </div>
-                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
-                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Robar hasta que salga carta</span>
-                      <UToggle v-model="unoRules.drawUntilPlayable" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-                    </div>
-                    <div class="flex items-center justify-between group bg-white/5 p-4 rounded-2xl transition-colors hover:bg-white/10 border border-transparent hover:border-white/5">
-                      <span class="text-gray-400 group-hover:text-white transition-colors text-sm font-bold tracking-wide">Intercepción exacta (Corte)</span>
-                      <UToggle v-model="unoRules.interceptExact" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Transition>
-            
-            <button 
-              class="mt-12 px-16 h-16 rounded-full text-xl font-black uppercase tracking-widest text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
-              :disabled="players.length < 2 || selectedGame !== 'uno'"
-              @click="startGame"
-              style="background-color: var(--theme-color); box-shadow: 0 0 20px rgba(var(--theme-color-rgb), 0.4);"
-              onmouseover="if(!this.disabled) { this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 30px rgba(var(--theme-color-rgb), 0.6)'; }"
-              onmouseout="if(!this.disabled) { this.style.filter='none'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.4)'; }"
-            >
-              <UIcon name="i-lucide-play" class="w-6 h-6 group-hover:scale-110 transition-transform" />
-              Empezar Partida
-            </button>
-            
-            <p v-if="players.length < 2" class="text-xs text-gray-500 mt-4 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
-            <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-4 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
           </div>
         </Transition>
       </div>
