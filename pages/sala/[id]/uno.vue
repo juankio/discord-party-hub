@@ -45,7 +45,7 @@
         
         <!-- Deck -->
         <div class="absolute left-16 flex flex-col items-center gap-2">
-          <div class="w-24 h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer hover:scale-105 transition-transform"
+          <div class="deck-placeholder w-24 h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer hover:scale-105 transition-transform"
                @click="drawCard($event)">
             <span class="text-3xl font-black text-gray-800 tracking-tighter">UNO</span>
           </div>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- Top Card -->
-        <div v-if="unoStore.topCard" class="uno-card top-card-anim" :class="`card-${unoStore.topCard.color || 'black'}`">
+        <div v-if="unoStore.topCard" class="uno-card top-card-anim top-card-placeholder" :class="`card-${unoStore.topCard.color || 'black'}`">
            <div class="inner-oval"><span class="card-value">{{ getCardDisplay(unoStore.topCard) }}</span></div>
            <span class="corner-value top-left">{{ getCardDisplay(unoStore.topCard) }}</span>
            <span class="corner-value bottom-right">{{ getCardDisplay(unoStore.topCard) }}</span>
@@ -134,16 +134,34 @@ const playCard = (id: string, event: Event) => {
   const target = event.currentTarget as HTMLElement
   target.style.pointerEvents = 'none'
 
+  // Get absolute positions for realistic flying
+  const rect = target.getBoundingClientRect()
+  const topCardEl = document.querySelector('.top-card-placeholder')
+  const topRect = topCardEl ? topCardEl.getBoundingClientRect() : { top: window.innerHeight/2 - 80, left: window.innerWidth/2 - 55 }
+
+  // Create flying clone
+  const clone = target.cloneNode(true) as HTMLElement
+  document.body.appendChild(clone)
+  
+  clone.style.position = 'fixed'
+  clone.style.top = `${rect.top}px`
+  clone.style.left = `${rect.left}px`
+  clone.style.margin = '0'
+  clone.style.zIndex = '9999'
+  clone.style.transform = 'none' // Reset wrapper rotation
+  
+  target.style.opacity = '0' // Hide original immediately
+
   anime({
-    targets: target,
-    translateY: -300,
-    translateX: anime.random(-50, 50),
-    scale: 0.5,
-    rotate: anime.random(-45, 45),
-    opacity: 0,
-    duration: 400,
-    easing: 'easeInCubic',
+    targets: clone,
+    top: topRect.top,
+    left: topRect.left,
+    rotate: anime.random(-25, 25),
+    scale: 1, // Final size
+    duration: 350,
+    easing: 'easeOutCubic',
     complete: () => {
+      clone.remove()
       socket.value?.emit('uno:play_cards', [id])
     }
   })
@@ -189,13 +207,23 @@ const exitGame = () => {
 watch(() => unoStore.myHand.length, async (newLen, oldLen) => {
   if (newLen > oldLen) {
     await nextTick()
+    
+    // Calcular posición aproximada del mazo vs la mano (La mano está abajo, mazo al centro)
+    const deckEl = document.querySelector('.deck-placeholder')
+    const deckRect = deckEl ? deckEl.getBoundingClientRect() : { top: window.innerHeight/2, left: window.innerWidth/2 }
+    
+    // Asumimos la posición destino (las cartas nuevas) vs el mazo (origen)
+    // Para simplificar y mantenerlo ultra fluido, usamos offsets relativos a la pantalla
+    const yOffset = - (window.innerHeight - deckRect.top) + 150
+    const xOffset = deckRect.left - (window.innerWidth / 2)
+    
     anime({
       targets: '.card-wrapper:nth-last-child(-n+' + (newLen - oldLen) + ') .hand-card',
-      translateY: [-300, 0], 
-      translateX: [-100, 0],
+      translateY: [yOffset, 0], 
+      translateX: [xOffset, 0],
       scale: [0.2, 1],
       opacity: [0, 1],
-      duration: 600, 
+      duration: 500, 
       easing: 'easeOutElastic(1, .8)'
     })
   }
@@ -249,14 +277,15 @@ onUnmounted(() => {
 
 .card-wrapper { 
   transform-origin: bottom center; 
-  transition: transform 0.3s ease, z-index 0s; 
+  transition: transform 0.3s ease, margin 0.2s ease, z-index 0s; 
   z-index: 1;
 }
 .card-wrapper:hover {
   z-index: 50;
+  margin: 0 10px; /* Empuja a las cartas vecinas para verla mejor */
 }
 .hand-card {
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
 }
 .card-wrapper:hover .hand-card {
   transform: translateY(-40px) scale(1.15) !important;
@@ -268,12 +297,13 @@ onUnmounted(() => {
   border-radius: 10px; border: 5px solid white;
   position: relative; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5); user-select: none;
+  background-color: white; /* Fallback */
 }
 .card-red { background-color: #ef4444; }
 .card-blue { background-color: #3b82f6; }
 .card-green { background-color: #22c55e; }
 .card-yellow { background-color: #eab308; }
-.card-black { background-color: #1f2937; }
+.card-black { background-color: #1f2937; border-color: #111; }
 
 .inner-oval {
   width: 85%; height: 85%; background: white;
@@ -287,25 +317,32 @@ onUnmounted(() => {
 .card-blue .inner-oval { color: #3b82f6; }
 .card-green .inner-oval { color: #22c55e; }
 .card-yellow .inner-oval { color: #eab308; }
+
 .card-black .inner-oval { 
-  background: #1a1a1a; 
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 5px rgba(255,255,255,0.2);
+  background-color: #1a1a1a !important; 
+  border: 4px solid transparent;
+  background-clip: padding-box;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+.card-black .inner-oval::before {
+  content: ''; position: absolute; inset: -4px; border-radius: inherit;
+  background: linear-gradient(135deg, #ef4444, #eab308, #22c55e, #3b82f6);
+  z-index: -1;
 }
 
 .card-value {
-  font-size: 2.5rem; font-weight: 900;
+  font-size: 3rem; font-weight: 900;
   text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
   transform: rotate(25deg);
   line-height: 1;
 }
 
 .card-black .card-value {
-  background: linear-gradient(135deg, #ef4444, #eab308, #22c55e, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 2.2rem;
-  filter: drop-shadow(0 2px 4px rgba(255,255,255,0.1));
-  text-shadow: none;
+  color: white !important;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
+  background: none !important;
+  -webkit-text-fill-color: white !important;
 }
 
 .corner-value {
