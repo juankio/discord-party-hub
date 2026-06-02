@@ -114,6 +114,16 @@ io.on("connection", (socket) => {
     if (room?.gameEngine) room.gameEngine.declareColor(socket.data.userId, color as any);
   });
 
+  socket.on("uno:yell_uno", () => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.yellUno(socket.data.userId);
+  });
+
+  socket.on("uno:challenge_uno", (targetId: string) => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.challengeUno(socket.data.userId, targetId);
+  });
+
   // -----------------------------------------------------
 
   socket.on("disconnect", () => {

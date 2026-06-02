@@ -18,6 +18,13 @@
           </div>
         </div>
         <span class="mt-2 text-sm font-bold text-gray-300">{{ rival.nickname }}</span>
+        
+        <!-- Denounce UNO button -->
+        <UButton v-if="rival.cardCount === 1 && !rival.hasYelledUno" 
+                 size="xs" color="red" class="absolute -bottom-8 whitespace-nowrap animate-bounce"
+                 @click="challengeUno(rival.userId)">
+          ¡Denunciar!
+        </UButton>
       </div>
     </div>
 
@@ -58,6 +65,14 @@
           </div>
         </div>
       </div>
+
+      <!-- Yell UNO Button -->
+      <div class="absolute right-12 bottom-12" v-if="unoStore.myHand.length <= 2">
+        <button class="w-24 h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform"
+                @click="yellUno">
+          UNO!
+        </button>
+      </div>
     </div>
 
     <!-- Color Modal -->
@@ -75,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useUnoStore } from '~/stores/games/unoStore'
@@ -89,6 +104,7 @@ const roomId = route.params.id as string
 const playerStore = usePlayerStore()
 const unoStore = useUnoStore()
 const { socket } = useSocket()
+const toast = useToast()
 
 const getCardDisplay = (card: any) => {
   if (!card) return ''
@@ -115,6 +131,14 @@ const declareColor = (color: string) => {
   socket.value?.emit('uno:declare_color', color)
 }
 
+const yellUno = () => {
+  socket.value?.emit('uno:yell_uno')
+}
+
+const challengeUno = (targetId: string) => {
+  socket.value?.emit('uno:challenge_uno', targetId)
+}
+
 const exitGame = () => {
   router.push(`/sala/${roomId}`)
 }
@@ -124,11 +148,29 @@ watch(() => unoStore.myHand.length, async (newLen, oldLen) => {
     await nextTick()
     anime({
       targets: '.card-wrapper:nth-last-child(-n+' + (newLen - oldLen) + ') .hand-card',
-      translateY: [150, 0], opacity: [0, 1],
-      duration: 600, easing: 'easeOutElastic(1, .8)'
+      translateY: [-300, 0], 
+      translateX: [-100, 0],
+      scale: [0.2, 1],
+      opacity: [0, 1],
+      duration: 600, 
+      easing: 'easeOutElastic(1, .8)'
     })
   }
 })
+
+watch(() => unoStore.topCard, async (newCard, oldCard) => {
+  if (newCard && newCard.id !== oldCard?.id) {
+    await nextTick()
+    anime({
+      targets: '.top-card-anim',
+      scale: [1.5, 1],
+      opacity: [0, 1],
+      rotate: () => anime.random(-15, 15),
+      duration: 400,
+      easing: 'easeOutBounce'
+    })
+  }
+}, { deep: true })
 
 onMounted(() => {
   anime({
@@ -136,6 +178,19 @@ onMounted(() => {
     translateY: [200, 0], opacity: [0, 1],
     delay: anime.stagger(80), easing: 'easeOutElastic(1, .8)'
   })
+
+  socket.value?.on('game_message', (data) => {
+    toast.add({
+      title: 'UNO',
+      description: data.message,
+      color: 'primary',
+      icon: 'i-lucide-info'
+    })
+  })
+})
+
+onUnmounted(() => {
+  socket.value?.off('game_message')
 })
 </script>
 
