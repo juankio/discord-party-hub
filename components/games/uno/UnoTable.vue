@@ -25,7 +25,9 @@
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
-      <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder" :class="`card-${topCard.color || 'black'}`">
+      <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
+           :class="[`card-${topCard.color === 'wild' ? 'black' : topCard.color}`]"
+           :style="currentColor && topCard.color === 'wild' ? `box-shadow: 0 0 30px var(--color-${currentColor}); border-color: var(--color-${currentColor})` : ''">
          <div class="inner-oval"><span class="card-value">{{ getCardDisplay(topCard) }}</span></div>
          <span class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
          <span class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>
@@ -35,11 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import anime from 'animejs'
 
 const props = defineProps({
   topCard: { type: Object, default: null },
+  currentColor: { type: String, default: '' },
   pendingDraws: { type: Number, default: 0 },
   isMyTurn: { type: Boolean, default: false }
 })
@@ -86,6 +89,10 @@ const drawCard = (event: Event) => {
   position: relative; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5); user-select: none;
   background-color: white;
+  --color-red: #ef4444;
+  --color-blue: #3b82f6;
+  --color-green: #22c55e;
+  --color-yellow: #eab308;
 }
 @media (min-width: 768px) {
   .uno-card { width: 110px; height: 160px; border-width: 5px; border-radius: 10px; }

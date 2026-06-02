@@ -8,7 +8,7 @@
            }">
         
         <div class="uno-card hand-card cursor-pointer"
-             :class="[`card-${card.color || 'black'}`, !isPlayable(card) ? 'unplayable' : '']"
+             :class="[`card-${card.color === 'wild' ? 'black' : card.color}`, !isPlayable(card) ? 'unplayable' : '']"
              @click="playCard(card, $event)"
              @mouseenter="$emit('hover-card', index)"
              @mouseleave="$emit('hover-card', null)">

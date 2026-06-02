@@ -2,8 +2,9 @@
   <div class="relative min-h-screen flex flex-col bg-transparent overflow-hidden text-white font-sans">
     
     <!-- Top Bar -->
-    <div class="absolute top-4 left-4 z-50">
-      <UButton @click="exitGame" color="gray" variant="ghost" icon="i-heroicons-arrow-left">Salir</UButton>
+    <div class="absolute top-4 left-4 z-50 flex gap-4">
+      <UButton @click="surrender" color="red" variant="soft" icon="i-heroicons-flag">Rendirse</UButton>
+      <UButton @click="exitGame" color="gray" variant="ghost" icon="i-heroicons-arrow-left">Salir al Lobby</UButton>
     </div>
 
     <!-- Rivals Area -->
@@ -143,6 +144,10 @@ const challengeUno = (targetId: string) => {
 // Sincronizar el mouse (Hover) con el backend
 const onCardHover = (index: number | null) => {
   socket.value?.emit('uno:hover_card', index)
+}
+
+const surrender = () => {
+  socket.value?.emit('uno:surrender')
 }
 
 const exitGame = () => {

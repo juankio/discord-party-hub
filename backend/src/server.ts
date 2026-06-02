@@ -57,6 +57,9 @@ io.on("connection", (socket) => {
     // Si ya hay un juego corriendo, meterlo y enviarle estado
     if (room.gameEngine && room.gameType === 'uno') {
       room.gameEngine.addPlayer(userId, socket.id, finalNickname, avatarId, color);
+      
+      // Auto-reconectar navegadores que llegan tarde
+      io.to(socket.id).emit("game_started", { gameType: 'uno' });
       room.gameEngine.broadcastState();
     } else {
       // Si el frontend se reconecta (ej. por F5) pero no hay juego corriendo en el server
@@ -134,6 +137,11 @@ io.on("connection", (socket) => {
       userId: socket.data.userId,
       index
     });
+  });
+
+  socket.on("uno:surrender", () => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.surrender(socket.data.userId);
   });
 
   // -----------------------------------------------------

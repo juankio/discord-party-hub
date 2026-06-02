@@ -197,7 +197,13 @@ export class UnoEngine {
     // EVALUAR EFECTOS
     let skips = 0;
     for (const c of cardsToPlay) {
-      if (c.value === 'reverse') this.playDirection *= -1;
+      if (c.value === 'reverse') {
+        if (this.players.length === 2) {
+          skips++; // En 2 jugadores, la reversa funciona como un salto
+        } else {
+          this.playDirection *= -1;
+        }
+      }
       if (c.value === 'skip') skips++;
       if (c.value === 'draw2') this.pendingDraws += 2;
       if (c.value === 'wild_draw4') this.pendingDraws += 4;
@@ -337,6 +343,29 @@ export class UnoEngine {
       this.broadcastMessage(`${challenger?.nickname} denunció a ${target.nickname}. ¡Roba 2 cartas!`);
       this.broadcastState();
     }
+  }
+
+  public surrender(userId: string) {
+    if (this.state !== 'PLAYING' && this.state !== 'CHOOSING_COLOR' && this.state !== 'CHOOSING_PLAYER') return;
+    
+    const player = this.players.find(p => p.userId === userId);
+    if (!player) return;
+
+    this.broadcastMessage(`${player.nickname} se ha rendido.`);
+    
+    // Si quedan 2 jugadores, el otro gana.
+    if (this.players.length === 2) {
+      const winner = this.players.find(p => p.userId !== userId);
+      this.state = 'FINISHED';
+      this.winner = winner?.userId || null;
+      if (winner) this.broadcastMessage(`¡${winner.nickname} HA GANADO LA PARTIDA! 🎉`);
+    } else {
+      // Remueve al jugador y el juego sigue
+      this.removePlayer(userId);
+      return; // removePlayer ya hace el broadcast
+    }
+
+    this.broadcastState();
   }
 
   // --- UTILS ---
