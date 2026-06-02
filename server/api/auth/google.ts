@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Buscar o crear usuario
-    let user = await User.findOne({ googleId: body.googleId })
+    let user = await User.findOne({ googleId: body.googleId } as any)
     
     if (!user) {
       user = await User.create({
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
         picture: body.picture,
         avatarId: Math.floor(Math.random() * 24) + 1, // Avatar random inicial
         color: '#f97316'
-      })
+      } as any)
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', { expiresIn: '30d' })

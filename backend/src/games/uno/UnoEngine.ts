@@ -114,10 +114,13 @@ export class UnoEngine {
 
     // Primera carta
     let firstCard = this.drawCards(1)[0];
+    if (!firstCard) return;
     while (firstCard.color === 'wild' || firstCard.value === 'reverse' || firstCard.value === 'skip' || firstCard.value === 'draw2') {
       this.deck.push(firstCard);
       this.shuffleDeck();
-      firstCard = this.drawCards(1)[0];
+      const newCard = this.drawCards(1)[0];
+      if (!newCard) break;
+      firstCard = newCard;
     }
     this.discardPile.push(firstCard);
     this.currentColor = firstCard.color;
@@ -138,11 +141,15 @@ export class UnoEngine {
     if (cardsToPlay.length === 0 || cardsToPlay.length !== cardIds.length) return; // No tiene las cartas
 
     const topCard = this.discardPile[this.discardPile.length - 1];
-    const isMyTurn = this.players[this.currentTurnIndex].userId === userId;
+    if (!topCard) return;
+    const isMyTurn = this.players[this.currentTurnIndex]?.userId === userId;
+
+    const firstCard = cardsToPlay[0];
+    if (!firstCard) return;
 
     // INTERCEPCIÓN (Regla de Corte)
     if (!isMyTurn && this.rules.interceptExact && cardsToPlay.length === 1) {
-      if (cardsToPlay[0].color !== 'wild' && cardsToPlay[0].color === topCard.color && cardsToPlay[0].value === topCard.value) {
+      if (firstCard.color !== 'wild' && firstCard.color === topCard.color && firstCard.value === topCard.value) {
         // ¡Corte válido!
         this.currentTurnIndex = this.players.findIndex(p => p.userId === userId);
         this.broadcastMessage(`${player.nickname} interrumpió el turno con un corte exacto!`);
@@ -156,11 +163,9 @@ export class UnoEngine {
     // REGLA DE MÚLTIPLES CARTAS
     if (cardsToPlay.length > 1) {
       if (!this.rules.playMultipleSame) return;
-      const firstVal = cardsToPlay[0].value;
+      const firstVal = firstCard.value;
       if (!cardsToPlay.every(c => c.value === firstVal)) return; // Deben ser del mismo valor
     }
-
-    const firstCard = cardsToPlay[0];
 
     // VALIDAR JUGADA SOBRE LA MESA
     if (this.pendingDraws > 0) {
@@ -243,9 +248,10 @@ export class UnoEngine {
 
   public drawFromDeck(userId: string) {
     if (this.state !== 'PLAYING') return;
-    if (this.players[this.currentTurnIndex].userId !== userId) return;
+    const currentPlayer = this.players[this.currentTurnIndex];
+    if (!currentPlayer || currentPlayer.userId !== userId) return;
 
-    const player = this.players[this.currentTurnIndex];
+    const player = currentPlayer;
 
     if (this.pendingDraws > 0) {
       // Comerse las acumuladas
@@ -265,12 +271,14 @@ export class UnoEngine {
       // Robar normal
       if (this.rules.drawUntilPlayable) {
         let drew = 0;
-        let drawnCard: Card;
+        let drawnCard: Card | undefined;
         do {
-          drawnCard = this.drawCards(1)[0];
-          player.hand.push(drawnCard);
+          const drewCards = this.drawCards(1);
+          if (drewCards.length === 0) break;
+          drawnCard = drewCards[0];
+          if (drawnCard !== undefined) player.hand.push(drawnCard);
           drew++;
-        } while (drawnCard.color !== 'wild' && drawnCard.color !== this.currentColor && drawnCard.value !== this.discardPile[this.discardPile.length-1].value);
+        } while (drawnCard !== undefined && drawnCard.color !== 'wild' && drawnCard.color !== this.currentColor && drawnCard.value !== this.discardPile[this.discardPile.length-1]?.value);
         this.broadcastMessage(`${player.nickname} robó ${drew} cartas buscando una jugable.`);
         
         this.broadcastCallback("game_action", {
@@ -279,15 +287,18 @@ export class UnoEngine {
           cardsCount: drew
         });
       } else {
-        const card = this.drawCards(1)[0];
-        player.hand.push(card);
-        this.broadcastMessage(`${player.nickname} robó una carta.`);
-        
-        this.broadcastCallback("game_action", {
-          action: "rival_drew",
-          userId: player.userId,
-          cardsCount: 1
-        });
+        const drewCards = this.drawCards(1);
+        const cardToPush = drewCards[0];
+        if (cardToPush !== undefined) {
+          player.hand.push(cardToPush);
+          this.broadcastMessage(`${player.nickname} robó una carta.`);
+          
+          this.broadcastCallback("game_action", {
+            action: "rival_drew",
+            userId: player.userId,
+            cardsCount: 1
+          });
+        }
       }
       this.advanceTurn(1);
     }
@@ -400,7 +411,12 @@ export class UnoEngine {
       hands.push(firstHand);
     }
 
-    this.players.forEach((p, i) => p.hand = hands[i]);
+    this.players.forEach((p, i) => {
+      const newHand = hands[i];
+      if (newHand !== undefined) {
+        p.hand = newHand;
+      }
+    });
   }
 
   private advanceTurn(steps: number) {
@@ -420,7 +436,10 @@ export class UnoEngine {
         this.discardPile = topCard ? [topCard] : [];
         if (this.deck.length === 0) break; // Si no hay cartas, rompemos
       }
-      drawn.push(this.deck.pop()!);
+      const card = this.deck.pop();
+      if (card !== undefined) {
+        drawn.push(card);
+      }
     }
     return drawn;
   }
@@ -452,7 +471,12 @@ export class UnoEngine {
   private shuffleDeck() {
     for (let i = this.deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+      const temp = this.deck[i];
+      const target = this.deck[j];
+      if (temp !== undefined && target !== undefined) {
+        this.deck[i] = target;
+        this.deck[j] = temp;
+      }
     }
   }
 

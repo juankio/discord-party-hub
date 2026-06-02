@@ -35,39 +35,18 @@
     />
 
     <!-- Color Modal -->
-    <div v-if="unoStore.gameState === 'CHOOSING_COLOR' && unoStore.actionRequiredFrom === playerStore.userId" 
-         class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-      <h2 class="text-4xl font-black mb-8 drop-shadow-lg text-white">Elige un color</h2>
-      <div class="grid grid-cols-2 gap-6">
-        <div @click="declareColor('red')" class="w-32 h-32 bg-red-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(239,68,68,0.5)]"></div>
-        <div @click="declareColor('blue')" class="w-32 h-32 bg-blue-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(59,130,246,0.5)]"></div>
-        <div @click="declareColor('green')" class="w-32 h-32 bg-green-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(34,197,94,0.5)]"></div>
-        <div @click="declareColor('yellow')" class="w-32 h-32 bg-yellow-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(234,179,8,0.5)]"></div>
-      </div>
-    </div>
+    <UnoColorModal 
+      :is-open="unoStore.gameState === 'CHOOSING_COLOR' && unoStore.actionRequiredFrom === playerStore.userId"
+      @select="declareColor"
+    />
 
     <!-- Victory Modal -->
-    <div v-if="unoStore.gameState === 'FINISHED'" 
-         class="absolute inset-0 bg-black/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-center">
-      <div class="winner-anim transform scale-50 opacity-0">
-        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 drop-shadow-[0_0_30px_rgba(249,115,22,0.8)] mb-4">
-          ¡VICTORIA!
-        </h2>
-        <p class="text-2xl text-gray-300 font-bold mb-12">
-          {{ unoStore.winner === playerStore.userId ? '¡Has ganado la partida!' : `El ganador es ${unoStore.rivals.find(r => r.userId === unoStore.winner)?.nickname || 'un rival'}.` }}
-        </p>
-        <UButton 
-          v-if="playerStore.userId === playerStore.hostUserId"
-          size="xl" 
-          color="primary" 
-          class="px-12 h-16 text-xl font-bold shadow-[0_0_20px_rgba(88,101,242,0.5)] hover:scale-105 active:scale-95 transition-all"
-          @click="exitGame"
-        >
-          Volver al Lobby
-        </UButton>
-        <p v-else class="text-gray-500 font-medium animate-pulse">Esperando a que el Host vuelva al lobby...</p>
-      </div>
-    </div>
+    <UnoVictoryModal
+      :is-open="unoStore.gameState === 'FINISHED'"
+      :winner-message="unoStore.winner === playerStore.userId ? '¡Has ganado la partida!' : `El ganador es ${unoStore.rivals.find((r: any) => r.userId === unoStore.winner)?.nickname || 'un rival'}.`"
+      :is-host="playerStore.userId === playerStore.hostUserId"
+      @lobby="exitGame"
+    />
   </div>
 </template>
 

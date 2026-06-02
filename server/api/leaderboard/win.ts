@@ -15,10 +15,10 @@ export default defineEventHandler(async (event) => {
     const updateQuery: any = { $inc: { 'stats.totalWins': 1 } }
     updateQuery.$inc[`stats.${body.game}`] = 1
 
-    const user = await User.findByIdAndUpdate(body.userId, updateQuery, { new: true })
+    const user = await User.findByIdAndUpdate(body.userId, updateQuery, { new: true } as any)
     if (!user) return { error: 'User not found' }
 
-    return { success: true, stats: user.stats }
+    return { success: true, stats: (user as any).stats }
   } catch (e: any) {
     return { error: e.message }
   }

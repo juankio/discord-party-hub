@@ -14,7 +14,8 @@ export const usePlayerStore = defineStore('player', {
     playersInRoom: [] as any[],
     isLoggedIn: false,
     token: '',
-    totalWins: 0
+    totalWins: 0,
+    picture: ''
   }),
   actions: {
     setPlayerSetup(nickname: string, avatarId: number, color: string = '#f97316') {
@@ -40,12 +41,14 @@ export const usePlayerStore = defineStore('player', {
         if (data) {
           try {
             const parsed = JSON.parse(data)
+            this.userId = parsed.userId || generateId()
             this.nickname = parsed.nickname || ''
             this.avatarId = parsed.avatarId || 1
             this.color = parsed.color || '#f97316'
             this.isLoggedIn = parsed.isLoggedIn || false
             this.token = parsed.token || ''
             this.totalWins = parsed.totalWins || 0
+            this.picture = parsed.picture || ''
             
             // Si el usuario viene de la versión anterior y no tiene userId, se lo creamos y guardamos
             if (!parsed.userId) {
@@ -57,7 +60,8 @@ export const usePlayerStore = defineStore('player', {
                 color: this.color,
                 isLoggedIn: this.isLoggedIn,
                 token: this.token,
-                totalWins: this.totalWins
+                totalWins: this.totalWins,
+                picture: this.picture
               }))
             } else {
               this.userId = parsed.userId
@@ -78,23 +82,27 @@ export const usePlayerStore = defineStore('player', {
       this.hostUserId = hostId
     },
     setAccountAuth(token: string, user: any) {
-      this.token = token
       this.isLoggedIn = true
+      this.token = token
       this.nickname = user.username
       this.avatarId = user.avatarId || 1
       this.color = user.color || '#f97316'
       this.totalWins = user.stats?.totalWins || 0
-      this.userId = user._id // Use mongo ID as userId
+      this.picture = user.picture || ''
+      if (!this.userId) this.userId = generateId()
       
-      localStorage.setItem('party-hub-user', JSON.stringify({ 
-        userId: this.userId,
-        nickname: this.nickname, 
-        avatarId: this.avatarId, 
-        color: this.color,
-        isLoggedIn: true,
-        token,
-        totalWins: this.totalWins
-      }))
+      try {
+        localStorage.setItem('party-hub-user', JSON.stringify({ 
+          userId: this.userId,
+          nickname: this.nickname, 
+          avatarId: this.avatarId, 
+          color: this.color,
+          isLoggedIn: this.isLoggedIn,
+          token: this.token,
+          totalWins: this.totalWins,
+          picture: this.picture
+        }))
+      } catch (e) {}
     },
     logout() {
       this.token = ''

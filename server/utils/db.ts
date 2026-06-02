@@ -17,7 +17,7 @@ export const connectDB = async () => {
   // capturamos el error para que la UI no se caiga mientras lo configuran
   try {
     const db = await mongoose.connect(uri)
-    isConnected = db.connection.readyState === 1
+    isConnected = db?.connection?.readyState === 1
     console.log('✅ MongoDB conectado')
   } catch (error) {
     console.error('❌ Error conectando a MongoDB. Revisa tus credenciales en el .env:', error)

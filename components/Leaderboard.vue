@@ -30,5 +30,5 @@
 </template>
 
 <script setup lang="ts">
-const { data: leaderboard, pending, error } = useFetch('/api/leaderboard')
+const { data: leaderboard, pending, error } = useFetch<any[]>('/api/leaderboard')
 </script>

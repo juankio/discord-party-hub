@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { UnoEngine, UnoRules } from "./games/uno/UnoEngine.js";
+import { UnoEngine, type UnoRules } from "./games/uno/UnoEngine.js";
 
 const PORT = 3001;
 
