@@ -9,11 +9,11 @@
     </div>
 
     <!-- Fila 1: Avatares -->
-    <div class="flex gap-2 flex-wrap justify-center w-full px-2">
+    <div class="flex gap-2 flex-nowrap w-full px-2 overflow-x-auto snap-x pb-2 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-orange-900/50 hover:[&::-webkit-scrollbar-thumb]:bg-orange-500 [&::-webkit-scrollbar-thumb]:rounded-full">
       <button 
-        v-for="i in 8" :key="i"
+        v-for="i in 16" :key="i"
         @click="$emit('update:avatarId', i)"
-        class="w-10 h-10 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
+        class="w-10 h-10 flex-shrink-0 snap-center rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110 overflow-hidden"
         :class="[
           avatarId === i 
             ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#151515]' 
