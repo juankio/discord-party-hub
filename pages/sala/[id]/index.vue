@@ -95,97 +95,67 @@
                     <UIcon name="i-lucide-gavel" class="w-5 h-5 text-amber-300 drop-shadow-md" />
                   </div>
                   
-                  <div class="flex flex-col gap-4 relative z-10">
+                  <div class="flex flex-col gap-2 relative z-10">
                     
                     <!-- Regla 1 -->
-                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.stackDrawCards = !unoRules.stackDrawCards">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.stackDrawCards ? 'bg-black/80 border-white/10' : ''">
-                           <UIcon name="i-lucide-layers" class="w-5 h-5 transition-colors" :style="unoRules.stackDrawCards ? { color: 'var(--theme-color)' } : { color: '#888' }" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.stackDrawCards && 'text-gray-400'">Acumular +2 y +4</span>
-                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Suma cartas de robo en cadena</span>
-                        </div>
-                      </div>
-                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
-                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
-                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.stackDrawCards = !unoRules.stackDrawCards">
+                      <span class="text-white font-bold text-sm tracking-wide">Acumular +2 y +4</span>
+                      
+                      <!-- Switch Flat -->
+                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
+                           :style="unoRules.stackDrawCards ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
+                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
                              :class="unoRules.stackDrawCards ? 'right-1' : 'left-1'"></div>
                       </div>
-                    </div>
+                    </label>
 
                     <!-- Regla 2 -->
-                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.playMultipleSame = !unoRules.playMultipleSame">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.playMultipleSame ? 'bg-black/80 border-white/10' : ''">
-                           <UIcon name="i-lucide-copy" class="w-5 h-5 transition-colors" :style="unoRules.playMultipleSame ? { color: 'var(--theme-color)' } : { color: '#888' }" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.playMultipleSame && 'text-gray-400'">Tirar dobles</span>
-                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Juega varios números iguales a la vez</span>
-                        </div>
-                      </div>
-                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
-                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
-                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.playMultipleSame = !unoRules.playMultipleSame">
+                      <span class="text-white font-bold text-sm tracking-wide">Tirar dobles (Mismo número)</span>
+                      
+                      <!-- Switch Flat -->
+                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
+                           :style="unoRules.playMultipleSame ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
+                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
                              :class="unoRules.playMultipleSame ? 'right-1' : 'left-1'"></div>
                       </div>
-                    </div>
+                    </label>
 
                     <!-- Regla 3 -->
-                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.zeroAndSevenRules = !unoRules.zeroAndSevenRules">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.zeroAndSevenRules ? 'bg-black/80 border-white/10' : ''">
-                           <UIcon name="i-lucide-arrow-right-left" class="w-5 h-5 transition-colors" :style="unoRules.zeroAndSevenRules ? { color: 'var(--theme-color)' } : { color: '#888' }" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.zeroAndSevenRules && 'text-gray-400'">Reglas del 0 y 7</span>
-                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Rotación de manos y robos de jugador</span>
-                        </div>
-                      </div>
-                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
-                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
-                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.zeroAndSevenRules = !unoRules.zeroAndSevenRules">
+                      <span class="text-white font-bold text-sm tracking-wide">Regla del 0 (Pasa) y 7 (Cambia)</span>
+                      
+                      <!-- Switch Flat -->
+                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
+                           :style="unoRules.zeroAndSevenRules ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
+                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
                              :class="unoRules.zeroAndSevenRules ? 'right-1' : 'left-1'"></div>
                       </div>
-                    </div>
+                    </label>
 
                     <!-- Regla 4 -->
-                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.drawUntilPlayable = !unoRules.drawUntilPlayable">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.drawUntilPlayable ? 'bg-black/80 border-white/10' : ''">
-                           <UIcon name="i-lucide-refresh-cw" class="w-5 h-5 transition-colors" :style="unoRules.drawUntilPlayable ? { color: 'var(--theme-color)' } : { color: '#888' }" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.drawUntilPlayable && 'text-gray-400'">Robo castigo</span>
-                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Robar hasta que salga una carta jugable</span>
-                        </div>
-                      </div>
-                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
-                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
-                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.drawUntilPlayable = !unoRules.drawUntilPlayable">
+                      <span class="text-white font-bold text-sm tracking-wide">Robar hasta que salga carta</span>
+                      
+                      <!-- Switch Flat -->
+                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
+                           :style="unoRules.drawUntilPlayable ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
+                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
                              :class="unoRules.drawUntilPlayable ? 'right-1' : 'left-1'"></div>
                       </div>
-                    </div>
+                    </label>
 
                     <!-- Regla 5 -->
-                    <div class="group relative flex items-center justify-between bg-black/30 hover:bg-black/40 p-3 rounded-2xl border border-black/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.1)] transition-all cursor-pointer" @click="unoRules.interceptExact = !unoRules.interceptExact">
-                      <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-black/60 shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] transition-colors" :class="unoRules.interceptExact ? 'bg-black/80 border-white/10' : ''">
-                           <UIcon name="i-lucide-zap" class="w-5 h-5 transition-colors" :style="unoRules.interceptExact ? { color: 'var(--theme-color)' } : { color: '#888' }" />
-                        </div>
-                        <div class="flex flex-col text-left">
-                          <span class="text-white font-bold text-sm drop-shadow-md transition-colors" :class="!unoRules.interceptExact && 'text-gray-400'">Intercepción (Corte)</span>
-                          <span class="text-green-200/50 text-[9px] uppercase tracking-widest font-bold mt-0.5">Roba el turno tirando una carta idéntica</span>
-                        </div>
-                      </div>
-                      <div class="w-14 h-8 rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] relative transition-colors duration-300 border border-black/50"
-                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 0 15px rgba(var(--theme-color-rgb), 0.4)' } : { backgroundColor: '#111' }">
-                        <div class="absolute top-1 bottom-1 w-6 bg-white rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] transition-all duration-300"
+                    <label class="group relative flex items-center justify-between bg-black/10 hover:bg-black/20 p-3 rounded-2xl border-2 border-black/20 cursor-pointer transition-colors" @click.prevent="unoRules.interceptExact = !unoRules.interceptExact">
+                      <span class="text-white font-bold text-sm tracking-wide">Intercepción exacta (Corte)</span>
+                      
+                      <!-- Switch Flat -->
+                      <div class="w-14 h-8 rounded-full border-2 border-black/30 relative transition-colors duration-200"
+                           :style="unoRules.interceptExact ? { backgroundColor: 'var(--theme-color)' } : { backgroundColor: 'rgba(0,0,0,0.3)' }">
+                        <div class="absolute top-1 bottom-1 w-5 bg-white rounded-full shadow-[0_3px_0_rgba(0,0,0,0.2)] transition-transform duration-300"
                              :class="unoRules.interceptExact ? 'right-1' : 'left-1'"></div>
                       </div>
-                    </div>
+                    </label>
 
                   </div>
                 </div>
