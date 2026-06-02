@@ -66,7 +66,7 @@ export const usePlayerStore = defineStore('player', {
             } else {
               this.userId = parsed.userId
             }
-          } catch {
+          } catch (e) {
             console.error('Error parsing user data', e)
           }
         } else {

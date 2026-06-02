@@ -18,12 +18,9 @@
             <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
             
             <!-- Estante de Billar (Flat 2D Vectorial) -->
-            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-8 px-4 md:px-6 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center overflow-hidden">
+            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center overflow-hidden">
               <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"/>
               
-              <!-- Línea de Repisa -->
-              <div class="absolute bottom-10 left-0 w-full h-4 bg-[#4a2e1b] border-y border-[#3a2212] shadow-[0_5px_10px_rgba(0,0,0,0.6)] z-0"></div>
-
               <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
             </div>
             

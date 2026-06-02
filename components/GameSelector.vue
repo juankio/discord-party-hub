@@ -1,49 +1,111 @@
 <template>
-  <!-- Quité el padding inferior y ajusté el alignment para que las cajas reposen sobre la línea de madera (repisa) -->
-  <div class="w-full flex gap-6 overflow-x-auto pt-8 pb-8 custom-scrollbar px-4 snap-x items-end justify-start md:justify-center relative z-10">
-    <button
-      v-for="game in games"
-      :key="game.id"
-      class="relative group outline-none focus:outline-none transition-all duration-500 snap-center shrink-0"
-      :class="[
-        game.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
-        selectedGame === game.id ? 'z-20 -translate-y-4' : 'z-10 hover:-translate-y-1'
-      ]"
-      :disabled="game.disabled"
-      @click="$emit('select', game.id)"
-    >
-      <!-- Halo de selección (Mágico) -->
-      <div v-if="selectedGame === game.id" 
-           class="absolute inset-0 blur-xl opacity-60 transition-opacity duration-300"
-           :style="{ backgroundColor: 'var(--theme-color)' }"></div>
-
-      <!-- Caja del Juego de Mesa (Rectángulo 3D) -->
-      <div 
-        class="w-[120px] h-[160px] md:w-[140px] md:h-[190px] rounded-sm relative flex flex-col items-center justify-center border-[3px] border-black/40 overflow-hidden transform-gpu"
-        :class="[game.color]"
-        style="box-shadow: inset 0 0 20px rgba(0,0,0,0.5), -5px 10px 15px rgba(0,0,0,0.8);"
-      >
-        <!-- Borde "tapa" de la caja (Efecto de cartón) -->
-        <div class="absolute inset-0 border-[4px] border-white/10 rounded-sm pointer-events-none"></div>
-        <div class="absolute top-0 w-full h-[2px] bg-white/30"></div>
-        <div class="absolute left-0 h-full w-[2px] bg-white/20"></div>
-
-        <!-- Decoración central de la caja -->
-        <div class="w-16 h-16 md:w-20 md:h-20 bg-black/30 rounded-full flex items-center justify-center shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border border-white/5 backdrop-blur-sm z-10 group-hover:scale-110 transition-transform duration-300">
-           <span class="font-black text-white tracking-widest drop-shadow-[0_2px_2px_rgba(0,0,0,1)]" :class="game.textSize">{{ game.number }}</span>
-        </div>
-        
-        <!-- Nombre impreso en la caja -->
-        <span class="absolute bottom-4 font-black text-[11px] md:text-xs tracking-[0.2em] text-white/90 drop-shadow-md uppercase z-10">{{ game.name }}</span>
-        
-        <!-- Marca de agua de textura (Simulando impresión) -->
-        <div class="absolute inset-0 opacity-10 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/paper.png')] pointer-events-none"></div>
-      </div>
+  <div class="w-full flex flex-col gap-8 relative z-10 py-4">
+    <!-- Fila Superior (3 Juegos) -->
+    <div class="flex justify-center gap-6 md:gap-12 relative pb-2 pt-2">
+      <!-- Repisa 1 -->
+      <div class="absolute bottom-0 left-[-2rem] right-[-2rem] h-4 bg-[#4a2e1b] border-y border-[#3a2212] shadow-[0_10px_10px_rgba(0,0,0,0.5)] z-0"></div>
       
-      <!-- Sombra proyectada en la repisa -->
-      <div class="absolute -bottom-2 left-2 right-2 h-4 bg-black/80 rounded-[100%] blur-[4px] -z-10"
-           :class="selectedGame === game.id ? 'opacity-30 scale-x-90 translate-y-4 blur-[8px]' : 'opacity-100 scale-x-100'"></div>
-    </button>
+      <button
+        v-for="game in games.slice(0, 3)"
+        :key="game.id"
+        class="relative group outline-none focus:outline-none transition-all duration-300 z-10"
+        :class="[
+          game.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
+          selectedGame === game.id ? 'z-20 -translate-y-4 scale-110' : 'hover:-translate-y-2'
+        ]"
+        :disabled="game.disabled"
+        @click="$emit('select', game.id)"
+      >
+        <!-- Flecha indicadora flotante (Estilo Arcade) -->
+        <div v-if="selectedGame === game.id" class="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce z-30">
+          <svg class="w-6 h-6 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21l-7-7h14l-7 7z" />
+          </svg>
+        </div>
+
+        <!-- Bola Flat 2D -->
+        <div 
+          class="relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-2 border-black/80 shadow-[inset_-5px_-5px_10px_rgba(0,0,0,0.5),_0_8px_10px_rgba(0,0,0,0.6)]"
+          :class="[game.color]"
+        >
+          <!-- Centro blanco de la bola -->
+          <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] border border-black/10">
+            <span class="font-black text-black" :class="game.textSize">{{ game.number }}</span>
+          </div>
+          <!-- Brillo Blanco (Estilo Vector Flat) -->
+          <div class="absolute top-1 right-2 w-3 h-2 bg-white/60 rounded-full rotate-[45deg]"></div>
+        </div>
+
+        <!-- Sombra en la repisa -->
+        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/60 rounded-full blur-[2px] -z-10"></div>
+        
+        <!-- Etiqueta del nombre -->
+        <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-300"
+             :class="selectedGame === game.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+          <span class="text-[9px] md:text-[10px] font-black tracking-widest text-amber-100 bg-[#2a1a0f] px-2 py-1 rounded border border-white/5 uppercase shadow-md">{{ game.name }}</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Fila Inferior (2 Juegos) -->
+    <div class="flex justify-center gap-6 md:gap-12 relative pb-2 pt-6">
+      <!-- Repisa 2 -->
+      <div class="absolute bottom-0 left-[-2rem] right-[-2rem] h-4 bg-[#4a2e1b] border-y border-[#3a2212] shadow-[0_10px_10px_rgba(0,0,0,0.5)] z-0"></div>
+      
+      <button
+        v-for="game in games.slice(3, 5)"
+        :key="game.id"
+        class="relative group outline-none focus:outline-none transition-all duration-300 z-10"
+        :class="[
+          game.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
+          selectedGame === game.id ? 'z-20 -translate-y-4 scale-110' : 'hover:-translate-y-2'
+        ]"
+        :disabled="game.disabled"
+        @click="$emit('select', game.id)"
+      >
+        <!-- Flecha indicadora flotante -->
+        <div v-if="selectedGame === game.id" class="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce z-30">
+          <svg class="w-6 h-6 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21l-7-7h14l-7 7z" />
+          </svg>
+        </div>
+
+        <!-- Bola Rayada Flat 2D (Para Pinturillo o especiales) -->
+        <div 
+          v-if="game.style === 'striped'"
+          class="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden flex flex-col justify-center items-center shadow-[inset_-5px_-5px_10px_rgba(0,0,0,0.5),_0_8px_10px_rgba(0,0,0,0.6)] bg-[#f8f9fa] border-2 border-black/80"
+        >
+          <!-- Franja de color -->
+          <div class="absolute w-full h-[55%] flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.2),inset_0_-2px_4px_rgba(0,0,0,0.2)]" :class="game.color">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] border border-black/10 relative z-10">
+              <span class="font-black text-black" :class="game.textSize">{{ game.number }}</span>
+            </div>
+          </div>
+          <div class="absolute top-1 right-2 w-3 h-2 bg-white/60 rounded-full rotate-[45deg] z-20"></div>
+        </div>
+
+        <!-- Bola Sólida Flat 2D -->
+        <div 
+          v-else
+          class="relative w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-2 border-black/80 shadow-[inset_-5px_-5px_10px_rgba(0,0,0,0.5),_0_8px_10px_rgba(0,0,0,0.6)]"
+          :class="[game.color]"
+        >
+          <div class="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] border border-black/10">
+            <span class="font-black text-black" :class="game.textSize">{{ game.number }}</span>
+          </div>
+          <div class="absolute top-1 right-2 w-3 h-2 bg-white/60 rounded-full rotate-[45deg]"></div>
+        </div>
+
+        <!-- Sombra en la repisa -->
+        <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-10 h-3 bg-black/60 rounded-full blur-[2px] -z-10"></div>
+        
+        <!-- Etiqueta del nombre -->
+        <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap transition-opacity duration-300"
+             :class="selectedGame === game.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'">
+          <span class="text-[9px] md:text-[10px] font-black tracking-widest text-amber-100 bg-[#2a1a0f] px-2 py-1 rounded border border-white/5 uppercase shadow-md">{{ game.name }}</span>
+        </div>
+      </button>
+    </div>
   </div>
 </template>
 
