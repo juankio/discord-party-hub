@@ -39,11 +39,39 @@
               </div>
             </div>
             
+            <!-- Configuración de Reglas UNO -->
+            <div class="mt-8 w-full max-w-sm bg-[#151515] rounded-2xl border border-white/10 p-5 shadow-xl">
+              <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 text-center">Reglas de la Mesa</h4>
+              <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between group">
+                  <span class="text-gray-400 group-hover:text-gray-200 transition-colors text-sm font-medium">Acumular +2 y +4</span>
+                  <UToggle v-model="unoRules.stackDrawCards" color="primary" />
+                </div>
+                <div class="flex items-center justify-between group">
+                  <span class="text-gray-400 group-hover:text-gray-200 transition-colors text-sm font-medium">Tirar dobles (Varios números iguales)</span>
+                  <UToggle v-model="unoRules.playMultipleSame" color="primary" />
+                </div>
+                <div class="flex items-center justify-between group">
+                  <span class="text-gray-400 group-hover:text-gray-200 transition-colors text-sm font-medium">Regla del 0 (Pasa) y 7 (Cambia)</span>
+                  <UToggle v-model="unoRules.zeroAndSevenRules" color="primary" />
+                </div>
+                <div class="flex items-center justify-between group">
+                  <span class="text-gray-400 group-hover:text-gray-200 transition-colors text-sm font-medium">Robar hasta que salga carta</span>
+                  <UToggle v-model="unoRules.drawUntilPlayable" color="primary" />
+                </div>
+                <div class="flex items-center justify-between group">
+                  <span class="text-gray-400 group-hover:text-gray-200 transition-colors text-sm font-medium">Intercepción exacta (Corte)</span>
+                  <UToggle v-model="unoRules.interceptExact" color="primary" />
+                </div>
+              </div>
+            </div>
+            
             <UButton 
               size="xl" 
               color="primary" 
-              class="mt-8 px-12 h-14 text-lg font-bold shadow-lg shadow-primary/30"
+              class="mt-8 px-12 h-14 text-lg font-bold shadow-lg shadow-primary/30 transition-all hover:scale-105 active:scale-95"
               :disabled="players.length < 2"
+              @click="startGame"
             >
               Empezar Partida
             </UButton>
@@ -124,6 +152,18 @@ const isHost = computed(() => {
          playerStore.hostUserId !== '' && 
          playerStore.userId === playerStore.hostUserId
 })
+
+const unoRules = ref({
+  stackDrawCards: true,
+  playMultipleSame: true,
+  zeroAndSevenRules: true,
+  drawUntilPlayable: false,
+  interceptExact: false
+})
+
+const startGame = () => {
+  useSocket().socket.value?.emit('start_game', { gameType: 'uno', rules: unoRules.value })
+}
 
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'

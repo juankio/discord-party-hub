@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { UnoEngine, UnoRules } from "./games/uno/UnoEngine.js";
 
 const PORT = 3001;
 
@@ -10,7 +11,7 @@ const io = new Server(PORT, {
 });
 
 // Estado en memoria
-// roomCode -> { users: [...], hostUserId: string }
+// roomCode -> { users: [...], hostUserId: string, gameEngine?: UnoEngine, gameType?: string }
 const rooms = new Map();
 
 io.on("connection", (socket) => {
@@ -20,18 +21,14 @@ io.on("connection", (socket) => {
     const { roomId, userId, nickname, avatarId, color } = data;
     
     socket.join(roomId);
-    
-    // Guardar datos en el socket
     socket.data = { userId, nickname, avatarId, color, roomId };
 
     if (!rooms.has(roomId)) {
-      // El primero en crear/entrar a la sala es el host
       rooms.set(roomId, { users: [], hostUserId: userId });
     }
 
     const room = rooms.get(roomId);
     
-    // Evitar nombres duplicados para usuarios DIFERENTES
     let finalNickname = nickname;
     let counter = 1;
     while (room.users.some((u: any) => u.nickname === finalNickname && u.userId !== userId)) {
@@ -39,57 +36,108 @@ io.on("connection", (socket) => {
       counter++;
     }
 
-    // Añadir usuario o actualizar si reconecta
     const existingIndex = room.users.findIndex((u: any) => u.userId === userId);
     
     if (existingIndex === -1) {
       room.users.push({ socketId: socket.id, userId, nickname: finalNickname, avatarId, color });
     } else {
-      // Actualizar su socketId y estado en caso de reconexión
       room.users[existingIndex] = { socketId: socket.id, userId, nickname: finalNickname, avatarId, color };
     }
 
-    // Doble validación: Si el host no existe en la sala (se perdió por un bug), asignar al primero
     const hostStillExists = room.users.some((u: any) => u.userId === room.hostUserId);
     if (!hostStillExists && room.users.length > 0) {
       room.hostUserId = room.users[0].userId;
     }
 
-    // Emitir estado actualizado a toda la sala, incluyendo quién es el host
     io.to(roomId).emit("room_update", { 
       users: room.users,
       hostUserId: room.hostUserId
     });
-    console.log(`${finalNickname} se unió a la sala ${roomId}`);
+
+    // Si ya hay un juego corriendo, meterlo y enviarle estado
+    if (room.gameEngine && room.gameType === 'uno') {
+      room.gameEngine.addPlayer(userId, socket.id, finalNickname, avatarId, color);
+      room.gameEngine.broadcastState();
+    }
   });
 
+  // ---- EVENTOS DE JUEGO (GAME DISPATCHER TEMPORAL) ----
+  socket.on("start_game", (data) => {
+    const roomId = socket.data.roomId;
+    const userId = socket.data.userId;
+    const room = rooms.get(roomId);
+    
+    if (!room || room.hostUserId !== userId) return; // Solo el host
+
+    const gameType = data.gameType || 'uno';
+    if (gameType === 'uno') {
+      const rules: UnoRules = data.rules || {
+        stackDrawCards: false, drawUntilPlayable: false, 
+        playMultipleSame: false, interceptExact: false, zeroAndSevenRules: false
+      };
+
+      room.gameType = 'uno';
+      room.gameEngine = new UnoEngine(roomId, (event: string, payload?: any) => {
+        if (event === 'game_state_update') {
+          // Enviar estado privado al socket correcto
+          const targetSocketId = room.users.find((u:any) => u.userId === payload.targetUserId)?.socketId;
+          if (targetSocketId) io.to(targetSocketId).emit(event, payload.state);
+        } else {
+          // Mensajes globales
+          io.to(roomId).emit(event, payload);
+        }
+      });
+
+      // Llenar el motor con los jugadores de la sala
+      room.users.forEach((u: any) => {
+        room.gameEngine.addPlayer(u.userId, u.socketId, u.nickname, u.avatarId, u.color);
+      });
+
+      // Empezar
+      io.to(roomId).emit("game_started", { gameType: 'uno' });
+      room.gameEngine.startGame(rules);
+    }
+  });
+
+  socket.on("uno:play_cards", (cardIds: string[]) => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.playCards(socket.data.userId, cardIds);
+  });
+
+  socket.on("uno:draw_card", () => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.drawFromDeck(socket.data.userId);
+  });
+
+  socket.on("uno:declare_color", (color: string) => {
+    const room = rooms.get(socket.data.roomId);
+    if (room?.gameEngine) room.gameEngine.declareColor(socket.data.userId, color as any);
+  });
+
+  // -----------------------------------------------------
+
   socket.on("disconnect", () => {
-    console.log("Usuario desconectado (esperando reconexión):", socket.id);
     const roomId = socket.data?.roomId;
     const userId = socket.data?.userId;
     
     if (roomId && rooms.has(roomId)) {
-      // PERIODO DE GRACIA (3 segundos) para evitar que el host se pierda con F5
       setTimeout(() => {
         const room = rooms.get(roomId);
         if (!room) return;
 
         const currentUser = room.users.find((u: any) => u.userId === userId);
         
-        // Si el usuario no ha vuelto (su socketId sigue siendo el que se desconectó)
         if (currentUser && currentUser.socketId === socket.id) {
-          console.log(`Usuario ${userId} expiró. Removiendo de la sala ${roomId}.`);
-          
           room.users = room.users.filter((u: any) => u.userId !== userId);
           
+          // Informar al motor si hay juego
+          if (room.gameEngine) room.gameEngine.removePlayer(userId);
+
           if (room.users.length === 0) {
             rooms.delete(roomId);
-            console.log(`Sala ${roomId} eliminada por estar vacía.`);
           } else {
-            // Si el host se fue definitivamente, le pasamos el host al siguiente jugador en la lista
             if (room.hostUserId === userId) {
               room.hostUserId = room.users[0].userId;
-              console.log(`Host migrado a ${room.hostUserId}`);
             }
             io.to(roomId).emit("room_update", { 
               users: room.users,
@@ -97,7 +145,7 @@ io.on("connection", (socket) => {
             });
           }
         }
-      }, 3000); // 3 segundos de tolerancia para F5
+      }, 3000);
     }
   });
 });
