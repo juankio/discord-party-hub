@@ -77,7 +77,13 @@ const yellUno = () => { socket.value?.emit('uno:yell_uno') }
 const challengeUno = (targetId: string) => { socket.value?.emit('uno:challenge_uno', targetId) }
 const onCardHover = (index: number | null) => { socket.value?.emit('uno:hover_card', index) }
 const surrender = () => { socket.value?.emit('uno:surrender') }
-const exitGame = () => { router.push(`/sala/${roomId}`) }
+const exitGame = () => {
+  if (unoStore.gameState === 'FINISHED' && playerStore.userId === playerStore.hostUserId) {
+    socket.value?.emit('return_to_lobby')
+  } else {
+    router.push(`/sala/${roomId}`)
+  }
+}
 
 onMounted(() => {
   socket.value?.on('game_message', (data: any) => {
