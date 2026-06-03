@@ -38,7 +38,7 @@ export const useSocket = () => {
     })
 
     socket.value.on('room_update', (data) => {
-      playerStore.updateRoomState(data.users, data.hostUserId)
+      playerStore.updateRoomState(data.users, data.hostUserId, data.roomRules)
     })
 
     socket.value.on('game_state_update', (data) => {

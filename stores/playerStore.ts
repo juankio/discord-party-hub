@@ -15,7 +15,10 @@ export const usePlayerStore = defineStore('player', {
     isLoggedIn: false,
     token: '',
     totalWins: 0,
-    picture: ''
+    picture: '',
+    roomRules: {
+      stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false
+    }
   }),
   actions: {
     setPlayerSetup(nickname: string, avatarId: number, color: string = '#f97316') {
@@ -77,9 +80,12 @@ export const usePlayerStore = defineStore('player', {
     setRoom(id: string) {
       this.roomId = id
     },
-    updateRoomState(players: any[], hostId: string) {
+    updateRoomState(players: any[], hostId: string, rules?: any) {
       this.playersInRoom = players
       this.hostUserId = hostId
+      if (rules) {
+        this.roomRules = { ...this.roomRules, ...rules }
+      }
     },
     setAccountAuth(token: string, user: any) {
       this.isLoggedIn = true

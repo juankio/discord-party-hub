@@ -33,7 +33,7 @@
             </div>
             
             <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
-            <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="unoRules" />
+            <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
             
             <!-- Botón Arcade 2D Macizo -->
             <button 
@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useSocket } from '~/composables/useSocket'
@@ -89,9 +89,6 @@ const roomId = playerStore.roomId
 const players = computed(() => playerStore.playersInRoom)
 const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
 
-const unoRules = ref({
-  stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false
-})
 const selectedGame = ref('uno')
 const games = [
   { id: 'uno', name: 'UNO', color: 'bg-[#151515]', labelColor: 'text-red-500', disabled: false },
@@ -101,7 +98,13 @@ const games = [
   { id: 'pinturillo', name: 'Pinturillo', color: 'bg-[#151515]', labelColor: 'text-purple-500', disabled: true },
 ]
 
-const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: unoRules.value })
+watch(() => playerStore.roomRules, (newRules) => {
+  if (isHost.value) {
+    socket.value?.emit('update_room_rules', newRules)
+  }
+}, { deep: true })
+
+const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: playerStore.roomRules })
 const leaveRoom = () => router.push('/')
 
 onMounted(() => {
