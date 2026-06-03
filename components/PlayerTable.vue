@@ -49,7 +49,16 @@
           <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/>
         </svg>
       </div>
-      <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" >
+
+      <!-- Overlay Offline -->
+      <div v-if="player.isOffline" class="absolute inset-0 bg-black/70 rounded-full flex flex-col items-center justify-center z-30 backdrop-blur-[2px]">
+        <UIcon name="i-lucide-wifi-off" class="w-6 h-6 md:w-8 md:h-8 text-orange-500 animate-pulse" />
+      </div>
+      <span v-if="player.isOffline" class="absolute -top-6 text-[8px] md:text-[9px] font-black text-orange-400 bg-black/90 px-2 py-0.5 rounded border border-orange-500/50 whitespace-nowrap animate-pulse z-40">
+        Reconectando...
+      </span>
+
+      <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" :class="{'grayscale opacity-50': player.isOffline}">
       <span 
         class="absolute -bottom-6 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm"
         :class="player.color === '#ffffff' ? 'text-black' : 'text-white'"
