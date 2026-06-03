@@ -19,6 +19,11 @@
         :disabled="game.disabled"
         @click="$emit('select', game.id)"
       >
+        <!-- Flecha Indicadora Bouncing -->
+        <div v-if="selectedGame === game.id" class="absolute -top-10 left-1/2 -translate-x-1/2 animate-bounce z-40 text-white drop-shadow-md">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-7-7h14l-7 7z" /></svg>
+        </div>
+
         <!-- Glow trasero al seleccionar -->
         <div class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0"
              :style="{ backgroundColor: game.color || '#ffffff' }"
