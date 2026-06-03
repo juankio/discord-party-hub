@@ -25,9 +25,11 @@
       </div>
       <p v-if="playerStore.lastPlayed" class="text-xs text-gray-500 italic mt-[-8px]">Última partida: {{ new Date(playerStore.lastPlayed).toLocaleDateString() }}</p>
       
-      <button class="text-gray-500 hover:text-white text-xs font-bold transition-all mt-4 border border-white/10 px-4 py-2 rounded-full hover:bg-white/5 hover:border-red-500/50 hover:text-red-400" @click="logout">
-        CERRAR SESIÓN
-      </button>
+      <div class="w-full flex justify-end">
+        <button class="text-gray-500 hover:text-white text-xs font-bold transition-all border border-white/10 px-4 py-2 rounded-full hover:bg-white/5 hover:border-red-500/50 hover:text-red-400 mt-2" @click="logout">
+          CERRAR SESIÓN
+        </button>
+      </div>
     </div>
 
     <!-- Vista de Edición de Perfil (Post-Login) -->
