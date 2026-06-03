@@ -44,7 +44,7 @@
 
     <!-- Input de Usuario -->
     <div class="w-full flex flex-col gap-1.5 mt-2">
-      <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3 drop-shadow-[1px_1px_0_#000]" style="color: var(--theme-color);">Nombre de Usuario</label>
+      <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3" style="color: var(--theme-color);">Nombre de Usuario</label>
       <input 
         :value="nickname"
         type="text"

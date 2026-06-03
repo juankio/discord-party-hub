@@ -4,7 +4,7 @@
       <!-- Avatar -->
       <div
 class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10 transition-colors"
-           :style="{ borderColor: rival.color || '#f97316' }"
+           :style="{ borderColor: rival.color || '#f97316', color: rival.color || '#f97316' }"
            :class="{'neon-glow': currentTurnUserId === rival.userId}">
         <img :src="`/avatars/avatar-${rival.avatarId}.svg?v=2`" class="w-full h-full object-cover rounded-full bg-[#151515]" >
         

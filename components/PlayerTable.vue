@@ -51,7 +51,8 @@
       </div>
       <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" >
       <span 
-        class="absolute -bottom-6 text-[10px] font-black text-white whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider"
+        class="absolute -bottom-6 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm"
+        :class="player.color === '#ffffff' ? 'text-black' : 'text-white'"
         :style="{ backgroundColor: player.color || '#f97316' }"
       >
         {{ player.nickname }}

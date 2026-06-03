@@ -17,6 +17,7 @@
     <!-- Central Table -->
     <UnoTable 
       :top-card="unoStore.topCard"
+      :current-color="unoStore.currentColor"
       :pending-draws="unoStore.pendingDraws"
       :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
       @draw="drawCard"
