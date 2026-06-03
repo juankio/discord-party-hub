@@ -44,6 +44,11 @@
         { borderColor: player.color || '#f97316' }
       ]"
     >
+      <div v-if="player.userId === hostUserId" class="absolute -top-4 -right-2 z-20 rotate-12 drop-shadow-md">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b" stroke="#2c190d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/>
+        </svg>
+      </div>
       <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" >
       <span 
         class="absolute -bottom-6 text-[10px] font-black text-white whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider"
@@ -61,7 +66,8 @@ import anime from 'animejs'
 
 const props = defineProps({
   roomId: { type: String, required: true },
-  players: { type: Array as () => any[], required: true }
+  players: { type: Array as () => any[], required: true },
+  hostUserId: { type: String, required: true }
 })
 
 const toast = useToast()

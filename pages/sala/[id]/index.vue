@@ -7,13 +7,16 @@
         <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
       </div>
 
-      <!-- Componente Mesa -->
-      <PlayerTable :room-id="roomId" :players="players" />
+      <div class="flex flex-col xl:flex-row gap-8 w-full items-start">
+        <!-- Columna Izquierda (Mesa y Controles) -->
+        <div class="flex-1 w-full flex flex-col">
+          <!-- Componente Mesa -->
+          <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" />
 
-      <!-- Zona de Control Dinámica -->
-      <div class="mt-16 w-full flex justify-center pb-24">
-        <Transition name="fade" mode="out-in">
-          <!-- Panel de Control (Host) -->
+          <!-- Zona de Control Dinámica -->
+          <div class="mt-16 w-full flex justify-center pb-24">
+            <Transition name="fade" mode="out-in">
+              <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
             <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
             
@@ -54,6 +57,13 @@
             <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
           </div>
         </Transition>
+          </div>
+        </div>
+
+        <!-- Columna Derecha (Historial) -->
+        <div class="w-full xl:w-[350px] shrink-0">
+          <TableHistoryBar :players="players" />
+        </div>
       </div>
     </div>
   </div>
