@@ -34,8 +34,8 @@
         v-model:nickname="editNickname"
       />
 
-      <!-- Toggle para ignorar foto de Google -->
-      <label v-if="playerStore.picture" class="flex items-center justify-center gap-3 w-full bg-black/30 p-3 rounded-xl border border-white/5 cursor-pointer hover:bg-black/50 transition-colors mt-2">
+      <!-- Toggle para foto de Google -->
+      <label class="flex items-center justify-center gap-3 w-full bg-black/30 p-3 rounded-xl border border-white/5 cursor-pointer hover:bg-black/50 transition-colors mt-2">
         <span class="text-gray-300 text-xs font-bold">Usar mi foto de Google</span>
         <UToggle v-model="editUseGooglePicture" :ui="{ active: 'bg-[var(--theme-color)]' }" />
       </label>

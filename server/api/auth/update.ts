@@ -1,15 +1,25 @@
 import { connectDB } from '../../utils/db'
 import { User } from '../../models/User'
 import jwt from 'jsonwebtoken'
+import { z } from 'zod'
+
+const updateSchema = z.object({
+  username: z.string().min(2, "El nombre de usuario debe tener al menos 2 caracteres").max(30, "El nombre de usuario no puede exceder los 30 caracteres").optional(),
+  avatarId: z.number().min(1, "Avatar inválido").max(24, "Avatar inválido").optional(),
+  color: z.string().optional(),
+  useGooglePicture: z.boolean().optional()
+})
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method !== 'POST') return { error: 'Method not allowed' }
+  if (event.node.req.method !== 'POST') {
+    return { success: false, data: null, message: null, error: 'Method not allowed' }
+  }
   
   await connectDB()
   const body = await readBody(event)
   
   if (!body.token || !body.updates) {
-    return { error: 'Faltan datos requeridos' }
+    return { success: false, data: null, message: null, error: 'Faltan datos requeridos' }
   }
 
   try {
@@ -20,35 +30,50 @@ export default defineEventHandler(async (event) => {
       throw new Error('Token inválido')
     }
 
-    // 2. Limpiar el objeto updates de inyecciones maliciosas
+    // 2. Validar el payload (updates) con Zod
+    const validation = updateSchema.safeParse(body.updates)
+    if (!validation.success) {
+      const errorMessages = validation.error.issues.map((err: any) => err.message).join(', ')
+      return { success: false, data: null, message: null, error: `Datos inválidos: ${errorMessages}` }
+    }
+
+    const updates = validation.data
     const safeUpdates: any = {}
-    if (body.updates.username && body.updates.username.length >= 2) safeUpdates.username = body.updates.username.substring(0, 30)
-    if (body.updates.avatarId !== undefined) safeUpdates.avatarId = Math.min(Math.max(Number(body.updates.avatarId), 1), 24)
-    if (body.updates.color) safeUpdates.color = body.updates.color.substring(0, 20)
-    if (body.updates.useGooglePicture !== undefined) {
-      // Si apaga la foto de Google, la borramos temporalmente en este scope
-      // O podemos manejarlo en el frontend enviando picture: '' si no la quiere usar
-      if (!body.updates.useGooglePicture) {
+
+    if (updates.username) safeUpdates.username = updates.username
+    if (updates.avatarId !== undefined) safeUpdates.avatarId = updates.avatarId
+    if (updates.color) safeUpdates.color = updates.color
+    
+    if (updates.useGooglePicture !== undefined) {
+      // Si apaga la foto de Google, la borramos en el frontend la puede reactivar
+      if (!updates.useGooglePicture) {
          safeUpdates.picture = ''
       }
     }
 
     // 3. Actualizar la base de datos
-    const updatedUser = await User.findByIdAndUpdate(decoded.id as any, { $set: safeUpdates }, { new: true } as any)
-    if (!updatedUser) return { error: 'Usuario no encontrado' }
+    const updatedUserDoc = await User.findByIdAndUpdate(decoded.id as any, { $set: safeUpdates }, { new: true } as any)
+    if (!updatedUserDoc) {
+      return { success: false, data: null, message: null, error: 'Usuario no encontrado' }
+    }
 
+    const updatedUser = { 
+      username: (updatedUserDoc as any).username, 
+      avatarId: (updatedUserDoc as any).avatarId, 
+      color: (updatedUserDoc as any).color,
+      picture: (updatedUserDoc as any).picture,
+      stats: (updatedUserDoc as any).stats 
+    }
+
+    // Retorno con la estructura sagrada
     return { 
       success: true, 
-      user: { 
-        username: (updatedUser as any).username, 
-        avatarId: (updatedUser as any).avatarId, 
-        color: (updatedUser as any).color,
-        picture: (updatedUser as any).picture,
-        stats: (updatedUser as any).stats 
-      } 
+      data: { user: updatedUser }, 
+      message: 'Perfil actualizado',
+      error: undefined
     }
   } catch (e: any) {
     console.error("Profile Update Error:", e);
-    return { error: 'No se pudo actualizar el perfil. Sesión inválida.' }
+    return { success: false, data: null, message: null, error: 'No se pudo actualizar el perfil. Sesión inválida.' }
   }
 })

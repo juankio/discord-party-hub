@@ -115,12 +115,13 @@ export const usePlayerStore = defineStore('player', {
         }
       });
 
-      if (res.error) {
-        throw new Error(res.error);
+      if (!res.success) {
+        throw new Error(res.error || res.message || 'Error al actualizar el perfil');
       }
 
       // Actualizamos estado si sale bien
-      this.setAccountAuth(this.token, res.user);
+      const updatedUser = res.data?.user || res.data;
+      this.setAccountAuth(this.token, updatedUser);
     },
     logout() {
       this.token = ''
