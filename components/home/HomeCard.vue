@@ -169,5 +169,10 @@ onMounted(() => {
     avatarId.value = playerStore.avatarId
     selectedColor.value = playerStore.color
   }
+  
+  // Auto-switch a la pestaña de cuenta si el usuario está logueado
+  if (playerStore.isLoggedIn) {
+    activeTab.value = 'account'
+  }
 })
 </script>
