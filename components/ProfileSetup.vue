@@ -44,12 +44,12 @@
 
     <!-- Input de Usuario -->
     <div class="w-full flex flex-col gap-1.5 mt-2">
-      <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3" style="color: var(--theme-color);">Nombre de Usuario</label>
+      <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3 drop-shadow-[1px_1px_0_#000]" style="color: var(--theme-color);">Nombre de Usuario</label>
       <input 
         :value="nickname"
         type="text"
         placeholder="Ej: Impostor"
-        class="w-full bg-black text-white px-5 py-3.5 rounded-2xl outline-none focus:ring-1 transition-all placeholder:text-gray-700 font-bold text-center tracking-wide"
+        class="w-full bg-black text-white px-5 py-3.5 rounded-2xl outline-none focus:ring-1 transition-all placeholder:text-gray-500 font-bold text-center tracking-wide"
         style="--tw-ring-color: rgba(var(--theme-color-rgb), 0.5);"
         @input="$emit('update:nickname', ($event.target as HTMLInputElement).value)"
       >

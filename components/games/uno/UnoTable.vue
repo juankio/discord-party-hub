@@ -19,18 +19,15 @@ class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gr
           </span>
 
         </div>
-        <span
-class="text-[10px] md:text-xs font-bold tracking-widest uppercase"
-              :class="pendingDraws > 0 ? 'text-red-500 animate-pulse' : 'text-gray-500'">
-          {{ pendingDraws > 0 ? '¡Comer!' : 'Robar' }}
+        <span class="text-[10px] md:text-xs font-bold tracking-widest uppercase"
+              :class="pendingDraws > 0 ? (isMyTurn ? 'text-red-500 animate-pulse' : 'text-orange-400') : 'text-gray-500'">
+          {{ pendingDraws > 0 ? (isMyTurn ? '¡Comer!' : `Acumulado: +${pendingDraws}`) : 'Robar' }}
         </span>
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
-      <div
-v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
-           :class="[`card-${topCard.color === 'wild' ? 'black' : topCard.color}`]"
-           :style="currentColor && topCard.color === 'wild' ? `box-shadow: 0 0 30px var(--color-${currentColor}); border-color: var(--color-${currentColor})` : ''">
+      <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
+           :class="[ topCard.color === 'wild' && currentColor ? 'card-' + currentColor : 'card-' + (topCard.color === 'wild' ? 'black' : topCard.color) ]">
          <div class="inner-oval"><span class="card-value">{{ getCardDisplay(topCard) }}</span></div>
          <span class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
          <span class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>

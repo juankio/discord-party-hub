@@ -46,14 +46,18 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
       const topRect = topCardEl.getBoundingClientRect();
       const clone = document.createElement('div');
       clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]';
-      clone.style.top = `-50px`;
-      clone.style.left = `${window.innerWidth / 2}px`;
+      clone.style.top = `${topRect.top - 150}px`;
+      clone.style.left = `${topRect.left}px`;
       document.body.appendChild(clone);
       
       anime({
         targets: clone,
-        top: topRect.top, left: topRect.left, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
-        duration: 400, easing: 'easeInCubic',
+        top: topRect.top, 
+        scale: [1.2, 1], 
+        opacity: [0, 1, 0], 
+        rotate: anime.random(-25, 25),
+        duration: 400, 
+        easing: 'easeOutElastic(1, .5)',
         complete: () => clone.remove()
       });
     }
@@ -70,11 +74,15 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
           
           anime({
             targets: clone,
-            top: -50, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
-            duration: 400, easing: 'easeOutCubic',
+            translateY: -150, 
+            scale: 0.5, 
+            opacity: [1, 0], 
+            rotate: anime.random(-45, 45),
+            duration: 500, 
+            easing: 'easeOutQuad',
             complete: () => clone.remove()
           });
-        }, i * 150);
+        }, i * 100);
       }
     }
   };
