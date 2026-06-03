@@ -1,9 +1,6 @@
 import { connectDB } from '../../utils/db'
 import { User } from '../../models/User'
 import jwt from 'jsonwebtoken'
-import { OAuth2Client } from 'google-auth-library'
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export default defineEventHandler(async (event) => {
   if (event.node.req.method !== 'POST') return { error: 'Method not allowed' }
@@ -16,19 +13,24 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Verificar token con Google (Usamos el access_token o el id_token)
-    // Asumimos que vue3-google-login nos mandó un credential (id_token) si usamos el popup estándar
-    const ticket = await client.verifyIdToken({
-      idToken: body.token,
-      audience: process.env.GOOGLE_CLIENT_ID
+    // Como usamos popup-type="TOKEN" en el frontend, recibimos un access_token.
+    // Usamos la API de userinfo de Google para verificarlo y obtener el perfil.
+    const googleResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${body.token}`
+      }
     });
-    
-    const payload = ticket.getPayload();
-    if (!payload) return { error: 'Invalid Google Token' };
+
+    if (!googleResponse.ok) {
+      throw new Error('Fallo al verificar el token con Google');
+    }
+
+    const payload = await googleResponse.json();
+    if (!payload || !payload.sub) return { error: 'Invalid Google Token' };
 
     const googleId = payload.sub;
     const email = payload.email;
-    const name = payload.name;
+    const name = payload.name || payload.given_name || 'Gamer';
     const picture = payload.picture;
 
     // Buscar o crear usuario

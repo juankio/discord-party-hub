@@ -26,6 +26,14 @@ export default defineNuxtConfig({
       ]
     }
   },
+  routeRules: {
+    '/**': {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none'
+      }
+    }
+  },
   runtimeConfig: {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     jwtSecret: process.env.JWT_SECRET,
