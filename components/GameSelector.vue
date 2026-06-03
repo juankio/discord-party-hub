@@ -1,7 +1,7 @@
 <template>
   <div class="w-full max-w-3xl mx-auto border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-hidden flex flex-col shadow-inner">
     <div v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
-         class="relative w-full flex justify-center gap-8 items-end pb-[24px] pt-16 bg-[#382012]">
+         class="relative w-full flex justify-center gap-8 items-end pb-[24px] pt-8 bg-[#382012]">
       
       <!-- Soga -->
       <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
