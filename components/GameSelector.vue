@@ -60,7 +60,8 @@
              <span class="text-white font-bold text-[10px] uppercase tracking-[0.2em] opacity-80" style="text-shadow: 1px 1px 0 #000;">{{ game.name }}</span>
           </div>
           
-          <div class="face right"></div>
+          <!-- Lomo lateral (Ahora lado Izquierdo) -->
+          <div class="face left"></div>
         </div>
         
         <div v-if="game.disabled" class="absolute -top-4 -right-4 bg-red-600 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg rotate-[15deg] z-40 border border-red-800 uppercase">
@@ -120,14 +121,14 @@ defineEmits(['select'])
 .front::after {
   content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: -1;
 }
-.right {
+.left {
   width: 24px;
   height: 160px;
-  right: 0;
-  transform-origin: right;
-  transform: rotateY(90deg);
+  left: 0;
+  transform-origin: left;
+  transform: rotateY(-90deg);
 }
-.right::after {
+.left::after {
   content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6);
 }
 
