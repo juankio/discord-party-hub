@@ -67,11 +67,13 @@ La interfaz se rige por la estética **"Pro Max"** combinada con **"Flat 2D Vect
 ---
 
 ## ⚙️ Arquitectura de Sincronización
-- Nuxt UI consume el estado mediante `Pinia` (`playerStore.ts`, `unoStore.ts`).
-- Las peticiones HTTP (Leaderboard, Update Profile) utilizan `$fetch` consumiendo el puerto de la API externa (Express).
-- La conexión de WebSockets se gestiona en `composables/useSocket.ts` implementando un control bidireccional "Anti-Ping-Pong" para no sobrecargar el servidor en eventos reactivos (ej. Apagar switches).
+- **Cross-Origin Auth Flow:** Para solucionar los problemas de estado entre el Frontend (3000) y Backend (3001), el flujo de Google OAuth inyecta los credenciales encriptados vía URL `/?auth_data=...`, los cuales Pinia intercepta, almacena en localStorage local y borra de la barra de navegación para una experiencia impecable.
+- **Estado Global:** Nuxt UI consume el estado mediante `Pinia` (`playerStore.ts`, `unoStore.ts`).
+- **REST API:** Las peticiones HTTP (Leaderboard, Update Profile) utilizan `$fetch` consumiendo el puerto de la API externa (Express).
+- **WebSockets:** La conexión de WebSockets se gestiona en `composables/useSocket.ts` implementando un control bidireccional "Anti-Ping-Pong" para no sobrecargar el servidor en eventos reactivos (ej. Apagar switches).
 
 ---
+
 
 ## 📝 Reglas de Contribución (Luffy Crew)
 1. **Atajos Prohibidos:** Nunca hacer commits directos a `main`. Usar ramas `feat/` o `fix/`.
