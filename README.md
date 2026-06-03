@@ -49,6 +49,11 @@ Servidor Express/Socket.io súper ligero.
 
 ## 🎨 Diseño Visual (UI/UX)
 - **Estética "Pro Max"**: Fondos ultra oscuros (`#0A0A0A`), tarjetas en `#151515`, sin esquinas cuadradas (todo `rounded-3xl` o circular).
+- **Estilo "Flat 2D Vectorial"**: Las áreas de juego, la mesa y las estanterías evitan los falsos desenfoques 3D o brillos hiperrealistas. Los elementos simulan volumen utilizando bordes gruesos, sombras sólidas (`shadow-[8px_8px_0px_#000]`) y perspectivas isométricas limitadas y estilizadas (como juegos 2D indie modernos).
+- **Inmersión del Lobby**:
+  - **Selector de Juegos**: Estantería rústica de madera, con una cuerda de seguridad (soga SVG anclada) sobre la que descansan objetos icónicos de cada juego.
+  - **Identidad**: Corona de oro SVG (Flat 2D) dinámica sobre el jugador "Host" en la mesa central.
+  - **Clasificación**: Pizarra de madera (Leaderboard) visible en el lobby, que muestra en tiempo real los jugadores ordenados por Victorias Totales con el Top #1 remarcado en oro.
 - **Acentos**: Colores neón sutiles, principalmente naranja (`#f97316`) y glows de colores elegidos por el usuario.
 - **Animaciones**: Transiciones fluidas nativas de Vue (`<Transition>`) y coreografías complejas impulsadas por `anime.js`.
 
