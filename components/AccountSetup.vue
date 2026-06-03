@@ -26,7 +26,7 @@
       <p v-if="playerStore.lastPlayed" class="text-xs text-gray-500 italic mt-[-8px]">Última partida: {{ new Date(playerStore.lastPlayed).toLocaleDateString() }}</p>
       
       <div class="w-full flex justify-end">
-        <button class="text-gray-500 hover:text-white text-xs font-bold transition-all border border-white/10 px-4 py-2 rounded-full hover:bg-white/5 hover:border-red-500/50 hover:text-red-400 mt-2" @click="logout">
+        <button class="text-red-400 hover:text-white text-xs font-bold transition-all border border-red-900/50 bg-red-950/20 px-4 py-2 rounded-full hover:bg-red-600/40 hover:border-red-500 hover:shadow-[0_0_10px_rgba(239,68,68,0.4)] mt-2" @click="logout">
           CERRAR SESIÓN
         </button>
       </div>
@@ -47,10 +47,10 @@
       />
 
       <!-- Toggle para foto de Google -->
-      <label class="flex items-center justify-center gap-3 w-full bg-black/30 p-3 rounded-xl border border-white/5 cursor-pointer hover:bg-black/50 transition-colors mt-2">
+      <div @click="editUseGooglePicture = !editUseGooglePicture" class="flex items-center justify-center gap-3 w-full bg-black/30 p-3 rounded-xl border border-white/5 cursor-pointer hover:bg-black/50 transition-colors mt-2">
         <span class="text-gray-300 text-xs font-bold">Usar mi foto de Google</span>
-        <UToggle v-model="editUseGooglePicture" :ui="{ active: 'bg-[var(--theme-color)]' }" />
-      </label>
+        <UToggle v-model="editUseGooglePicture" :ui="{ active: 'bg-[var(--theme-color)]' }" @click.stop />
+      </div>
 
       <!-- Feedback -->
       <p v-if="errorMsg" class="text-red-500 text-xs font-bold">{{ errorMsg }}</p>
