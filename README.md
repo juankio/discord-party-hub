@@ -14,13 +14,11 @@
 
 ---
 
-## 📸 Capturas de Pantalla (Preview)
-
-> **Nota:** *Reemplazar estos placeholders con las capturas reales del proyecto (ej. usando la herramienta Recortes o Screenshots en `/docs`).*
+## 📸 Capturas de Pantalla
 
 <div align="center">
-  <img src="https://placehold.co/600x350/1a0f0a/f97316?text=Lobby+Principal+\n(Mesa+y+Estanteria)" width="48%" />
-  <img src="https://placehold.co/600x350/1a0f0a/f97316?text=Partida+de+UNO+\n(Fisicas+Anime.js)" width="48%" />
+  <img src="./docs/assets/lobby.png" width="48%" alt="Lobby y Mesa de Billar" />
+  <img src="./docs/assets/uno-game.png" width="48%" alt="Partida de UNO" />
 </div>
 
 ---
