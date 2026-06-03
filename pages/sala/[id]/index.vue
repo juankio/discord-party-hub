@@ -7,14 +7,19 @@
         <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
       </div>
 
-      <div class="flex flex-col xl:flex-row gap-8 w-full items-start">
+      <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
         <!-- Columna Izquierda (Mesa y Controles) -->
-        <div class="flex-1 w-full flex flex-col">
+        <div class="flex-1 w-full flex flex-col gap-8">
           <!-- Componente Mesa -->
           <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" />
 
+          <!-- Clasificación en Móvil (Oculta en LG porque irá en la columna derecha) -->
+          <div class="block lg:hidden w-full max-w-md mx-auto">
+            <TableHistoryBar :players="players" />
+          </div>
+
           <!-- Zona de Control Dinámica -->
-          <div class="mt-16 w-full flex justify-center pb-24">
+          <div class="w-full flex justify-center pb-24">
             <Transition name="fade" mode="out-in">
               <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
@@ -60,8 +65,8 @@
           </div>
         </div>
 
-        <!-- Columna Derecha (Historial) -->
-        <div class="w-full xl:w-[350px] shrink-0">
+        <!-- Columna Derecha (Solo visible en LG y superior) -->
+        <div class="hidden lg:block w-[320px] xl:w-[350px] shrink-0">
           <TableHistoryBar :players="players" />
         </div>
       </div>
