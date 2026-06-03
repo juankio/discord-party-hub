@@ -1,6 +1,9 @@
 import { connectDB } from '../../utils/db'
 import { User } from '../../models/User'
 import jwt from 'jsonwebtoken'
+import { OAuth2Client } from 'google-auth-library'
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 export default defineEventHandler(async (event) => {
   if (event.node.req.method !== 'POST') return { error: 'Method not allowed' }
@@ -13,19 +16,14 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Como usamos popup-type="TOKEN" en el frontend, recibimos un access_token.
-    // Usamos la API de userinfo de Google para verificarlo y obtener el perfil.
-    const googleResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: {
-        Authorization: `Bearer ${body.token}`
-      }
+    // Al quitar popup-type="TOKEN", recibimos un idToken clásico. 
+    // Usamos el cliente oficial de Google para verificar criptográficamente el JWT.
+    const ticket = await client.verifyIdToken({
+      idToken: body.token,
+      audience: process.env.GOOGLE_CLIENT_ID
     });
-
-    if (!googleResponse.ok) {
-      throw new Error('Fallo al verificar el token con Google');
-    }
-
-    const payload = await googleResponse.json();
+    
+    const payload = ticket.getPayload();
     if (!payload || !payload.sub) return { error: 'Invalid Google Token' };
 
     const googleId = payload.sub;

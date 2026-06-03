@@ -15,7 +15,8 @@
     <div v-else class="w-full flex flex-col gap-6 mt-4">
       <p class="text-gray-400 text-sm text-center">Inicia sesión con tu cuenta de Google para guardar tus victorias en el Leaderboard Global.</p>
       
-      <GoogleLogin :callback="handleGoogleLogin" popup-type="TOKEN">
+      <!-- Se quitó popup-type="TOKEN" que a veces fuerza bloqueos estrictos de COOP y usamos el flujo nativo de Vue3 Google Login -->
+      <GoogleLogin :callback="handleGoogleLogin">
         <button class="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-200 text-black px-6 py-4 rounded-full font-black transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
           <svg class="w-6 h-6" viewBox="0 0 24 24">
               <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
