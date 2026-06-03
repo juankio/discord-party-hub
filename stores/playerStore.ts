@@ -137,6 +137,17 @@ export const usePlayerStore = defineStore('player', {
         token: '',
         totalWins: 0
       }))
+    },
+    incrementWin() {
+      this.totalWins++;
+      try {
+        const data = localStorage.getItem('party-hub-user');
+        if (data) {
+          const parsed = JSON.parse(data);
+          parsed.totalWins = this.totalWins;
+          localStorage.setItem('party-hub-user', JSON.stringify(parsed));
+        }
+      } catch {}
     }
   }
 })

@@ -32,7 +32,8 @@ export const useSocket = () => {
         userId: playerStore.userId,
         nickname: playerStore.nickname,
         avatarId: playerStore.avatarId,
-        color: playerStore.color
+        color: playerStore.color,
+        totalWins: playerStore.totalWins
       })
     })
 
