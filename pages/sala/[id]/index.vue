@@ -112,7 +112,10 @@ watch(() => playerStore.roomRules, (newRules) => {
 }, { deep: true })
 
 const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: playerStore.roomRules })
-const leaveRoom = () => router.push('/')
+const leaveRoom = () => {
+  socket.value?.emit('leave_room')
+  router.push('/')
+}
 
 onMounted(() => {
   setTimeout(() => anime({ targets: '.header-anim', opacity: [0, 1], translateY: [-20, 0], duration: 800, easing: 'easeOutExpo' }), 100)

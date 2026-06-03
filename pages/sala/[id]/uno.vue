@@ -80,6 +80,11 @@ const challengeUno = (targetId: string) => { socket.value?.emit('uno:challenge_u
 const onCardHover = (index: number | null) => { socket.value?.emit('uno:hover_card', index) }
 const surrender = () => { socket.value?.emit('uno:surrender') }
 const exitGame = () => {
+  if (unoStore.gameState !== 'FINISHED' && unoStore.gameState !== 'WAITING') {
+    // Si la partida está activa y deciden salir al lobby, se rinden automáticamente
+    surrender()
+  }
+
   if (unoStore.gameState === 'FINISHED' && playerStore.userId === playerStore.hostUserId) {
     socket.value?.emit('return_to_lobby')
   } else {
