@@ -8,7 +8,7 @@
       <div class="absolute left-8 md:left-16 flex flex-col items-center gap-2">
         <div
 class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer transition-transform"
-             :class="[pendingDraws > 0 ? 'ring-4 ring-red-500 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-105' : (isMyTurn ? 'ring-4 ring-yellow-400 animate-pulse shadow-[0_0_30px_rgba(250,204,21,0.6)] hover:scale-105' : 'hover:scale-105')]"
+             :class="[pendingDraws > 0 ? 'ring-4 ring-red-500 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-105' : (isMyTurn && !hasPlayableCard ? 'ring-4 ring-yellow-400 animate-pulse shadow-[0_0_30px_rgba(250,204,21,0.6)] hover:scale-105' : 'hover:scale-105')]"
              @click="drawCard">
           
           <!-- Si hay cartas acumuladas (+2, +4) -->
@@ -21,7 +21,7 @@ class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gr
           </span>
 
         </div>
-        <span class="text-[9px] md:text-[10px] font-black tracking-widest uppercase text-center max-w-[120px] drop-shadow-md z-10" :class="pendingDraws > 0 ? (isMyTurn ? 'text-red-500 animate-pulse' : 'text-orange-400') : (isMyTurn ? 'text-yellow-400' : 'text-gray-300')">{{ pendingDraws > 0 ? (isMyTurn ? `¡TE TOCA COMER +${pendingDraws}!` : `¡${victimName} COME +${pendingDraws} POR MALO!`) : (isMyTurn ? 'Tu turno (Robar)' : 'Mazo') }}</span>
+        <span class="text-[9px] md:text-[10px] font-black tracking-widest uppercase text-center max-w-[120px] drop-shadow-md z-10" :class="pendingDraws > 0 ? (isMyTurn ? 'text-red-500 animate-pulse' : 'text-orange-400') : (isMyTurn ? 'text-yellow-400' : 'text-gray-300')">{{ pendingDraws > 0 ? (isMyTurn ? `¡TE TOCA COMER +${pendingDraws}!` : `¡${victimName} COME +${pendingDraws} POR MALO!`) : (isMyTurn ? (hasPlayableCard ? 'Tu turno' : '¡Robar Carta!') : 'Mazo') }}</span>
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
@@ -46,7 +46,8 @@ const props = defineProps({
   topCard: { type: Object, default: null },
   currentColor: { type: String, default: '' },
   pendingDraws: { type: Number, default: 0 },
-  isMyTurn: { type: Boolean, default: false }
+  isMyTurn: { type: Boolean, default: false },
+  myHand: { type: Array as () => any[], default: () => [] }
 })
 
 const emit = defineEmits(['draw'])
@@ -54,6 +55,19 @@ const isDrawing = ref(false)
 
 const unoStore = useUnoStore()
 const playerStore = usePlayerStore()
+
+const hasPlayableCard = computed(() => {
+  if (!props.isMyTurn) return false;
+  if (props.pendingDraws > 0) {
+    return props.myHand.some(card => card.value === 'draw2' || card.value === 'wild_draw4');
+  }
+  return props.myHand.some(card => 
+    card.color === 'wild' || 
+    card.color === props.currentColor || 
+    card.color === props.topCard?.color || 
+    card.value === props.topCard?.value
+  );
+})
 
 const victimName = computed(() => {
   const currentId = unoStore.currentTurnUserId;

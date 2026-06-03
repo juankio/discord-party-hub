@@ -119,7 +119,7 @@ export const usePlayerStore = defineStore('player', {
     async updateProfile(updates: any) {
       if (!this.isLoggedIn || !this.token) throw new Error('No estás logueado');
       
-      const res = await $fetch<any>('/api/auth/update', {
+      const res = await $fetch<any>('http://localhost:3001/api/auth/update', {
         method: 'POST',
         body: {
           token: this.token,

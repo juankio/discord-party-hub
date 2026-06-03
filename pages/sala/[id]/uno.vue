@@ -20,6 +20,7 @@
       :current-color="unoStore.currentColor"
       :pending-draws="unoStore.pendingDraws"
       :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
+      :my-hand="unoStore.myHand"
       @draw="drawCard"
     />
 
