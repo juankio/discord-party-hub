@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useSocket } from '~/composables/useSocket'
@@ -98,9 +98,16 @@ const games = [
   { id: 'pinturillo', name: 'Pinturillo', color: 'bg-[#151515]', labelColor: 'text-purple-500', disabled: true },
 ]
 
+let lastSentRules = JSON.stringify(playerStore.roomRules)
+
 watch(() => playerStore.roomRules, (newRules) => {
   if (isHost.value) {
-    socket.value?.emit('update_room_rules', newRules)
+    const rulesStr = JSON.stringify(newRules)
+    // Si las reglas son idénticas a las que enviamos la última vez, ignoramos el loop
+    if (rulesStr !== lastSentRules) {
+      lastSentRules = rulesStr
+      socket.value?.emit('update_room_rules', toRaw(newRules))
+    }
   }
 }, { deep: true })
 

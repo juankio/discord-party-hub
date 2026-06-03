@@ -84,7 +84,13 @@ export const usePlayerStore = defineStore('player', {
       this.playersInRoom = players
       this.hostUserId = hostId
       if (rules) {
-        this.roomRules = { ...this.roomRules, ...rules }
+        // Solo actualizamos si realmente hay un cambio para evitar el bucle infinito de Vue watch
+        const currentRulesStr = JSON.stringify(this.roomRules);
+        const newRulesStr = JSON.stringify({ ...this.roomRules, ...rules });
+        
+        if (currentRulesStr !== newRulesStr) {
+          this.roomRules = { ...this.roomRules, ...rules }
+        }
       }
     },
     setAccountAuth(token: string, user: any) {
