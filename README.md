@@ -56,46 +56,20 @@ bun run dev
 ## 🏛️ Arquitectura del Frontend (UI/UX)
 
 La interfaz se rige por la estética **"Pro Max"** combinada con **"Flat 2D Vectorial"**.
+- **Cliente 100% Puro:** El frontend de Nuxt no contiene base de datos, SSR APIs pesadas ni lógica de servidor interno. Toda la comunicación de red apunta exclusivamente al servidor Node.js/Express.
 - **Colores:** Fondos ultra oscuros (`#0A0A0A`, `#151515`) contrastados con acentos de neón dinámicos (inyectados vía `--theme-color`).
 - **Profundidad sin 3D:** Se evita el desenfoque (blur) y el fotorrealismo. Los volúmenes se logran con bordes gruesos de madera, sombras sólidas (ej. `shadow-[8px_8px_0px_#000]`) y paletas de colores planos.
 - **Componentes Destacados:**
-  - `PlayerTable.vue`: Una mesa de billar plana vista desde arriba donde los jugadores se sientan. Identifica al creador de la mesa con una corona Flat 2D dorada.
+  - `PlayerTable.vue`: Una mesa de casino (`bg-[#991b1b]`) plana vista desde arriba. Identifica al creador de la mesa con una corona Flat 2D dorada.
   - `GameSelector.vue`: Un mueble de estantería de madera maciza. Los juegos descansan protegidos por una soga SVG.
-  - `TableHistoryBar.vue`: Una pizarra rústica anclada al layout que muestra el *Leaderboard* en vivo (Top #1 en oro).
+  - `TableHistoryBar.vue`: Una pizarra rústica anclada al layout que muestra el *Leaderboard* en vivo.
 
 ---
 
-## ⚙️ Arquitectura del Backend (Node.js + Socket.io + MongoDB)
-
-El backend no es solo un puente de mensajes, es el **Árbitro Supremo** (Zero-Trust).
-
-### 1. Zero-Trust Engines (Motores de Juego Aislados)
-El frontend es "tonto". Solo renderiza lo que el backend dicta.
-- **`src/games/uno/UnoEngine.ts`**: Valida cada jugada (ej. si puedes tirar un +4 sobre un +2). Maneja reglas de la casa (`stackDrawCards`, `interceptExact`, `zeroAndSevenRules`). Si un cliente envía un evento de trampa, el Engine lo rechaza silenciosamente o devuelve un error.
-
-### 2. Gestión de Salas (`RoomManager.ts`)
-- Mantenedor del estado en memoria (`Map<string, RoomState>`).
-- Maneja la reconexión de jugadores (F5 / Recarga de página) mediante un token de sesión.
-- Implementa **Garbage Collection**: Las salas vacías o inactivas por más de 1 hora se auto-destruyen para liberar RAM.
-
-### 3. Autenticación y Base de Datos (MongoDB)
-- **`server/api/auth/google/callback.ts`**: Controlador oficial de Google OAuth. Recibe el `id_token`, lo verifica, extrae el perfil y crea/actualiza el documento en **MongoDB Atlas**.
-- Devuelve un token JWT al frontend, el cual usa Pinia (`playerStore`) para iniciar sesión de forma persistente.
-- **Estadísticas**: Colección dedicada en Mongo para trackear `totalWins`, `gamesPlayed` y preferencias visuales del usuario (Color y Avatar).
-
-### 4. Eventos Socket Principales
-| Evento (Emit) | Función |
-| :--- | :--- |
-| `join_room` | Conecta a un jugador a una sala o lo crea si no existe. |
-| `start_game` | (Solo Host) Inicializa el `GameEngine` y reparte las cartas. |
-| `play_card` | Intenta colocar una carta en la pila de descarte. Valida con el Engine. |
-| `draw_card` | Pide robar una carta del mazo principal. |
-
-| Evento (Listen) | Función |
-| :--- | :--- |
-| `room_state_update` | Sincroniza la lista de jugadores y el Host actual. |
-| `game_state_update` | Envía la mano del jugador actual, la carta en la cima y de quién es el turno. |
-| `error` | Captura y muestra rechazos del motor (ej. "No es tu turno"). |
+## ⚙️ Arquitectura de Sincronización
+- Nuxt UI consume el estado mediante `Pinia` (`playerStore.ts`, `unoStore.ts`).
+- Las peticiones HTTP (Leaderboard, Update Profile) utilizan `$fetch` consumiendo el puerto de la API externa (Express).
+- La conexión de WebSockets se gestiona en `composables/useSocket.ts` implementando un control bidireccional "Anti-Ping-Pong" para no sobrecargar el servidor en eventos reactivos (ej. Apagar switches).
 
 ---
 
