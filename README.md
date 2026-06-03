@@ -30,9 +30,13 @@ Este proyecto está dividido en dos partes que deben correr simultáneamente: el
 ⚠️ **Regla estricta de la Tripulación:** Este proyecto usa `bun` exclusivamente. No uses `npm`.
 
 ### 1. Levantar el Backend (Motor de Juegos)
-El servidor de WebSockets se encarga de la lógica Zero-Trust, el sistema de salas y la conexión a MongoDB.
+El servidor de WebSockets ahora se encuentra en su propio repositorio para mantener la arquitectura limpia.
+
+> **Importante**: Asegúrate de haber clonado y configurado el backend por separado.
+
 ```bash
-cd backend
+# Asumiendo que clonaste el backend en otra carpeta
+cd ../discord-party-hub-backend
 bun install
 bun run dev
 ```
