@@ -1,22 +1,44 @@
-# 🎮 Discord Party Hub
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=f97316&height=200&section=header&text=Discord%20Party%20Hub&fontSize=50&fontColor=ffffff" alt="Discord Party Hub Banner" />
+  
+  <p><em>Un hub de minijuegos multijugador en tiempo real diseñado para jugarse por Discord con cero fricción.</em></p>
 
-Un hub de minijuegos multijugador en tiempo real diseñado para jugarse por Discord con cero fricción. Creado con **Nuxt 3**, **Bun**, y **Socket.io**.
+  <p>
+    <img src="https://img.shields.io/badge/Nuxt-3.0-00DC82?style=flat-square&logo=nuxt.js" alt="Nuxt">
+    <img src="https://img.shields.io/badge/Bun-Runtime-000000?style=flat-square&logo=bun" alt="Bun">
+    <img src="https://img.shields.io/badge/Socket.io-Realtime-010101?style=flat-square&logo=socket.io" alt="Socket.io">
+    <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=flat-square&logo=mongodb" alt="MongoDB">
+    <img src="https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS">
+  </p>
+</div>
+
+---
+
+## 📸 Capturas de Pantalla (Preview)
+
+> **Nota:** *Reemplazar estos placeholders con las capturas reales del proyecto (ej. usando la herramienta Recortes o Screenshots en `/docs`).*
+
+<div align="center">
+  <img src="https://placehold.co/600x350/1a0f0a/f97316?text=Lobby+Principal+\n(Mesa+y+Estanteria)" width="48%" />
+  <img src="https://placehold.co/600x350/1a0f0a/f97316?text=Partida+de+UNO+\n(Fisicas+Anime.js)" width="48%" />
+</div>
 
 ---
 
 ## 🚀 Inicio Rápido (Modo Desarrollo)
 
 Este proyecto está dividido en dos partes que deben correr simultáneamente: el **Frontend** (Nuxt 3) y el **Backend** (Node.js/Socket.io). 
-⚠️ **Regla estricta:** Este proyecto usa `bun` exclusivamente. No uses `npm`.
+
+⚠️ **Regla estricta de la Tripulación:** Este proyecto usa `bun` exclusivamente. No uses `npm`.
 
 ### 1. Levantar el Backend (Motor de Juegos)
-El servidor de WebSockets se encarga de la lógica Zero-Trust y las salas.
+El servidor de WebSockets se encarga de la lógica Zero-Trust, el sistema de salas y la conexión a MongoDB.
 ```bash
 cd backend
 bun install
 bun run dev
 ```
-El backend correrá en `http://localhost:3001`.
+> El backend correrá en `http://localhost:3001`.
 
 ### 2. Levantar el Frontend (La Interfaz)
 La interfaz de usuario interactiva y fluida.
@@ -25,44 +47,57 @@ La interfaz de usuario interactiva y fluida.
 bun install
 bun run dev
 ```
-El frontend correrá en `http://localhost:3000`.
+> El frontend correrá en `http://localhost:3000`.
 
 ---
 
-## 🏛️ Arquitectura del Proyecto
+## 🏛️ Arquitectura del Frontend (UI/UX)
 
-Este no es un proyecto monolítico, es un **Hub Modular**.
-
-### Frontend (`/`)
-Construido con Vue 3 (Composition API) bajo el marco de Nuxt 3.
-- **`components/core/`**: Componentes globales de la aplicación (La tarjeta de perfil de estilo oscuro, la mesa de billar vectorial 2D, etc.).
-- **`components/games/`**: Componentes específicos de cada juego (Ej. `games/uno/Card.vue`).
-- **`pages/sala/[id]/`**: Sistema de sub-rutas. El lobby principal está en `index.vue`, pero al lanzar un juego, se navega dinámicamente al motor visual del juego (ej. `uno.vue`, `pinturillo.vue`).
-- **`stores/`**: Gestión de estado con Pinia. `playerStore` mantiene la persistencia del usuario (ID, color, avatar) guardándolo en `localStorage` para sobrevivir a las recargas (F5).
-
-### Backend (`/backend`)
-Servidor Express/Socket.io súper ligero.
-- **Cero Confianza (Zero-Trust):** El frontend es "tonto". Nunca calcula reglas ni guarda estados secretos. Todo se procesa en el backend.
-- **Motores Aislados (`src/games/`)**: Cada juego tiene su propio motor de reglas puro (Ej. `UnoEngine.ts`, `ParchisEngine.ts`) para evitar mezclar la lógica de pintar en un lienzo con la lógica de tirar un dado.
+La interfaz se rige por la estética **"Pro Max"** combinada con **"Flat 2D Vectorial"**.
+- **Colores:** Fondos ultra oscuros (`#0A0A0A`, `#151515`) contrastados con acentos de neón dinámicos (inyectados vía `--theme-color`).
+- **Profundidad sin 3D:** Se evita el desenfoque (blur) y el fotorrealismo. Los volúmenes se logran con bordes gruesos de madera, sombras sólidas (ej. `shadow-[8px_8px_0px_#000]`) y paletas de colores planos.
+- **Componentes Destacados:**
+  - `PlayerTable.vue`: Una mesa de billar plana vista desde arriba donde los jugadores se sientan. Identifica al creador de la mesa con una corona Flat 2D dorada.
+  - `GameSelector.vue`: Un mueble de estantería de madera maciza. Los juegos descansan protegidos por una soga SVG.
+  - `TableHistoryBar.vue`: Una pizarra rústica anclada al layout que muestra el *Leaderboard* en vivo (Top #1 en oro).
 
 ---
 
-## 🎨 Diseño Visual (UI/UX)
-- **Estética "Pro Max"**: Fondos ultra oscuros (`#0A0A0A`), tarjetas en `#151515`, sin esquinas cuadradas (todo `rounded-3xl` o circular).
-- **Estilo "Flat 2D Vectorial"**: Las áreas de juego, la mesa y las estanterías evitan los falsos desenfoques 3D o brillos hiperrealistas. Los elementos simulan volumen utilizando bordes gruesos, sombras sólidas (`shadow-[8px_8px_0px_#000]`) y perspectivas isométricas limitadas y estilizadas (como juegos 2D indie modernos).
-- **Inmersión del Lobby**:
-  - **Selector de Juegos**: Estantería rústica de madera, con una cuerda de seguridad (soga SVG anclada) sobre la que descansan objetos icónicos de cada juego.
-  - **Identidad**: Corona de oro SVG (Flat 2D) dinámica sobre el jugador "Host" en la mesa central.
-  - **Clasificación**: Pizarra de madera (Leaderboard) visible en el lobby, que muestra en tiempo real los jugadores ordenados por Victorias Totales con el Top #1 remarcado en oro.
-- **Acentos**: Colores neón sutiles, principalmente naranja (`#f97316`) y glows de colores elegidos por el usuario.
-- **Animaciones**: Transiciones fluidas nativas de Vue (`<Transition>`) y coreografías complejas impulsadas por `anime.js`.
+## ⚙️ Arquitectura del Backend (Node.js + Socket.io + MongoDB)
+
+El backend no es solo un puente de mensajes, es el **Árbitro Supremo** (Zero-Trust).
+
+### 1. Zero-Trust Engines (Motores de Juego Aislados)
+El frontend es "tonto". Solo renderiza lo que el backend dicta.
+- **`src/games/uno/UnoEngine.ts`**: Valida cada jugada (ej. si puedes tirar un +4 sobre un +2). Maneja reglas de la casa (`stackDrawCards`, `interceptExact`, `zeroAndSevenRules`). Si un cliente envía un evento de trampa, el Engine lo rechaza silenciosamente o devuelve un error.
+
+### 2. Gestión de Salas (`RoomManager.ts`)
+- Mantenedor del estado en memoria (`Map<string, RoomState>`).
+- Maneja la reconexión de jugadores (F5 / Recarga de página) mediante un token de sesión.
+- Implementa **Garbage Collection**: Las salas vacías o inactivas por más de 1 hora se auto-destruyen para liberar RAM.
+
+### 3. Autenticación y Base de Datos (MongoDB)
+- **`server/api/auth/google/callback.ts`**: Controlador oficial de Google OAuth. Recibe el `id_token`, lo verifica, extrae el perfil y crea/actualiza el documento en **MongoDB Atlas**.
+- Devuelve un token JWT al frontend, el cual usa Pinia (`playerStore`) para iniciar sesión de forma persistente.
+- **Estadísticas**: Colección dedicada en Mongo para trackear `totalWins`, `gamesPlayed` y preferencias visuales del usuario (Color y Avatar).
+
+### 4. Eventos Socket Principales
+| Evento (Emit) | Función |
+| :--- | :--- |
+| `join_room` | Conecta a un jugador a una sala o lo crea si no existe. |
+| `start_game` | (Solo Host) Inicializa el `GameEngine` y reparte las cartas. |
+| `play_card` | Intenta colocar una carta en la pila de descarte. Valida con el Engine. |
+| `draw_card` | Pide robar una carta del mazo principal. |
+
+| Evento (Listen) | Función |
+| :--- | :--- |
+| `room_state_update` | Sincroniza la lista de jugadores y el Host actual. |
+| `game_state_update` | Envía la mano del jugador actual, la carta en la cima y de quién es el turno. |
+| `error` | Captura y muestra rechazos del motor (ej. "No es tu turno"). |
 
 ---
 
-## 🛠️ Stack Tecnológico
-- **Runtime & PM**: [Bun](https://bun.sh/)
-- **Framework Frontend**: [Nuxt 3](https://nuxt.com/)
-- **UI & Estilos**: [Nuxt UI v3](https://ui.nuxt.com/) / Tailwind CSS
-- **Estado**: [Pinia](https://pinia.vuejs.org/)
-- **Animaciones**: [Anime.js](https://animejs.com/)
-- **WebSockets**: [Socket.io](https://socket.io/) (v4)
+## 📝 Reglas de Contribución (Luffy Crew)
+1. **Atajos Prohibidos:** Nunca hacer commits directos a `main`. Usar ramas `feat/` o `fix/`.
+2. **Refactorización Continua:** Componentes Vue limitados estrictamente a `< 150 líneas`. Si crecen, fragmentar.
+3. **No `npm`:** Si haces `npm install`, te hacemos caminar por la tabla. Usa `bun`.
