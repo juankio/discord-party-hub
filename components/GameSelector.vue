@@ -7,30 +7,27 @@
     <div class="w-full overflow-x-auto custom-scrollbar relative z-10 flex items-end pb-[16px] px-8 snap-x">
        
        <!-- Hilo/Cuerda Sticky -->
-       <div class="sticky left-0 flex-none w-0 h-[2px] z-[15] pointer-events-none mb-[40px]">
-          <!-- Usa 200vw para asegurar que cubra todo, aunque se haga scroll -->
-          <div class="absolute left-0 w-[200vw] h-full bg-black/60 shadow-[0_1px_1px_rgba(255,255,255,0.2)]"></div>
+       <div class="absolute left-0 right-0 h-[2px] z-[25] pointer-events-none" style="bottom: 56px;">
+          <div class="w-full h-full bg-black/60 shadow-[0_1px_1px_rgba(255,255,255,0.2)]"></div>
        </div>
 
        <!-- Contenedor de Items (sin context de apilamiento extra para que z-index de botones funcione con el hilo) -->
        <div class="flex gap-x-12 px-4 items-end pt-20 w-max">
           <button
-            v-for="game in games"
-            :key="game.id"
-            class="group outline-none snap-center relative transition-all duration-300 ease-out flex items-end justify-center w-28 h-32"
+            class="relative group outline-none focus:outline-none transition-none duration-0 snap-center shrink-0 w-[140px] h-[160px] flex flex-col justify-end"
             :class="[
-              game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer',
-              selectedGame === game.id ? 'z-[20]' : 'z-10 hover:z-[20]'
+              game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
+              selectedGame === game.id ? 'z-[30]' : 'z-10'
             ]"
             :disabled="game.disabled"
             @click="$emit('select', game.id)"
           >
             <!-- Sombra anclada a la repisa -->
-            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/60 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
-                 :class="selectedGame === game.id ? 'w-24 opacity-40' : 'w-16 opacity-70 group-hover:w-20 group-hover:opacity-50'"></div>
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
+                 :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"></div>
 
             <!-- Objeto animado (se mueve verticalmente pero la sombra se queda) -->
-            <div class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-10"
+            <div class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
                  :class="[
                    game.disabled ? '' : 'group-hover:-translate-y-4',
                    selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
