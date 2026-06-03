@@ -104,6 +104,24 @@ export const usePlayerStore = defineStore('player', {
         }))
       } catch {}
     },
+    async updateProfile(updates: any) {
+      if (!this.isLoggedIn || !this.token) throw new Error('No estás logueado');
+      
+      const res = await $fetch<any>('/api/auth/update', {
+        method: 'POST',
+        body: {
+          token: this.token,
+          updates
+        }
+      });
+
+      if (res.error) {
+        throw new Error(res.error);
+      }
+
+      // Actualizamos estado si sale bien
+      this.setAccountAuth(this.token, res.user);
+    },
     logout() {
       this.token = ''
       this.isLoggedIn = false

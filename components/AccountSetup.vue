@@ -102,30 +102,15 @@ const saveProfile = async () => {
   errorMsg.value = ''
   
   try {
-    const res = await $fetch('/api/auth/update', {
-      method: 'POST',
-      body: {
-        token: playerStore.token,
-        updates: {
-          username: editNickname.value,
-          avatarId: editAvatarId.value,
-          color: editColor.value,
-          useGooglePicture: editUseGooglePicture.value
-        }
-      }
+    await playerStore.updateProfile({
+      username: editNickname.value,
+      avatarId: editAvatarId.value,
+      color: editColor.value,
+      useGooglePicture: editUseGooglePicture.value
     })
-
-    if (res.error) {
-      errorMsg.value = res.error
-      return
-    }
-
-    // Actualizamos el store local que a su vez actualizará localStorage y CSS vars (reactivo)
-    playerStore.setAccountAuth(playerStore.token, res.user)
     isEditing.value = false
-    
   } catch (e: any) {
-    errorMsg.value = 'Error de conexión.'
+    errorMsg.value = e.message || 'Error de conexión.'
   } finally {
     isLoading.value = false
   }
