@@ -6,7 +6,7 @@
       <h1 class="text-4xl md:text-5xl font-black text-white pb-1 tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
         PARTY HUB
       </h1>
-      <p class="text-gray-500 text-sm font-medium tracking-widest uppercase mt-1">Juega con fricción cero</p>
+      <p class="text-gray-500 text-sm font-medium tracking-widest uppercase mt-1">¡Juega cagón!</p>
     </div>
 
     <!-- Contenedor Principal y Leaderboard -->
