@@ -1,17 +1,61 @@
 <template>
-  <div class="flex flex-col items-center gap-4 w-full">
-    <div v-if="playerStore.isLoggedIn" class="flex flex-col items-center gap-4">
+  <div class="flex flex-col items-center gap-4 w-full relative">
+    
+    <!-- Vista de Usuario Logueado (No Editando) -->
+    <div v-if="playerStore.isLoggedIn && !isEditing" class="flex flex-col items-center gap-4 w-full transition-all duration-300">
+      
+      <!-- Botón Editar Flotante -->
+      <button @click="startEditing" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all" title="Editar Perfil">
+        <UIcon name="i-lucide-settings" class="w-5 h-5" />
+      </button>
+
       <div class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors shadow-[0_0_30px_rgba(0,0,0,0.8)] relative" :style="{ borderColor: playerStore.color }">
         <img :src="playerStore.picture ? playerStore.picture : `/avatars/avatar-${playerStore.avatarId}.svg?v=3`" alt="Avatar" class="w-full h-full object-cover" >
       </div>
-      <h2 class="text-white text-2xl font-black">¡Hola, <span :style="{ color: 'var(--theme-color)' }">{{ playerStore.nickname }}</span>!</h2>
+      <h2 class="text-white text-2xl font-black text-center">¡Hola, <span :style="{ color: 'var(--theme-color)' }">{{ playerStore.nickname }}</span>!</h2>
       <p class="text-yellow-500 font-bold tracking-widest text-sm">🏆 VICTORIAS: {{ playerStore.totalWins || 0 }}</p>
       
-      <button class="text-gray-500 hover:text-white text-xs font-bold transition-all mt-4 border border-white/10 px-4 py-2 rounded-full hover:bg-white/5" @click="logout">
+      <button class="text-gray-500 hover:text-white text-xs font-bold transition-all mt-4 border border-white/10 px-4 py-2 rounded-full hover:bg-white/5 hover:border-red-500/50 hover:text-red-400" @click="logout">
         CERRAR SESIÓN
       </button>
     </div>
 
+    <!-- Vista de Edición de Perfil (Post-Login) -->
+    <div v-else-if="playerStore.isLoggedIn && isEditing" class="flex flex-col items-center gap-4 w-full transition-all duration-300">
+      <div class="flex items-center justify-between w-full px-2 mb-2 border-b border-white/10 pb-2">
+        <h3 class="text-white font-bold tracking-widest uppercase text-xs">Editar Perfil</h3>
+        <button @click="isEditing = false" class="text-gray-500 hover:text-white text-xs font-bold transition-colors">CANCELAR</button>
+      </div>
+
+      <!-- Selector de Avatar y Color base (Componente que ya tenemos) -->
+      <ProfileSetup 
+        v-model:avatar-id="editAvatarId"
+        v-model:color="editColor"
+        v-model:nickname="editNickname"
+      />
+
+      <!-- Toggle para ignorar foto de Google -->
+      <label v-if="playerStore.picture" class="flex items-center justify-center gap-3 w-full bg-black/30 p-3 rounded-xl border border-white/5 cursor-pointer hover:bg-black/50 transition-colors mt-2">
+        <span class="text-gray-300 text-xs font-bold">Usar mi foto de Google</span>
+        <UToggle v-model="editUseGooglePicture" :ui="{ active: 'bg-[var(--theme-color)]' }" />
+      </label>
+
+      <!-- Feedback -->
+      <p v-if="errorMsg" class="text-red-500 text-xs font-bold">{{ errorMsg }}</p>
+      <p v-if="isLoading" class="text-gray-400 text-xs font-bold animate-pulse">Guardando en la nube...</p>
+
+      <!-- Guardar -->
+      <button 
+        @click="saveProfile"
+        :disabled="editNickname.trim().length < 2 || isLoading"
+        class="w-full mt-2 px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+        style="background-color: var(--theme-color);"
+      >
+        Guardar Cambios
+      </button>
+    </div>
+
+    <!-- Vista de Invitado/No Logueado -->
     <div v-else class="w-full flex flex-col gap-6 mt-4">
       <p class="text-gray-400 text-sm text-center">Inicia sesión con tu cuenta de Google para guardar tus victorias en el Leaderboard Global.</p>
       
@@ -30,11 +74,65 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
 
 const playerStore = usePlayerStore()
 
+const isEditing = ref(false)
+const isLoading = ref(false)
+const errorMsg = ref('')
+
+// Estados temporales de edición
+const editNickname = ref('')
+const editAvatarId = ref(1)
+const editColor = ref('#f97316')
+const editUseGooglePicture = ref(true) // Si la apaga, picture se guardará vacío
+
+const startEditing = () => {
+  editNickname.value = playerStore.nickname
+  editAvatarId.value = playerStore.avatarId
+  editColor.value = playerStore.color
+  editUseGooglePicture.value = playerStore.picture !== ''
+  isEditing.value = true
+}
+
+const saveProfile = async () => {
+  isLoading.value = true
+  errorMsg.value = ''
+  
+  try {
+    const res = await $fetch('/api/auth/update', {
+      method: 'POST',
+      body: {
+        token: playerStore.token,
+        updates: {
+          username: editNickname.value,
+          avatarId: editAvatarId.value,
+          color: editColor.value,
+          useGooglePicture: editUseGooglePicture.value
+        }
+      }
+    })
+
+    if (res.error) {
+      errorMsg.value = res.error
+      return
+    }
+
+    // Actualizamos el store local que a su vez actualizará localStorage y CSS vars (reactivo)
+    playerStore.setAccountAuth(playerStore.token, res.user)
+    isEditing.value = false
+    
+  } catch (e: any) {
+    errorMsg.value = 'Error de conexión.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
 const logout = () => {
   playerStore.logout()
+  isEditing.value = false
 }
 </script>
