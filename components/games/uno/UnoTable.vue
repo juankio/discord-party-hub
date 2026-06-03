@@ -1,12 +1,14 @@
 <template>
   <div class="flex-1 flex justify-center items-center relative z-10 w-full">
-    <div class="w-full max-w-[600px] h-[300px] bg-[#151515] rounded-[100px] border border-gray-800 shadow-2xl flex items-center justify-center relative mx-4">
+    <div class="w-full max-w-[600px] h-[300px] bg-[#991b1b] rounded-[100px] border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex items-center justify-center relative mx-4 overflow-hidden">
       
+      <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"></div>
+
       <!-- Deck (Mazo para Robar) -->
       <div class="absolute left-8 md:left-16 flex flex-col items-center gap-2">
         <div
 class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer transition-transform"
-             :class="pendingDraws > 0 ? 'border-red-500 animate-pulse hover:scale-105' : 'hover:scale-105'"
+             :class="[pendingDraws > 0 ? 'ring-4 ring-red-500 animate-pulse shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-105' : (isMyTurn ? 'ring-4 ring-yellow-400 animate-pulse shadow-[0_0_30px_rgba(250,204,21,0.6)] hover:scale-105' : 'hover:scale-105')]"
              @click="drawCard">
           
           <!-- Si hay cartas acumuladas (+2, +4) -->
@@ -19,18 +21,15 @@ class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gr
           </span>
 
         </div>
-        <span class="text-[10px] md:text-xs font-bold tracking-widest uppercase"
-              :class="pendingDraws > 0 ? (isMyTurn ? 'text-red-500 animate-pulse' : 'text-orange-400') : 'text-gray-500'">
-          {{ pendingDraws > 0 ? (isMyTurn ? '¡Comer!' : `Acumulado: +${pendingDraws}`) : 'Robar' }}
-        </span>
+        <span class="text-[9px] md:text-[10px] font-black tracking-widest uppercase text-center max-w-[120px] drop-shadow-md z-10" :class="pendingDraws > 0 ? (isMyTurn ? 'text-red-500 animate-pulse' : 'text-orange-400') : (isMyTurn ? 'text-yellow-400' : 'text-gray-300')">{{ pendingDraws > 0 ? (isMyTurn ? `¡TE TOCA COMER +${pendingDraws}!` : `¡${victimName} COME +${pendingDraws} POR MALO!`) : (isMyTurn ? 'Tu turno (Robar)' : 'Mazo') }}</span>
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
       <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
            :class="[ topCard.color === 'wild' && currentColor ? 'card-' + currentColor : 'card-' + (topCard.color === 'wild' ? 'black' : topCard.color) ]">
-         <div class="inner-oval"><span class="card-value">{{ getCardDisplay(topCard) }}</span></div>
-         <span class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
-         <span class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>
+         <div class="inner-oval"><div v-if="topCard.value === 'wild'" class="w-10 h-10 md:w-14 md:h-14 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="card-value">{{ getCardDisplay(topCard) }}</span></div>
+         <div v-if="topCard.value === 'wild'" class="corner-value top-left w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
+         <div v-if="topCard.value === 'wild'" class="corner-value bottom-right w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>
       </div>
     </div>
   </div>
@@ -39,6 +38,9 @@ class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gr
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import anime from 'animejs'
+import { computed } from 'vue'
+import { useUnoStore } from '~/stores/games/unoStore'
+import { usePlayerStore } from '~/stores/playerStore'
 
 const props = defineProps({
   topCard: { type: Object, default: null },
@@ -50,13 +52,23 @@ const props = defineProps({
 const emit = defineEmits(['draw'])
 const isDrawing = ref(false)
 
+const unoStore = useUnoStore()
+const playerStore = usePlayerStore()
+
+const victimName = computed(() => {
+  const currentId = unoStore.currentTurnUserId;
+  if (currentId === playerStore.userId) return 'TÚ';
+  const rival = unoStore.rivals.find((r: any) => r.userId === currentId);
+  return rival ? rival.nickname : 'Alguien';
+})
+
 const getCardDisplay = (card: any) => {
   if (!card) return ''
   if (['0','1','2','3','4','5','6','7','8','9'].includes(card.value)) return card.value
   if (card.value === 'skip') return '⊘'
   if (card.value === 'reverse') return '⇄'
   if (card.value === 'draw2') return '+2'
-  if (card.value === 'wild') return 'W'
+  if (card.value === 'wild') return ''
   if (card.value === 'wild_draw4') return '+4'
   return ''
 }

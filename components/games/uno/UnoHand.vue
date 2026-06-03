@@ -13,9 +13,9 @@ class="uno-card hand-card cursor-pointer"
              @mouseenter="$emit('hover-card', index)"
              @mouseleave="$emit('hover-card', null)">
           
-          <div class="inner-oval"><span class="card-value">{{ getCardDisplay(card) }}</span></div>
-          <span class="corner-value top-left">{{ getCardDisplay(card) }}</span>
-          <span class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
+          <div class="inner-oval"><div v-if="card.value === 'wild'" class="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="card-value">{{ getCardDisplay(card) }}</span></div>
+          <div v-if="card.value === 'wild'" class="corner-value top-left w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value top-left">{{ getCardDisplay(card) }}</span>
+          <div v-if="card.value === 'wild'" class="corner-value bottom-right w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
           
           <!-- Bloqueo visual oscuro si no es jugable y es tu turno -->
           <div v-if="!isPlayable(card)" class="absolute inset-0 bg-black/60 rounded-[4px] md:rounded-[6px]"/>
@@ -69,7 +69,7 @@ const getCardDisplay = (card: any) => {
   if (card.value === 'skip') return '⊘'
   if (card.value === 'reverse') return '⇄'
   if (card.value === 'draw2') return '+2'
-  if (card.value === 'wild') return 'W'
+  if (card.value === 'wild') return ''
   if (card.value === 'wild_draw4') return '+4'
   return ''
 }
