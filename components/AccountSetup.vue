@@ -47,9 +47,12 @@ const handleGoogleLogin = async (response: any) => {
   isLoading.value = true
   
   try {
+    // Cuando usamos el flujo por defecto (sin popup-type="TOKEN"), el token viene en response.credential
+    const token = response.credential || response.access_token;
+    
     const res = await $fetch('/api/auth/google', {
       method: 'POST',
-      body: { token: response.access_token }
+      body: { token }
     })
     
     if (res.error) {
