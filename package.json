@@ -24,8 +24,7 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2",
-    "vue3-google-login": "^2.1.4"
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
