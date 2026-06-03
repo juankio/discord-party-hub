@@ -15,6 +15,10 @@ export const usePlayerStore = defineStore('player', {
     isLoggedIn: false,
     token: '',
     totalWins: 0,
+        gamesPlayed: 0,
+        lastPlayed: null,
+    gamesPlayed: 0,
+    lastPlayed: null as Date | string | null,
     picture: '',
     roomRules: {
       stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false
@@ -38,8 +42,36 @@ export const usePlayerStore = defineStore('player', {
         }))
       } catch {}
     },
+
     loadPlayerSetup() {
+      if (typeof window !== 'undefined') {
+        const searchParams = new URLSearchParams(window.location.search);
+        const authDataParam = searchParams.get('auth_data');
+        if (authDataParam) {
+          try {
+            const authDataString = atob(authDataParam);
+            const authData = JSON.parse(authDataString);
+            
+            const oldDataRaw = window.localStorage.getItem('party-hub-user');
+            let roomId = '';
+            if (oldDataRaw) {
+              const oldData = JSON.parse(oldDataRaw);
+              roomId = oldData.roomId || '';
+            }
+            if (roomId) authData.roomId = roomId;
+            
+            window.localStorage.setItem('party-hub-user', JSON.stringify(authData));
+            
+            // Limpiar la URL para que no quede el token ahí feo
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch(e) {
+            console.error('Failed to parse auth data from URL', e);
+          }
+        }
+      }
+      
       try {
+
         const data = localStorage.getItem('party-hub-user')
         if (data) {
           try {
@@ -51,6 +83,8 @@ export const usePlayerStore = defineStore('player', {
             this.isLoggedIn = parsed.isLoggedIn || false
             this.token = parsed.token || ''
             this.totalWins = parsed.totalWins || 0
+            this.gamesPlayed = parsed.gamesPlayed || 0
+            this.lastPlayed = parsed.lastPlayed || null
             this.picture = parsed.picture || ''
             
             // Si el usuario viene de la versión anterior y no tiene userId, se lo creamos y guardamos
@@ -64,6 +98,10 @@ export const usePlayerStore = defineStore('player', {
                 isLoggedIn: this.isLoggedIn,
                 token: this.token,
                 totalWins: this.totalWins,
+          gamesPlayed: this.gamesPlayed,
+          lastPlayed: this.lastPlayed,
+                gamesPlayed: this.gamesPlayed,
+                lastPlayed: this.lastPlayed,
                 picture: this.picture
               }))
             } else {
@@ -100,6 +138,8 @@ export const usePlayerStore = defineStore('player', {
       this.avatarId = user.avatarId || 1
       this.color = user.color || '#f97316'
       this.totalWins = user.stats?.totalWins || 0
+      this.gamesPlayed = user.gamesPlayed || 0
+      this.lastPlayed = user.lastPlayed || null
       this.picture = user.picture || ''
       if (!this.userId) this.userId = generateId()
       

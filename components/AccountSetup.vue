@@ -13,7 +13,17 @@
         <img :src="playerStore.picture ? playerStore.picture : `/avatars/avatar-${playerStore.avatarId}.svg?v=3`" alt="Avatar" class="w-full h-full object-cover" >
       </div>
       <h2 class="text-white text-2xl font-black text-center">¡Hola, <span :style="{ color: 'var(--theme-color)' }">{{ playerStore.nickname }}</span>!</h2>
-      <p class="text-yellow-500 font-bold tracking-widest text-sm">🏆 VICTORIAS: {{ playerStore.totalWins || 0 }}</p>
+      <div class="flex gap-4 w-full justify-center">
+        <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col items-center flex-1">
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Partidas</p>
+          <p class="text-xl font-black text-white">{{ playerStore.gamesPlayed || 0 }}</p>
+        </div>
+        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 flex flex-col items-center flex-1">
+          <p class="text-[10px] text-yellow-500/70 font-bold uppercase tracking-widest">Victorias</p>
+          <p class="text-xl font-black text-yellow-500">{{ playerStore.totalWins || 0 }}</p>
+        </div>
+      </div>
+      <p v-if="playerStore.lastPlayed" class="text-xs text-gray-500 italic mt-[-8px]">Última partida: {{ new Date(playerStore.lastPlayed).toLocaleDateString() }}</p>
       
       <button class="text-gray-500 hover:text-white text-xs font-bold transition-all mt-4 border border-white/10 px-4 py-2 rounded-full hover:bg-white/5 hover:border-red-500/50 hover:text-red-400" @click="logout">
         CERRAR SESIÓN
