@@ -31,5 +31,7 @@ v-for="(player, index) in leaderboard" :key="player.username"
 </template>
 
 <script setup lang="ts">
-const { data: leaderboard, pending, error } = useFetch<any[]>('http://localhost:3001/api/leaderboard/top')
+const config = useRuntimeConfig()
+const baseUrl = config.public.socketUrl || 'http://localhost:3001'
+const { data: leaderboard, pending, error } = useFetch<any[]>(`${baseUrl}/api/leaderboard/top`)
 </script>

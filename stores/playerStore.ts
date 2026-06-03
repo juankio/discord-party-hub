@@ -119,10 +119,15 @@ export const usePlayerStore = defineStore('player', {
     async updateProfile(updates: any) {
       if (!this.isLoggedIn || !this.token) throw new Error('No estás logueado');
       
-      const res = await $fetch<any>('http://localhost:3001/api/auth/update', {
+      const config = useRuntimeConfig();
+      const baseUrl = config.public.socketUrl || 'http://localhost:3001';
+      
+      const res = await $fetch<any>(`${baseUrl}/api/auth/update`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        },
         body: {
-          token: this.token,
           updates
         }
       });
