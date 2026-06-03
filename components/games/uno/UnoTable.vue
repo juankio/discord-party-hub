@@ -63,7 +63,7 @@ const getCardDisplay = (card: any) => {
 
 const drawCard = (event: Event) => {
   if (!props.isMyTurn || isDrawing.value) return
-  isDrawing.value = true
+  isDrawing.value = true // Bloqueamos el mazo
   
   const target = event.currentTarget as HTMLElement
   anime({
@@ -75,7 +75,8 @@ const drawCard = (event: Event) => {
     easing: 'easeOutElastic(1, .5)',
     complete: () => {
       emit('draw')
-      setTimeout(() => isDrawing.value = false, 200)
+      // Aumentamos a 1000ms el bloqueo para evitar spamear el click mientras esperamos al backend
+      setTimeout(() => isDrawing.value = false, 1000) 
     }
   })
 }
