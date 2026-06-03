@@ -14,6 +14,8 @@
        <!-- Contenedor de Items (sin context de apilamiento extra para que z-index de botones funcione con el hilo) -->
        <div class="flex gap-x-12 px-4 items-end pt-20 w-max">
           <button
+            v-for="game in games"
+            :key="game.id"
             class="relative group outline-none focus:outline-none transition-none duration-0 snap-center shrink-0 w-[140px] h-[160px] flex flex-col justify-end"
             :class="[
               game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
