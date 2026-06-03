@@ -2,7 +2,7 @@
   <div class="flex-1 flex justify-center items-center relative z-10 w-full">
     <div class="w-full max-w-[600px] h-[300px] bg-[#991b1b] rounded-[100px] border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex items-center justify-center relative mx-4 overflow-hidden">
       
-      <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"></div>
+      <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"/>
 
       <!-- Deck (Mazo para Robar) -->
       <div class="absolute left-8 md:left-16 flex flex-col items-center gap-2">
@@ -25,20 +25,20 @@ class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gr
       </div>
 
       <!-- Top Card (Carta de la Mesa) -->
-      <div v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
+      <div
+v-if="topCard" class="uno-card top-card-anim top-card-placeholder transition-shadow duration-300" 
            :class="[ topCard.color === 'wild' && currentColor ? 'card-' + currentColor : 'card-' + (topCard.color === 'wild' ? 'black' : topCard.color) ]">
-         <div class="inner-oval"><div v-if="topCard.value === 'wild'" class="w-10 h-10 md:w-14 md:h-14 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="card-value">{{ getCardDisplay(topCard) }}</span></div>
-         <div v-if="topCard.value === 'wild'" class="corner-value top-left w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
-         <div v-if="topCard.value === 'wild'" class="corner-value bottom-right w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>
+         <div class="inner-oval"><div v-if="topCard.value === 'wild'" class="w-10 h-10 md:w-14 md:h-14 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="card-value">{{ getCardDisplay(topCard) }}</span></div>
+         <div v-if="topCard.value === 'wild'" class="corner-value top-left w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value top-left">{{ getCardDisplay(topCard) }}</span>
+         <div v-if="topCard.value === 'wild'" class="corner-value bottom-right w-3 h-3 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value bottom-right">{{ getCardDisplay(topCard) }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed  } from 'vue'
 import anime from 'animejs'
-import { computed } from 'vue'
 import { useUnoStore } from '~/stores/games/unoStore'
 import { usePlayerStore } from '~/stores/playerStore'
 
@@ -108,82 +108,3 @@ const drawCard = (event: Event) => {
 }
 </script>
 
-<style scoped>
-/* Compartimos estilos de las cartas */
-.uno-card {
-  width: 90px; height: 130px;
-  border-radius: 8px; border: 4px solid white;
-  position: relative; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5); user-select: none;
-  background-color: white;
-  --color-red: #ef4444;
-  --color-blue: #3b82f6;
-  --color-green: #22c55e;
-  --color-yellow: #eab308;
-}
-@media (min-width: 768px) {
-  .uno-card { width: 110px; height: 160px; border-width: 5px; border-radius: 10px; }
-}
-
-.card-red { background-color: #ef4444; }
-.card-blue { background-color: #3b82f6; }
-.card-green { background-color: #22c55e; }
-.card-yellow { background-color: #eab308; }
-.card-black { background-color: #1f2937; border-color: #111; }
-
-.inner-oval {
-  width: 85%; height: 85%; background: white;
-  border-radius: 50% 50% / 65% 65%;
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotate(-25deg);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
-}
-.card-red .inner-oval { color: #ef4444; }
-.card-blue .inner-oval { color: #3b82f6; }
-.card-green .inner-oval { color: #22c55e; }
-.card-yellow .inner-oval { color: #eab308; }
-
-.card-black .inner-oval { 
-  background-color: #1a1a1a !important; 
-  border: 4px solid transparent;
-  background-clip: padding-box;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-}
-.card-black .inner-oval::before {
-  content: ''; position: absolute; inset: -4px; border-radius: inherit;
-  background: linear-gradient(135deg, #ef4444, #eab308, #22c55e, #3b82f6);
-  z-index: -1;
-}
-
-.card-value {
-  font-size: 2.2rem; font-weight: 900;
-  text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-  transform: rotate(25deg);
-  line-height: 1;
-}
-@media (min-width: 768px) {
-  .card-value { font-size: 3rem; }
-}
-
-.card-black .card-value {
-  color: white !important;
-  font-size: 2rem;
-  text-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
-  background: none !important;
-  -webkit-text-fill-color: white !important;
-}
-@media (min-width: 768px) {
-  .card-black .card-value { font-size: 2.5rem; }
-}
-
-.corner-value {
-  position: absolute; font-size: 0.9rem; font-weight: bold;
-  color: white; text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
-}
-@media (min-width: 768px) {
-  .corner-value { font-size: 1.1rem; }
-}
-.top-left { top: 4px; left: 6px; }
-.bottom-right { bottom: 4px; right: 6px; transform: rotate(180deg); }
-</style>

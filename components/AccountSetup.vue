@@ -5,7 +5,7 @@
     <div v-if="playerStore.isLoggedIn && !isEditing" class="flex flex-col items-center gap-4 w-full transition-all duration-300">
       
       <!-- Botón Editar Flotante -->
-      <button @click="startEditing" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all" title="Editar Perfil">
+      <button class="absolute top-0 right-0 p-2 text-gray-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all" title="Editar Perfil" @click="startEditing">
         <UIcon name="i-lucide-settings" class="w-5 h-5" />
       </button>
 
@@ -24,7 +24,7 @@
     <div v-else-if="playerStore.isLoggedIn && isEditing" class="flex flex-col items-center gap-4 w-full transition-all duration-300">
       <div class="flex items-center justify-between w-full px-2 mb-2 border-b border-white/10 pb-2">
         <h3 class="text-white font-bold tracking-widest uppercase text-xs">Editar Perfil</h3>
-        <button @click="isEditing = false" class="text-gray-500 hover:text-white text-xs font-bold transition-colors">CANCELAR</button>
+        <button class="text-gray-500 hover:text-white text-xs font-bold transition-colors" @click="isEditing = false">CANCELAR</button>
       </div>
 
       <!-- Selector de Avatar y Color base (Componente que ya tenemos) -->
@@ -46,10 +46,10 @@
 
       <!-- Guardar -->
       <button 
-        @click="saveProfile"
         :disabled="editNickname.trim().length < 2 || isLoading"
         class="w-full mt-2 px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
         style="background-color: var(--theme-color);"
+        @click="saveProfile"
       >
         Guardar Cambios
       </button>

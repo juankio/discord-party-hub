@@ -1,6 +1,7 @@
 <template>
   <div class="w-full max-w-3xl mx-auto border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-hidden flex flex-col shadow-inner">
-    <div v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
+    <div
+v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
          class="relative w-full flex justify-center gap-8 items-end pb-[24px] pt-8 bg-[#382012]">
       
       <!-- Soga -->
@@ -16,7 +17,7 @@
       </div>
       
       <!-- Repisa -->
-      <div class="absolute bottom-0 left-0 w-full h-[24px] bg-[#a06d40] border-b-[8px] border-[#7d512a] z-0 shadow-lg"></div>
+      <div class="absolute bottom-0 left-0 w-full h-[24px] bg-[#a06d40] border-b-[8px] border-[#7d512a] z-0 shadow-lg"/>
 
       <!-- Items -->
       <button
@@ -30,38 +31,36 @@
         :disabled="game.disabled"
         @click="$emit('select', game.id)"
       >
-        <!-- Sombra anclada a la repisa -->
-        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
-             :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"></div>
+        <div
+class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
+             :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"/>
 
-        <!-- Objeto animado -->
-        <div class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
+        <div
+class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
              :class="[
                game.disabled ? '' : 'group-hover:-translate-y-4',
                selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
              ]">
             
-            <!-- Etiqueta Nombre -->
-            <div class="absolute -top-6 text-white font-bold text-[10px] uppercase tracking-widest whitespace-nowrap opacity-60 transition-opacity"
+            <div
+class="absolute -top-6 text-white font-bold text-[10px] uppercase tracking-widest whitespace-nowrap opacity-60 transition-opacity"
                  :class="{'opacity-100 text-yellow-400 drop-shadow-md': selectedGame === game.id}">
               {{ game.name }}
             </div>
 
-            <!-- Flecha Bouncing -->
             <div v-if="selectedGame === game.id" class="absolute -top-14 left-1/2 -translate-x-1/2 animate-bounce z-40 text-white drop-shadow-md">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-7-7h14l-7 7z" /></svg>
             </div>
 
-            <!-- Glow trasero al seleccionar -->
-            <div class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0 pointer-events-none"
+            <div
+class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0 pointer-events-none"
                  :style="{ backgroundColor: game.color || '#ffffff' }"
-                 :class="{ 'opacity-30': selectedGame === game.id }"></div>
+                 :class="{ 'opacity-30': selectedGame === game.id }"/>
             
-            <!-- 2D Game Graphic -->
             <div class="relative z-10 w-full flex items-end justify-center">
                <!-- UNO -->
                <div v-if="game.id === 'uno'" class="relative w-16 h-24 flex items-center justify-center">
-                 <div class="absolute w-16 h-24 bg-gray-900 border-2 border-white rounded-sm rotate-12 shadow-md"></div>
+                 <div class="absolute w-16 h-24 bg-gray-900 border-2 border-white rounded-sm rotate-12 shadow-md"/>
                  <div class="absolute w-16 h-24 bg-red-600 border-2 border-white rounded-sm -rotate-6 shadow-lg flex items-center justify-center overflow-hidden">
                    <div class="w-[110%] h-[60%] bg-white rounded-[50%] -rotate-[25deg] flex items-center justify-center">
                      <span class="text-red-600 font-black text-xl tracking-tighter" style="text-shadow: 1px 1px 0 #000;">UNO</span>
@@ -72,13 +71,13 @@
                <!-- PARCHÍS -->
                <div v-else-if="game.id === 'parchis'" class="w-20 h-20 bg-[#eab308] border-2 border-white p-1 rounded-sm relative shadow-md">
                  <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1">
-                   <div class="bg-red-500 rounded-tl-sm"></div>
-                   <div class="bg-blue-500 rounded-tr-sm"></div>
-                   <div class="bg-green-500 rounded-bl-sm"></div>
-                   <div class="bg-yellow-400 rounded-br-sm"></div>
+                   <div class="bg-red-500 rounded-tl-sm"/>
+                   <div class="bg-blue-500 rounded-tr-sm"/>
+                   <div class="bg-green-500 rounded-bl-sm"/>
+                   <div class="bg-yellow-400 rounded-br-sm"/>
                  </div>
                  <div class="absolute inset-0 m-auto w-5 h-5 bg-white border border-gray-800 rounded-sm shadow-md flex items-center justify-center rotate-3">
-                   <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                   <div class="w-1.5 h-1.5 bg-black rounded-full"/>
                  </div>
                </div>
 
@@ -88,12 +87,12 @@
                     <UIcon name="i-lucide-skull" class="w-6 h-6 text-gray-400 opacity-60" />
                  </div>
                  <div class="absolute bottom-1 -right-1 w-4 h-4 bg-red-700 border border-red-900 rounded-sm shadow-md flex items-center justify-center rotate-12 z-20">
-                   <div class="w-1 h-1 bg-white rounded-full"></div>
+                   <div class="w-1 h-1 bg-white rounded-full"/>
                  </div>
                  <div class="absolute bottom-2 -left-2 w-4 h-4 bg-white border border-gray-300 rounded-sm shadow-md flex items-center justify-center -rotate-12 z-20">
                    <div class="grid grid-cols-2 grid-rows-2 gap-[2px]">
-                     <div class="w-0.5 h-0.5 bg-black rounded-full"></div><div class="w-0.5 h-0.5 bg-black rounded-full"></div>
-                     <div class="w-0.5 h-0.5 bg-black rounded-full"></div><div class="w-0.5 h-0.5 bg-black rounded-full"></div>
+                     <div class="w-0.5 h-0.5 bg-black rounded-full"/><div class="w-0.5 h-0.5 bg-black rounded-full"/>
+                     <div class="w-0.5 h-0.5 bg-black rounded-full"/><div class="w-0.5 h-0.5 bg-black rounded-full"/>
                    </div>
                  </div>
                </div>
@@ -101,9 +100,9 @@
                <!-- STOP -->
                <div v-else-if="game.id === 'stop'" class="w-16 h-20 bg-yellow-300 border border-yellow-500 rounded-sm shadow-md flex flex-col overflow-hidden relative rotate-3">
                  <div class="h-3 w-full bg-red-600 border-b border-red-800 flex justify-evenly items-center">
-                    <div class="w-1 h-1 bg-black rounded-full opacity-40" v-for="i in 3" :key="i"></div>
+                    <div v-for="i in 3" :key="i" class="w-1 h-1 bg-black rounded-full opacity-40"/>
                  </div>
-                 <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px);"></div>
+                 <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px);"/>
                  <div class="absolute inset-0 flex items-center justify-center pt-2">
                     <span class="text-red-600 font-black text-sm tracking-tight -rotate-12 bg-yellow-300 px-1 border-2 border-red-600 rounded">STOP</span>
                  </div>
@@ -112,14 +111,14 @@
                <!-- PINTURILLO -->
                <div v-else-if="game.id === 'pinturillo'" class="w-20 h-20 relative flex flex-col items-center justify-end">
                  <div class="w-14 h-12 bg-white border-[3px] border-[#a37648] rounded-sm shadow-md z-10 flex items-center justify-center relative">
-                    <div class="w-4 h-4 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-1"></div>
-                    <div class="w-4 h-4 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-1"></div>
+                    <div class="w-4 h-4 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-1"/>
+                    <div class="w-4 h-4 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-1"/>
                  </div>
-                 <div class="w-16 h-1.5 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"></div>
+                 <div class="w-16 h-1.5 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"/>
                  <div class="absolute bottom-0 w-full h-full flex justify-center z-0">
-                   <div class="w-1.5 h-16 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-3"></div>
-                   <div class="w-1.5 h-16 bg-[#6b4726] absolute rotate-12 origin-top translate-x-3"></div>
-                   <div class="w-1.5 h-20 bg-[#57391e] absolute"></div>
+                   <div class="w-1.5 h-16 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-3"/>
+                   <div class="w-1.5 h-16 bg-[#6b4726] absolute rotate-12 origin-top translate-x-3"/>
+                   <div class="w-1.5 h-20 bg-[#57391e] absolute"/>
                  </div>
                </div>
                

@@ -18,20 +18,23 @@
         ]"
       >
         <!-- Rango -->
-        <div class="w-6 font-black text-lg text-center"
+        <div
+class="w-6 font-black text-lg text-center"
              :class="index === 0 ? 'text-[#f59e0b]' : 'text-gray-500'">
           #{{ index + 1 }}
         </div>
         
         <!-- Avatar -->
-        <div class="w-10 h-10 rounded-full border-2 bg-black flex-shrink-0"
+        <div
+class="w-10 h-10 rounded-full border-2 bg-black flex-shrink-0"
              :style="{ borderColor: player.color || '#f97316' }">
           <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-full h-full object-contain rounded-full">
         </div>
         
         <!-- Info -->
         <div class="flex-1 flex flex-col overflow-hidden">
-          <span class="font-bold text-sm truncate"
+          <span
+class="font-bold text-sm truncate"
                 :class="index === 0 ? 'text-[#f59e0b] drop-shadow-[1px_1px_0_#000]' : 'text-white'">
             {{ player.nickname }}
           </span>

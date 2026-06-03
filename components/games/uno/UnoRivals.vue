@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex justify-center items-start pt-12 gap-8 z-10 w-full">
-    <div :id="`rival-avatar-${rival.userId}`" v-for="rival in rivals" :key="rival.userId" class="flex flex-col items-center relative">
+    <div v-for="rival in rivals" :id="`rival-avatar-${rival.userId}`" :key="rival.userId" class="flex flex-col items-center relative">
       <!-- Avatar -->
       <div
 class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10 transition-colors"

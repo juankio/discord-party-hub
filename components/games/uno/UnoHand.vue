@@ -1,8 +1,10 @@
 <template>
   <div ref="handContainer" class="flex-1 flex justify-center items-end pb-8 z-10 relative w-full">
-    <div class="flex justify-center items-end" 
+    <div
+class="flex justify-center items-end" 
          :class="myHand.length > 12 ? '-space-x-16 sm:-space-x-14' : (myHand.length > 7 ? '-space-x-14 sm:-space-x-12' : '-space-x-12 sm:-space-x-10')">
-      <div v-for="(card, index) in myHand" :key="card.id" 
+      <div
+v-for="(card, index) in myHand" :key="card.id" 
            class="card-wrapper transition-all duration-300"
            :style="calculateCardStyle(index, myHand.length)">
         
@@ -13,9 +15,9 @@ class="uno-card hand-card cursor-pointer"
              @mouseenter="$emit('hover-card', index)"
              @mouseleave="$emit('hover-card', null)">
           
-          <div class="inner-oval"><div v-if="card.value === 'wild'" class="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="card-value">{{ getCardDisplay(card) }}</span></div>
-          <div v-if="card.value === 'wild'" class="corner-value top-left w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value top-left">{{ getCardDisplay(card) }}</span>
-          <div v-if="card.value === 'wild'" class="corner-value bottom-right w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"></div><span v-else class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
+          <div class="inner-oval"><div v-if="card.value === 'wild'" class="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="card-value">{{ getCardDisplay(card) }}</span></div>
+          <div v-if="card.value === 'wild'" class="corner-value top-left w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value top-left">{{ getCardDisplay(card) }}</span>
+          <div v-if="card.value === 'wild'" class="corner-value bottom-right w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
           
           <!-- Bloqueo visual oscuro si no es jugable y es tu turno -->
           <div v-if="!isPlayable(card)" class="absolute inset-0 bg-black/60 rounded-[4px] md:rounded-[6px]"/>

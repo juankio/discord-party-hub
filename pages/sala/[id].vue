@@ -27,9 +27,9 @@
 
         <!-- Separador -->
         <div class="w-full flex items-center gap-4 my-2 opacity-50">
-          <div class="h-px bg-white flex-1"></div>
+          <div class="h-px bg-white flex-1"/>
           <span class="text-[10px] font-bold tracking-widest text-white uppercase">O</span>
-          <div class="h-px bg-white flex-1"></div>
+          <div class="h-px bg-white flex-1"/>
         </div>
 
         <!-- Botón Google -->

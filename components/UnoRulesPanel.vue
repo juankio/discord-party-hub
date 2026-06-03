@@ -6,22 +6,24 @@
           Reglas de la Mesa
         </h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-          <label v-for="(rule, key) in rulesList" :key="key" 
+          <label
+v-for="(rule, key) in rulesList" :key="key" 
                  class="group flex items-center justify-between bg-[#6d4621] hover:bg-[#7d512a] p-4 rounded-xl cursor-pointer transition-colors border-2 border-[#5c3a1b] border-b-[6px] shadow-sm"
                  :class="{'md:col-span-2': key === 'interceptExact'}">
             <span class="text-[#f2f3f5] font-black text-xs tracking-wide">{{ rule.label }}</span>
             
             <!-- Flat Toggle -->
-            <div class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
+            <div
+class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
                  :class="rules[key] ? 'bg-[#109041]' : 'bg-[#151515]'">
               
               <!-- La Bola (Thumb) -->
-              <div class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transition-all"
-                   :class="rules[key] ? 'right-0' : 'left-0'">
-              </div>
+              <div
+class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transition-all"
+                   :class="rules[key] ? 'right-0' : 'left-0'"/>
             </div>
             
-            <input type="checkbox" v-model="rules[key]" class="hidden" />
+            <input v-model="rules[key]" type="checkbox" class="hidden" >
           </label>
         </div>
       </div>
