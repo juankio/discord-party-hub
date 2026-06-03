@@ -41,19 +41,25 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
 
     const topCardEl = document.querySelector('.top-card-placeholder');
     const deckEl = document.querySelector('.deck-placeholder');
+    const rivalAvatarEl = document.getElementById(`rival-avatar-${userId}`);
+    
+    // Coordenadas por defecto si el avatar no está visible por alguna razón
+    const startX = rivalAvatarEl ? rivalAvatarEl.getBoundingClientRect().left + 30 : window.innerWidth / 2;
+    const startY = rivalAvatarEl ? rivalAvatarEl.getBoundingClientRect().top + 30 : -50;
     
     if (action === 'rival_played' && topCardEl) {
       const topRect = topCardEl.getBoundingClientRect();
       const clone = document.createElement('div');
-      clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]';
-      clone.style.top = `${topRect.top - 150}px`;
-      clone.style.left = `${topRect.left}px`;
+      clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999] shadow-xl';
+      clone.style.top = `${startY}px`;
+      clone.style.left = `${startX}px`;
       document.body.appendChild(clone);
       
       anime({
         targets: clone,
         top: topRect.top, 
-        scale: [1.2, 1], 
+        left: topRect.left, 
+        scale: [0.5, 1], 
         opacity: [0, 1, 0], 
         rotate: anime.random(-25, 25),
         duration: 400, 
@@ -67,22 +73,23 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
       for (let i = 0; i < cardsCount; i++) {
         setTimeout(() => {
           const clone = document.createElement('div');
-          clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]';
+          clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999] shadow-xl';
           clone.style.top = `${deckRect.top}px`;
           clone.style.left = `${deckRect.left}px`;
           document.body.appendChild(clone);
           
           anime({
             targets: clone,
-            translateY: -150, 
-            scale: 0.5, 
+            top: startY,
+            left: startX, 
+            scale: 0.2, 
             opacity: [1, 0], 
             rotate: anime.random(-45, 45),
-            duration: 500, 
-            easing: 'easeOutQuad',
+            duration: 400, 
+            easing: 'easeOutCubic',
             complete: () => clone.remove()
           });
-        }, i * 100);
+        }, i * 150);
       }
     }
   };

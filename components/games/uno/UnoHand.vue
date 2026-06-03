@@ -1,12 +1,10 @@
 <template>
   <div ref="handContainer" class="flex-1 flex justify-center items-end pb-8 z-10 relative w-full">
-    <div class="flex justify-center items-end -space-x-12 sm:-space-x-10">
-      <div
-v-for="(card, index) in myHand" :key="card.id" 
-           class="card-wrapper"
-           :style="{ 
-             transform: `rotate(${(index - (myHand.length - 1)/2) * 4}deg) translateY(${Math.abs(index - (myHand.length - 1)/2) * 3}px)`
-           }">
+    <div class="flex justify-center items-end" 
+         :class="myHand.length > 12 ? '-space-x-16 sm:-space-x-14' : (myHand.length > 7 ? '-space-x-14 sm:-space-x-12' : '-space-x-12 sm:-space-x-10')">
+      <div v-for="(card, index) in myHand" :key="card.id" 
+           class="card-wrapper transition-all duration-300"
+           :style="calculateCardStyle(index, myHand.length)">
         
         <div
 class="uno-card hand-card cursor-pointer"
@@ -37,8 +35,23 @@ class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white t
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import anime from 'animejs'
+
+const calculateCardStyle = (index: number, total: number) => {
+  const isTooMany = total > 7;
+  const spreadAngle = isTooMany ? (total > 15 ? 1 : 2) : 4; // Menos ángulo si hay muchas
+  const yOffsetMultiplier = isTooMany ? 1.5 : 3;
+  
+  const middle = (total - 1) / 2;
+  const rotate = (index - middle) * spreadAngle;
+  const translateY = Math.abs(index - middle) * yOffsetMultiplier;
+  
+  return {
+    transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
+    zIndex: index
+  };
+}
 
 const props = defineProps({
   myHand: { type: Array as () => any[], required: true },
