@@ -27,8 +27,11 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
+    jwtSecret: process.env.JWT_SECRET,
     public: {
-      socketUrl: process.env.SOCKET_URL || 'http://localhost:3001'
+      socketUrl: process.env.SOCKET_URL || 'http://localhost:3001',
+      googleClientId: process.env.GOOGLE_CLIENT_ID
     }
   }
 })

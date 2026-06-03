@@ -15,6 +15,7 @@
     "@nuxt/ui": "^2.16.0",
     "@pinia/nuxt": "^0.5.1",
     "animejs": "^3.2.2",
+    "google-auth-library": "^10.6.2",
     "jsonwebtoken": "^9.0.3",
     "lucide-vue-next": "^0.380.0",
     "mongoose": "^9.6.3",
@@ -23,7 +24,8 @@
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "vue3-google-login": "^2.1.4"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
