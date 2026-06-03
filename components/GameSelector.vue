@@ -1,136 +1,140 @@
 <template>
-  <div class="relative w-full h-[280px] flex flex-col justify-end">
-    <!-- Repisa base visual estática -->
-    <div class="absolute bottom-0 left-0 w-full h-[16px] bg-[#4a2e1b] border-t border-[#704629] border-b-4 border-[#2c190d] shadow-[0_15px_20px_rgba(0,0,0,0.8)] pointer-events-none z-0"></div>
+  <div class="w-full flex flex-col gap-12 items-center justify-center py-8">
+    <div v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
+         class="relative w-full max-w-lg flex justify-center gap-8 items-end pb-[12px] pt-16 px-4">
+      
+      <!-- Soga -->
+      <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
+        <svg width="100%" height="100%" preserveAspectRatio="none">
+          <pattern id="rope" width="12" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+            <rect width="12" height="10" fill="#a47c50" />
+            <line x1="6" y1="0" x2="6" y2="10" stroke="#715233" stroke-width="3" />
+            <line x1="8" y1="0" x2="8" y2="10" stroke="#cdab84" stroke-width="1.5" />
+          </pattern>
+          <rect width="100%" height="10" fill="url(#rope)" filter="drop-shadow(0px 3px 2px rgba(0,0,0,0.6))" />
+        </svg>
+      </div>
+      
+      <!-- Repisa -->
+      <div class="absolute bottom-0 left-0 w-full h-[12px] bg-[#4a2e1b] border-t border-[#704629] border-b-4 border-[#2c190d] shadow-md z-0"></div>
 
-    <!-- Contenedor scroll -->
-    <div class="w-full overflow-x-auto custom-scrollbar relative z-10 flex items-end pb-[16px] px-8 snap-x">
-       
-       <!-- Hilo/Cuerda Sticky -->
-       <div class="absolute left-0 right-0 h-[2px] z-[25] pointer-events-none" style="bottom: 56px;">
-          <div class="w-full h-full bg-black/60 shadow-[0_1px_1px_rgba(255,255,255,0.2)]"></div>
-       </div>
+      <!-- Items -->
+      <button
+        v-for="game in row"
+        :key="game.id"
+        class="relative group outline-none focus:outline-none transition-none duration-0 shrink-0 w-[100px] sm:w-[120px] h-[140px] flex flex-col justify-end"
+        :class="[
+          game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
+          selectedGame === game.id ? 'z-[30]' : 'z-10'
+        ]"
+        :disabled="game.disabled"
+        @click="$emit('select', game.id)"
+      >
+        <!-- Sombra anclada a la repisa -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
+             :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"></div>
 
-       <!-- Contenedor de Items (sin context de apilamiento extra para que z-index de botones funcione con el hilo) -->
-       <div class="flex gap-x-12 px-4 items-end pt-20 w-max">
-          <button
-            v-for="game in games"
-            :key="game.id"
-            class="relative group outline-none focus:outline-none transition-none duration-0 snap-center shrink-0 w-[140px] h-[160px] flex flex-col justify-end"
-            :class="[
-              game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
-              selectedGame === game.id ? 'z-[30]' : 'z-10'
-            ]"
-            :disabled="game.disabled"
-            @click="$emit('select', game.id)"
-          >
-            <!-- Sombra anclada a la repisa -->
-            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
-                 :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"></div>
-
-            <!-- Objeto animado (se mueve verticalmente pero la sombra se queda) -->
-            <div class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
-                 :class="[
-                   game.disabled ? '' : 'group-hover:-translate-y-4',
-                   selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
-                 ]">
-                
-                <!-- Etiqueta Nombre -->
-                <div class="absolute -top-8 text-white font-bold text-[10px] uppercase tracking-widest whitespace-nowrap opacity-60 transition-opacity"
-                     :class="{'opacity-100 text-yellow-400 drop-shadow-md': selectedGame === game.id}">
-                  {{ game.name }}
-                </div>
-
-                <!-- Flecha Bouncing -->
-                <div v-if="selectedGame === game.id" class="absolute -top-16 left-1/2 -translate-x-1/2 animate-bounce z-40 text-white drop-shadow-md">
-                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-7-7h14l-7 7z" /></svg>
-                </div>
-
-                <!-- Glow trasero al seleccionar -->
-                <div class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0 pointer-events-none"
-                     :style="{ backgroundColor: game.color || '#ffffff' }"
-                     :class="{ 'opacity-30': selectedGame === game.id }"></div>
-                
-                <!-- 2D Game Graphic -->
-                <div class="relative z-10 w-full flex items-end justify-center">
-                   <!-- UNO -->
-                   <div v-if="game.id === 'uno'" class="relative w-20 h-28 flex items-center justify-center">
-                     <div class="absolute w-20 h-28 bg-gray-900 border-2 border-white rounded-md rotate-12 shadow-md"></div>
-                     <div class="absolute w-20 h-28 bg-red-600 border-2 border-white rounded-md -rotate-6 shadow-lg flex items-center justify-center overflow-hidden">
-                       <div class="w-[110%] h-[60%] bg-white rounded-[50%] -rotate-[25deg] flex items-center justify-center">
-                         <span class="text-red-600 font-black text-2xl tracking-tighter" style="text-shadow: 1px 1px 0 #000;">UNO</span>
-                       </div>
-                     </div>
-                   </div>
-                   
-                   <!-- PARCHÍS -->
-                   <div v-else-if="game.id === 'parchis'" class="w-24 h-24 bg-[#eab308] border-2 border-white p-1 rounded-sm relative shadow-md">
-                     <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1">
-                       <div class="bg-red-500 rounded-tl-sm"></div>
-                       <div class="bg-blue-500 rounded-tr-sm"></div>
-                       <div class="bg-green-500 rounded-bl-sm"></div>
-                       <div class="bg-yellow-400 rounded-br-sm"></div>
-                     </div>
-                     <div class="absolute inset-0 m-auto w-6 h-6 bg-white border border-gray-800 rounded-sm shadow-md flex items-center justify-center rotate-3">
-                       <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
-                     </div>
-                   </div>
-
-                   <!-- LIAR'S BAR -->
-                   <div v-else-if="game.id === 'liars'" class="flex items-end justify-center w-24 h-24 relative">
-                     <div class="w-16 h-20 bg-[#2d1b11] border-2 border-[#1a0f0a] shadow-lg flex items-center justify-center relative z-10" style="clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%)">
-                        <UIcon name="i-lucide-skull" class="w-8 h-8 text-gray-400 opacity-60" />
-                     </div>
-                     <div class="absolute bottom-1 -right-2 w-5 h-5 bg-red-700 border border-red-900 rounded-sm shadow-md flex items-center justify-center rotate-12 z-20">
-                       <div class="w-1 h-1 bg-white rounded-full"></div>
-                     </div>
-                     <div class="absolute bottom-3 -left-3 w-5 h-5 bg-white border border-gray-300 rounded-sm shadow-md flex items-center justify-center -rotate-12 z-20">
-                       <div class="grid grid-cols-2 grid-rows-2 gap-[2px]">
-                         <div class="w-1 h-1 bg-black rounded-full"></div><div class="w-1 h-1 bg-black rounded-full"></div>
-                         <div class="w-1 h-1 bg-black rounded-full"></div><div class="w-1 h-1 bg-black rounded-full"></div>
-                       </div>
-                     </div>
-                   </div>
-
-                   <!-- STOP -->
-                   <div v-else-if="game.id === 'stop'" class="w-20 h-24 bg-yellow-300 border border-yellow-500 rounded-sm shadow-md flex flex-col overflow-hidden relative rotate-3">
-                     <div class="h-4 w-full bg-red-600 border-b-2 border-red-800 flex justify-evenly items-center">
-                        <div class="w-1 h-1 bg-black rounded-full opacity-40" v-for="i in 4" :key="i"></div>
-                     </div>
-                     <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 6px, rgba(0,0,0,0.1) 6px, rgba(0,0,0,0.1) 7px);"></div>
-                     <div class="absolute inset-0 flex items-center justify-center pt-2">
-                        <span class="text-red-600 font-black text-xl tracking-tight -rotate-12 bg-yellow-300 px-1 border-2 border-red-600 rounded">STOP</span>
-                     </div>
-                   </div>
-
-                   <!-- PINTURILLO -->
-                   <div v-else-if="game.id === 'pinturillo'" class="w-24 h-24 relative flex flex-col items-center justify-end">
-                     <div class="w-16 h-14 bg-white border-4 border-[#a37648] rounded-sm shadow-md z-10 flex items-center justify-center relative">
-                        <div class="w-6 h-6 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-2"></div>
-                        <div class="w-5 h-5 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-2"></div>
-                        <div class="w-4 h-4 rounded-full bg-yellow-400 blur-[1px] absolute top-2 right-4"></div>
-                     </div>
-                     <div class="w-20 h-2 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"></div>
-                     <div class="absolute bottom-0 w-full h-full flex justify-center z-0">
-                       <div class="w-2 h-20 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-4"></div>
-                       <div class="w-2 h-20 bg-[#6b4726] absolute rotate-12 origin-top translate-x-4"></div>
-                       <div class="w-2 h-24 bg-[#57391e] absolute"></div>
-                     </div>
-                   </div>
-                   
-                   <!-- GENÉRICO -->
-                   <div v-else class="w-20 h-20 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center shadow-md">
-                     <span class="text-xl font-black text-white opacity-50">{{ game.name.substring(0, 2) }}</span>
-                   </div>
-                </div>
+        <!-- Objeto animado -->
+        <div class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
+             :class="[
+               game.disabled ? '' : 'group-hover:-translate-y-4',
+               selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
+             ]">
+            
+            <!-- Etiqueta Nombre -->
+            <div class="absolute -top-6 text-white font-bold text-[10px] uppercase tracking-widest whitespace-nowrap opacity-60 transition-opacity"
+                 :class="{'opacity-100 text-yellow-400 drop-shadow-md': selectedGame === game.id}">
+              {{ game.name }}
             </div>
 
-            <!-- Tag En obras -->
-            <div v-if="game.disabled" class="absolute -top-4 -right-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow rotate-[15deg] z-40 border border-red-800 uppercase">
-              En obras
+            <!-- Flecha Bouncing -->
+            <div v-if="selectedGame === game.id" class="absolute -top-14 left-1/2 -translate-x-1/2 animate-bounce z-40 text-white drop-shadow-md">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-7-7h14l-7 7z" /></svg>
             </div>
-          </button>
-       </div>
+
+            <!-- Glow trasero al seleccionar -->
+            <div class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0 pointer-events-none"
+                 :style="{ backgroundColor: game.color || '#ffffff' }"
+                 :class="{ 'opacity-30': selectedGame === game.id }"></div>
+            
+            <!-- 2D Game Graphic -->
+            <div class="relative z-10 w-full flex items-end justify-center">
+               <!-- UNO -->
+               <div v-if="game.id === 'uno'" class="relative w-16 h-24 flex items-center justify-center">
+                 <div class="absolute w-16 h-24 bg-gray-900 border-2 border-white rounded-sm rotate-12 shadow-md"></div>
+                 <div class="absolute w-16 h-24 bg-red-600 border-2 border-white rounded-sm -rotate-6 shadow-lg flex items-center justify-center overflow-hidden">
+                   <div class="w-[110%] h-[60%] bg-white rounded-[50%] -rotate-[25deg] flex items-center justify-center">
+                     <span class="text-red-600 font-black text-xl tracking-tighter" style="text-shadow: 1px 1px 0 #000;">UNO</span>
+                   </div>
+                 </div>
+               </div>
+               
+               <!-- PARCHÍS -->
+               <div v-else-if="game.id === 'parchis'" class="w-20 h-20 bg-[#eab308] border-2 border-white p-1 rounded-sm relative shadow-md">
+                 <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1">
+                   <div class="bg-red-500 rounded-tl-sm"></div>
+                   <div class="bg-blue-500 rounded-tr-sm"></div>
+                   <div class="bg-green-500 rounded-bl-sm"></div>
+                   <div class="bg-yellow-400 rounded-br-sm"></div>
+                 </div>
+                 <div class="absolute inset-0 m-auto w-5 h-5 bg-white border border-gray-800 rounded-sm shadow-md flex items-center justify-center rotate-3">
+                   <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+                 </div>
+               </div>
+
+               <!-- LIAR'S BAR -->
+               <div v-else-if="game.id === 'liars'" class="flex items-end justify-center w-20 h-20 relative">
+                 <div class="w-14 h-16 bg-[#2d1b11] border-2 border-[#1a0f0a] shadow-lg flex items-center justify-center relative z-10" style="clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%)">
+                    <UIcon name="i-lucide-skull" class="w-6 h-6 text-gray-400 opacity-60" />
+                 </div>
+                 <div class="absolute bottom-1 -right-1 w-4 h-4 bg-red-700 border border-red-900 rounded-sm shadow-md flex items-center justify-center rotate-12 z-20">
+                   <div class="w-1 h-1 bg-white rounded-full"></div>
+                 </div>
+                 <div class="absolute bottom-2 -left-2 w-4 h-4 bg-white border border-gray-300 rounded-sm shadow-md flex items-center justify-center -rotate-12 z-20">
+                   <div class="grid grid-cols-2 grid-rows-2 gap-[2px]">
+                     <div class="w-0.5 h-0.5 bg-black rounded-full"></div><div class="w-0.5 h-0.5 bg-black rounded-full"></div>
+                     <div class="w-0.5 h-0.5 bg-black rounded-full"></div><div class="w-0.5 h-0.5 bg-black rounded-full"></div>
+                   </div>
+                 </div>
+               </div>
+
+               <!-- STOP -->
+               <div v-else-if="game.id === 'stop'" class="w-16 h-20 bg-yellow-300 border border-yellow-500 rounded-sm shadow-md flex flex-col overflow-hidden relative rotate-3">
+                 <div class="h-3 w-full bg-red-600 border-b border-red-800 flex justify-evenly items-center">
+                    <div class="w-1 h-1 bg-black rounded-full opacity-40" v-for="i in 3" :key="i"></div>
+                 </div>
+                 <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px);"></div>
+                 <div class="absolute inset-0 flex items-center justify-center pt-2">
+                    <span class="text-red-600 font-black text-sm tracking-tight -rotate-12 bg-yellow-300 px-1 border-2 border-red-600 rounded">STOP</span>
+                 </div>
+               </div>
+
+               <!-- PINTURILLO -->
+               <div v-else-if="game.id === 'pinturillo'" class="w-20 h-20 relative flex flex-col items-center justify-end">
+                 <div class="w-14 h-12 bg-white border-[3px] border-[#a37648] rounded-sm shadow-md z-10 flex items-center justify-center relative">
+                    <div class="w-4 h-4 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-1"></div>
+                    <div class="w-4 h-4 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-1"></div>
+                 </div>
+                 <div class="w-16 h-1.5 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"></div>
+                 <div class="absolute bottom-0 w-full h-full flex justify-center z-0">
+                   <div class="w-1.5 h-16 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-3"></div>
+                   <div class="w-1.5 h-16 bg-[#6b4726] absolute rotate-12 origin-top translate-x-3"></div>
+                   <div class="w-1.5 h-20 bg-[#57391e] absolute"></div>
+                 </div>
+               </div>
+               
+               <!-- GENÉRICO -->
+               <div v-else class="w-16 h-16 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center shadow-md">
+                 <span class="text-lg font-black text-white opacity-50">{{ game.name.substring(0, 2) }}</span>
+               </div>
+            </div>
+        </div>
+
+        <!-- Tag En obras -->
+        <div v-if="game.disabled" class="absolute -top-2 -right-2 bg-red-600 text-white text-[8px] font-bold px-1 rounded shadow rotate-[15deg] z-40 border border-red-800 uppercase">
+          En obras
+        </div>
+      </button>
     </div>
   </div>
 </template>
@@ -144,8 +148,4 @@ defineEmits(['select'])
 </script>
 
 <style scoped>
-.custom-scrollbar::-webkit-scrollbar { height: 8px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
 </style>
