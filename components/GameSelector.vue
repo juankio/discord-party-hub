@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full flex flex-col gap-12 items-center justify-center py-8">
+  <div class="w-full max-w-3xl mx-auto border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-hidden flex flex-col shadow-inner">
     <div v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
-         class="relative w-full max-w-lg flex justify-center gap-8 items-end pb-[12px] pt-16 px-4">
+         class="relative w-full flex justify-center gap-8 items-end pb-[24px] pt-16 bg-[#382012]">
       
       <!-- Soga -->
       <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
@@ -16,7 +16,7 @@
       </div>
       
       <!-- Repisa -->
-      <div class="absolute bottom-0 left-0 w-full h-[12px] bg-[#4a2e1b] border-t border-[#704629] border-b-4 border-[#2c190d] shadow-md z-0"></div>
+      <div class="absolute bottom-0 left-0 w-full h-[24px] bg-[#a06d40] border-b-[8px] border-[#7d512a] z-0 shadow-lg"></div>
 
       <!-- Items -->
       <button
