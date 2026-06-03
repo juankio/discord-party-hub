@@ -2,69 +2,111 @@
   <div class="relative w-full">
     <!-- Doble repisa visual estática -->
     <div class="absolute inset-0 pointer-events-none z-0 flex flex-col justify-evenly">
-      <div class="w-full h-5 bg-[#4a2e1b] border-y-2 border-[#2c190d] shadow-[0_15px_20px_rgba(0,0,0,0.6)] translate-y-4"></div>
-      <div class="w-full h-5 bg-[#4a2e1b] border-y-2 border-[#2c190d] shadow-[0_15px_20px_rgba(0,0,0,0.6)] translate-y-4"></div>
+      <div class="w-full h-3 bg-[#4a2e1b] border-t border-[#704629] border-b-2 border-[#2c190d] shadow-[0_15px_20px_rgba(0,0,0,0.6)] translate-y-6"></div>
+      <div class="w-full h-3 bg-[#4a2e1b] border-t border-[#704629] border-b-2 border-[#2c190d] shadow-[0_15px_20px_rgba(0,0,0,0.6)] translate-y-6"></div>
     </div>
 
     <!-- Contenedor de juegos (Grid 2 filas) -->
-    <div class="w-full grid grid-rows-2 grid-flow-col auto-cols-max gap-x-12 gap-y-16 overflow-x-auto pt-12 pb-16 custom-scrollbar px-12 snap-x relative z-10 justify-start">
+    <div class="w-full grid grid-rows-2 grid-flow-col auto-cols-max gap-x-12 gap-y-16 overflow-x-auto pt-10 pb-12 custom-scrollbar px-12 snap-x relative z-10 justify-start items-end">
       <button
         v-for="game in games"
         :key="game.id"
-        class="box-wrapper outline-none snap-center relative"
+        class="outline-none snap-center relative transition-all duration-300 ease-out flex items-end justify-center w-28 h-32"
         :class="[
-          game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer',
-          selectedGame === game.id ? 'selected z-30' : 'z-10 hover:z-20'
+          game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:-translate-y-2',
+          selectedGame === game.id ? '-translate-y-4 z-30' : 'z-10 hover:z-20'
         ]"
         :disabled="game.disabled"
         @click="$emit('select', game.id)"
-        :style="{ '--theme': game.color || '#334155' }"
       >
-        <!-- Sombra base -->
-        <div class="absolute bottom-[-5px] left-0 w-[120px] h-[30px] bg-black/80 blur-[8px] rounded-[100%] shadow-anim z-0"></div>
+        <!-- Glow trasero al seleccionar -->
+        <div class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0"
+             :style="{ backgroundColor: game.color || '#ffffff' }"
+             :class="{ 'opacity-30': selectedGame === game.id }"></div>
         
-        <!-- Caja 3D -->
-        <div class="box-3d z-10">
-          <div class="face top rounded-sm overflow-hidden flex items-center justify-center">
-             <!-- Diseño UNO -->
-             <div v-if="game.id === 'uno'" class="w-full h-full bg-[#111] border-[4px] border-white p-2 flex items-center justify-center relative">
-               <div class="w-[120%] h-[75%] bg-red-600 rounded-[50%] transform -rotate-[25deg] flex items-center justify-center border-2 border-red-800 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
-                 <span class="text-yellow-400 font-black text-4xl tracking-tighter" style="-webkit-text-stroke: 1.5px black; text-shadow: 3px 3px 0 #000;">UNO</span>
-               </div>
-             </div>
+        <!-- Objeto 2D del juego -->
+        <div class="relative z-10 w-full flex items-end justify-center transition-all duration-300"
+             :class="{'drop-shadow-[0_25px_25px_rgba(0,0,0,0.9)] scale-110': selectedGame === game.id, 'drop-shadow-lg': selectedGame !== game.id}">
              
-             <!-- Diseño PARCHIS -->
-             <div v-else-if="game.id === 'parchis'" class="w-full h-full bg-[#eab308] border-[4px] border-white p-2 relative flex items-center justify-center">
-               <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1 p-1">
-                 <div class="bg-red-500 rounded-tl shadow-[inset_0_0_8px_rgba(0,0,0,0.3)]"></div>
-                 <div class="bg-blue-500 rounded-tr shadow-[inset_0_0_8px_rgba(0,0,0,0.3)]"></div>
-                 <div class="bg-green-500 rounded-bl shadow-[inset_0_0_8px_rgba(0,0,0,0.3)]"></div>
-                 <div class="bg-yellow-400 rounded-br shadow-[inset_0_0_8px_rgba(0,0,0,0.3)]"></div>
-               </div>
-               <div class="absolute w-12 h-12 bg-white border-2 border-gray-800 flex items-center justify-center transform rotate-12 shadow-lg">
-                  <div class="w-3 h-3 bg-black rounded-full"></div>
+           <!-- UNO -->
+           <div v-if="game.id === 'uno'" class="relative w-20 h-28 flex items-center justify-center">
+             <div class="absolute w-20 h-28 bg-gray-900 border-2 border-white rounded-md rotate-12 shadow-md"></div>
+             <div class="absolute w-20 h-28 bg-red-600 border-2 border-white rounded-md -rotate-6 shadow-lg flex items-center justify-center overflow-hidden">
+               <div class="w-[110%] h-[60%] bg-white rounded-[50%] -rotate-[25deg] flex items-center justify-center">
+                 <span class="text-red-600 font-black text-2xl tracking-tighter" style="text-shadow: 1px 1px 0 #000;">UNO</span>
                </div>
              </div>
-             
-             <!-- Diseño GENÉRICO -->
-             <div v-else class="w-full h-full bg-gray-800 border-[3px] border-gray-600 flex items-center justify-center relative">
-               <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
-               <UIcon v-if="game.id === 'liars'" name="i-lucide-skull" class="w-14 h-14 text-gray-300 drop-shadow-md z-10" />
-               <UIcon v-else-if="game.id === 'stop'" name="i-lucide-hand" class="w-14 h-14 text-blue-400 drop-shadow-md z-10" />
-               <UIcon v-else-if="game.id === 'pinturillo'" name="i-lucide-paintbrush" class="w-14 h-14 text-purple-400 drop-shadow-md z-10" />
-               <span v-else class="text-2xl font-black text-white opacity-50 z-10">{{ game.name.substring(0, 2) }}</span>
+           </div>
+           
+           <!-- PARCHÍS -->
+           <div v-else-if="game.id === 'parchis'" class="w-24 h-24 bg-[#eab308] border-2 border-white p-1 rounded-sm relative shadow-md">
+             <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1">
+               <div class="bg-red-500 rounded-tl-sm"></div>
+               <div class="bg-blue-500 rounded-tr-sm"></div>
+               <div class="bg-green-500 rounded-bl-sm"></div>
+               <div class="bg-yellow-400 rounded-br-sm"></div>
              </div>
-          </div>
-          
-          <div class="face front flex items-center justify-center">
-             <span class="text-white font-bold text-[10px] uppercase tracking-[0.2em] opacity-80" style="text-shadow: 1px 1px 0 #000;">{{ game.name }}</span>
-          </div>
-          
-          <!-- Lomo lateral (Ahora lado Izquierdo) -->
-          <div class="face left"></div>
+             <div class="absolute inset-0 m-auto w-6 h-6 bg-white border border-gray-800 rounded-sm shadow-md flex items-center justify-center rotate-3">
+               <div class="w-1.5 h-1.5 bg-black rounded-full"></div>
+             </div>
+           </div>
+
+           <!-- LIAR'S BAR -->
+           <div v-else-if="game.id === 'liars'" class="flex items-end justify-center w-24 h-24 relative">
+             <div class="w-16 h-20 bg-[#2d1b11] border-2 border-[#1a0f0a] shadow-lg flex items-center justify-center relative z-10" style="clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%)">
+                <UIcon name="i-lucide-skull" class="w-8 h-8 text-gray-400 opacity-60" />
+             </div>
+             <div class="absolute bottom-1 -right-2 w-5 h-5 bg-red-700 border border-red-900 rounded-sm shadow-md flex items-center justify-center rotate-12 z-20">
+               <div class="w-1 h-1 bg-white rounded-full"></div>
+             </div>
+             <div class="absolute bottom-3 -left-3 w-5 h-5 bg-white border border-gray-300 rounded-sm shadow-md flex items-center justify-center -rotate-12 z-20">
+               <div class="grid grid-cols-2 grid-rows-2 gap-[2px]">
+                 <div class="w-1 h-1 bg-black rounded-full"></div><div class="w-1 h-1 bg-black rounded-full"></div>
+                 <div class="w-1 h-1 bg-black rounded-full"></div><div class="w-1 h-1 bg-black rounded-full"></div>
+               </div>
+             </div>
+           </div>
+
+           <!-- STOP -->
+           <div v-else-if="game.id === 'stop'" class="w-20 h-24 bg-yellow-300 border border-yellow-500 rounded-sm shadow-md flex flex-col overflow-hidden relative rotate-3">
+             <div class="h-4 w-full bg-red-600 border-b-2 border-red-800 flex justify-evenly items-center">
+                <div class="w-1 h-1 bg-black rounded-full opacity-40" v-for="i in 4" :key="i"></div>
+             </div>
+             <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 6px, rgba(0,0,0,0.1) 6px, rgba(0,0,0,0.1) 7px);"></div>
+             <div class="absolute inset-0 flex items-center justify-center pt-2">
+                <span class="text-red-600 font-black text-xl tracking-tight -rotate-12 bg-yellow-300 px-1 border-2 border-red-600 rounded">STOP</span>
+             </div>
+           </div>
+
+           <!-- PINTURILLO -->
+           <div v-else-if="game.id === 'pinturillo'" class="w-24 h-24 relative flex flex-col items-center justify-end">
+             <div class="w-16 h-14 bg-white border-4 border-[#a37648] rounded-sm shadow-md z-10 flex items-center justify-center relative">
+                <div class="w-6 h-6 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-2"></div>
+                <div class="w-5 h-5 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-2"></div>
+                <div class="w-4 h-4 rounded-full bg-yellow-400 blur-[1px] absolute top-2 right-4"></div>
+             </div>
+             <div class="w-20 h-2 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"></div>
+             <div class="absolute bottom-0 w-full h-full flex justify-center z-0">
+               <div class="w-2 h-20 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-4"></div>
+               <div class="w-2 h-20 bg-[#6b4726] absolute rotate-12 origin-top translate-x-4"></div>
+               <div class="w-2 h-24 bg-[#57391e] absolute"></div>
+             </div>
+           </div>
+           
+           <!-- GENÉRICO -->
+           <div v-else class="w-20 h-20 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center shadow-md">
+             <span class="text-xl font-black text-white opacity-50">{{ game.name.substring(0, 2) }}</span>
+           </div>
         </div>
-        
-        <div v-if="game.disabled" class="absolute -top-4 -right-4 bg-red-600 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg rotate-[15deg] z-40 border border-red-800 uppercase">
+
+        <!-- Etiqueta de Nombre -->
+        <div class="absolute -bottom-8 text-white font-bold text-[10px] uppercase tracking-widest whitespace-nowrap opacity-60 transition-opacity"
+             :class="{'opacity-100 text-yellow-400 drop-shadow-md': selectedGame === game.id}">
+          {{ game.name }}
+        </div>
+
+        <!-- Tag En obras -->
+        <div v-if="game.disabled" class="absolute -top-4 -right-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow rotate-[15deg] z-40 border border-red-800 uppercase">
           En obras
         </div>
       </button>
@@ -81,69 +123,6 @@ defineEmits(['select'])
 </script>
 
 <style scoped>
-.box-wrapper {
-  perspective: 1200px;
-  width: 120px;
-  height: 160px;
-}
-.box-3d {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transform: rotateX(60deg) rotateZ(-35deg) translateZ(0);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.box-wrapper:hover:not(:disabled) .box-3d {
-  transform: rotateX(60deg) rotateZ(-35deg) translateZ(20px);
-}
-.box-wrapper.selected .box-3d {
-  transform: rotateX(60deg) rotateZ(-35deg) translateZ(50px) scale3d(1.05, 1.05, 1.05);
-}
-
-.face {
-  position: absolute;
-  border: 2px solid #111;
-  background-color: var(--theme);
-}
-.top {
-  width: 120px;
-  height: 160px;
-  transform: translateZ(24px);
-}
-.front {
-  width: 120px;
-  height: 24px;
-  bottom: 0;
-  transform-origin: bottom;
-  transform: rotateX(-90deg);
-}
-.front::after {
-  content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: -1;
-}
-.left {
-  width: 24px;
-  height: 160px;
-  left: 0;
-  transform-origin: left;
-  transform: rotateY(-90deg);
-}
-.left::after {
-  content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6);
-}
-
-.shadow-anim {
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.box-wrapper:hover:not(:disabled) .shadow-anim {
-  transform: translateY(10px) scale(0.9);
-  opacity: 0.5;
-}
-.box-wrapper.selected .shadow-anim {
-  transform: translateY(30px) scale(0.7);
-  opacity: 0.2;
-}
-
 .custom-scrollbar::-webkit-scrollbar { height: 8px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
