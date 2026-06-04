@@ -12,8 +12,8 @@ v-for="(card, index) in myHand" :key="card.id"
 class="uno-card hand-card cursor-pointer"
              :class="[`card-${card.color === 'wild' ? 'black' : card.color}`, !isPlayable(card) ? 'unplayable' : '']"
              @click="playCard(card, $event)"
-             @mouseenter="$emit('hover-card', index)"
-             @mouseleave="$emit('hover-card', null)">
+             @mouseenter="localHoverIndex = index; $emit('hover-card', index)"
+             @mouseleave="localHoverIndex = null; $emit('hover-card', null)">
           
           <div class="inner-oval"><div v-if="card.value === 'wild'" class="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="card-value">{{ getCardDisplay(card) }}</span></div>
           <div v-if="card.value === 'wild'" class="corner-value top-left w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value top-left">{{ getCardDisplay(card) }}</span>
@@ -40,6 +40,8 @@ class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white t
 import { ref, computed } from 'vue'
 import anime from 'animejs'
 
+const localHoverIndex = ref<number | null>(null)
+
 const calculateCardStyle = (index: number, total: number) => {
   const isTooMany = total > 7;
   const spreadAngle = isTooMany ? (total > 15 ? 1 : 2) : 4; // Menos ángulo si hay muchas
@@ -47,11 +49,19 @@ const calculateCardStyle = (index: number, total: number) => {
   
   const middle = (total - 1) / 2;
   const rotate = (index - middle) * spreadAngle;
-  const translateY = Math.abs(index - middle) * yOffsetMultiplier;
+  let translateY = Math.abs(index - middle) * yOffsetMultiplier;
+  let scale = 1;
+  let zIndex = index;
+
+  if (index === localHoverIndex.value) {
+    translateY -= 40;
+    scale = 1.15;
+    zIndex = 50;
+  }
   
   return {
-    transform: `rotate(${rotate}deg) translateY(${translateY}px)`,
-    zIndex: index
+    transform: `rotate(${rotate}deg) translateY(${translateY}px) scale(${scale})`,
+    zIndex: zIndex
   };
 }
 
