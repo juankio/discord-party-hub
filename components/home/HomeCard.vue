@@ -4,6 +4,7 @@
     <!-- Tabs -->
     <div class="flex w-full bg-black/50 border-b border-white/5">
       <button 
+        v-if="!playerStore.isLoggedIn"
         class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2" 
         :class="activeTab === 'guest' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
         :style="activeTab === 'guest' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
@@ -12,7 +13,7 @@
         INVITADO
       </button>
       <button 
-        class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2" 
+        class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2 w-full" 
         :class="activeTab === 'account' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
         :style="activeTab === 'account' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
         @click="activeTab = 'account'"
@@ -101,14 +102,19 @@ const savePlayerAndRedirect = (roomId: string) => {
   })
 }
 
-const handleCreateRoom = () => {
+const handleCreateRoom = async () => {
   if (!isValid.value) return
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  let roomId = ''
-  for (let i = 0; i < 5; i++) {
-    roomId += chars.charAt(Math.floor(Math.random() * chars.length))
+  try {
+    const config = useRuntimeConfig()
+    const baseUrl = (config.public.socketUrl || 'http://localhost:3001').replace(/\/$/, '')
+    const res = await $fetch(`${baseUrl}/api/rooms/create`, {
+      method: 'POST', body: { userId: playerStore.userId }
+    }) as any
+    savePlayerAndRedirect(res.roomId)
+  } catch (error) {
+    // Assuming useToast exists or I should import it if not. The prompt says useToast().add(...)
+    useToast().add({ title: 'Error', description: 'No se pudo crear la sala', color: 'red' })
   }
-  savePlayerAndRedirect(roomId)
 }
 
 const handleJoinRoom = () => {

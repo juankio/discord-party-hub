@@ -68,6 +68,13 @@ export const useSocket = () => {
       }
     })
 
+    socket.value.on('room_not_found', () => {
+      disconnect()
+      playerStore.updateRoomState([], '')
+      useToast().add({ title: 'Sala Cerrada', description: 'La sala que buscas no existe o fue cerrada.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      router.push('/')
+    })
+
     socket.value.on('disconnect', () => {
       isConnected.value = false
     })
