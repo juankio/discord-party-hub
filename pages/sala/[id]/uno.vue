@@ -42,6 +42,13 @@
       @select="declareColor"
     />
 
+    <!-- Swap Modal -->
+    <UnoSwapModal
+      :is-open="unoStore.gameState === 'CHOOSING_PLAYER' && unoStore.actionRequiredFrom === playerStore.userId"
+      :rivals="unoStore.rivals"
+      @select="id => socket.value?.emit('uno:swap_hands', id)"
+    />
+
     <!-- Victory Modal -->
     <UnoVictoryModal
       :is-open="unoStore.gameState === 'FINISHED'"
@@ -53,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useUnoStore } from '~/stores/games/unoStore'
@@ -91,14 +98,6 @@ const exitGame = () => {
     router.push(`/sala/${roomId}`)
   }
 }
-
-watch(() => unoStore.gameState, (newState, oldState) => {
-  if (newState === 'FINISHED' && oldState !== 'FINISHED') {
-    if (unoStore.winner === playerStore.userId) {
-      playerStore.incrementWin()
-    }
-  }
-})
 
 onMounted(() => {
   socket.value?.on('game_message', (data: any) => {

@@ -52,6 +52,12 @@ export const useSocket = () => {
       } catch {}
     })
 
+    socket.value.on('player_won', (userId: string) => {
+      if (userId === playerStore.userId) {
+        playerStore.incrementWin()
+      }
+    })
+
     socket.value.on('uno:rival_hover', (data) => {
       useUnoStore().setRivalHover(data.userId, data.index)
     })
