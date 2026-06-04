@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import anime from 'animejs'
+import { usePlayerStore } from '~/stores/playerStore'
 
 const props = defineProps({
   roomId: { type: String, required: true },
@@ -81,26 +82,37 @@ const props = defineProps({
 })
 
 const toast = useToast()
+const playerStore = usePlayerStore()
 
-// Calcula posiciones en un óvalo (mesa)
+// Calcula posiciones basadas en las buchacas de la mesa
 const getAvatarPosition = (index: number, total: number) => {
-  // Ajuste para el primer jugador abajo al centro
-  const offset = Math.PI / 2
-  const angle = (index / total) * Math.PI * 2 + offset
-  // Usamos porcentajes para ser responsive
-  const rx = 45 // radio X en porcentaje
-  const ry = 40 // radio Y en porcentaje
-  const cx = 50
-  const cy = 50
+  const slots = [
+    { left: '50%', top: '100%', transform: 'translate(-50%, -50%)' }, // 0: Abajo Centro (Local)
+    { left: '50%', top: '0%', transform: 'translate(-50%, -50%)' },   // 1: Arriba Centro
+    { left: '0%', top: '0%', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
+    { left: '100%', top: '0%', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
+    { left: '0%', top: '100%', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
+    { left: '100%', top: '100%', transform: 'translate(-50%, -50%)' } // 5: Abajo Derecha
+  ]
+
+  const myIndex = props.players.findIndex(p => p.userId === playerStore.userId)
+  const normalizedMyIndex = myIndex >= 0 ? myIndex : 0
   
-  const x = cx + rx * Math.cos(angle)
-  const y = cy + ry * Math.sin(angle)
-  
-  return {
-    left: `${x}%`,
-    top: `${y}%`,
-    transform: 'translate(-50%, -50%)' // Centrar sobre sus coordenadas
+  const distance = (index - normalizedMyIndex + total) % total
+
+  let layout: number[] = []
+  if (total <= 2) {
+    layout = [0, 1]
+  } else if (total === 3) {
+    layout = [0, 2, 3]
+  } else if (total === 4) {
+    layout = [0, 4, 2, 3]
+  } else {
+    layout = [0, 4, 2, 1, 3, 5]
   }
+
+  const slotIndex = layout[distance] !== undefined ? layout[distance] : 0
+  return slots[slotIndex % slots.length]
 }
 
 watch(() => props.players.length, (newLength, oldLength) => {
