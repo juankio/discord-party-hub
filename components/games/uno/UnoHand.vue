@@ -117,6 +117,9 @@ const playCard = (card: any, event: Event) => {
   const topCardEl = document.querySelector('.top-card-placeholder')
   const topRect = topCardEl ? topCardEl.getBoundingClientRect() : { top: window.innerHeight/2 - 80, left: window.innerWidth/2 - 55 }
 
+  // Obtener la rotación actual para que no salte al inicio de la animación
+  const currentTransform = getComputedStyle(target.parentElement!).transform
+  
   const clone = target.cloneNode(true) as HTMLElement
   document.body.appendChild(clone)
   
@@ -125,7 +128,8 @@ const playCard = (card: any, event: Event) => {
   clone.style.left = `${rect.left}px`
   clone.style.margin = '0'
   clone.style.zIndex = '9999'
-  clone.style.transform = 'none'
+  clone.style.transform = currentTransform
+  clone.style.transformOrigin = 'center center'
   
   target.style.opacity = '0'
 
@@ -137,9 +141,11 @@ const playCard = (card: any, event: Event) => {
     scale: topCardEl ? 1 : 0.8,
     duration: 350,
     easing: 'easeOutCubic',
+    begin: () => {
+      emit('play-card', card.id)
+    },
     complete: () => {
       clone.remove()
-      emit('play-card', card.id)
     }
   })
 }
