@@ -110,7 +110,7 @@ const handleCreateRoom = async () => {
     const res = await $fetch(`${baseUrl}/api/rooms/create`, {
       method: 'POST', body: { userId: playerStore.userId }
     }) as any
-    savePlayerAndRedirect(res.roomId)
+    savePlayerAndRedirect(res.data.roomId)
   } catch (error) {
     // Assuming useToast exists or I should import it if not. The prompt says useToast().add(...)
     useToast().add({ title: 'Error', description: 'No se pudo crear la sala', color: 'red' })
