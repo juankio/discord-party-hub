@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center gap-6 w-full pb-4">
+  <div class="flex flex-col items-center gap-4 w-full pb-4">
     <!-- Avatar Grande Seleccionado -->
     <div 
       class="w-24 h-24 rounded-full bg-black border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_30px_rgba(0,0,0,0.8)] relative"
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Fila 2: Colores -->
-    <div class="flex gap-3 justify-center w-full mt-4 mb-2">
+    <div class="flex gap-3 justify-center flex-wrap w-full">
       <button
         v-for="c in colors" :key="c.val"
         class="w-6 h-6 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
@@ -43,7 +43,7 @@
     </div>
 
     <!-- Input de Usuario -->
-    <div class="w-full flex flex-col gap-1.5 mt-4">
+    <div class="w-full flex flex-col gap-1.5">
       <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3" style="color: var(--theme-color);">Nombre de Usuario</label>
       <input 
         :value="nickname"
