@@ -15,8 +15,6 @@ export const usePlayerStore = defineStore('player', {
     isLoggedIn: false,
     token: '',
     totalWins: 0,
-        gamesPlayed: 0,
-        lastPlayed: null,
     gamesPlayed: 0,
     lastPlayed: null as Date | string | null,
     picture: '',
@@ -98,8 +96,6 @@ export const usePlayerStore = defineStore('player', {
                 isLoggedIn: this.isLoggedIn,
                 token: this.token,
                 totalWins: this.totalWins,
-          gamesPlayed: this.gamesPlayed,
-          lastPlayed: this.lastPlayed,
                 gamesPlayed: this.gamesPlayed,
                 lastPlayed: this.lastPlayed,
                 picture: this.picture
