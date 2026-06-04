@@ -37,10 +37,11 @@
             
             <!-- Botón Arcade 2D Macizo -->
             <button 
-              class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest text-white transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
+              class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
               :disabled="players.length < 2 || selectedGame !== 'uno'"
               style="
                 background-color: var(--theme-color); 
+                color: var(--theme-text-color, white);
                 box-shadow: 0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4);
               "
               onmousedown="if(!this.disabled) { this.style.transform='translateY(8px)'; this.style.boxShadow='0 0px 0 rgba(0,0,0,0.6), 0 5px 10px rgba(0,0,0,0.4)'; }"

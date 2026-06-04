@@ -9,8 +9,8 @@
       </button>
       <button 
         :disabled="!isValid"
-        class="text-white px-7 py-3 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        style="background-color: var(--theme-color); box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);"
+        class="px-7 py-3 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        style="background-color: var(--theme-color); color: var(--theme-text-color, white); box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);"
         onmouseover="if(!this.disabled) { this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.5)'; }"
         onmouseout="if(!this.disabled) { this.style.filter='none'; this.style.boxShadow='0 0 15px rgba(var(--theme-color-rgb), 0.3)'; }"
         @click="$emit('createRoom')"

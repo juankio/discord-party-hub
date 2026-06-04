@@ -27,7 +27,8 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
       anime({
         targets: textClone,
         scale: [0, 1.2, 1],
-        translateX: [-5, 5, -5, 5, 0],
+        translateX: ['-50%', 'calc(-50% - 10px)', 'calc(-50% + 10px)', 'calc(-50% - 10px)', '-50%'],
+        translateY: '-50%',
         opacity: [0, 1, 0],
         duration: 1500,
         complete: () => textClone.remove()
@@ -71,6 +72,8 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
         targets: clone,
         rotate: '1turn',
         scale: [0, 1.5, 0],
+        translateX: '-50%',
+        translateY: '-50%',
         opacity: [0, 1, 0],
         duration: 1000,
         easing: 'easeOutElastic(1, .5)',
@@ -95,7 +98,8 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
       anime({
         targets: clone,
         scale: [2, 1],
-        translateX: [-10, 10, -10, 10, 0],
+        translateX: ['-50%', 'calc(-50% - 10px)', 'calc(-50% + 10px)', 'calc(-50% - 10px)', '-50%'],
+        translateY: '-50%',
         opacity: [0, 1, 1, 0],
         duration: 800,
         easing: 'easeInOutSine',
@@ -114,6 +118,8 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
         targets: clone,
         rotate: '1080deg',
         scale: [0, 2, 0],
+        translateX: '-50%',
+        translateY: '-50%',
         opacity: [0, 1, 0],
         duration: 1500,
         easing: 'easeInOutCubic',

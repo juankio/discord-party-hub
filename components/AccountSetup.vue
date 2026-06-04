@@ -59,8 +59,8 @@
       <!-- Guardar -->
       <button 
         :disabled="editNickname.trim().length < 2 || isLoading"
-        class="w-full mt-2 px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-        style="background-color: var(--theme-color);"
+        class="w-full mt-2 px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+        style="background-color: var(--theme-color); color: var(--theme-text-color, white);"
         @click="saveProfile"
       >
         Guardar Cambios

@@ -79,6 +79,7 @@ watch(selectedColor, (newColor) => {
     }
     document.documentElement.style.setProperty('--theme-color', newColor)
     document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(newColor))
+    document.documentElement.style.setProperty('--theme-text-color', newColor.toLowerCase() === '#ffffff' ? '#000000' : '#ffffff')
   }
 })
 

@@ -22,6 +22,7 @@ const updateThemeColor = (color: string) => {
   if (typeof window !== 'undefined') {
     document.documentElement.style.setProperty('--theme-color', color)
     document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(color))
+    document.documentElement.style.setProperty('--theme-text-color', color.toLowerCase() === '#ffffff' ? '#000000' : '#ffffff')
   }
 }
 
@@ -38,6 +39,7 @@ watch(() => playerStore.color, (newColor) => {
 :root {
   --theme-color: #f97316;
   --theme-color-rgb: 249, 115, 22;
+  --theme-text-color: #ffffff;
 }
 
 /* Estilos base Pro Max */
