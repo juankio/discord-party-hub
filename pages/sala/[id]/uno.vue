@@ -46,7 +46,7 @@
     <UnoSwapModal
       :is-open="unoStore.gameState === 'CHOOSING_PLAYER' && unoStore.actionRequiredFrom === playerStore.userId"
       :rivals="unoStore.rivals"
-      @select="id => socket.value?.emit('uno:swap_hands', id)"
+      @select="swapHands"
     />
 
     <!-- Victory Modal -->
@@ -84,6 +84,7 @@ const drawCard = () => drawCardAnimation()
 const declareColor = (color: string) => { socket.value?.emit('uno:declare_color', color) }
 const yellUno = () => { socket.value?.emit('uno:yell_uno') }
 const challengeUno = (targetId: string) => { socket.value?.emit('uno:challenge_uno', targetId) }
+const swapHands = (id: string) => { socket.value?.emit('uno:swap_hands', id) }
 const onCardHover = (index: number | null) => { socket.value?.emit('uno:hover_card', index) }
 const surrender = () => { socket.value?.emit('uno:surrender') }
 const exitGame = () => {
