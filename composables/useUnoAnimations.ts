@@ -13,6 +13,54 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
   const handleRivalAnimation = (e: CustomEvent) => {
     const { action, userId, cardsCount, targetId } = e.detail;
     
+    if (action === 'action_challenge') {
+      const victimId = targetId || userId;
+      const victimAvatarEl = document.getElementById(`rival-avatar-${victimId}`);
+      const victimX = victimAvatarEl ? victimAvatarEl.getBoundingClientRect().left + 30 : window.innerWidth / 2;
+      const victimY = victimAvatarEl ? victimAvatarEl.getBoundingClientRect().top + 30 : window.innerHeight / 2;
+
+      const textClone = document.createElement('div');
+      textClone.textContent = '¡Te Pillé!';
+      textClone.className = 'fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl md:text-8xl text-red-500 font-black drop-shadow-[0_0_20px_rgba(239,68,68,0.8)] uppercase italic text-center whitespace-nowrap';
+      document.body.appendChild(textClone);
+
+      anime({
+        targets: textClone,
+        scale: [0, 1.2, 1],
+        translateX: [-5, 5, -5, 5, 0],
+        opacity: [0, 1, 0],
+        duration: 1500,
+        complete: () => textClone.remove()
+      });
+
+      const deckEl = document.querySelector('.deck-placeholder');
+      const startX = deckEl ? deckEl.getBoundingClientRect().left : window.innerWidth / 2;
+      const startY = deckEl ? deckEl.getBoundingClientRect().top : window.innerHeight / 2;
+
+      for (let i = 0; i < 2; i++) {
+        setTimeout(() => {
+          const cardClone = document.createElement('div');
+          cardClone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999] shadow-xl';
+          cardClone.style.top = `${startY}px`;
+          cardClone.style.left = `${startX}px`;
+          document.body.appendChild(cardClone);
+
+          anime({
+            targets: cardClone,
+            top: victimY,
+            left: victimX,
+            scale: 0.2,
+            opacity: [1, 0],
+            rotate: anime.random(-45, 45),
+            duration: 400,
+            easing: 'easeOutCubic',
+            complete: () => cardClone.remove()
+          });
+        }, i * 150);
+      }
+      return;
+    }
+
     if (action === 'action_reverse') {
       const clone = document.createElement('div');
       clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.8)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17H3"/><path d="m6 14-3 3 3 3"/><path d="M3 7h18"/><path d="m18 10 3-3-3-3"/></svg>`;
