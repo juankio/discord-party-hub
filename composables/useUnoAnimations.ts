@@ -2,6 +2,17 @@ import { nextTick, watch, onMounted, onUnmounted } from 'vue';
 import anime from 'animejs';
 
 export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
+  const getColorClass = () => {
+    const color = unoStore.currentColor || unoStore.topCard?.color;
+    switch (color) {
+      case 'red': return 'text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]';
+      case 'blue': return 'text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]';
+      case 'green': return 'text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.8)]';
+      case 'yellow': return 'text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]';
+      default: return 'text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]';
+    }
+  };
+
   const playCardAnimation = (id: string) => {
     socket.value?.emit('uno:play_cards', [id]);
   };
@@ -64,20 +75,30 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
 
     if (action === 'action_reverse') {
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-blue-400 drop-shadow-[0_0_15px_rgba(96,165,250,0.8)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17H3"/><path d="m6 14-3 3 3 3"/><path d="M3 7h18"/><path d="m18 10 3-3-3-3"/></svg>`;
-      clone.className = 'fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center';
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17H3"/><path d="m6 14-3 3 3 3"/><path d="M3 7h18"/><path d="m18 10 3-3-3-3"/></svg>`;
+      clone.className = 'fixed z-[9999] top-1/2 left-1/2 flex items-center justify-center';
+      clone.style.opacity = '0';
       document.body.appendChild(clone);
       
-      anime({
+      const tl = anime.timeline({
         targets: clone,
+        complete: () => clone.remove()
+      });
+
+      tl.add({
+        scale: [0, 3],
+        opacity: [0, 1],
         rotate: '1turn',
-        scale: [0, 1.5, 0],
         translateX: '-50%',
         translateY: '-50%',
-        opacity: [0, 1, 0],
-        duration: 1000,
-        easing: 'easeOutElastic(1, .5)',
-        complete: () => clone.remove()
+        duration: 800,
+        easing: 'easeOutElastic(1, .5)'
+      }).add({
+        scale: 0,
+        opacity: 0,
+        duration: 400,
+        delay: 800,
+        easing: 'easeInCubic'
       });
       return;
     }
@@ -89,41 +110,64 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
       const victimY = victimAvatarEl ? victimAvatarEl.getBoundingClientRect().top + 30 : window.innerHeight / 2;
 
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
-      clone.className = 'fixed z-[9999] flex items-center justify-center -translate-x-1/2 -translate-y-1/2';
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
+      clone.className = 'fixed z-[9999] flex items-center justify-center';
       clone.style.top = `${victimY}px`;
       clone.style.left = `${victimX}px`;
+      clone.style.opacity = '0';
       document.body.appendChild(clone);
 
-      anime({
+      const tl = anime.timeline({
         targets: clone,
-        scale: [2, 1],
-        translateX: ['-50%', 'calc(-50% - 10px)', 'calc(-50% + 10px)', 'calc(-50% - 10px)', '-50%'],
-        translateY: '-50%',
-        opacity: [0, 1, 1, 0],
-        duration: 800,
-        easing: 'easeInOutSine',
         complete: () => clone.remove()
+      });
+
+      tl.add({
+        scale: [0, 2],
+        opacity: [0, 1],
+        translateX: '-50%',
+        translateY: '-50%',
+        duration: 400,
+        easing: 'easeOutBack'
+      }).add({
+        translateX: ['-50%', 'calc(-50% - 20px)', 'calc(-50% + 20px)', 'calc(-50% - 20px)', 'calc(-50% + 20px)', 'calc(-50% - 20px)', 'calc(-50% + 20px)', 'calc(-50% - 20px)', 'calc(-50% + 20px)', '-50%'],
+        duration: 1200,
+        easing: 'easeInOutSine'
+      }).add({
+        scale: 1,
+        opacity: 0,
+        duration: 400,
+        easing: 'easeInCubic'
       });
       return;
     }
 
     if (action === 'action_zero') {
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-green-400 drop-shadow-[0_0_15px_rgba(74,222,128,0.8)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
-      clone.className = 'fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center';
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
+      clone.className = 'fixed z-[9999] top-1/2 left-1/2 flex items-center justify-center';
+      clone.style.opacity = '0';
       document.body.appendChild(clone);
 
-      anime({
+      const tl = anime.timeline({
         targets: clone,
+        complete: () => clone.remove()
+      });
+
+      tl.add({
+        scale: [0, 2],
+        opacity: [0, 1],
         rotate: '1080deg',
-        scale: [0, 2, 0],
         translateX: '-50%',
         translateY: '-50%',
-        opacity: [0, 1, 0],
-        duration: 1500,
-        easing: 'easeInOutCubic',
-        complete: () => clone.remove()
+        duration: 1000,
+        easing: 'easeOutCubic'
+      }).add({
+        scale: 0,
+        opacity: 0,
+        duration: 500,
+        delay: 1000,
+        easing: 'easeInCubic'
       });
       return;
     }
