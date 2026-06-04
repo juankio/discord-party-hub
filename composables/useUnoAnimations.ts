@@ -270,14 +270,12 @@ export function useUnoAnimations(unoStore: any, playerStore: any, socket: any) {
   onMounted(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('uno:action', handleRivalAnimation as EventListener);
-      window.addEventListener('game_action', handleRivalAnimation as EventListener);
     }
   });
 
   onUnmounted(() => {
     if (typeof window !== 'undefined') {
       window.removeEventListener('uno:action', handleRivalAnimation as EventListener);
-      window.removeEventListener('game_action', handleRivalAnimation as EventListener);
     }
   });
 
