@@ -94,10 +94,17 @@ export const useSocket = () => {
     }
   }
 
+  const updateProfile = (data: { nickname: string, avatarId: number, color: string }) => {
+    if (socket.value) {
+      socket.value.emit('update_profile', data)
+    }
+  }
+
   return {
     socket,
     isConnected,
     connect,
-    disconnect
+    disconnect,
+    updateProfile
   }
 }

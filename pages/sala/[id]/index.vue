@@ -4,7 +4,10 @@
       <!-- Header de la Sala -->
       <div class="flex items-center justify-between mb-8 header-anim opacity-0">
         <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
-        <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
+        <div class="flex items-center gap-4">
+          <UButton color="gray" variant="soft" icon="i-lucide-user-edit" @click="isEditProfileOpen = true">Editar Perfil</UButton>
+          <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
+        </div>
       </div>
 
       <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
@@ -72,6 +75,7 @@
         </div>
       </div>
     </div>
+    <EditProfileModal v-model:isOpen="isEditProfileOpen" />
   </div>
 </template>
 
@@ -89,6 +93,8 @@ const roomId = playerStore.roomId
 
 const players = computed(() => playerStore.playersInRoom)
 const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
+
+const isEditProfileOpen = ref(false)
 
 const selectedGame = ref('uno')
 const games = [
