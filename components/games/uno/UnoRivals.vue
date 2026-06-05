@@ -90,20 +90,20 @@ const getRivalPosition = (index: number, total: number) => {
     startAngle = 175;
     endAngle = 5;
   } else {
-    // 7 rivales
-    startAngle = 180;
-    endAngle = 0;
+    // 7 rivales u otros
+    startAngle = 200;
+    endAngle = -20;
   }
 
   const angleDeg = startAngle - (index / (total - 1)) * (startAngle - endAngle);
   const angleRad = angleDeg * (Math.PI / 180);
 
   // Ampliamos un poco el radio X para usar más pantalla
-  const radiusX = 45; 
+  const radiusX = 46; 
   // Reducimos el Y y subimos el centro para no tapar la mesa
-  const radiusY = 25; 
+  const radiusY = 24; 
   const centerX = 50; 
-  const centerY = 40; 
+  const centerY = 32; 
 
   const x = centerX + radiusX * Math.cos(angleRad);
   const y = centerY - radiusY * Math.sin(angleRad);
