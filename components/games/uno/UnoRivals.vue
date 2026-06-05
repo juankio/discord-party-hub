@@ -1,9 +1,9 @@
 <template>
-  <div class="flex-1 flex justify-center items-start pt-12 gap-8 z-10 w-full">
-    <div v-for="rival in rivals" :id="`rival-avatar-${rival.userId}`" :key="rival.userId" class="flex flex-col items-center relative">
+  <div class="flex-1 flex justify-center items-start pt-20 sm:pt-12 gap-4 sm:gap-8 flex-wrap z-10 w-full px-4 max-w-full">
+    <div v-for="rival in rivals" :id="`rival-avatar-${rival.userId}`" :key="rival.userId" class="flex flex-col items-center relative basis-[60px] sm:basis-auto">
       <!-- Avatar -->
       <div
-class="w-16 h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10 transition-colors"
+class="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10 transition-colors"
            :style="{ borderColor: rival.color || '#f97316', color: rival.color || '#f97316' }"
            :class="{'neon-glow': currentTurnUserId === rival.userId}">
         <!-- Overlay Offline -->
@@ -34,7 +34,7 @@ class="w-full h-full bg-red-800 rounded-[2px] opacity-80"
         </div>
       </div>
 
-      <span class="mt-4 text-sm font-bold text-gray-300">{{ rival.nickname }}</span>
+      <span class="mt-4 text-[10px] sm:text-sm font-bold text-gray-300 truncate w-full max-w-[80px] text-center px-1">{{ rival.nickname }}</span>
       
       <!-- Botón de Denuncia -->
       <UButton

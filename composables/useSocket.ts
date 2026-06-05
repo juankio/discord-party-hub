@@ -75,6 +75,12 @@ export const useSocket = () => {
       router.push('/')
     })
 
+    socket.value.on('room_full', () => {
+      disconnect()
+      useToast().add({ title: 'Sala Llena', description: 'La sala ha alcanzado su límite de jugadores.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      router.push('/')
+    })
+
     socket.value.on('disconnect', () => {
       isConnected.value = false
     })

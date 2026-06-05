@@ -3,7 +3,7 @@
     <div class="w-full max-w-6xl">
       <!-- Header de la Sala -->
       <div class="flex items-center justify-between mb-8 header-anim opacity-0">
-        <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span></h1>
+        <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
         <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
       </div>
 
