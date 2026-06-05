@@ -1,8 +1,10 @@
 <template>
-  <!-- Contenedor flex-1 para recuperar la estructura original y empujar la mesa hacia el centro -->
-  <div class="flex-1 w-full relative z-10 pointer-events-none">
-    <div class="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center">
-      <div class="relative w-full max-w-7xl h-full">
+  <!-- Contenedor flex-1 para mantener la proporción de la pantalla, pero con overflow-hidden general -->
+  <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden">
+    <!-- El contenedor que alinea a los rivales usa TODA la pantalla disponible, no solo la mitad superior -->
+    <div class="absolute inset-0 w-full h-full flex items-center justify-center">
+      <!-- max-w-screen-2xl limita lo ancho que pueden irse en monitores ultra-wide -->
+      <div class="relative w-full max-w-screen-2xl h-full">
         <div 
           v-for="(rival, index) in rivals" 
           :id="`rival-avatar-${rival.userId}`" 
@@ -72,17 +74,19 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  if (total === 1) return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' };
+  // Ahora TODOS los cálculos de posición Y están referenciados al ALTO TOTAL de la pantalla,
+  // con la mesa teóricamente sentada cerca del centro (50% vh).
+  // La mitad superior libre real va del 0% al ~35% de la altura total de la pantalla.
+
+  if (total === 1) return { top: '25%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' };
   
-  // Para 2 jugadores, los colocamos a los lados, bien centrados verticalmente
   if (total === 2) {
     return [
-      { top: '60%', left: '25%', transform: 'translate(-50%, -50%)', position: 'absolute' },
-      { top: '60%', left: '75%', transform: 'translate(-50%, -50%)', position: 'absolute' }
+      { top: '25%', left: '25%', transform: 'translate(-50%, -50%)', position: 'absolute' },
+      { top: '25%', left: '75%', transform: 'translate(-50%, -50%)', position: 'absolute' }
     ][index]
   }
 
-  // Para 3 o más jugadores usamos la lógica elíptica basada en PORCENTAJES del contenedor superior
   let startAngle = 180;
   let endAngle = 0;
 
@@ -99,7 +103,7 @@ const getRivalPosition = (index: number, total: number) => {
     startAngle = 175;
     endAngle = 5;
   } else {
-    // 7 rivales, abrimos el arco un poco hacia abajo
+    // 7 rivales
     startAngle = 190;
     endAngle = -10;
   }
@@ -107,19 +111,24 @@ const getRivalPosition = (index: number, total: number) => {
   const angleDeg = startAngle - (index / (total - 1)) * (startAngle - endAngle);
   const angleRad = angleDeg * (Math.PI / 180);
 
-  // Radio horizontal: 42% del ancho máximo del contenedor
-  const radiusX = 42; 
-  // Radio vertical: 50% de la altura de ESTA mitad superior de la pantalla
-  const radiusY = 50; 
+  // Radio X usa hasta un 40% del ancho del contenedor (que llega a max-w-screen-2xl)
+  const radiusX = 40; 
+  // Radio Y usa un 20% de la altura TOTAL de la pantalla.
+  const radiusY = 20; 
+  
   const centerX = 50; 
-  const centerY = 80; // El centro de la elipse está abajo (cerca de la mesa), para que el arco suba
+  
+  // El centro vertical de la elipse lo ubicamos en 40%.
+  // Al restar 20% de radio Y en el punto más alto (90 grados), 
+  // los avatares tocarán el top: 20%, quedando muy por encima de la mesa, pero bajando visiblemente.
+  const centerY = 40; 
 
   const x = centerX + radiusX * Math.cos(angleRad);
   const y = centerY - radiusY * Math.sin(angleRad);
 
   return {
-    top: `${y}%`, 
-    left: `${x}%`, 
+    top: `clamp(10%, ${y}%, 45%)`, 
+    left: `clamp(5%, ${x}%, 95%)`, 
     transform: 'translate(-50%, -50%)',
     position: 'absolute'
   }
