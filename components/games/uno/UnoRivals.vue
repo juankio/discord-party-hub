@@ -83,26 +83,34 @@ const getRivalPosition = (index: number, total: number) => {
   } else if (total === 4) {
     startAngle = 165;
     endAngle = 15;
-  } else {
+  } else if (total === 5) {
     startAngle = 170;
     endAngle = 10;
+  } else if (total === 6) {
+    startAngle = 175;
+    endAngle = 5;
+  } else {
+    // 7 rivales
+    startAngle = 180;
+    endAngle = 0;
   }
 
   const angleDeg = startAngle - (index / (total - 1)) * (startAngle - endAngle);
   const angleRad = angleDeg * (Math.PI / 180);
 
-  // Radios para la elipse
-  const radiusX = 40; // 40vw
-  const radiusY = 32; // 32vh
-  const centerX = 50; // 50vw
-  const centerY = 45; // 45vh
+  // Ampliamos un poco el radio X para usar más pantalla
+  const radiusX = 45; 
+  // Reducimos el Y y subimos el centro para no tapar la mesa
+  const radiusY = 25; 
+  const centerX = 50; 
+  const centerY = 40; 
 
   const x = centerX + radiusX * Math.cos(angleRad);
   const y = centerY - radiusY * Math.sin(angleRad);
 
   return {
-    top: `calc(${y}vh + 10px)`, // Ajuste para que no choquen arriba
-    left: `clamp(10%, ${x}vw, 90%)`, // Clamp para evitar desbordes en izquierda/derecha
+    top: `calc(${y}vh + 10px)`, 
+    left: `clamp(6%, ${x}vw, 94%)`, 
     transform: 'translate(-50%, -50%)',
     position: 'absolute'
   }
