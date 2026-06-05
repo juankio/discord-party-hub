@@ -53,7 +53,6 @@
     <UnoVictoryModal
       :is-open="unoStore.gameState === 'FINISHED'"
       :winner-message="unoStore.winner === playerStore.userId ? '¡Has ganado la partida!' : `El ganador es ${unoStore.rivals.find((r: any) => r.userId === unoStore.winner)?.nickname || 'un rival'}.`"
-      :is-host="playerStore.userId === playerStore.hostUserId"
       @lobby="exitGame"
     />
   </div>
@@ -89,11 +88,10 @@ const onCardHover = (index: number | null) => { socket.value?.emit('uno:hover_ca
 const surrender = () => { socket.value?.emit('uno:surrender') }
 const exitGame = () => {
   if (unoStore.gameState !== 'FINISHED' && unoStore.gameState !== 'WAITING') {
-    // Si la partida está activa y deciden salir al lobby, se rinden automáticamente
     surrender()
   }
 
-  if (unoStore.gameState === 'FINISHED' && playerStore.userId === playerStore.hostUserId) {
+  if (unoStore.gameState === 'FINISHED') {
     socket.value?.emit('return_to_lobby')
   } else {
     router.push(`/sala/${roomId}`)
