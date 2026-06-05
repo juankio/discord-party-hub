@@ -8,7 +8,6 @@
         {{ winnerMessage }}
       </p>
       <UButton 
-        v-if="isHost"
         size="xl" 
         color="primary" 
         class="px-12 h-16 text-xl font-bold shadow-[0_0_20px_rgba(88,101,242,0.5)] hover:scale-105 active:scale-95 transition-all"
@@ -16,7 +15,6 @@
       >
         Volver al Lobby
       </UButton>
-      <p v-else class="text-gray-500 font-medium animate-pulse">Esperando a que el Host vuelva al lobby...</p>
     </div>
   </div>
 </template>
@@ -27,8 +25,7 @@ import anime from 'animejs'
 
 const props = defineProps({
   isOpen: { type: Boolean, required: true },
-  winnerMessage: { type: String, required: true },
-  isHost: { type: Boolean, required: true }
+  winnerMessage: { type: String, required: true }
 })
 
 defineEmits(['lobby'])
