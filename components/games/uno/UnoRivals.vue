@@ -1,17 +1,12 @@
 <template>
-  <!-- Contenedor flex-1 para mantener la proporción de la pantalla, pero con overflow-hidden general -->
-  <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden">
-    <!-- El contenedor que alinea a los rivales usa TODA la pantalla disponible, no solo la mitad superior -->
-    <div class="absolute inset-0 w-full h-full flex items-center justify-center">
-      <!-- max-w-screen-2xl limita lo ancho que pueden irse en monitores ultra-wide -->
-      <div class="relative w-full max-w-screen-2xl h-full">
-        <div 
-          v-for="(rival, index) in rivals" 
-          :id="`rival-avatar-${rival.userId}`" 
-          :key="rival.userId" 
-          class="flex flex-col items-center pointer-events-auto transition-all duration-500"
-          :style="getRivalPosition(index, rivals.length)"
-        >
+  <div class="flex-1 w-full flex flex-col justify-end pb-8 relative z-10 pointer-events-none overflow-hidden">
+    <div class="w-full max-w-screen-2xl mx-auto flex flex-wrap justify-center items-end gap-x-6 gap-y-14 sm:gap-x-10 sm:gap-y-20 px-4 pt-16">
+      <div 
+        v-for="(rival, index) in rivals" 
+        :id="`rival-avatar-${rival.userId}`" 
+        :key="rival.userId" 
+        class="flex flex-col items-center pointer-events-auto transition-all duration-500 relative"
+      >
           <!-- Avatar (Aumentado de tamaño) -->
           <div
             class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] relative z-10 transition-colors"
@@ -60,7 +55,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -72,67 +66,6 @@ defineProps({
 })
 
 defineEmits(['challenge'])
-
-const getRivalPosition = (index: number, total: number) => {
-  // Ahora TODOS los cálculos de posición Y están referenciados al ALTO TOTAL de la pantalla,
-  // con la mesa teóricamente sentada cerca del centro (50% vh).
-  // La mitad superior libre real va del 0% al ~35% de la altura total de la pantalla.
-
-  if (total === 1) return { top: '25%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute' };
-  
-  if (total === 2) {
-    return [
-      { top: '25%', left: '25%', transform: 'translate(-50%, -50%)', position: 'absolute' },
-      { top: '25%', left: '75%', transform: 'translate(-50%, -50%)', position: 'absolute' }
-    ][index]
-  }
-
-  let startAngle = 180;
-  let endAngle = 0;
-
-  if (total === 3) {
-    startAngle = 160;
-    endAngle = 20;
-  } else if (total === 4) {
-    startAngle = 165;
-    endAngle = 15;
-  } else if (total === 5) {
-    startAngle = 170;
-    endAngle = 10;
-  } else if (total === 6) {
-    startAngle = 175;
-    endAngle = 5;
-  } else {
-    // 7 rivales
-    startAngle = 190;
-    endAngle = -10;
-  }
-
-  const angleDeg = startAngle - (index / (total - 1)) * (startAngle - endAngle);
-  const angleRad = angleDeg * (Math.PI / 180);
-
-  // Radio X usa hasta un 40% del ancho del contenedor (que llega a max-w-screen-2xl)
-  const radiusX = 40; 
-  // Radio Y usa un 20% de la altura TOTAL de la pantalla.
-  const radiusY = 20; 
-  
-  const centerX = 50; 
-  
-  // El centro vertical de la elipse lo ubicamos en 40%.
-  // Al restar 20% de radio Y en el punto más alto (90 grados), 
-  // los avatares tocarán el top: 20%, quedando muy por encima de la mesa, pero bajando visiblemente.
-  const centerY = 40; 
-
-  const x = centerX + radiusX * Math.cos(angleRad);
-  const y = centerY - radiusY * Math.sin(angleRad);
-
-  return {
-    top: `clamp(10%, ${y}%, 45%)`, 
-    left: `clamp(5%, ${x}%, 95%)`, 
-    transform: 'translate(-50%, -50%)',
-    position: 'absolute'
-  }
-}
 </script>
 
 <style scoped>
