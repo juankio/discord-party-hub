@@ -87,12 +87,14 @@ const playerStore = usePlayerStore()
 // Calcula posiciones basadas en las buchacas de la mesa
 const getAvatarPosition = (index: number, total: number) => {
   const slots = [
-    { left: '50%', top: '100%', transform: 'translate(-50%, -50%)' }, // 0: Abajo Centro (Local)
-    { left: '50%', top: '0%', transform: 'translate(-50%, -50%)' },   // 1: Arriba Centro
-    { left: '0%', top: '0%', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
-    { left: '100%', top: '0%', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
-    { left: '0%', top: '100%', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
-    { left: '100%', top: '100%', transform: 'translate(-50%, -50%)' } // 5: Abajo Derecha
+    { left: '50%', top: 'calc(100% - 2.5rem)', transform: 'translate(-50%, -50%)' }, // 0: Abajo Centro (Local)
+    { left: '50%', top: '2.5rem', transform: 'translate(-50%, -50%)' },   // 1: Arriba Centro
+    { left: '2.5rem', top: '2.5rem', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
+    { left: 'calc(100% - 2.5rem)', top: '2.5rem', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
+    { left: '2.5rem', top: 'calc(100% - 2.5rem)', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
+    { left: 'calc(100% - 2.5rem)', top: 'calc(100% - 2.5rem)', transform: 'translate(-50%, -50%)' }, // 5: Abajo Derecha
+    { left: '2.5rem', top: '50%', transform: 'translate(-50%, -50%)' }, // 6: Centro Izquierda
+    { left: 'calc(100% - 2.5rem)', top: '50%', transform: 'translate(-50%, -50%)' } // 7: Centro Derecha
   ]
 
   const myIndex = props.players.findIndex(p => p.userId === playerStore.userId)
@@ -107,8 +109,14 @@ const getAvatarPosition = (index: number, total: number) => {
     layout = [0, 2, 3]
   } else if (total === 4) {
     layout = [0, 4, 2, 3]
-  } else {
+  } else if (total === 5) {
+    layout = [0, 4, 2, 1, 3]
+  } else if (total === 6) {
     layout = [0, 4, 2, 1, 3, 5]
+  } else if (total === 7) {
+    layout = [0, 4, 6, 2, 1, 3, 5]
+  } else {
+    layout = [0, 4, 6, 2, 1, 3, 7, 5]
   }
 
   const slotIndex = layout[distance] !== undefined ? layout[distance] : 0

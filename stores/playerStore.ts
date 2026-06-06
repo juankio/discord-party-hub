@@ -19,7 +19,7 @@ export const usePlayerStore = defineStore('player', {
     lastPlayed: null as Date | string | null,
     picture: '',
     roomRules: {
-      stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false
+      stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false, extendedLobby: false
     }
   }),
   actions: {

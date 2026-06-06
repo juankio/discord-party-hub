@@ -9,7 +9,7 @@
           <label
 v-for="(rule, key) in rulesList" :key="key" 
                  class="group flex items-center justify-between bg-[#6d4621] hover:bg-[#7d512a] p-4 rounded-xl cursor-pointer transition-colors border-2 border-[#5c3a1b] border-b-[6px] shadow-sm"
-                 :class="{'md:col-span-2': key === 'interceptExact'}">
+                 :class="{'md:col-span-1': key === 'interceptExact'}">
             <span class="text-[#f2f3f5] font-black text-xs tracking-wide">{{ rule.label }}</span>
             
             <!-- Flat Toggle -->
@@ -39,6 +39,7 @@ const rulesList = {
   playMultipleSame: { label: 'Tirar dobles (Mismo número)' },
   zeroAndSevenRules: { label: 'Regla del 0 (Pasa) y 7 (Cambia)' },
   drawUntilPlayable: { label: 'Robar hasta que salga carta' },
+  extendedLobby: { label: 'Lobby Extendido (hasta 8 jugadores)' },
   interceptExact: { label: 'Intercepción exacta (Corte)' }
 }
 </script>

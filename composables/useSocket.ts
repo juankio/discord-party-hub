@@ -75,6 +75,12 @@ export const useSocket = () => {
       router.push('/')
     })
 
+    socket.value.on('room_full', () => {
+      disconnect()
+      useToast().add({ title: 'Sala Llena', description: 'La sala ha alcanzado su límite de jugadores.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      router.push('/')
+    })
+
     socket.value.on('disconnect', () => {
       isConnected.value = false
     })
@@ -88,10 +94,17 @@ export const useSocket = () => {
     }
   }
 
+  const updateProfile = (data: { nickname: string, avatarId: number, color: string }) => {
+    if (socket.value) {
+      socket.value.emit('update_profile', data)
+    }
+  }
+
   return {
     socket,
     isConnected,
     connect,
-    disconnect
+    disconnect,
+    updateProfile
   }
 }
