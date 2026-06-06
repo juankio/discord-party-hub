@@ -5,8 +5,20 @@
       <div class="flex items-center justify-between mb-8 header-anim opacity-0">
         <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
         <div class="flex items-center gap-4">
-          <UButton color="gray" variant="soft" icon="i-lucide-user-edit" @click="isEditProfileOpen = true">Editar Perfil</UButton>
-          <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
+          <button 
+            @click="isEditProfileOpen = true"
+            class="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-300 hover:text-white rounded-xl border border-white/10 transition-all duration-200 active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.5)] font-bold text-sm"
+          >
+            <UIcon name="i-lucide-user-edit" class="w-4 h-4" style="color: var(--theme-color);" />
+            Editar Perfil
+          </button>
+          <button 
+            @click="leaveRoom"
+            class="flex items-center gap-2 px-4 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-300 rounded-xl border border-red-500/20 transition-all duration-200 active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.5)] font-bold text-sm"
+          >
+            <UIcon name="i-lucide-log-out" class="w-4 h-4" />
+            Salir
+          </button>
         </div>
       </div>
 
