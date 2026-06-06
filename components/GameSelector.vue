@@ -1,29 +1,30 @@
 <template>
-  <div class="w-full max-w-3xl mx-auto border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-hidden flex flex-col shadow-inner">
-    <div
-v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
-         class="relative w-full flex justify-center gap-8 items-end pb-[24px] pt-8 bg-[#382012]">
-      
-      <!-- Soga -->
-      <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
-        <svg width="100%" height="100%" preserveAspectRatio="none">
-          <pattern id="rope" width="12" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
-            <rect width="12" height="10" fill="#a47c50" />
-            <line x1="6" y1="0" x2="6" y2="10" stroke="#715233" stroke-width="3" />
-            <line x1="8" y1="0" x2="8" y2="10" stroke="#cdab84" stroke-width="1.5" />
-          </pattern>
-          <rect width="100%" height="10" fill="url(#rope)" filter="drop-shadow(0px 3px 2px rgba(0,0,0,0.6))" />
-        </svg>
-      </div>
-      
-      <!-- Repisa -->
-      <div class="absolute bottom-0 left-0 w-full h-[24px] bg-[#a06d40] border-b-[8px] border-[#7d512a] z-0 shadow-lg"/>
+  <div class="w-full max-w-3xl mx-auto border-[8px] sm:border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-x-auto overflow-y-hidden flex flex-col shadow-inner custom-scrollbar">
+    <div class="min-w-[340px] flex flex-col">
+      <div
+  v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
+           class="relative w-full flex justify-center gap-4 sm:gap-8 items-end pb-[24px] pt-8 bg-[#382012]">
+        
+        <!-- Soga -->
+        <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
+          <svg width="100%" height="100%" preserveAspectRatio="none">
+            <pattern id="rope" width="12" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+              <rect width="12" height="10" fill="#a47c50" />
+              <line x1="6" y1="0" x2="6" y2="10" stroke="#715233" stroke-width="3" />
+              <line x1="8" y1="0" x2="8" y2="10" stroke="#cdab84" stroke-width="1.5" />
+            </pattern>
+            <rect width="100%" height="10" fill="url(#rope)" filter="drop-shadow(0px 3px 2px rgba(0,0,0,0.6))" />
+          </svg>
+        </div>
+        
+        <!-- Repisa -->
+        <div class="absolute bottom-0 left-0 w-full h-[24px] bg-[#a06d40] border-b-[8px] border-[#7d512a] z-0 shadow-lg"/>
 
-      <!-- Items -->
-      <button
-        v-for="game in row"
-        :key="game.id"
-        class="relative group outline-none focus:outline-none transition-none duration-0 shrink-0 w-[100px] sm:w-[120px] h-[140px] flex flex-col justify-end"
+        <!-- Items -->
+        <button
+          v-for="game in row"
+          :key="game.id"
+          class="relative group outline-none focus:outline-none transition-none duration-0 shrink-0 w-[80px] sm:w-[120px] h-[120px] sm:h-[140px] flex flex-col justify-end"
         :class="[
           game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
           selectedGame === game.id ? 'z-[30]' : 'z-10'
@@ -135,6 +136,7 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
         </div>
       </button>
     </div>
+    </div>
   </div>
 </template>
 
@@ -147,4 +149,18 @@ defineEmits(['select'])
 </script>
 
 <style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #382012;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #7d512a;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a06d40;
+}
 </style>
