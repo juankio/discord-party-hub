@@ -2,8 +2,8 @@
   <div class="flex flex-col items-center pt-8 md:pt-16 p-4">
     <div class="w-full max-w-6xl">
       <!-- Header de la Sala -->
-      <div class="flex items-center justify-between mb-8 header-anim opacity-0">
-        <h1 class="text-2xl sm:text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-lg sm:text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 header-anim opacity-0 w-full">
+        <h1 class="text-2xl sm:text-3xl font-black text-white text-center sm:text-left">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-lg sm:text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
         <div class="flex items-center gap-2 sm:gap-3">
           <!-- Botón Editar Perfil (Pro Max UI) -->
           <button 
@@ -51,7 +51,7 @@
             <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
             
             <!-- Estante de Billar (Flat 2D Vectorial) -->
-            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center overflow-hidden">
+            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
               <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"/>
               
               <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
@@ -103,26 +103,27 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, toRaw } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useSocket } from '~/composables/useSocket'
 import anime from 'animejs'
 
+const route = useRoute()
 const router = useRouter()
 const playerStore = usePlayerStore()
 const { socket } = useSocket()
-const roomId = playerStore.roomId
+const roomId = computed(() => route.params.id as string)
 
 useSeoMeta({
-  title: `Lobby: ${roomId} - Discord Party Hub`,
-  ogTitle: `Lobby: ${roomId} - Discord Party Hub`,
+  title: `Lobby: ${roomId.value} - Discord Party Hub`,
+  ogTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
   description: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
   ogDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
   ogImage: 'https://discord-party-hub.vercel.app/banner.jpg',
   ogImageWidth: 1200,
   ogImageHeight: 630,
   twitterCard: 'summary_large_image',
-  twitterTitle: `Lobby: ${roomId} - Discord Party Hub`,
+  twitterTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
   twitterDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
   twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg'
 })

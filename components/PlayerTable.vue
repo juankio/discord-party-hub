@@ -1,7 +1,7 @@
 <template>
-  <div class="relative w-full max-w-4xl min-h-[250px] sm:min-h-[0px] aspect-[4/3] sm:aspect-[2/1] mx-auto mt-10 player-table-container">
+  <div class="relative w-[92%] sm:w-full max-w-4xl min-h-[220px] sm:min-h-[0px] aspect-[4/3] sm:aspect-[2/1] mx-auto mt-6 sm:mt-10 player-table-container">
     <!-- Mesa de Billar Vectorial 2D -->
-    <div class="absolute inset-6 sm:inset-8 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex p-3 md:p-5 table-surface">
+    <div class="absolute inset-3 sm:inset-6 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex p-2 sm:p-3 md:p-5 table-surface">
       <!-- Paño Verde -->
       <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2.5rem] shadow-[inset_0_0_30px_rgba(0,0,0,0.4)] relative flex items-center justify-center border-4 border-[#0a662c]">
         
@@ -20,11 +20,11 @@
         <div class="absolute -bottom-3 -right-3 md:-bottom-4 md:-right-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"/>
 
         <!-- Centro de la mesa (Info) -->
-        <div class="text-center relative z-10 flex flex-col items-center p-4 sm:p-6 bg-black/20 rounded-3xl backdrop-blur-sm border border-white/10">
-          <p class="text-[10px] md:text-xs text-green-100 mb-2 uppercase tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
-          <h2 class="text-3xl sm:text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-4">{{ roomId }}</h2>
+        <div class="text-center relative z-10 flex flex-col items-center p-3 sm:p-6 bg-black/20 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10 w-[90%] sm:w-auto max-w-full">
+          <p class="text-[9px] sm:text-[10px] md:text-xs text-green-100 mb-1 sm:mb-2 uppercase tracking-[0.2em] sm:tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
+          <h2 class="text-2xl sm:text-5xl md:text-7xl font-mono font-black text-white tracking-[0.1em] sm:tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-3 sm:mb-4 truncate w-full px-2">{{ roomId }}</h2>
           <button 
-            class="copy-btn-anim flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-sm font-bold transition-colors duration-300 border"
+            class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 border"
             :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20'"
             @click="copyLink"
           >
@@ -61,7 +61,7 @@
 
       <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" :class="{'grayscale opacity-50': player.isOffline}">
       <span 
-        class="absolute -bottom-6 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm"
+        class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[70px] sm:max-w-[100px] truncate"
         :class="player.color === '#ffffff' ? 'text-black' : 'text-white'"
         :style="{ backgroundColor: player.color || '#f97316' }"
       >

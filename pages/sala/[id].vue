@@ -1,22 +1,10 @@
 <template>
   <div class="min-h-screen overflow-hidden">
-    <NuxtPage v-if="hasSetup" />
+    <NuxtPage />
 
     <!-- Modal Obligatorio si entra directo con link sin nickname -->
-    <UModal 
-      v-model="showSetupModal" 
-      prevent-close 
-      :ui="{ 
-        background: 'bg-transparent', 
-        shadow: 'shadow-none',
-        overlay: { background: 'bg-black/90 backdrop-blur-sm' },
-        rounded: 'rounded-none',
-        padding: 'p-0',
-        ring: 'ring-0',
-        inner: 'sm:p-0'
-      }"
-    >
-      <div class="w-full max-w-[380px] mx-auto bg-[#151515] p-6 pb-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border border-white/5">
+    <div v-if="showSetupModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+      <div class="w-full max-w-[380px] bg-[#151515] p-6 pb-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border border-white/5 relative">
         <h2 class="text-xl font-black text-white text-center tracking-widest uppercase mt-2">Únete a la Sala</h2>
         
         <ProfileSetup 
@@ -54,7 +42,7 @@
           Entrar a Jugar
         </button>
       </div>
-    </UModal>
+    </div>
   </div>
 </template>
 
@@ -80,7 +68,12 @@ const tempColor = ref('#f97316')
 
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'
+  
+  // Limpiar el estado de la sala anterior para evitar "fantasmas" visuales
+  playerStore.updateRoomState([], '')
+  
   playerStore.loadPlayerSetup()
+  playerStore.setRoom(route.params.id as string)
 
   if (!playerStore.nickname) {
     showSetupModal.value = true
@@ -103,7 +96,7 @@ const saveAndJoin = () => {
 }
 
 const initRoom = () => {
-  playerStore.setRoom(roomId)
+  
   connect(roomId)
   
   socket.value?.on('game_started', (data) => {

@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model="isOpen" prevent-close :ui="{ base: 'relative text-left rtl:text-right overflow-hidden flex flex-col', ring: '', shadow: 'shadow-2xl shadow-black/80', rounded: 'rounded-3xl', background: 'bg-[#111] border border-white/5' }">
+  <UModal v-model="isOpen" prevent-close :ui="{ base: 'relative text-left rtl:text-right overflow-hidden flex flex-col', ring: '', shadow: 'shadow-2xl shadow-black/80', rounded: 'rounded-3xl', background: 'bg-[#111] dark:bg-[#111] border border-white/5' }">
     <div class="relative p-6 md:p-8 w-full max-w-md mx-auto">
       <!-- Glow Decorativo -->
       <div class="absolute -top-12 -left-12 w-48 h-48 bg-[var(--theme-color)] opacity-20 blur-[80px] pointer-events-none transition-colors duration-500 rounded-full" :style="{ backgroundColor: localColor }" />

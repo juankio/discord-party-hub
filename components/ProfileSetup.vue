@@ -66,7 +66,7 @@ defineProps({
 defineEmits(['update:avatarId', 'update:color', 'update:nickname'])
 
 const colors = [
-  { val: '#ffffff' }, // Blanco
+  { val: '#ff0000' }, // Blanco
   { val: '#8b4513' }, // Marrón
   { val: '#ff69b4' }, // Rosa
   { val: '#4caf50' }, // Verde

@@ -1,29 +1,29 @@
 <template>
   <div class="flex-1 flex justify-center items-end z-10 relative w-full max-w-full">
     <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-8 pt-12 px-4 md:px-0 flex justify-start md:justify-center snap-x">
-      <div
-class="flex items-end min-w-max mx-auto px-4 md:px-0" 
-         :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')">
-      <div
-v-for="(card, index) in myHand" :key="card.id" 
-           class="card-wrapper transition-all duration-300"
-           :style="calculateCardStyle(index, myHand.length)">
-        
+      <TransitionGroup 
+        tag="div" 
+        @enter="onCardEnter" 
+        :css="false"
+        class="flex items-end min-w-max mx-auto px-4 md:px-0" 
+        :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')"
+      >
         <div
-class="uno-card hand-card cursor-pointer"
-             :class="[`card-${card.color === 'wild' ? 'black' : card.color}`, !isPlayable(card) ? 'unplayable' : '']"
+v-for="(card, index) in myHand" :key="card.id" 
+             class="card-wrapper transition-all duration-300"
+             :style="calculateCardStyle(index, myHand.length)"
+             :data-index="index">
+          
+          <UnoCard
+             :card="card"
+             :playable="isPlayable(card)"
+             class="hand-card cursor-pointer"
              @click="playCard(card, $event)"
              @mouseenter="localHoverIndex = index; $emit('hover-card', index)"
-             @mouseleave="localHoverIndex = null; $emit('hover-card', null)">
-          
-          <div class="inner-oval"><div v-if="card.value === 'wild'" class="w-8 h-8 md:w-12 md:h-12 rounded-full shadow-[inset_0_2px_5px_rgba(0,0,0,0.5)] border-2 border-white/20" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="card-value">{{ getCardDisplay(card) }}</span></div>
-          <div v-if="card.value === 'wild'" class="corner-value top-left w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value top-left">{{ getCardDisplay(card) }}</span>
-          <div v-if="card.value === 'wild'" class="corner-value bottom-right w-2.5 h-2.5 rounded-full shadow-sm" style="background: conic-gradient(#ef4444 90deg, #eab308 90deg 180deg, #22c55e 180deg 270deg, #3b82f6 270deg);"/><span v-else class="corner-value bottom-right">{{ getCardDisplay(card) }}</span>
-          
-          <!-- Bloqueo visual oscuro si no es jugable y es tu turno -->
-          <div v-if="!isPlayable(card)" class="absolute inset-0 bg-black/60 rounded-[4px] md:rounded-[6px]"/>
+             @mouseleave="localHoverIndex = null; $emit('hover-card', null)"
+          />
         </div>
-      </div>
+      </TransitionGroup>
     </div>
 
     <!-- Botón Yell UNO -->
@@ -40,6 +40,7 @@ class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white t
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import anime from 'animejs'
+import UnoCard from './UnoCard.vue'
 
 const localHoverIndex = ref<number | null>(null)
 
@@ -76,16 +77,53 @@ const props = defineProps({
 
 const emit = defineEmits(['play-card', 'yell-uno', 'hover-card'])
 
-const getCardDisplay = (card: any) => {
-  if (!card) return ''
-  if (['0','1','2','3','4','5','6','7','8','9'].includes(card.value)) return card.value
-  if (card.value === 'skip') return '⊘'
-  if (card.value === 'reverse') return '⇄'
-  if (card.value === 'draw2') return '+2'
-  if (card.value === 'wild') return ''
-  if (card.value === 'wild_draw4') return '+4'
-  return ''
+let enterTickCount = 0
+let enterTimeout: NodeJS.Timeout | null = null
+
+const onCardEnter = (el: Element, done: () => void) => {
+  const htmlEl = el as HTMLElement
+  const innerCard = htmlEl.querySelector('.uno-card') as HTMLElement
+  if (!innerCard) {
+    done()
+    return
+  }
+
+  // Obtenemos coordenadas del mazo
+  const deckEl = document.querySelector('.deck-placeholder')
+  const deckRect = deckEl ? deckEl.getBoundingClientRect() : { top: 0, left: window.innerWidth / 2, width: 80, height: 120 }
+  
+  // Obtenemos posición final (natural) de la carta
+  const elRect = htmlEl.getBoundingClientRect()
+  
+  const startX = deckRect.left - elRect.left + (deckRect.width / 2) - (elRect.width / 2)
+  const startY = deckRect.top - elRect.top + (deckRect.height / 2) - (elRect.height / 2)
+
+  // Asignamos posición inicial al hijo para no pelear con calculateCardStyle
+  innerCard.style.opacity = '0'
+  innerCard.style.transform = `translate(${startX}px, ${startY}px) scale(0.2) rotate(-30deg)`
+  
+  const delayIndex = enterTickCount++
+  if (enterTimeout) clearTimeout(enterTimeout)
+  enterTimeout = setTimeout(() => { enterTickCount = 0 }, 50)
+
+  anime({
+    targets: innerCard,
+    opacity: [0, 1],
+    translateX: [startX, 0],
+    translateY: [startY, 0],
+    scale: [0.2, 1],
+    rotate: [-30, 0],
+    duration: 600,
+    delay: delayIndex * 150,
+    easing: 'easeOutQuint',
+    complete: () => {
+      innerCard.style.transform = ''
+      done()
+    }
+  })
 }
+
+// getCardDisplay removed
 
 // Validar si la carta brilla o se oscurece
 const isPlayable = (card: any) => {

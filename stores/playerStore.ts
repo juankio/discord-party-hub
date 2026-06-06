@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia'
-
-// Función simple para generar un ID único
-const generateId = () => Math.random().toString(36).substring(2, 15)
+import { generateId, saveUserToStorage, loadUserFromStorage, handleAuthFromUrl } from '~/utils/authStorage'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -27,89 +25,34 @@ export const usePlayerStore = defineStore('player', {
       this.nickname = nickname
       this.avatarId = avatarId
       this.color = color
-      if (!this.userId) {
-        this.userId = generateId()
-      }
-
-      try {
-        localStorage.setItem('party-hub-user', JSON.stringify({ 
-          userId: this.userId,
-          nickname, 
-          avatarId, 
-          color 
-        }))
-      } catch {}
+      if (!this.userId) this.userId = generateId()
+      saveUserToStorage({ userId: this.userId, nickname, avatarId, color })
     },
 
     loadPlayerSetup() {
-      if (typeof window !== 'undefined') {
-        const searchParams = new URLSearchParams(window.location.search);
-        const authDataParam = searchParams.get('auth_data');
-        if (authDataParam) {
-          try {
-            const authDataString = atob(authDataParam);
-            const authData = JSON.parse(authDataString);
-            
-            const oldDataRaw = window.localStorage.getItem('party-hub-user');
-            let roomId = '';
-            if (oldDataRaw) {
-              const oldData = JSON.parse(oldDataRaw);
-              roomId = oldData.roomId || '';
-            }
-            if (roomId) authData.roomId = roomId;
-            
-            window.localStorage.setItem('party-hub-user', JSON.stringify(authData));
-            
-            // Limpiar la URL para que no quede el token ahí feo
-            window.history.replaceState({}, document.title, window.location.pathname);
-          } catch(e) {
-            console.error('Failed to parse auth data from URL', e);
-          }
-        }
-      }
+      handleAuthFromUrl()
       
-      try {
-
-        const data = localStorage.getItem('party-hub-user')
-        if (data) {
-          try {
-            const parsed = JSON.parse(data)
-            this.userId = parsed.userId || generateId()
-            this.nickname = parsed.nickname || ''
-            this.avatarId = parsed.avatarId || 1
-            this.color = parsed.color || '#f97316'
-            this.isLoggedIn = parsed.isLoggedIn || false
-            this.token = parsed.token || ''
-            this.totalWins = parsed.totalWins || 0
-            this.gamesPlayed = parsed.gamesPlayed || 0
-            this.lastPlayed = parsed.lastPlayed || null
-            this.picture = parsed.picture || ''
-            
-            // Si el usuario viene de la versión anterior y no tiene userId, se lo creamos y guardamos
-            if (!parsed.userId) {
-              this.userId = generateId()
-              localStorage.setItem('party-hub-user', JSON.stringify({ 
-                userId: this.userId,
-                nickname: this.nickname, 
-                avatarId: this.avatarId, 
-                color: this.color,
-                isLoggedIn: this.isLoggedIn,
-                token: this.token,
-                totalWins: this.totalWins,
-                gamesPlayed: this.gamesPlayed,
-                lastPlayed: this.lastPlayed,
-                picture: this.picture
-              }))
-            } else {
-              this.userId = parsed.userId
-            }
-          } catch (e) {
-            console.error('Error parsing user data', e)
-          }
-        } else {
+      const parsed = loadUserFromStorage()
+      if (parsed) {
+        this.userId = parsed.userId || generateId()
+        this.nickname = parsed.nickname || ''
+        this.avatarId = parsed.avatarId || 1
+        this.color = parsed.color || '#f97316'
+        this.isLoggedIn = parsed.isLoggedIn || false
+        this.token = parsed.token || ''
+        this.totalWins = parsed.totalWins || 0
+        this.gamesPlayed = parsed.gamesPlayed || 0
+        this.lastPlayed = parsed.lastPlayed || null
+        this.picture = parsed.picture || ''
+        
+        // Si no tiene userId (versión anterior), lo generamos
+        if (!parsed.userId) {
           this.userId = generateId()
+          saveUserToStorage({ ...parsed, userId: this.userId })
         }
-      } catch {}
+      } else {
+        this.userId = generateId()
+      }
     },
     setRoom(id: string) {
       this.roomId = id
@@ -139,18 +82,10 @@ export const usePlayerStore = defineStore('player', {
       this.picture = user.picture || ''
       if (!this.userId) this.userId = generateId()
       
-      try {
-        localStorage.setItem('party-hub-user', JSON.stringify({ 
-          userId: this.userId,
-          nickname: this.nickname, 
-          avatarId: this.avatarId, 
-          color: this.color,
-          isLoggedIn: this.isLoggedIn,
-          token: this.token,
-          totalWins: this.totalWins,
-          picture: this.picture
-        }))
-      } catch {}
+      saveUserToStorage({ 
+        userId: this.userId, nickname: this.nickname, avatarId: this.avatarId, color: this.color,
+        isLoggedIn: this.isLoggedIn, token: this.token, totalWins: this.totalWins, picture: this.picture
+      })
     },
     async updateProfile(updates: any) {
       if (!this.isLoggedIn || !this.token) throw new Error('No estás logueado');
@@ -181,7 +116,7 @@ export const usePlayerStore = defineStore('player', {
       this.isLoggedIn = false
       this.userId = generateId()
       
-      localStorage.setItem('party-hub-user', JSON.stringify({ 
+      saveUserToStorage({ 
         userId: this.userId,
         nickname: this.nickname, 
         avatarId: this.avatarId, 
@@ -189,18 +124,15 @@ export const usePlayerStore = defineStore('player', {
         isLoggedIn: false,
         token: '',
         totalWins: 0
-      }))
+      })
     },
     incrementWin() {
       this.totalWins++;
-      try {
-        const data = localStorage.getItem('party-hub-user');
-        if (data) {
-          const parsed = JSON.parse(data);
-          parsed.totalWins = this.totalWins;
-          localStorage.setItem('party-hub-user', JSON.stringify(parsed));
-        }
-      } catch {}
+      const parsed = loadUserFromStorage()
+      if (parsed) {
+        parsed.totalWins = this.totalWins;
+        saveUserToStorage(parsed);
+      }
     }
   }
 })

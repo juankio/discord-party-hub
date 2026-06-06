@@ -12,6 +12,7 @@ export const useUnoStore = defineStore('uno', {
     winner: null as string | null,
     myHand: [] as any[],
     rivals: [] as any[],
+    hasDrawnThisTurn: false,
     // Estado transitorio para animaciones de rivales
     rivalHoverIndex: {} as Record<string, number | null>
   }),
@@ -27,6 +28,7 @@ export const useUnoStore = defineStore('uno', {
       this.winner = state.winner
       this.myHand = state.myHand
       this.rivals = state.rivals
+      this.hasDrawnThisTurn = state.hasDrawnThisTurn
       
       // Inicializar el hover record si hay rivales nuevos
       this.rivals.forEach(r => {

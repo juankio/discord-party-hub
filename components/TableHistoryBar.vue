@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full bg-[#2a1a0f] border-8 border-[#5c3a21] rounded-2xl shadow-[8px_8px_0px_rgba(0,0,0,0.8)] overflow-hidden">
-    <div class="bg-[#1a0f0a] py-3 border-b-4 border-[#111]">
+  <div class="w-full bg-[#2a1a0f] border-4 sm:border-8 border-[#5c3a21] rounded-2xl shadow-[4px_4px_0px_rgba(0,0,0,0.8)] sm:shadow-[8px_8px_0px_rgba(0,0,0,0.8)] overflow-hidden">
+    <div class="bg-[#1a0f0a] py-2 sm:py-3 border-b-4 border-[#111]">
       <h3 class="text-center text-[#f59e0b] font-black tracking-widest uppercase text-sm drop-shadow-md">
         Clasificación
       </h3>
@@ -10,7 +10,7 @@
       <div 
         v-for="(player, index) in sortedPlayers" 
         :key="player.userId"
-        class="flex items-center gap-4 p-3 rounded-xl border-2 transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(0,0,0,0.6)]"
+        class="flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl border-2 transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_rgba(0,0,0,0.6)]"
         :class="[
           index === 0 
             ? 'bg-[#4a2e1b] border-[#f59e0b]' 

@@ -1,14 +1,14 @@
 <template>
   <Transition name="slide-panel">
-    <div class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-8">
+    <div class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-4 sm:px-8">
       <div class="bg-[#8b5a2b] rounded-b-3xl border-4 border-t-0 border-[#5c3a21] p-6 pt-8 shadow-sm relative">
         <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase mb-5 text-center">
           Reglas de la Mesa
         </h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 relative z-10">
           <label
 v-for="(rule, key) in rulesList" :key="key" 
-                 class="group flex items-center justify-between bg-[#6d4621] hover:bg-[#7d512a] p-4 rounded-xl cursor-pointer transition-colors border-2 border-[#5c3a1b] border-b-[6px] shadow-sm"
+                 class="group flex items-center justify-between gap-2 sm:gap-0 bg-[#6d4621] hover:bg-[#7d512a] p-3 sm:p-4 rounded-xl cursor-pointer transition-colors border-2 border-[#5c3a1b] border-b-[6px] shadow-sm"
                  :class="{'md:col-span-1': key === 'interceptExact'}">
             <span class="text-[#f2f3f5] font-black text-xs tracking-wide">{{ rule.label }}</span>
             

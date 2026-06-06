@@ -20,8 +20,10 @@
       :current-color="unoStore.currentColor"
       :pending-draws="unoStore.pendingDraws"
       :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
+      :has-drawn-this-turn="unoStore.hasDrawnThisTurn"
       :my-hand="unoStore.myHand"
       @draw="drawCard"
+      @pass-turn="passTurn"
     />
 
     <!-- My Hand Area -->
@@ -79,6 +81,7 @@ const { playCardAnimation, drawCardAnimation } = useUnoAnimations(unoStore, play
 
 const playCard = (id: string) => playCardAnimation(id)
 const drawCard = () => drawCardAnimation()
+const passTurn = () => { socket.value?.emit('uno:pass_turn') }
 
 const declareColor = (color: string) => { socket.value?.emit('uno:declare_color', color) }
 const yellUno = () => { socket.value?.emit('uno:yell_uno') }
