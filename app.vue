@@ -14,11 +14,11 @@ import { usePlayerStore } from '~/stores/playerStore'
 useSeoMeta({
   ogTitle: 'Discord Party Hub',
   ogDescription: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4',
   ogImageWidth: 1200,
   ogImageHeight: 630,
   twitterCard: 'summary_large_image',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg'
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4'
 })
 
 const playerStore = usePlayerStore()

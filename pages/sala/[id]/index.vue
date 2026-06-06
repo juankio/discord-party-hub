@@ -119,13 +119,13 @@ useSeoMeta({
   ogTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
   description: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
   ogDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4',
   ogImageWidth: 1200,
   ogImageHeight: 630,
   twitterCard: 'summary_large_image',
   twitterTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
   twitterDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg'
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4'
 })
 
 const players = computed(() => playerStore.playersInRoom)
