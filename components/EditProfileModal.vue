@@ -114,7 +114,7 @@ const localAvatarId = ref(playerStore.avatarId)
 const localColor = ref(playerStore.color)
 
 const colors = [
-  { val: '#ffffff' },
+  { val: '#ff0000' },
   { val: '#8b4513' },
   { val: '#ff69b4' },
   { val: '#4caf50' },
