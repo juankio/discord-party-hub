@@ -25,7 +25,7 @@
           <h2 class="text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-4">{{ roomId }}</h2>
           <button 
             class="copy-btn-anim flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 border"
-            :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20 hover:scale-105 active:scale-95'"
+            :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20'"
             @click="copyLink"
           >
             <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
@@ -157,8 +157,8 @@ const copyLink = () => {
     
     anime({
       targets: '.copy-btn-anim',
-      scale: [1, 1.1, 1],
-      duration: 300,
+      scale: [1, 1.15, 1],
+      duration: 400,
       easing: 'easeInOutQuad'
     })
     

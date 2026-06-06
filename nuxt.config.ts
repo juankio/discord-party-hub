@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  features: {
+    inlineStyles: false
+  },
   devtools: { enabled: false },
   modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/eslint'],
   css: ['~/assets/css/uno-cards.css'],
