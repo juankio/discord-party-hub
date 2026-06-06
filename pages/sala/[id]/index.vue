@@ -91,6 +91,13 @@ const playerStore = usePlayerStore()
 const { socket } = useSocket()
 const roomId = playerStore.roomId
 
+useSeoMeta({
+  title: `Lobby: ${roomId} - Discord Party Hub`,
+  ogTitle: `¡Únete a mi sala (${roomId}) en Discord Party Hub!`,
+  description: 'Entra a la sala para jugar UNO en tiempo real.',
+  ogDescription: 'Entra a la sala para jugar UNO en tiempo real.'
+})
+
 const players = computed(() => playerStore.playersInRoom)
 const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
 
