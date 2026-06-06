@@ -4,20 +4,30 @@
       <!-- Header de la Sala -->
       <div class="flex items-center justify-between mb-8 header-anim opacity-0">
         <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span> <span class="text-gray-500 text-xl ml-2">{{ players.length }}/{{ playerStore.roomRules?.extendedLobby ? 8 : 6 }}</span></h1>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Botón Editar Perfil (Pro Max UI) -->
           <button 
             @click="isEditProfileOpen = true"
-            class="flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] hover:bg-[#2a2a2a] text-gray-300 hover:text-white rounded-xl border border-white/10 transition-all duration-200 active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.5)] font-bold text-sm"
+            class="group relative flex items-center gap-2 px-5 py-2.5 bg-black/40 hover:bg-white/5 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md"
           >
-            <UIcon name="i-lucide-user-edit" class="w-4 h-4" style="color: var(--theme-color);" />
-            Editar Perfil
+            <!-- Efecto Pro Line (Glow en hover) -->
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_var(--theme-color,rgba(249,115,22,0.2))] rounded-xl pointer-events-none"></div>
+            <!-- Icono arreglado (Heroicons) -->
+            <UIcon name="i-heroicons-pencil-square" class="w-4 h-4 relative z-10 transition-transform group-hover:scale-110" style="color: var(--theme-color); filter: drop-shadow(0 0 4px var(--theme-color));" />
+            <span class="relative z-10 tracking-wide drop-shadow-md">Editar Perfil</span>
           </button>
+
+          <!-- Botón Salir (Pro Max UI) -->
           <button 
             @click="leaveRoom"
-            class="flex items-center gap-2 px-4 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-300 rounded-xl border border-red-500/20 transition-all duration-200 active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.5)] font-bold text-sm"
+            class="group relative flex items-center gap-2 px-5 py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md"
           >
-            <UIcon name="i-lucide-log-out" class="w-4 h-4" />
-            Salir
+            <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
+            <!-- Icono arreglado (Heroicons) -->
+            <UIcon name="i-heroicons-arrow-right-on-rectangle" class="w-4 h-4 relative z-10 transition-transform group-hover:scale-110 group-hover:-translate-x-0.5 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+            <span class="relative z-10 tracking-wide drop-shadow-md">Salir</span>
           </button>
         </div>
       </div>
