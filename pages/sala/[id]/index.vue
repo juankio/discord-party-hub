@@ -93,11 +93,16 @@ const roomId = playerStore.roomId
 
 useSeoMeta({
   title: `Lobby: ${roomId} - Discord Party Hub`,
-  ogTitle: `¡Únete a mi sala (${roomId}) en Discord Party Hub!`,
-  description: 'Entra a la sala para jugar UNO en tiempo real.',
-  ogDescription: 'Entra a la sala para jugar UNO en tiempo real.',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.png',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.png'
+  ogTitle: `Lobby: ${roomId} - Discord Party Hub`,
+  description: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
+  ogDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg',
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  twitterCard: 'summary_large_image',
+  twitterTitle: `Lobby: ${roomId} - Discord Party Hub`,
+  twitterDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg'
 })
 
 const players = computed(() => playerStore.playersInRoom)

@@ -22,20 +22,7 @@ export default defineNuxtConfig({
     head: {
       title: 'Discord Party Hub',
       meta: [
-        { name: 'description', content: 'Tu hub de juegos en tiempo real. ¡Juega UNO y más con tus amigos!' },
-        { property: 'og:title', content: 'Discord Party Hub' },
-        { property: 'og:description', content: 'Tu hub de juegos en tiempo real. ¡Juega UNO y más con tus amigos!' },
-        { property: 'og:image', content: 'https://discord-party-hub.vercel.app/banner.png' },
-        { property: 'og:image:width', content: '1200' },
-        { property: 'og:image:height', content: '630' },
-        { property: 'og:image:alt', content: 'Banner de Discord Party Hub' },
-        { property: 'og:url', content: 'https://discord-party-hub.vercel.app/' },
-        { property: 'og:site_name', content: 'Discord Party Hub' },
-        { property: 'og:type', content: 'website' },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'Discord Party Hub' },
-        { name: 'twitter:description', content: 'Tu hub de juegos en tiempo real. ¡Juega UNO y más con tus amigos!' },
-        { name: 'twitter:image', content: 'https://discord-party-hub.vercel.app/banner.png' },
+        { name: 'description', content: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!' },
         { name: 'theme-color', content: '#f97316' }
       ],
       link: [

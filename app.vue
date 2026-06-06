@@ -12,13 +12,13 @@ import { watch, onMounted } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
 
 useSeoMeta({
-  ogSiteName: 'Discord Party Hub',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.png',
+  ogTitle: 'Discord Party Hub',
+  ogDescription: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg',
   ogImageWidth: 1200,
   ogImageHeight: 630,
-  ogImageAlt: 'Banner de Discord Party Hub',
   twitterCard: 'summary_large_image',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.png'
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg'
 })
 
 const playerStore = usePlayerStore()
