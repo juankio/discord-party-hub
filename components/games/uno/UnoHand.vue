@@ -1,8 +1,9 @@
 <template>
-  <div ref="handContainer" class="flex-1 flex justify-center items-end pb-8 z-10 relative w-full">
-    <div
-class="flex justify-center items-end" 
-         :class="myHand.length > 12 ? '-space-x-16 sm:-space-x-14' : (myHand.length > 7 ? '-space-x-14 sm:-space-x-12' : '-space-x-12 sm:-space-x-10')">
+  <div class="flex-1 flex justify-center items-end z-10 relative w-full max-w-full">
+    <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-8 pt-12 px-4 md:px-0 flex justify-start md:justify-center snap-x">
+      <div
+class="flex items-end min-w-max mx-auto px-4 md:px-0" 
+         :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')">
       <div
 v-for="(card, index) in myHand" :key="card.id" 
            class="card-wrapper transition-all duration-300"
@@ -150,3 +151,13 @@ const playCard = (card: any, event: Event) => {
   })
 }
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>

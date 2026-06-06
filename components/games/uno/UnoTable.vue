@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex justify-center items-center relative z-10 w-full">
-    <div class="w-full max-w-[600px] h-[300px] bg-[#991b1b] rounded-[100px] border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex items-center justify-center relative mx-4 overflow-hidden">
+    <div class="w-full max-w-[600px] h-[200px] sm:h-[300px] bg-[#991b1b] rounded-[60px] sm:rounded-[100px] border-[6px] sm:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex items-center justify-center relative mx-4 overflow-hidden">
       
       <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"/>
 

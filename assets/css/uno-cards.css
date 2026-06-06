@@ -1,8 +1,12 @@
 .uno-card {
-  width: 90px; height: 130px; border-radius: 8px; border: 4px solid white;
+  width: 70px; height: 105px; border-radius: 6px; border: 3px solid white;
   position: relative; display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5); user-select: none; background-color: white;
   --color-red: #ef4444; --color-blue: #3b82f6; --color-green: #22c55e; --color-yellow: #eab308;
+  flex-shrink: 0;
+}
+@media (min-width: 640px) {
+  .uno-card { width: 90px; height: 130px; border-width: 4px; border-radius: 8px; }
 }
 @media (min-width: 768px) {
   .uno-card { width: 110px; height: 160px; border-width: 5px; border-radius: 10px; }
@@ -30,17 +34,20 @@
   background: linear-gradient(135deg, #ef4444, #eab308, #22c55e, #3b82f6); z-index: -1;
 }
 .card-value {
-  font-size: 2.2rem; font-weight: 900; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); transform: rotate(25deg); line-height: 1;
+  font-size: 1.8rem; font-weight: 900; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); transform: rotate(25deg); line-height: 1;
 }
+@media (min-width: 640px) { .card-value { font-size: 2.2rem; } }
 @media (min-width: 768px) { .card-value { font-size: 3rem; } }
 .card-black .card-value {
-  color: white !important; font-size: 2rem; text-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
+  color: white !important; font-size: 1.6rem; text-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
   background: none !important; -webkit-text-fill-color: white !important;
 }
+@media (min-width: 640px) { .card-black .card-value { font-size: 2rem; } }
 @media (min-width: 768px) { .card-black .card-value { font-size: 2.5rem; } }
 .corner-value {
-  position: absolute; font-size: 0.9rem; font-weight: bold; color: white; text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+  position: absolute; font-size: 0.8rem; font-weight: bold; color: white; text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
 }
+@media (min-width: 640px) { .corner-value { font-size: 0.9rem; } }
 @media (min-width: 768px) { .corner-value { font-size: 1.1rem; } }
 .top-left { top: 4px; left: 6px; }
 .bottom-right { bottom: 4px; right: 6px; transform: rotate(180deg); }
