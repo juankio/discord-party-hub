@@ -95,7 +95,9 @@ useSeoMeta({
   title: `Lobby: ${roomId} - Discord Party Hub`,
   ogTitle: `¡Únete a mi sala (${roomId}) en Discord Party Hub!`,
   description: 'Entra a la sala para jugar UNO en tiempo real.',
-  ogDescription: 'Entra a la sala para jugar UNO en tiempo real.'
+  ogDescription: 'Entra a la sala para jugar UNO en tiempo real.',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.png',
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.png'
 })
 
 const players = computed(() => playerStore.playersInRoom)

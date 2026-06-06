@@ -11,6 +11,16 @@
 import { watch, onMounted } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
 
+useSeoMeta({
+  ogSiteName: 'Discord Party Hub',
+  ogImage: 'https://discord-party-hub.vercel.app/banner.png',
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageAlt: 'Banner de Discord Party Hub',
+  twitterCard: 'summary_large_image',
+  twitterImage: 'https://discord-party-hub.vercel.app/banner.png'
+})
+
 const playerStore = usePlayerStore()
 
 const hexToRgb = (hex: string) => {

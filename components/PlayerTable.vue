@@ -24,11 +24,12 @@
           <p class="text-[10px] md:text-xs text-green-100 mb-2 uppercase tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
           <h2 class="text-5xl md:text-7xl font-mono font-black text-white tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-4">{{ roomId }}</h2>
           <button 
-            class="flex items-center gap-2 bg-black/40 hover:bg-black/60 text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95 border border-white/20"
+            class="copy-btn-anim flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-colors duration-300 border"
+            :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20 hover:scale-105 active:scale-95'"
             @click="copyLink"
           >
-            <UIcon name="i-lucide-copy" class="w-4 h-4" />
-            Copiar Link
+            <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
+            {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
           </button>
         </div>
       </div>
@@ -71,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import anime from 'animejs'
 import { usePlayerStore } from '~/stores/playerStore'
 
@@ -83,6 +84,7 @@ const props = defineProps({
 
 const toast = useToast()
 const playerStore = usePlayerStore()
+const isCopied = ref(false)
 
 // Calcula posiciones basadas en las buchacas de la mesa
 const getAvatarPosition = (index: number, total: number) => {
@@ -152,6 +154,19 @@ onMounted(() => {
 const copyLink = () => {
   if (import.meta.client) {
     navigator.clipboard.writeText(window.location.href)
+    
+    anime({
+      targets: '.copy-btn-anim',
+      scale: [1, 1.1, 1],
+      duration: 300,
+      easing: 'easeInOutQuad'
+    })
+    
+    isCopied.value = true
+    setTimeout(() => {
+      isCopied.value = false
+    }, 2500)
+
     toast.add({
       title: '¡Link copiado!',
       description: 'Envíalo a tus amigos por Discord para que se unan.',
