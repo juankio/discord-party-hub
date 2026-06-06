@@ -1,81 +1,53 @@
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=f97316&height=200&section=header&text=Discord%20Party%20Hub&fontSize=50&fontColor=ffffff" alt="Discord Party Hub Banner" />
-  
-  <p><em>Un hub de minijuegos multijugador en tiempo real diseñado para jugarse por Discord con cero fricción.</em></p>
+# 🎮 Discord Party Hub (Frontend)
 
-  <p>
-    <img src="https://img.shields.io/badge/Nuxt-3.0-00DC82?style=flat-square&logo=nuxt.js" alt="Nuxt">
-    <img src="https://img.shields.io/badge/Bun-Runtime-000000?style=flat-square&logo=bun" alt="Bun">
-    <img src="https://img.shields.io/badge/Socket.io-Realtime-010101?style=flat-square&logo=socket.io" alt="Socket.io">
-    <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=flat-square&logo=mongodb" alt="MongoDB">
-    <img src="https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=flat-square&logo=tailwind-css" alt="Tailwind CSS">
-  </p>
-</div>
+![Nuxt 3](https://img.shields.io/badge/Nuxt_3-00DC82?style=for-the-badge&logo=nuxt.js&logoColor=white)
+![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Anime.js](https://img.shields.io/badge/Anime.js-181818?style=for-the-badge&logo=javascript&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
 
----
+Tu hub de juegos multijugador en tiempo real con una interfaz **Pro Max**. Juega UNO con tus amigos, personaliza las reglas de la sala y disfruta de una experiencia fluida y reactiva.
 
-## 📸 Capturas de Pantalla
+## ✨ Características Principales
 
-<div align="center">
-  <img src="./docs/assets/lobby.png" width="48%" alt="Lobby y Mesa de Billar" />
-  <img src="./docs/assets/uno-game.png" width="48%" alt="Partida de UNO" />
-</div>
+*   **UI/UX Premium:** Diseño moderno "Glassmorphism" y "Dark Neon", 100% responsivo (Mobile-first, optimizado para 390px).
+*   **Animaciones Fluidas:** Interacciones, reparto de cartas en cascada, robos de turno (Corte Exacto) orquestados con `anime.js`.
+*   **UNO Extendido:** Soporte para múltiples reglas personalizadas (Acumulación de +2/+4, Robar hasta que salga, Intercepción Exacta, Regla del 0 y 7).
+*   **Optimización SEO y WhatsApp:** Vistas previas de enlaces generadas dinámicamente con OpenGraph y Twitter Cards para invitar amigos con estilo.
+*   **Arquitectura Limpia:** Construido siguiendo estrictamente patrones de *Clean Code*, componentes atómicos (`<UnoCard />`) y composables modulares.
 
----
+## 🛠️ Tecnologías
 
-## 🚀 Inicio Rápido (Modo Desarrollo)
+*   **Framework:** Nuxt 3 / Vue 3 (Composition API)
+*   **Estilos:** Tailwind CSS + Nuxt UI
+*   **Estado:** Pinia
+*   **Animaciones:** Anime.js
+*   **Tiempo Real:** Socket.io-client
+*   **Linter/Type Checking:** TypeScript estricto
 
-Este proyecto está dividido en dos partes que deben correr simultáneamente: el **Frontend** (Nuxt 3) y el **Backend** (Node.js/Socket.io). 
+## 🚀 Instalación y Uso
 
-⚠️ **Regla estricta de la Tripulación:** Este proyecto usa `bun` exclusivamente. No uses `npm`.
-
-### 1. Levantar el Backend (Motor de Juegos)
-El servidor de WebSockets ahora se encuentra en su propio repositorio para mantener la arquitectura limpia.
-
-> **Importante**: Asegúrate de haber clonado y configurado el backend por separado.
+**Importante:** Este proyecto utiliza **Bun** como gestor de paquetes exclusivo. Prohibido usar `npm`.
 
 ```bash
-# Asumiendo que clonaste el backend en otra carpeta
-cd ../discord-party-hub-backend
+# Instalar dependencias
 bun install
+
+# Iniciar servidor de desarrollo
 bun run dev
 ```
-> El backend correrá en `http://localhost:3001`.
 
-### 2. Levantar el Frontend (La Interfaz)
-La interfaz de usuario interactiva y fluida.
-```bash
-# En la raíz del proyecto (discord-party-hub)
-bun install
-bun run dev
-```
-> El frontend correrá en `http://localhost:3000`.
+La aplicación estará disponible en `http://localhost:3000`.
 
----
+## 📂 Estructura de Directorios
 
-## 🏛️ Arquitectura del Frontend (UI/UX)
-
-La interfaz se rige por la estética **"Pro Max"** combinada con **"Flat 2D Vectorial"**.
-- **Cliente 100% Puro:** El frontend de Nuxt no contiene base de datos, SSR APIs pesadas ni lógica de servidor interno. Toda la comunicación de red apunta exclusivamente al servidor Node.js/Express.
-- **Colores:** Fondos ultra oscuros (`#0A0A0A`, `#151515`) contrastados con acentos de neón dinámicos (inyectados vía `--theme-color`).
-- **Profundidad sin 3D:** Se evita el desenfoque (blur) y el fotorrealismo. Los volúmenes se logran con bordes gruesos de madera, sombras sólidas (ej. `shadow-[8px_8px_0px_#000]`) y paletas de colores planos.
-- **Componentes Destacados:**
-  - `PlayerTable.vue`: Una mesa de casino (`bg-[#991b1b]`) plana vista desde arriba. Identifica al creador de la mesa con una corona Flat 2D dorada.
-  - `GameSelector.vue`: Un mueble de estantería de madera maciza. Los juegos descansan protegidos por una soga SVG.
-  - `TableHistoryBar.vue`: Una pizarra rústica anclada al layout que muestra el *Leaderboard* en vivo.
+*   `/components`: Componentes atómicos y de UI.
+    *   `/games/uno`: Componentes específicos del juego (cartas, mesa, mano).
+*   `/composables`: Hooks reactivos y lógica visual.
+    *   `/uno`: Lógica fragmentada de animaciones (`useUnoDrawFx`, `useUnoActionFx`, etc.).
+*   `/pages`: Sistema de rutas automáticas de Nuxt (`/sala/[id]`).
+*   `/stores`: Estados globales gestionados por Pinia.
+*   `/utils`: Utilidades puras (e.g., manejo de LocalStorage para perfiles).
 
 ---
-
-## ⚙️ Arquitectura de Sincronización
-- **Cross-Origin Auth Flow:** Para solucionar los problemas de estado entre el Frontend (3000) y Backend (3001), el flujo de Google OAuth inyecta los credenciales encriptados vía URL `/?auth_data=...`, los cuales Pinia intercepta, almacena en localStorage local y borra de la barra de navegación para una experiencia impecable.
-- **Estado Global:** Nuxt UI consume el estado mediante `Pinia` (`playerStore.ts`, `unoStore.ts`).
-- **REST API:** Las peticiones HTTP (Leaderboard, Update Profile) utilizan `$fetch` consumiendo el puerto de la API externa (Express).
-- **WebSockets:** La conexión de WebSockets se gestiona en `composables/useSocket.ts` implementando un control bidireccional "Anti-Ping-Pong" para no sobrecargar el servidor en eventos reactivos (ej. Apagar switches).
-
----
-
-
-## 📝 Reglas de Contribución (Luffy Crew)
-1. **Atajos Prohibidos:** Nunca hacer commits directos a `main`. Usar ramas `feat/` o `fix/`.
-2. **Refactorización Continua:** Componentes Vue limitados estrictamente a `< 150 líneas`. Si crecen, fragmentar.
-3. **No `npm`:** Si haces `npm install`, te hacemos caminar por la tabla. Usa `bun`.
+*Hecho por la tripulación del Sombrero de Paja 🏴‍☠️*
