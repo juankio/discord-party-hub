@@ -1,15 +1,24 @@
 <template>
   <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-    <UNotifications />
+    <Transition name="loader-fade">
+      <AppLoader v-if="!isServerReady" />
+    </Transition>
+
+    <Transition name="fade">
+      <div v-show="isServerReady">
+        <NuxtLayout>
+          <NuxtPage />
+        </NuxtLayout>
+        <UNotifications />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
+import AppLoader from '~/components/core/AppLoader.vue'
 
 useSeoMeta({
   ogTitle: 'Discord Party Hub',
@@ -20,6 +29,8 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
   twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4'
 })
+
+const isServerReady = ref(false)
 
 const playerStore = usePlayerStore()
 
@@ -38,6 +49,26 @@ const updateThemeColor = (color: string) => {
 
 onMounted(() => {
   updateThemeColor(playerStore.color || '#f97316')
+
+  const config = useRuntimeConfig()
+  const baseUrl = (config.public.socketUrl || 'http://localhost:3001').replace(/\/$/, '')
+  const healthUrl = `${baseUrl}/api/health`
+
+  const checkHealth = async () => {
+    try {
+      const res = await fetch(healthUrl)
+      if (res.ok) {
+        isServerReady.value = true
+        return
+      }
+    } catch (e) {
+      // Ignorar error, servidor apagado o levantando en Azure
+    }
+    // Reintentar cada 2 segundos
+    setTimeout(checkHealth, 2000)
+  }
+
+  checkHealth()
 })
 
 watch(() => playerStore.color, (newColor) => {
@@ -81,5 +112,23 @@ body {
 /* Glow helpers */
 .neon-glow {
   box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.8s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.loader-fade-leave-active {
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.loader-fade-leave-to {
+  opacity: 0;
+  transform: scale(1.05);
 }
 </style>
