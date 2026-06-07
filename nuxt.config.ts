@@ -36,7 +36,10 @@ export default defineNuxtConfig({
         'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
         'Cross-Origin-Embedder-Policy': 'unsafe-none'
       }
-    }
+    },
+    // Cachear la vista principal y el lobby en el Edge de Vercel (SWR) para evitar el Cold Start de la UI
+    '/': { swr: 60 },
+    '/sala/**': { swr: 60 }
   },
   runtimeConfig: {
     googleClientId: process.env.GOOGLE_CLIENT_ID,

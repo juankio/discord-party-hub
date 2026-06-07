@@ -2,50 +2,69 @@
   <div class="app-loader fixed inset-0 z-[9999] bg-[#0A0A0A] flex flex-col items-center justify-center overflow-hidden">
     
     <!-- Animación de Trayectoria SVG -->
-    <div class="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] flex items-center justify-center mb-8 perspective-1000">
+    <div class="relative w-[300px] h-[200px] sm:w-[400px] sm:h-[300px] flex items-center justify-center mb-12 perspective-1000">
       
-      <!-- Camino Invisible y Glow dinámico -->
+      <!-- Glow de fondo -->
       <div 
-        class="absolute inset-0 opacity-20 blur-[60px] rounded-full transition-colors duration-500"
+        class="absolute inset-0 opacity-25 blur-[50px] transition-colors duration-500 will-change-transform"
         :style="{ backgroundColor: currentCardColor }"
       ></div>
 
-      <!-- El Camino (Path) de la pista -->
-      <svg class="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 400 400" fill="none">
+      <!-- El Camino (Pista Infinito) -->
+      <svg class="absolute inset-0 w-full h-full overflow-visible pointer-events-none" viewBox="0 0 400 300" fill="none">
+        <!-- Rastro sutil estático -->
         <path 
-          class="track-path" 
-          d="M 50,200 C 50,50 350,50 350,200 C 350,350 50,350 50,200" 
-          stroke="rgba(255,255,255,0.1)" 
-          stroke-width="2" 
-          stroke-dasharray="10 10"
+          class="track-path-base"
+          d="M 200 150 C 280 50, 380 50, 380 150 C 380 250, 280 250, 200 150 C 120 50, 20 50, 20 150 C 20 250, 120 250, 200 150 Z" 
+          stroke="rgba(255,255,255,0.05)" 
+          stroke-width="4" 
+        />
+        <!-- Láser que dibuja el rastro (Neón) -->
+        <path 
+          class="track-laser" 
+          d="M 200 150 C 280 50, 380 50, 380 150 C 380 250, 280 250, 200 150 C 120 50, 20 50, 20 150 C 20 250, 120 250, 200 150 Z" 
+          :stroke="currentCardColor" 
+          stroke-width="6" 
+          stroke-linecap="round"
+          style="filter: drop-shadow(0 0 10px currentColor);"
         />
       </svg>
       
       <!-- La Carta de UNO Viajera -->
-      <div class="traveling-card w-16 h-24 sm:w-20 sm:h-28 absolute top-0 left-0 preserve-3d" style="transform-origin: center center;">
-        <div class="uno-card absolute inset-0 rounded-xl border-4 border-white flex flex-col items-center justify-center shadow-[0_15px_35px_rgba(0,0,0,0.8)]"
+      <div class="traveling-card w-14 h-20 sm:w-20 sm:h-28 absolute top-0 left-0 preserve-3d will-change-transform" style="transform-origin: center center;">
+        <div class="uno-card absolute inset-0 rounded-xl border-4 border-white flex flex-col items-center justify-center shadow-[0_15px_35px_rgba(0,0,0,0.8)] will-change-transform backface-hidden"
              :class="currentCardClass"
              :style="{ boxShadow: `0 0 30px ${currentCardColor}` }">
           
           <div class="w-full h-full p-1.5 flex items-center justify-center">
              <div class="inner-oval w-full h-full rounded-full bg-white flex items-center justify-center transform -rotate-12 shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
-                <span class="text-xl sm:text-2xl font-black italic tracking-tighter" :class="currentTextClass">UNO</span>
+                <span class="text-lg sm:text-2xl font-black italic tracking-tighter" :class="currentTextClass">UNO</span>
              </div>
           </div>
           
           <div class="absolute top-1 left-1.5 text-white font-black text-[10px] italic">O</div>
           <div class="absolute bottom-1 right-1.5 text-white font-black text-[10px] italic rotate-180">O</div>
         </div>
+
+        <!-- Reverso de la carta -->
+        <div class="absolute inset-0 bg-[#111] rounded-xl border-4 border-white flex flex-col items-center justify-center rotate-y-180 backface-hidden" style="transform: rotateY(180deg);">
+          <div class="w-full h-full p-1.5 flex items-center justify-center">
+             <div class="w-full h-full rounded-full bg-red-600 flex items-center justify-center transform -rotate-12 shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] border-2 border-yellow-500">
+                <span class="text-sm font-black italic tracking-tighter text-yellow-400 drop-shadow-md">UNO</span>
+             </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
 
     <!-- Animated Text -->
-    <div class="text-container h-12 relative w-full flex justify-center items-center px-4">
+    <div class="text-container h-12 relative w-full flex justify-center items-center px-4 mt-8">
       <Transition name="phrase-fade" mode="out-in">
         <span 
           :key="currentPhraseIndex" 
-          class="phrase font-black tracking-widest text-lg md:text-xl text-center uppercase"
+          class="phrase font-black tracking-widest text-lg md:text-xl text-center uppercase will-change-transform"
           :class="currentTextClass"
           style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));"
         >
@@ -56,7 +75,7 @@
 
     <!-- Progress bar hint (pulsing line) -->
     <div class="absolute bottom-16 w-48 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-      <div class="loading-bar h-full w-full origin-left transition-colors duration-300" :style="{ backgroundColor: currentCardColor }"></div>
+      <div class="loading-bar h-full w-full origin-left transition-colors duration-300 will-change-transform" :style="{ backgroundColor: currentCardColor }"></div>
     </div>
   </div>
 </template>
@@ -92,24 +111,36 @@ const currentCardColor = ref(colors[0]!.hex)
 let textInterval: ReturnType<typeof setInterval> | null = null
 
 onMounted(() => {
-  // SVG Motion Path animation
-  // Centramos el objeto en el punto 0,0 del SVG (-40px -56px es la mitad de 80x112px carta)
-  const path = anime.path('.track-path');
+  const path = anime.path('.track-path-base');
   
+  // Fisicas fluidas: El recorrido de la carta en infinito (∞)
+  // Usamos easeInOutSine para que acelere en el centro y se frene suave en las curvas
   anime({
     targets: '.traveling-card',
     translateX: path('x'),
     translateY: path('y'),
-    rotate: path('angle'), // La carta gira siguiendo la curva
-    easing: 'linear',
-    duration: 3000,
+    rotate: path('angle'),
+    easing: 'easeInOutSine',
+    duration: 3500,
     loop: true,
     update: function(anim) {
-      // Cambiamos de color cada vez que completa un bucle (100%) o a la mitad (50%)
+      // Cambiamos el color cada vez que pasa por el centro (0%, 50%, 100%)
       const prog = Math.round(anim.progress)
-      if (prog === 50 || prog === 100) {
-        if (!document.querySelector('.traveling-card')?.hasAttribute('data-color-changed')) {
-            document.querySelector('.traveling-card')?.setAttribute('data-color-changed', 'true');
+      
+      // En 25% y 75% estamos en los bordes de la curva, es el momento perfecto para hacer el flip
+      if (prog === 25 || prog === 75) {
+        if (!document.querySelector('.traveling-card')?.hasAttribute('data-flipped')) {
+            document.querySelector('.traveling-card')?.setAttribute('data-flipped', 'true');
+            
+            // Hacemos un giro rápido (flip 3D) a la carta
+            anime({
+              targets: '.traveling-card',
+              rotateY: '+=180',
+              duration: 800,
+              easing: 'easeOutElastic(1, .5)' // Física de rebote real
+            });
+
+            // Cambiamos color
             colorIndex.value = (colorIndex.value + 1) % colors.length;
             const nextColorObj = colors[colorIndex.value];
             if(nextColorObj) {
@@ -119,18 +150,20 @@ onMounted(() => {
             }
         }
       }
-      if (prog > 10 && prog < 40 || prog > 60 && prog < 90) {
-         document.querySelector('.traveling-card')?.removeAttribute('data-color-changed');
+      
+      // Limpiamos el lock cuando salimos de las curvas
+      if (prog > 35 && prog < 65 || prog > 85 || prog < 15) {
+         document.querySelector('.traveling-card')?.removeAttribute('data-flipped');
       }
     }
   });
 
-  // Animamos la carta girando en 3D mientras viaja
+  // El láser de neón que persigue a la carta
   anime({
-    targets: '.uno-card',
-    rotateY: '1turn',
-    easing: 'linear',
-    duration: 1500,
+    targets: '.track-laser',
+    strokeDashoffset: [anime.setDashoffset, 0],
+    easing: 'easeInOutSine',
+    duration: 3500,
     loop: true
   });
 
@@ -154,7 +187,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (textInterval) clearInterval(textInterval)
   anime.remove('.traveling-card')
-  anime.remove('.uno-card')
+  anime.remove('.track-laser')
   anime.remove('.loading-bar')
 })
 </script>
@@ -166,9 +199,22 @@ onUnmounted(() => {
 .preserve-3d {
   transform-style: preserve-3d;
 }
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 .traveling-card {
-  margin-top: -3rem; /* Centrar la carta respecto al path Y */
-  margin-left: -2rem; /* Centrar la carta respecto al path X */
+  /* Centrar exactamente la carta sobre el punto de la linea SVG */
+  margin-top: -3.5rem; /* Mitad de h-28 (112px / 2 = 56px) */
+  margin-left: -2.5rem; /* Mitad de w-20 (80px / 2 = 40px) */
+}
+
+/* Solo en movil (sm = 640px hacia abajo), la carta es mas pequeña */
+@media (max-width: 639px) {
+  .traveling-card {
+    margin-top: -3rem; /* Mitad de h-24 (96px / 2 = 48px) */
+    margin-left: -2rem; /* Mitad de w-16 (64px / 2 = 32px) */
+  }
 }
 
 .phrase-fade-enter-active,
