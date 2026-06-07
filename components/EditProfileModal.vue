@@ -38,23 +38,25 @@
           >
         </div>
 
-        <!-- Avatares (1 al 6) -->
+        <!-- Avatares (1 al 24) scrollable like ProfileSetup -->
         <div class="flex flex-col gap-2">
           <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Avatar</label>
-          <div class="flex gap-3 justify-center flex-wrap">
-            <button 
-              v-for="i in 6" :key="i"
-              class="w-12 h-12 shrink-0 rounded-full bg-[#1a1a1a] flex items-center justify-center transition-all duration-300 outline-none hover:scale-110 shadow-lg relative overflow-hidden"
-              :class="[
-                localAvatarId === i 
-                  ? 'ring-2 ring-offset-2 ring-offset-[#111] z-10 scale-110' 
-                  : 'opacity-50 hover:opacity-100 border border-white/5'
-              ]"
-              :style="localAvatarId === i ? { '--tw-ring-color': localColor } : {}"
-              @click="localAvatarId = i"
-            >
-              <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-10 h-10 object-contain absolute bottom-0" >
-            </button>
+          <div class="w-full overflow-x-auto py-4 custom-scrollbar">
+            <div class="flex gap-3 w-max px-2">
+              <button 
+                v-for="i in 24" :key="i"
+                class="w-14 h-14 shrink-0 rounded-full bg-[#1a1a1a] flex items-center justify-center transition-all duration-300 outline-none hover:scale-110 shadow-lg relative overflow-hidden"
+                :class="[
+                  localAvatarId === i 
+                    ? 'ring-2 ring-offset-2 ring-offset-[#111] z-10 scale-110' 
+                    : 'opacity-50 hover:opacity-100 border border-white/5'
+                ]"
+                :style="localAvatarId === i ? { '--tw-ring-color': localColor } : {}"
+                @click="localAvatarId = i"
+              >
+                <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-12 h-12 object-contain absolute bottom-0" >
+              </button>
+            </div>
           </div>
         </div>
 
