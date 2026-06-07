@@ -1,17 +1,15 @@
 <template>
   <div>
-    <Transition name="loader-fade">
+    <Transition name="loader-fade" @after-leave="destroyLoader">
       <AppLoader v-if="!isServerReady" />
     </Transition>
 
-    <Transition name="fade">
-      <div v-show="isServerReady">
-        <NuxtLayout>
-          <NuxtPage />
-        </NuxtLayout>
-        <UNotifications />
-      </div>
-    </Transition>
+    <div :class="{ 'opacity-0 h-0 overflow-hidden': !isServerReady, 'transition-opacity duration-1000 opacity-100': isServerReady }">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+      <UNotifications />
+    </div>
   </div>
 </template>
 
@@ -31,8 +29,13 @@ useSeoMeta({
 })
 
 const isServerReady = ref(false)
+const showLayout = ref(false)
 
 const playerStore = usePlayerStore()
+
+const destroyLoader = () => {
+  showLayout.value = true;
+}
 
 const hexToRgb = (hex: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -115,15 +118,6 @@ body {
 }
 
 /* Transitions */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.8s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .loader-fade-leave-active {
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
