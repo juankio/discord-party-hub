@@ -8,24 +8,14 @@
     </div>
 
     <Transition name="fade" mode="out-in">
-      <StopLobby
-        v-if="stopStore.gameState === 'LOBBY'"
-        :is-host="stopStore.isHost"
-        :players="stopStore.players"
-        :initial-categories="stopStore.categories"
-        :initial-rounds="stopStore.rounds"
-        @update_config="updateConfig"
-        @start="startGame"
-        @cancel="exitGame"
-      />
-
       <StopBoard
-        v-else-if="stopStore.gameState === 'PLAYING'"
+        v-if="stopStore.gameState === 'PLAYING'"
         :categories="stopStore.categories"
         :current-round="stopStore.currentRound"
         :total-rounds="stopStore.rounds"
         :letter="stopStore.currentLetter"
         :is-finished="false"
+        :panic-mode="panicMode"
         @update_answers="updateAnswersLocally"
         @stop_call="callStop"
       />
@@ -59,14 +49,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import { ref, onMounted, onUnmounted, watchEffect, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSocket } from '~/composables/useSocket'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useStopStore } from '~/stores/games/stopStore'
 
 // Components
-import StopLobby from '~/components/games/stop/StopLobby.vue'
 import StopBoard from '~/components/games/stop/StopBoard.vue'
 import StopVerification from '~/components/games/stop/StopVerification.vue'
 import StopScoreboard from '~/components/games/stop/StopScoreboard.vue'
@@ -81,18 +70,11 @@ const stopStore = useStopStore()
 
 const roundScores = ref<Record<string, number>>({})
 let localAnswers: Record<string, string> = {}
+const panicMode = ref(false)
 
 const exitGame = () => {
   socket.value?.emit('return_to_lobby')
   router.push(`/sala/${roomId}`)
-}
-
-const updateConfig = (config: any) => {
-  socket.value?.emit('stop:update_config', config)
-}
-
-const startGame = (config: any) => {
-  socket.value?.emit('stop:start_game', config)
 }
 
 const updateAnswersLocally = (answers: Record<string, string>) => {
@@ -120,6 +102,12 @@ const backToLobby = () => {
   socket.value?.emit('stop:back_to_lobby')
 }
 
+watch(() => stopStore.gameState, (newState) => {
+  if (newState === 'PLAYING') {
+    panicMode.value = false
+  }
+})
+
 onMounted(() => {
   let joined = false
   watchEffect(() => {
@@ -131,6 +119,16 @@ onMounted(() => {
         roundScores.value = scores
       })
       
+      // Auto-submit mechanism when someone else calls stop
+      socket.value.off('stop_called')
+      socket.value.on('stop_called', () => {
+        panicMode.value = true
+        // Delay slighty to let user realize panic mode activated
+        setTimeout(() => {
+          socket.value?.emit('stop:submit_answers', { answers: localAnswers })
+        }, 1500)
+      })
+
       socket.value.emit('stop:join', { roomId })
       joined = true
     }
@@ -141,6 +139,7 @@ onUnmounted(() => {
   if (socket.value) {
     stopStore.unbindEvents(socket.value)
     socket.value.off('stop:round_scores')
+    socket.value.off('stop_called')
   }
 })
 </script>

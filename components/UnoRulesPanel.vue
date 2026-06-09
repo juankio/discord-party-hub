@@ -32,7 +32,7 @@ class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transiti
 </template>
 
 <script setup lang="ts">
-const rules = defineModel<Record<string, boolean>>('rules', { required: true })
+const rules = defineModel<any>('rules', { required: true })
 
 const rulesList = {
   stackDrawCards: { label: 'Acumular +2 y +4' },

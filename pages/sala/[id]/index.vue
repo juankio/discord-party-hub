@@ -59,6 +59,7 @@
             
             <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
             <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
+            <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
             
             <!-- Botón Arcade 2D Macizo -->
             <button 

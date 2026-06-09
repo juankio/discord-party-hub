@@ -32,11 +32,13 @@ export const useUnoStore = defineStore('uno', {
       this.hasDrawnThisTurn = state.hasDrawnThisTurn
       
       // Inicializar el hover record si hay rivales nuevos
-      this.rivals.forEach(r => {
-        if (this.rivalHoverIndex[r.userId] === undefined) {
-          this.rivalHoverIndex[r.userId] = null;
-        }
-      })
+      if (this.rivals) {
+        this.rivals.forEach(r => {
+          if (this.rivalHoverIndex[r.userId] === undefined) {
+            this.rivalHoverIndex[r.userId] = null;
+          }
+        })
+      }
     },
     setRivalHover(userId: string, index: number | null) {
       this.rivalHoverIndex[userId] = index

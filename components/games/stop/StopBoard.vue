@@ -42,6 +42,12 @@
             <div v-for="i in 15" :key="i" class="w-4 h-8 bg-gray-400 rounded-full border-2 border-gray-600 shadow-sm -mt-2"></div>
         </div>
         
+        <!-- Alerta Pánico (Basta) -->
+        <div v-if="panicMode" class="absolute inset-0 bg-red-600/20 z-0 pointer-events-none animate-pulse"></div>
+        <div v-if="panicMode" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none rotate-12 opacity-30">
+          <span class="text-8xl md:text-9xl font-black text-red-600 border-8 border-red-600 px-4 rounded-xl drop-shadow-lg">¡TIEMPO!</span>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 mt-6 relative z-10">
           <div 
             v-for="(cat, idx) in categories" 
@@ -54,7 +60,7 @@
             <label class="text-[#8c6b5d] font-black uppercase tracking-widest text-xs sm:text-sm pl-2">{{ cat }}</label>
             <input 
               v-model="answers[cat]" 
-              :disabled="isRolling || isFinished"
+              :disabled="isRolling || isFinished || panicMode || localFinished"
               type="text"
               class="w-full bg-transparent border-none outline-none text-[#2d201a] font-bold text-xl sm:text-2xl px-2 py-1 placeholder:text-[#bca495] placeholder:italic disabled:opacity-50 uppercase"
               placeholder="..."
@@ -76,15 +82,15 @@
         <button 
           ref="stopBtn"
           @click="callStop"
-          :disabled="!canStop || isRolling || isFinished"
+          :disabled="!canStop || isRolling || isFinished || panicMode || localFinished"
           class="relative w-full sm:w-[400px] h-[80px] rounded-3xl text-2xl sm:text-3xl font-black uppercase tracking-[0.2em] transition-all duration-100 flex items-center justify-center border-t-4 border-white/20 disabled:border-t-0"
-          :class="canStop && !isFinished ? 'bg-[#dc2626] text-white hover:bg-[#b91c1c] shadow-[0_8px_0_#7f1d1d,0_15px_20px_rgba(0,0,0,0.5)] cursor-pointer' : 'bg-[#3a2212] text-[#cdab84] shadow-[0_8px_0_#2a180c,0_15px_20px_rgba(0,0,0,0.5)] cursor-not-allowed opacity-80'"
+          :class="canStop && !isFinished && !panicMode && !localFinished ? 'bg-[#dc2626] text-white hover:bg-[#b91c1c] shadow-[0_8px_0_#7f1d1d,0_15px_20px_rgba(0,0,0,0.5)] cursor-pointer' : 'bg-[#3a2212] text-[#cdab84] shadow-[0_8px_0_#2a180c,0_15px_20px_rgba(0,0,0,0.5)] cursor-not-allowed opacity-80'"
           style="transform: translateY(0);"
           onmousedown="if(!this.disabled) { this.style.transform='translateY(8px)'; this.style.boxShadow='0 0px 0 #7f1d1d, 0 5px 10px rgba(0,0,0,0.4)'; }"
           onmouseup="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #7f1d1d, 0 15px 20px rgba(0,0,0,0.5)'; }"
           onmouseleave="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #7f1d1d, 0 15px 20px rgba(0,0,0,0.5)'; }"
         >
-          <span class="relative z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">¡Basta para Mí!</span>
+          <span class="relative z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{{ panicMode ? 'RECOLECTANDO...' : (localFinished ? '¡ESPERANDO!' : '¡Basta para Mí!') }}</span>
         </button>
       </div>
 
@@ -102,12 +108,14 @@ const props = defineProps<{
   totalRounds: number
   letter: string
   isFinished: boolean
+  panicMode: boolean
 }>()
 
 const emit = defineEmits(['stop_call', 'update_answers'])
 
 const answers = ref<Record<string, string>>({})
 const isRolling = ref(true)
+const localFinished = ref(false)
 const displayLetter = ref('?')
 const letterReel = ref(null)
 const stopBtn = ref(null)
@@ -121,7 +129,7 @@ const canStop = computed(() => {
 
 const checkCompletion = () => {
   emit('update_answers', answers.value)
-  if (canStop.value && stopBtn.value && !props.isFinished) {
+  if (canStop.value && stopBtn.value && !props.isFinished && !props.panicMode && !localFinished.value) {
     anime({
       targets: stopBtn.value,
       scale: [1, 1.02],
@@ -142,13 +150,15 @@ const checkCompletion = () => {
 }
 
 const callStop = () => {
-  if (canStop.value && !props.isFinished) {
+  if (canStop.value && !props.isFinished && !props.panicMode && !localFinished.value) {
+    localFinished.value = true
     emit('stop_call', answers.value)
   }
 }
 
 const rollLetter = () => {
   isRolling.value = true
+  localFinished.value = false
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   let dummyLoops = 20
   let currentLoop = 0
