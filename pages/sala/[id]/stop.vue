@@ -112,7 +112,6 @@ onMounted(() => {
   let joined = false
   watchEffect(() => {
     if (socket.value && !joined) {
-      stopStore.bindEvents(socket.value)
       // Escuchar round_scores
       socket.value.off('stop:round_scores')
       socket.value.on('stop:round_scores', (scores: Record<string, number>) => {
@@ -137,7 +136,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (socket.value) {
-    stopStore.unbindEvents(socket.value)
     socket.value.off('stop:round_scores')
     socket.value.off('stop_called')
   }

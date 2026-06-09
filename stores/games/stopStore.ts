@@ -12,9 +12,6 @@ export const useStopStore = defineStore('stopStore', () => {
   const currentLetter = ref('')
   const players = ref<any[]>([])
   
-  // 🔥 BUG FIX: isHost relies on playerStore.hostUserId. If the user navigates directly to /stop, 
-  // they might miss the 'room_update' event because they didn't join the room socket channel correctly, 
-  // but useSocket handles 'join_room' globally.
   const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
   
   // Verification/Scoring state
@@ -23,7 +20,6 @@ export const useStopStore = defineStore('stopStore', () => {
 
   const updateState = (data: any) => {
     if (!data) return
-    // Support the case where backend sends `{ state: { state: 'LOBBY', ... } }` or just the flat object
     const payload = (data.state && typeof data.state === 'object') ? data.state : data
     
     if (payload.categories !== undefined) {
@@ -38,27 +34,6 @@ export const useStopStore = defineStore('stopStore', () => {
     }
   }
 
-  const bindEvents = (socketInstance: any) => {
-    if (!socketInstance) return
-
-    socketInstance.off('game_state_update')
-    socketInstance.off('stop_called')
-    
-    socketInstance.on('game_state_update', (data: any) => {
-      updateState(data)
-    })
-    
-    socketInstance.on('stop_called', (data: any) => {
-      // Manejar alert de stop_called si es necesario
-    })
-  }
-
-  const unbindEvents = (socketInstance: any) => {
-    if (!socketInstance) return
-    socketInstance.off('game_state_update')
-    socketInstance.off('stop_called')
-  }
-
   return {
     gameState,
     categories,
@@ -69,8 +44,6 @@ export const useStopStore = defineStore('stopStore', () => {
     isHost,
     verifyingData,
     roundScores,
-    updateState,
-    bindEvents,
-    unbindEvents
+    updateState
   }
 })
