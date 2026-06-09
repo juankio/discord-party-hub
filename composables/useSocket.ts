@@ -42,7 +42,13 @@ export const useSocket = () => {
     })
 
     socket.value.on('game_state_update', (data) => {
-      useUnoStore().updateState(data)
+      // Si la carga incluye myHand o rivals, es un state de Uno.
+      // Si incluye categories o verifyingData, es un state de Stop.
+      // El store de Stop ya escucha este evento localmente mediante bindEvents(), 
+      // por lo que aquí solo actualizaremos el de UNO si detectamos su formato.
+      if (data && (data.myHand || data.rivals)) {
+        useUnoStore().updateState(data)
+      }
     })
 
     socket.value.on('game_action', (data) => {
