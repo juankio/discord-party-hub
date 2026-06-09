@@ -24,7 +24,7 @@ export const useStopStore = defineStore('stopStore', () => {
   const updateState = (data: any) => {
     if (!data) return
     // Support the case where backend sends `{ state: { state: 'LOBBY', ... } }` or just the flat object
-    const payload = data.state ? data.state : data
+    const payload = (data.state && typeof data.state === 'object') ? data.state : data
     
     if (payload.categories !== undefined) {
       if (payload.state) gameState.value = payload.state
