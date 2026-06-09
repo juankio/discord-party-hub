@@ -1,96 +1,97 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen text-white p-4 relative overflow-hidden bg-[#0A0A0A]">
-    <!-- Animated SVG Grid Background -->
-    <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#f97316 1px, transparent 1px); background-size: 30px 30px;"></div>
+  <div class="flex flex-col items-center justify-center min-h-screen p-4 relative z-10 w-full" style="color: var(--theme-text-color, white);">
 
-    <div class="relative z-10 w-full max-w-3xl bg-[#151515] border border-orange-500/30 rounded-[40px] shadow-[0_0_50px_rgba(249,115,22,0.15)] overflow-hidden flex flex-col">
+    <!-- Contenedor Principal Flat 2D -->
+    <div class="w-full max-w-[800px] mx-auto bg-[#4a2e1b] rounded-3xl border-8 border-[#7d512a] shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col relative z-20">
+      
+      <!-- Fondo textura sutil -->
+      <div class="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px);"></div>
+
       <!-- Header -->
-      <div class="bg-gradient-to-r from-orange-600/20 to-transparent p-6 sm:p-8 border-b border-orange-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="bg-[#3a2212] p-6 border-b-4 border-[#2a180c] flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10 shadow-lg">
         <div class="flex items-center gap-4">
-          <div class="p-3 bg-orange-500/10 rounded-2xl border border-orange-500/30 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
-            <svg class="w-8 h-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
+          <div class="w-12 h-12 bg-yellow-400 border-4 border-red-600 rounded-lg shadow-md flex items-center justify-center rotate-3 transform">
+             <span class="text-red-600 font-black text-xs tracking-tighter -rotate-12 bg-yellow-400 px-1 border-2 border-red-600 rounded">STOP</span>
           </div>
           <div>
-            <h2 class="text-3xl font-black text-white tracking-widest uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Tutti Frutti</h2>
-            <p class="text-orange-400 font-bold uppercase tracking-widest text-xs mt-1">Configuración de la Partida</p>
+            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-widest uppercase drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Tutti Frutti</h2>
+            <p class="text-[#cdab84] font-bold uppercase tracking-widest text-[10px] mt-1 drop-shadow-md">Configuración de la Partida</p>
           </div>
         </div>
-        <div class="px-4 py-2 bg-black/50 border border-white/10 rounded-full font-black tracking-widest text-sm text-gray-300">
-          <span class="text-orange-500">{{ players.length }}</span> / 8 Jugadores
+        <div class="px-4 py-2 bg-[#1a0f08] border-2 border-[#5c3a21] rounded-xl font-black tracking-widest text-xs text-[#cdab84] shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)]">
+          <span class="text-white">{{ players.length }}</span> / 8 Jugadores
         </div>
       </div>
 
       <!-- Config Body (Host) -->
-      <div class="p-6 sm:p-8 flex-1 flex flex-col gap-8" v-if="isHost">
+      <div class="p-6 sm:p-8 flex-1 flex flex-col gap-8 bg-[#8b5a2b] relative z-10" v-if="isHost">
         
-        <!-- Categorias -->
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <label class="text-sm font-black text-gray-400 tracking-widest uppercase">Categorías <span class="text-orange-500 ml-1">({{ categories.length }}/8)</span></label>
-            <span class="text-xs font-bold text-red-400 uppercase tracking-widest" v-if="categories.length < 3">Mínimo 3</span>
+        <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase text-center mb-[-10px]">
+          Categorías <span class="text-[#f97316] ml-1">({{ categories.length }}/8)</span>
+        </h4>
+        
+        <!-- Categorias Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner">
+          <div 
+            v-for="(cat, idx) in categories" 
+            :key="idx" 
+            class="group bg-[#4a2e1b] border-2 border-[#3a2212] hover:border-red-500 hover:bg-[#5c3a21] text-white font-black uppercase tracking-wider text-[10px] sm:text-xs rounded-lg p-2 cursor-pointer transition-all flex items-center justify-between shadow-sm relative overflow-hidden"
+            @click="removeCategory(idx)"
+          >
+            <span class="truncate pr-4 z-10">{{ cat }}</span>
+            <div class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-red-600 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-end pr-2 z-0">
+               <svg class="w-3 h-3 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
           </div>
           
-          <div class="flex flex-wrap gap-3 p-4 bg-black/30 rounded-2xl border border-white/5 min-h-[80px]">
-            <div 
-              v-for="(cat, idx) in categories" 
-              :key="idx" 
-              class="group px-4 py-2 bg-[#1A1A1A] border border-orange-500/50 hover:border-red-500 hover:bg-red-500/10 text-white font-bold uppercase tracking-wider text-sm rounded-xl cursor-pointer transition-all flex items-center gap-2"
-              @click="removeCategory(idx)"
-            >
-              {{ cat }}
-              <svg class="w-4 h-4 text-red-500 opacity-50 group-hover:opacity-100 transition-opacity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </div>
-            
-            <span v-if="categories.length === 0" class="text-gray-500 font-bold uppercase tracking-widest text-sm self-center mx-auto">Sin categorías</span>
-          </div>
-
-          <div class="flex gap-3" v-if="categories.length < 8">
+          <!-- Add new -->
+          <div class="col-span-2 sm:col-span-4 flex gap-2 mt-2" v-if="categories.length < 8">
             <input 
               v-model="newCategory" 
               type="text"
-              placeholder="Escribe una categoría..." 
+              placeholder="Escribe una nueva..." 
               @keyup.enter="addCategory"
-              class="flex-1 bg-black/50 border border-white/10 focus:border-orange-500 rounded-2xl px-5 py-3 text-white font-bold uppercase tracking-widest outline-none transition-all placeholder:text-gray-600"
+              class="flex-1 bg-[#2a1a0f] border-2 border-[#1a0f08] focus:border-[#d97706] rounded-lg px-4 py-2 text-white font-bold uppercase tracking-widest outline-none transition-all placeholder:text-[#5c3a21] text-xs shadow-inner"
             />
             <button 
               @click="addCategory" 
               :disabled="!newCategory.trim()"
-              class="px-6 bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:hover:bg-orange-600 text-white rounded-2xl font-black transition-all hover:scale-105 active:scale-95 disabled:scale-100"
+              class="px-4 bg-[#109041] hover:bg-[#15b051] disabled:opacity-50 disabled:bg-[#109041] text-white border-b-4 border-[#0a5c28] disabled:border-[#0a5c28] rounded-lg font-black transition-all active:translate-y-1 active:border-b-0 disabled:active:translate-y-0 disabled:active:border-b-4"
             >
-              <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <svg class="w-5 h-5 drop-shadow-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
+        </div>
 
-          <div class="flex flex-wrap gap-2 mt-2">
+        <!-- Presets -->
+        <div class="flex flex-wrap justify-center gap-2">
             <button 
               v-for="preset in presetCategories" 
               :key="preset"
               @click="addPreset(preset)"
               :disabled="categories.includes(preset) || categories.length >= 8"
-              class="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg text-xs font-bold uppercase tracking-wider text-gray-400 transition-all"
+              class="px-3 py-1.5 bg-[#5c3a21] hover:bg-[#7d512a] disabled:bg-[#3a2212] border-2 border-[#3a2212] disabled:border-[#1a0f08] disabled:text-[#4a2e1b] rounded-lg text-[10px] font-black uppercase tracking-wider text-[#e5e7eb] transition-colors shadow-sm"
             >
               + {{ preset }}
             </button>
-          </div>
         </div>
 
-        <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full my-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
 
         <!-- Rondas -->
-        <div class="flex flex-col gap-4">
-          <label class="text-sm font-black text-gray-400 tracking-widest uppercase flex items-center justify-between">
+        <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner">
+          <label class="text-[10px] font-black text-[#e5e7eb] tracking-[0.4em] uppercase flex items-center justify-between w-full">
             Rondas de Juego
-            <span class="text-orange-500 text-xl">{{ rounds }}</span>
+            <span class="text-[#f97316] text-xl drop-shadow-md">{{ rounds }}</span>
           </label>
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-4 w-full">
             <input 
               type="range" 
               v-model.number="rounds" 
               min="1" 
               max="10" 
-              class="w-full accent-orange-500 bg-black/50 h-2 rounded-full appearance-none outline-none"
+              class="w-full h-4 bg-[#2a1a0f] rounded-full outline-none appearance-none border-2 border-[#1a0f08] shadow-inner"
+              style="--thumb-color: #f97316;"
             />
           </div>
         </div>
@@ -98,29 +99,30 @@
       </div>
 
       <!-- Waiting State (Guest) -->
-      <div v-else class="flex-1 flex flex-col items-center justify-center p-12 py-20 text-center gap-6">
-        <div class="relative">
-          <svg class="w-20 h-20 text-orange-500 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="w-10 h-10 bg-orange-500/20 rounded-full blur-md"></div>
-          </div>
+      <div v-else class="flex-1 flex flex-col items-center justify-center p-12 py-20 text-center gap-6 bg-[#8b5a2b] relative z-10">
+        
+        <!-- Loading spinner customizado madera -->
+        <div class="relative w-24 h-24 bg-[#5c3a21] rounded-full border-8 border-[#3a2212] shadow-[inset_0_0_20px_rgba(0,0,0,0.8),0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center">
+            <div class="absolute w-full h-full border-8 border-transparent border-t-[#f97316] rounded-full animate-spin"></div>
+            <div class="w-8 h-8 bg-[#2a1a0f] rounded-full shadow-inner"></div>
         </div>
+
         <div class="flex flex-col gap-2">
-          <h3 class="text-3xl font-black text-white tracking-widest uppercase drop-shadow-md">Esperando al Host</h3>
-          <p class="text-gray-400 uppercase tracking-widest text-sm font-bold">El capitán está configurando las reglas</p>
+          <h3 class="text-2xl sm:text-3xl font-black text-white tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Esperando al Host</h3>
+          <p class="text-[#cdab84] uppercase tracking-[0.2em] text-xs font-bold drop-shadow-md">El capitán está configurando las reglas</p>
         </div>
       </div>
 
       <!-- Footer (Host) -->
-      <div class="bg-black/40 p-6 border-t border-white/5 flex justify-between sm:justify-end gap-4" v-if="isHost">
+      <div class="bg-[#3a2212] p-6 border-t-4 border-[#2a180c] flex justify-center sm:justify-end gap-4 relative z-10 shadow-[0_-5px_15px_rgba(0,0,0,0.3)]" v-if="isHost">
         <button 
-          class="px-8 py-4 bg-transparent hover:bg-white/5 text-gray-400 hover:text-white font-black tracking-widest uppercase rounded-full transition-all"
+          class="px-6 py-3 bg-[#4a2e1b] hover:bg-[#5c3a21] text-[#cdab84] hover:text-white font-black tracking-widest uppercase rounded-xl border-2 border-[#2a180c] transition-colors text-sm shadow-sm"
           @click="$emit('cancel')"
         >
           Cancelar
         </button>
         <button 
-          class="px-10 py-4 bg-orange-600 hover:bg-orange-500 disabled:opacity-50 disabled:hover:bg-orange-600 text-white font-black tracking-widest uppercase rounded-full shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 active:scale-95 disabled:scale-100 disabled:shadow-none"
+          class="px-8 py-3 bg-[#f97316] hover:bg-[#ea580c] disabled:opacity-50 disabled:bg-[#f97316] text-white font-black tracking-[0.2em] uppercase rounded-xl border-b-4 border-[#c2410c] disabled:border-[#c2410c] shadow-[0_5px_15px_rgba(0,0,0,0.4)] transition-all active:translate-y-1 active:border-b-0 disabled:active:translate-y-0 disabled:active:border-b-4 text-sm"
           @click="startGame" 
           :disabled="categories.length < 3"
         >
@@ -148,10 +150,10 @@ const categories = ref<string[]>([...props.initialCategories])
 const rounds = ref(props.initialRounds || 5)
 const newCategory = ref('')
 
-const presetCategories = ['Nombre', 'Color', 'Animal', 'Cosa', 'País/Ciudad', 'Fruta/Verdura', 'Profesión', 'Marca', 'Película/Serie', 'Deporte']
+const presetCategories = ['Nombre', 'Color', 'Animal', 'Cosa', 'País', 'Fruta', 'Profesión', 'Marca']
 
 const addCategory = () => {
-  const cat = newCategory.value.trim()
+  const cat = newCategory.value.trim().toUpperCase()
   if (cat && categories.value.length < 8 && !categories.value.includes(cat)) {
     categories.value.push(cat)
     newCategory.value = ''
@@ -160,8 +162,9 @@ const addCategory = () => {
 }
 
 const addPreset = (cat: string) => {
-  if (categories.value.length < 8 && !categories.value.includes(cat)) {
-    categories.value.push(cat)
+  const upperCat = cat.toUpperCase()
+  if (categories.value.length < 8 && !categories.value.includes(upperCat)) {
+    categories.value.push(upperCat)
     emitConfig()
   }
 }
@@ -199,8 +202,9 @@ input[type=range]::-webkit-slider-thumb {
   height: 24px;
   width: 24px;
   border-radius: 50%;
-  background: #f97316;
+  background: var(--thumb-color, #f97316);
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
+  border: 4px solid #fff;
+  box-shadow: 0 0 5px rgba(0,0,0,0.8);
 }
 </style>
