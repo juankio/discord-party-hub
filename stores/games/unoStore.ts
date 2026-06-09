@@ -18,6 +18,7 @@ export const useUnoStore = defineStore('uno', {
   }),
   actions: {
     updateState(state: any) {
+      if (!state || !state.rivals) return;
       this.gameState = state.state
       this.currentTurnUserId = state.currentTurnUserId
       this.playDirection = state.playDirection

@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSocket } from '~/composables/useSocket'
 import { usePlayerStore } from '~/stores/playerStore'
@@ -121,17 +121,27 @@ const backToLobby = () => {
 }
 
 onMounted(() => {
-  stopStore.bindEvents()
-  socket.value?.emit('stop:join', { roomId })
-  
-  socket.value?.on('stop:round_scores', (scores: Record<string, number>) => {
-    roundScores.value = scores
+  let joined = false
+  watchEffect(() => {
+    if (socket.value && !joined) {
+      stopStore.bindEvents(socket.value)
+      // Escuchar round_scores
+      socket.value.off('stop:round_scores')
+      socket.value.on('stop:round_scores', (scores: Record<string, number>) => {
+        roundScores.value = scores
+      })
+      
+      socket.value.emit('stop:join', { roomId })
+      joined = true
+    }
   })
 })
 
 onUnmounted(() => {
-  stopStore.unbindEvents()
-  socket.value?.off('stop:round_scores')
+  if (socket.value) {
+    stopStore.unbindEvents(socket.value)
+    socket.value.off('stop:round_scores')
+  }
 })
 </script>
 
