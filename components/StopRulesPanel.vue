@@ -6,7 +6,7 @@
         <!-- Categorias Grid -->
         <div class="flex flex-col gap-2">
           <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase text-center mb-1">
-            Categorías <span class="text-[#f97316] ml-1">({{ rules.stopCategories.length }}/8)</span>
+            Categorías <span class="text-[#f97316] ml-1">({{ rules.stopCategories.length }}/12)</span>
           </h4>
           
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner">
@@ -23,7 +23,7 @@
             </div>
             
             <!-- Add new -->
-            <div class="col-span-2 sm:col-span-4 flex gap-2 mt-2" v-if="rules.stopCategories.length < 8">
+            <div class="col-span-2 sm:col-span-4 flex gap-2 mt-2" v-if="rules.stopCategories.length < 12">
               <input 
                 v-model="newCategory" 
                 type="text"
@@ -47,7 +47,7 @@
                 v-for="preset in presetCategories" 
                 :key="preset"
                 @click="addPreset(preset)"
-                :disabled="rules.stopCategories.includes(preset) || rules.stopCategories.length >= 8"
+                :disabled="rules.stopCategories.includes(preset) || rules.stopCategories.length >= 12"
                 class="px-3 py-1.5 bg-[#5c3a21] hover:bg-[#7d512a] disabled:bg-[#3a2212] border-2 border-[#3a2212] disabled:border-[#1a0f08] disabled:text-[#4a2e1b] rounded-lg text-[10px] font-black uppercase tracking-wider text-[#e5e7eb] transition-colors shadow-sm"
               >
                 + {{ preset }}
@@ -98,7 +98,7 @@ if (!rules.value.stopRounds) {
 
 const addCategory = () => {
   const cat = newCategory.value.trim().toUpperCase()
-  if (cat && rules.value.stopCategories.length < 8 && !rules.value.stopCategories.includes(cat)) {
+  if (cat && rules.value.stopCategories.length < 12 && !rules.value.stopCategories.includes(cat)) {
     rules.value.stopCategories.push(cat)
     newCategory.value = ''
   }
@@ -106,7 +106,7 @@ const addCategory = () => {
 
 const addPreset = (cat: string) => {
   const upperCat = cat.toUpperCase()
-  if (rules.value.stopCategories.length < 8 && !rules.value.stopCategories.includes(upperCat)) {
+  if (rules.value.stopCategories.length < 12 && !rules.value.stopCategories.includes(upperCat)) {
     rules.value.stopCategories.push(upperCat)
   }
 }

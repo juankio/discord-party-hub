@@ -6,6 +6,7 @@ import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
 import { useUnoStore } from '~/stores/games/unoStore'
+import { useStopStore } from '~/stores/games/stopStore'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
@@ -42,12 +43,11 @@ export const useSocket = () => {
     })
 
     socket.value.on('game_state_update', (data) => {
-      // Si la carga incluye myHand o rivals, es un state de Uno.
-      // Si incluye categories o verifyingData, es un state de Stop.
-      // El store de Stop ya escucha este evento localmente mediante bindEvents(), 
-      // por lo que aquí solo actualizaremos el de UNO si detectamos su formato.
+      // Enrutar dependiendo de la estructura del payload
       if (data && (data.myHand || data.rivals)) {
         useUnoStore().updateState(data)
+      } else if (data && data.categories !== undefined) {
+        useStopStore().updateState(data)
       }
     })
 

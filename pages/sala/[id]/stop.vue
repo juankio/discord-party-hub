@@ -2,9 +2,17 @@
   <div class="relative min-h-screen flex flex-col bg-transparent overflow-hidden text-white font-sans">
     <!-- Top Bar actions -->
     <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <UButton color="gray" variant="ghost" icon="i-lucide-arrow-left" @click="exitGame">
-        Salir de la Partida
-      </UButton>
+      <!-- Botón Salir (Pro Max UI) -->
+      <button 
+        @click="exitGame"
+        class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+      >
+        <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
+        <!-- Icono arreglado (Heroicons) -->
+        <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 group-hover:-translate-x-0.5 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+        <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Salir de la Partida</span>
+      </button>
     </div>
 
     <Transition name="fade" mode="out-in">
