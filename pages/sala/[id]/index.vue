@@ -44,7 +44,7 @@
           </div>
 
           <!-- Zona de Control Dinámica -->
-          <div class="w-full flex justify-center pb-24 lg:-mt-24 relative z-10">
+          <div class="w-full flex justify-center pb-24 mt-8 lg:mt-4 relative z-10">
             <Transition name="fade" mode="out-in">
               <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">

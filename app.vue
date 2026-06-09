@@ -125,4 +125,5 @@ body {
   opacity: 0;
   transform: scale(1.05);
 }
+button:focus { outline: none !important; box-shadow: none !important; }
 </style>
