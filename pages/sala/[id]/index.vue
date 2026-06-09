@@ -44,11 +44,11 @@
           </div>
 
           <!-- Zona de Control Dinámica -->
-          <div class="w-full flex justify-center pb-24">
+          <div class="w-full flex justify-center pb-24 lg:-mt-8 relative z-10">
             <Transition name="fade" mode="out-in">
               <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
-            <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
+            <h3 class="text-white/30 mb-2 lg:mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
             
             <!-- Estante de Billar (Flat 2D Vectorial) -->
             <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
@@ -64,7 +64,7 @@
             <!-- Botón Arcade 2D Macizo -->
             <button 
               class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
-              :disabled="players.length < 2 || !['uno', 'stop'].includes(selectedGame)"
+              :disabled="players.length < 2 || !['uno', 'stop'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
               style="
                 background-color: var(--theme-color); 
                 color: var(--theme-text-color, white);
@@ -80,6 +80,7 @@
             
             <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
             <p v-else-if="!['uno', 'stop'].includes(selectedGame)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
+            <p v-else-if="selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Faltan categorías para Stop</p>
           </div>
           
           <!-- Panel de Espera (Invitados) -->
