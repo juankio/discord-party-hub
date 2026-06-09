@@ -1,49 +1,52 @@
 <template>
-  <div class="min-h-screen bg-[#0A0A0A] p-4 sm:p-8 text-white relative flex flex-col items-center">
-    <div class="w-full max-w-7xl mx-auto z-10 flex flex-col gap-6">
+  <div class="min-h-screen p-4 sm:p-8 relative flex flex-col items-center" style="color: var(--theme-text-color, white);">
+    <div class="w-full max-w-[1000px] mx-auto z-10 flex flex-col gap-6">
       
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-center sm:text-left">
-          <h2 class="text-3xl sm:text-4xl font-black tracking-widest text-orange-500 drop-shadow-md uppercase">Votación</h2>
-          <p class="text-gray-400 mt-1 uppercase font-bold tracking-widest">
-            Letra Activa: <span class="text-3xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)] ml-2">{{ letter }}</span>
+      <!-- Header 2D Madera -->
+      <div class="bg-[#3a2212] p-6 border-4 border-[#2a180c] rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 mix-blend-overlay" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px);"></div>
+        <div class="text-center sm:text-left relative z-10">
+          <h2 class="text-2xl sm:text-3xl font-black tracking-widest text-[#f97316] drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] uppercase">Fase de Votación</h2>
+          <p class="text-[#cdab84] mt-1 uppercase font-bold tracking-widest text-xs">
+            Letra Activa: <span class="text-2xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ml-2">{{ letter }}</span>
           </p>
         </div>
         <button 
           v-if="isHost"
-          class="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(249,115,22,0.4)] tracking-widest uppercase"
+          class="relative z-10 px-8 py-4 bg-[#f97316] hover:bg-[#ea580c] text-white font-black rounded-xl transition-all active:translate-y-1 border-b-4 border-[#c2410c] active:border-b-0 shadow-[0_5px_15px_rgba(0,0,0,0.4)] tracking-widest uppercase text-sm"
           @click="finishVerification"
         >
           Confirmar Votos y Puntuar
         </button>
       </div>
 
-      <!-- Scrollable Matrix -->
-      <div class="w-full bg-[#1A1A1A] rounded-3xl border border-white/10 overflow-x-auto custom-scrollbar shadow-2xl relative">
-        <table class="w-full text-left border-collapse min-w-[800px]">
+      <!-- Scrollable Matrix 2D Madera -->
+      <div class="w-full bg-[#4a2e1b] rounded-3xl border-8 border-[#7d512a] overflow-x-auto custom-scrollbar shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.5)] relative">
+        <div class="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px);"></div>
+
+        <table class="w-full text-left border-collapse min-w-[800px] relative z-10">
           <thead>
             <tr>
-              <th class="p-5 bg-[#151515] border-b border-r border-white/5 sticky left-0 z-20 font-black tracking-widest uppercase text-white shadow-[4px_0_10px_rgba(0,0,0,0.5)]">
+              <th class="p-5 bg-[#2a180c] border-b-4 border-r-4 border-[#1a0f08] sticky left-0 z-20 font-black tracking-widest uppercase text-white shadow-[4px_0_10px_rgba(0,0,0,0.5)]">
                 Jugador
               </th>
               <th 
                 v-for="catData in verifyingData" 
                 :key="catData.category"
-                class="p-5 bg-[#151515] border-b border-r border-white/5 font-black tracking-widest uppercase text-orange-400 whitespace-nowrap text-center"
+                class="p-5 bg-[#3a2212] border-b-4 border-r-4 border-[#1a0f08] font-black tracking-widest uppercase text-[#f97316] whitespace-nowrap text-center drop-shadow-md"
               >
                 {{ catData.category }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="player in players" :key="player.userId" class="group hover:bg-white/5 transition-colors">
-              <td class="p-5 border-b border-r border-white/5 sticky left-0 bg-[#1A1A1A] group-hover:bg-[#202020] z-10 font-bold shadow-[4px_0_10px_rgba(0,0,0,0.5)]">
+            <tr v-for="player in players" :key="player.userId" class="group hover:bg-[#5c3a21] transition-colors">
+              <td class="p-5 border-b-4 border-r-4 border-[#2a180c] sticky left-0 bg-[#3a2212] group-hover:bg-[#4a2e1b] z-10 font-bold shadow-[4px_0_10px_rgba(0,0,0,0.5)]">
                 <div class="flex items-center gap-3">
                   <div class="relative">
-                    <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-10 h-10 rounded-full bg-white/10 p-1 border-2" :style="{ borderColor: player.color }" />
+                    <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-10 h-10 rounded-full bg-[#1a0f08] p-1 border-2 shadow-inner" :style="{ borderColor: player.color }" />
                   </div>
-                  <span class="tracking-wider uppercase" :class="player.userId === myUserId ? 'text-orange-400' : 'text-white'">
+                  <span class="tracking-wider uppercase text-xs" :class="player.userId === myUserId ? 'text-[#f97316]' : 'text-[#e5e7eb]'">
                     {{ player.nickname }}
                   </span>
                 </div>
@@ -52,35 +55,35 @@
               <td 
                 v-for="catData in verifyingData" 
                 :key="catData.category"
-                class="p-5 border-b border-r border-white/5 relative text-center"
+                class="p-5 border-b-4 border-r-4 border-[#2a180c] relative text-center bg-[#4a2e1b] group-hover:bg-[#5c3a21]"
               >
                 <div class="flex flex-col items-center gap-2">
                   <span 
                     class="text-xl font-black tracking-wider uppercase transition-colors duration-300 relative"
                     :class="[
-                      !getAnswerObj(catData, player.userId)?.answer ? 'text-gray-600' : 'text-white',
+                      !getAnswerObj(catData, player.userId)?.answer ? 'text-[#cdab84] opacity-50' : 'text-white',
                       isVetoed(catData, player.userId) ? 'text-red-500 opacity-50' : ''
                     ]"
                   >
                     {{ getAnswerObj(catData, player.userId)?.answer || '---' }}
                     
-                    <!-- Strikethrough line -->
+                    <!-- Strikethrough line 2D style -->
                     <div 
-                      class="absolute top-1/2 left-[-10%] h-1 bg-red-500 origin-left scale-x-0"
+                      class="absolute top-1/2 left-[-10%] h-2 bg-red-600 border border-red-900 origin-left scale-x-0 rounded"
                       :class="`strikethrough-${player.userId}-${catData.category.replace(/[^a-zA-Z0-9]/g, '')}`"
-                      style="width: 120%; margin-top: -2px; box-shadow: 0 0 10px rgba(239,68,68,0.8);"
+                      style="width: 120%; margin-top: -4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);"
                     ></div>
                   </span>
                   
                   <button 
                     v-if="player.userId !== myUserId && getAnswerObj(catData, player.userId)?.answer"
                     @click="toggleVeto(player.userId, catData.category)"
-                    class="text-xs font-bold uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded-full transition-all"
-                    :class="hasMyVeto(catData, player.userId) ? 'bg-red-500/20 text-red-500 border border-red-500/50 hover:bg-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white'"
+                    class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded-lg transition-all border-2"
+                    :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-inner' : 'bg-[#2a1a0f] text-[#cdab84] border-[#1a0f08] hover:bg-[#3a2212] hover:text-white shadow-sm'"
                   >
                     VETO ({{ getVetoCount(catData, player.userId) }})
                   </button>
-                  <div v-else-if="getAnswerObj(catData, player.userId)?.answer" class="text-xs font-bold uppercase tracking-widest text-gray-500 mt-1">
+                  <div v-else-if="getAnswerObj(catData, player.userId)?.answer" class="text-[10px] font-black uppercase tracking-widest text-[#cdab84] mt-1 bg-[#2a1a0f] px-2 py-1 rounded border border-[#1a0f08]">
                     VETOS: {{ getVetoCount(catData, player.userId) }}
                   </div>
                 </div>
@@ -167,18 +170,19 @@ watch(() => props.verifyingData, (newData) => {
 
 <style scoped>
 .custom-scrollbar::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
+  height: 12px;
+  width: 12px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: #2a180c;
   border-radius: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: #7d512a;
   border-radius: 4px;
+  border: 2px solid #2a180c;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #a06d40;
 }
 </style>
