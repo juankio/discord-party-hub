@@ -8,7 +8,7 @@
           <!-- Botón Editar Perfil (Pro Max UI) -->
           <button 
             @click="isEditProfileOpen = true"
-            class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-black/40 hover:bg-white/5 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+            class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-black/40 hover:bg-white/5 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0 ring-0 focus-visible:ring-0"
           >
             <!-- Efecto Pro Line (Glow en hover) -->
             <div class="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
@@ -21,7 +21,7 @@
           <!-- Botón Salir (Pro Max UI) -->
           <button 
             @click="leaveRoom"
-            class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+            class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0 ring-0 focus-visible:ring-0"
           >
             <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
             <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
@@ -34,7 +34,7 @@
 
       <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
         <!-- Columna Izquierda (Mesa y Controles) -->
-        <div class="flex-1 w-full flex flex-col gap-8">
+        <div class="flex-1 w-full flex flex-col gap-4 lg:gap-0">
           <!-- Componente Mesa -->
           <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" />
 
@@ -44,7 +44,7 @@
           </div>
 
           <!-- Zona de Control Dinámica -->
-          <div class="w-full flex justify-center pb-24 lg:-mt-16 relative z-10">
+          <div class="w-full flex justify-center pb-24 lg:-mt-24 relative z-10">
             <Transition name="fade" mode="out-in">
               <!-- Panel de Control (Host) -->
           <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
