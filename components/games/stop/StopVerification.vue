@@ -78,15 +78,18 @@
                   </span>
                   
                   <button 
-                    v-if="player.userId !== myUserId && getAnswerObj(catData, player.userId)?.answer"
+                    v-if="player.userId !== myUserId && getAnswerObj(catData, player.userId)?.answer && !isAutoInvalid(catData, player.userId)"
                     @click="toggleVeto(player.userId, catData.category)"
                     class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded transition-all border-2 font-['Comic_Sans_MS',_cursive,sans-serif]"
                     :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-inner' : 'bg-[#173119] text-gray-300 border-white/20 hover:bg-[#254b27] hover:text-white shadow-sm'"
                   >
                     INVALIDAR ({{ getVetoCount(catData, player.userId) }})
                   </button>
-                  <div v-else-if="getAnswerObj(catData, player.userId)?.answer" class="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1 px-2 py-1 rounded border border-white/10 font-['Comic_Sans_MS',_cursive,sans-serif]">
+                  <div v-else-if="getAnswerObj(catData, player.userId)?.answer && !isAutoInvalid(catData, player.userId)" class="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1 px-2 py-1 rounded border border-white/10 font-['Comic_Sans_MS',_cursive,sans-serif]">
                     INVÁLIDOS: {{ getVetoCount(catData, player.userId) }}
+                  </div>
+                  <div v-if="getAnswerObj(catData, player.userId)?.answer && isAutoInvalid(catData, player.userId)" class="text-[10px] font-black uppercase tracking-widest text-red-400 mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]">
+                    (Letra Incorrecta)
                   </div>
                 </div>
               </td>
@@ -124,11 +127,16 @@ const getVetoCount = (catData: any, userId: string) => {
   return ans ? ans.vetos.length : 0
 }
 
+const isAutoInvalid = (catData: any, userId: string) => {
+  const ans = getAnswerObj(catData, userId)
+  if (!ans || !ans.answer) return false
+  return !ans.answer.toLowerCase().startsWith(props.letter.toLowerCase())
+}
+
 const isVetoed = (catData: any, userId: string) => {
   const ans = getAnswerObj(catData, userId)
   if (!ans || !ans.answer) return false
-  const invalidLetter = !ans.answer.toLowerCase().startsWith(props.letter.toLowerCase())
-  return getVetoCount(catData, userId) > vetoThreshold.value || invalidLetter
+  return getVetoCount(catData, userId) > vetoThreshold.value || isAutoInvalid(catData, userId)
 }
 
 const hasMyVeto = (catData: any, userId: string) => {
@@ -155,7 +163,7 @@ watch(() => props.verifyingData, (newData) => {
         if (isVetoed(catData, p.userId)) {
           anime({
             targets: targetClass,
-            scaleX: [0, 1],
+            scaleX: 1,
             duration: 400,
             easing: 'easeOutElastic(1, .8)'
           })

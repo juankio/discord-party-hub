@@ -125,16 +125,25 @@ if (!rules.value.bannedLetters) {
 const toggleBannedLetter = (letter: string) => {
   const index = rules.value.bannedLetters.indexOf(letter)
   if (index === -1) {
-    rules.value.bannedLetters.push(letter)
+    rules.value = { 
+      ...rules.value, 
+      bannedLetters: [...rules.value.bannedLetters, letter] 
+    }
   } else {
-    rules.value.bannedLetters.splice(index, 1)
+    rules.value = { 
+      ...rules.value, 
+      bannedLetters: rules.value.bannedLetters.filter((_: any, i: number) => i !== index) 
+    }
   }
 }
 
 const addCategory = () => {
   const cat = newCategory.value.trim().toUpperCase()
   if (cat && rules.value.stopCategories.length < 12 && !rules.value.stopCategories.includes(cat)) {
-    rules.value.stopCategories.push(cat)
+    rules.value = { 
+      ...rules.value, 
+      stopCategories: [...rules.value.stopCategories, cat] 
+    }
     newCategory.value = ''
   }
 }
@@ -142,12 +151,18 @@ const addCategory = () => {
 const addPreset = (cat: string) => {
   const upperCat = cat.toUpperCase()
   if (rules.value.stopCategories.length < 12 && !rules.value.stopCategories.includes(upperCat)) {
-    rules.value.stopCategories.push(upperCat)
+    rules.value = { 
+      ...rules.value, 
+      stopCategories: [...rules.value.stopCategories, upperCat] 
+    }
   }
 }
 
 const removeCategory = (idx: number) => {
-  rules.value.stopCategories.splice(idx, 1)
+  rules.value = { 
+    ...rules.value, 
+    stopCategories: rules.value.stopCategories.filter((_: any, i: number) => i !== idx) 
+  }
 }
 </script>
 
