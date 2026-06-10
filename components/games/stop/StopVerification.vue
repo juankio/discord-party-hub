@@ -71,8 +71,8 @@
                     
                     <!-- Strikethrough line 2D style (Chalk-like) -->
                     <div 
-                      class="absolute top-1/2 left-[-10%] h-2 bg-red-500 origin-left scale-x-0 rounded rotate-[-2deg]"
-                      :class="`strikethrough-${player.userId}-${catData.category.replace(/[^a-zA-Z0-9]/g, '')}`"
+                      class="absolute top-1/2 left-[-10%] h-2 bg-red-500 origin-left rounded rotate-[-2deg] transition-transform duration-500 ease-out"
+                      :class="isVetoed(catData, player.userId) ? 'scale-x-100' : 'scale-x-0'"
                       style="width: 120%; margin-top: -4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);"
                     ></div>
                   </span>
@@ -102,8 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, nextTick } from 'vue'
-import anime from 'animejs'
+import { computed } from 'vue'
 
 const props = defineProps<{
   players: any[]
@@ -151,34 +150,6 @@ const toggleVeto = (targetId: string, cat: string) => {
 const finishVerification = () => {
   emit('finish_verification')
 }
-
-// Watch for vetos reaching threshold to trigger strikethrough animation
-watch(() => props.verifyingData, (newData) => {
-  nextTick(() => {
-    props.players.forEach(p => {
-      newData.forEach(catData => {
-        const catSafe = catData.category.replace(/[^a-zA-Z0-9]/g, '')
-        const targetClass = `.strikethrough-${p.userId}-${catSafe}`
-        
-        if (isVetoed(catData, p.userId)) {
-          anime({
-            targets: targetClass,
-            scaleX: 1,
-            duration: 400,
-            easing: 'easeOutElastic(1, .8)'
-          })
-        } else {
-          anime({
-            targets: targetClass,
-            scaleX: 0,
-            duration: 200,
-            easing: 'easeInQuad'
-          })
-        }
-      })
-    })
-  })
-}, { deep: true })
 </script>
 
 <style scoped>
