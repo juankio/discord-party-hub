@@ -58,6 +58,21 @@
         </div>
       </div>
 
+      <!-- Podium of Shame -->
+      <div v-if="isFinal && mostInvalidatedPlayer" class="mx-6 mb-6 bg-[#3a1212] border-4 border-[#7f1d1d] rounded-2xl p-4 flex items-center justify-center gap-4 relative overflow-hidden z-10 shadow-inner">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
+        <div class="relative z-10 bg-[#7f1d1d] p-3 rounded-full shadow-inner border-2 border-red-900">
+          <svg class="w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path><line x1="4" y1="20" x2="20" y2="4"></line></svg>
+        </div>
+        <div class="relative z-10 flex flex-col justify-center">
+          <div class="text-red-400 font-black tracking-widest uppercase text-[10px] sm:text-xs font-['Comic_Sans_MS',_cursive,sans-serif]">El Rey de la Trampa</div>
+          <div class="text-white font-black text-lg sm:text-xl tracking-wider font-['Comic_Sans_MS',_cursive,sans-serif] flex items-baseline gap-2">
+            {{ mostInvalidatedPlayer.nickname }} 
+            <span class="text-[10px] sm:text-xs text-red-300">con {{ mostInvalidatedPlayer.invalidatedCount }} invalidadas</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Footer -->
       <div class="bg-[#173119] p-6 border-t-4 border-white/10 relative z-10 flex justify-center shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
         <button 
@@ -102,6 +117,13 @@ const emit = defineEmits(['next_round', 'back_to_lobby'])
 
 const sortedPlayers = computed(() => {
   return [...props.players].sort((a, b) => (b.score || 0) - (a.score || 0))
+})
+
+const mostInvalidatedPlayer = computed(() => {
+  if (!props.isFinal) return null
+  const playersWithInvalidations = props.players.filter(p => p.invalidatedCount && p.invalidatedCount > 0)
+  if (playersWithInvalidations.length === 0) return null
+  return playersWithInvalidations.reduce((prev, current) => (prev.invalidatedCount > current.invalidatedCount) ? prev : current)
 })
 
 const getRoundScore = (userId: string) => {

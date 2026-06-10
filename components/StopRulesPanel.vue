@@ -57,6 +57,29 @@
 
         <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
 
+        <!-- Letras Prohibidas -->
+        <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
+          <label class="text-[10px] font-black text-[#e5e7eb] tracking-[0.4em] uppercase flex items-center justify-between w-full">
+            Letras Prohibidas
+            <span class="text-red-400 text-sm drop-shadow-md">{{ rules.bannedLetters?.length || 0 }}</span>
+          </label>
+          <div class="flex flex-wrap justify-center gap-1.5 w-full">
+            <button 
+              v-for="letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')" 
+              :key="letter"
+              @click="toggleBannedLetter(letter)"
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded border-2 font-black text-[10px] sm:text-xs flex items-center justify-center transition-all shadow-sm"
+              :class="rules.bannedLetters?.includes(letter) 
+                ? 'bg-[#991b1b] border-[#7f1d1d] text-white/50 shadow-inner' 
+                : 'bg-[#b48554] border-[#d4a373] text-[#4a2e1b] hover:bg-[#c49564] hover:-translate-y-0.5'"
+            >
+              {{ letter }}
+            </button>
+          </div>
+        </div>
+
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+
         <!-- Rondas -->
         <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
           <label class="text-[10px] font-black text-[#e5e7eb] tracking-[0.4em] uppercase flex items-center justify-between w-full">
@@ -94,6 +117,18 @@ if (!rules.value.stopCategories) {
 }
 if (!rules.value.stopRounds) {
   rules.value.stopRounds = 5
+}
+if (!rules.value.bannedLetters) {
+  rules.value.bannedLetters = ['W', 'X', 'Y', 'Z']
+}
+
+const toggleBannedLetter = (letter: string) => {
+  const index = rules.value.bannedLetters.indexOf(letter)
+  if (index === -1) {
+    rules.value.bannedLetters.push(letter)
+  } else {
+    rules.value.bannedLetters.splice(index, 1)
+  }
 }
 
 const addCategory = () => {

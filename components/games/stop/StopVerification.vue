@@ -8,7 +8,7 @@
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
         
         <div class="text-center sm:text-left relative z-10">
-          <h2 class="text-2xl sm:text-3xl font-black tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase font-['Comic_Sans_MS',_cursive,sans-serif]">Fase de Votación</h2>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase font-['Comic_Sans_MS',_cursive,sans-serif]">Fase de Revisión</h2>
           <p class="text-[#e2e8f0] mt-1 uppercase font-bold tracking-widest text-xs font-['Comic_Sans_MS',_cursive,sans-serif]">
             Letra Activa: <span class="text-3xl font-black text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ml-2">{{ letter }}</span>
           </p>
@@ -83,10 +83,10 @@
                     class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded transition-all border-2 font-['Comic_Sans_MS',_cursive,sans-serif]"
                     :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-inner' : 'bg-[#173119] text-gray-300 border-white/20 hover:bg-[#254b27] hover:text-white shadow-sm'"
                   >
-                    VETO ({{ getVetoCount(catData, player.userId) }})
+                    INVALIDAR ({{ getVetoCount(catData, player.userId) }})
                   </button>
                   <div v-else-if="getAnswerObj(catData, player.userId)?.answer" class="text-[10px] font-black uppercase tracking-widest text-gray-400 mt-1 px-2 py-1 rounded border border-white/10 font-['Comic_Sans_MS',_cursive,sans-serif]">
-                    VETOS: {{ getVetoCount(catData, player.userId) }}
+                    INVÁLIDOS: {{ getVetoCount(catData, player.userId) }}
                   </div>
                 </div>
               </td>
@@ -125,7 +125,10 @@ const getVetoCount = (catData: any, userId: string) => {
 }
 
 const isVetoed = (catData: any, userId: string) => {
-  return getVetoCount(catData, userId) > vetoThreshold.value
+  const ans = getAnswerObj(catData, userId)
+  if (!ans || !ans.answer) return false
+  const invalidLetter = !ans.answer.toLowerCase().startsWith(props.letter.toLowerCase())
+  return getVetoCount(catData, userId) > vetoThreshold.value || invalidLetter
 }
 
 const hasMyVeto = (catData: any, userId: string) => {

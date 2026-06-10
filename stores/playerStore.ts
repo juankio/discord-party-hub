@@ -18,7 +18,7 @@ export const usePlayerStore = defineStore('player', {
     picture: '',
     roomRules: {
       stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false, extendedLobby: false,
-      stopCategories: ['NOMBRE', 'ANIMAL', 'COLOR', 'COSA', 'FRUTA'], stopRounds: 5
+      stopCategories: ['NOMBRE', 'ANIMAL', 'COLOR', 'COSA', 'FRUTA'], stopRounds: 5, bannedLetters: ['W', 'X', 'Y', 'Z']
     }
   }),
   actions: {
