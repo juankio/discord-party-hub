@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6 w-full max-w-sm mx-auto mt-10 room-actions" v-if="isVisible">
+  <div v-if="isVisible" class="flex flex-col gap-6 w-full max-w-sm mx-auto mt-10 room-actions">
     <UButton 
       size="xl" 
       color="primary" 
@@ -12,9 +12,9 @@
     </UButton>
 
     <div class="flex items-center gap-4">
-      <div class="h-px bg-gray-700 flex-1"></div>
+      <div class="h-px bg-gray-700 flex-1"/>
       <span class="text-gray-400 text-sm font-medium">O</span>
-      <div class="h-px bg-gray-700 flex-1"></div>
+      <div class="h-px bg-gray-700 flex-1"/>
     </div>
 
     <div class="flex gap-2">
