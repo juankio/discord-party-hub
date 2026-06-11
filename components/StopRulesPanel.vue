@@ -98,6 +98,29 @@
           </div>
         </div>
 
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+
+        <!-- Tiempo de Revisión -->
+        <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
+          <label class="text-[10px] font-black text-[#e5e7eb] tracking-[0.4em] uppercase flex items-center justify-between w-full">
+            Tiempo de Revisión
+            <span class="text-[#f97316] text-xl drop-shadow-md">{{ rules.verificationTime }}s</span>
+          </label>
+          <div class="flex items-center justify-center gap-2 sm:gap-4 w-full">
+            <button 
+              v-for="time in [15, 30, 45, 60]" 
+              :key="time"
+              @click="rules.verificationTime = time"
+              class="flex-1 py-2 rounded-lg border-2 font-black text-xs sm:text-sm flex items-center justify-center transition-all shadow-sm"
+              :class="rules.verificationTime === time 
+                ? 'bg-[#991b1b] border-[#7f1d1d] text-white shadow-inner scale-105' 
+                : 'bg-[#b48554] border-[#d4a373] text-[#4a2e1b] hover:bg-[#c49564] hover:-translate-y-0.5'"
+            >
+              {{ time }}s
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </Transition>
@@ -120,6 +143,9 @@ if (!rules.value.stopRounds) {
 }
 if (!rules.value.bannedLetters) {
   rules.value.bannedLetters = ['W', 'X', 'Y', 'Z']
+}
+if (!rules.value.verificationTime) {
+  rules.value.verificationTime = 30
 }
 
 const toggleBannedLetter = (letter: string) => {

@@ -1,33 +1,33 @@
 <template>
   <div class="min-h-screen flex items-center justify-center p-4 sm:p-8 text-white relative" style="color: var(--theme-text-color, white);">
     
-    <div class="w-full max-w-3xl bg-[#1e3f20] border-[12px] border-[#8b5a2b] rounded-[40px] shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.5)] overflow-hidden relative z-20 flex flex-col">
+    <div class="w-full max-w-3xl bg-[#1e3f20]/95 backdrop-blur-lg border border-white/10 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden relative z-20 flex flex-col">
       <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
       
       <!-- Header -->
-      <div class="bg-[#173119] p-6 border-b-4 border-white/10 relative z-10 shadow-lg text-center">
-        <h2 class="text-3xl sm:text-4xl font-black text-white tracking-widest uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] mb-2 font-['Comic_Sans_MS',_cursive,sans-serif]">
+      <div class="bg-[#173119]/80 p-6 border-b border-white/10 relative z-10 text-center">
+        <h2 class="text-3xl sm:text-4xl font-black text-white tracking-widest uppercase drop-shadow-md mb-3 font-['Comic_Sans_MS',_cursive,sans-serif]">
           {{ isFinal ? 'Resultados Finales' : `Puntuación Ronda ${currentRound}` }}
         </h2>
-        <div class="flex items-center justify-center gap-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#e2e8f0] font-['Comic_Sans_MS',_cursive,sans-serif]">
-          <span class="bg-white/10 px-3 py-1 rounded border-2 border-white/20">100pts Única</span>
-          <span class="bg-white/10 px-3 py-1 rounded border-2 border-white/20">50pts Compartida</span>
-          <span class="bg-red-500/20 text-red-300 px-3 py-1 rounded border-2 border-red-500/30">0pts Veto</span>
+        <div class="flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-xs font-black uppercase tracking-widest text-[#e2e8f0] font-['Comic_Sans_MS',_cursive,sans-serif] flex-wrap">
+          <span class="bg-white/5 px-3 py-1.5 rounded-full border border-white/10 shadow-sm">100pts Única</span>
+          <span class="bg-white/5 px-3 py-1.5 rounded-full border border-white/10 shadow-sm">50pts Compartida</span>
+          <span class="bg-red-500/10 text-red-300 px-3 py-1.5 rounded-full border border-red-500/20 shadow-sm">0pts Inválida</span>
         </div>
       </div>
 
       <!-- Body -->
-      <div class="p-6 sm:p-8 relative z-10 space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+      <div class="p-6 sm:p-8 relative z-10 space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar">
         <div 
           v-for="(player, idx) in sortedPlayers" 
           :key="player.userId"
-          class="flex items-center justify-between bg-[#254b27] p-4 rounded-2xl border-4 border-white/10 shadow-inner relative overflow-hidden"
-          :class="player.userId === myUserId ? 'border-yellow-300/50 bg-[#2f5f31]' : ''"
+          class="flex items-center justify-between bg-white/5 hover:bg-white/10 transition-colors p-4 rounded-xl border border-white/10 relative overflow-hidden"
+          :class="player.userId === myUserId ? 'border-yellow-400/50 bg-yellow-400/5' : ''"
         >
           <!-- Ranking Badge -->
           <div 
-            class="absolute left-0 top-0 bottom-0 w-3 flex items-center justify-center border-r-2 border-white/10"
-            :class="idx === 0 ? 'bg-[#fbbf24]' : idx === 1 ? 'bg-[#94a3b8]' : idx === 2 ? 'bg-[#b45309]' : 'bg-black/30'"
+            class="absolute left-0 top-0 bottom-0 w-2 flex items-center justify-center"
+            :class="idx === 0 ? 'bg-[#fbbf24]' : idx === 1 ? 'bg-[#94a3b8]' : idx === 2 ? 'bg-[#b45309]' : 'bg-transparent'"
           ></div>
 
           <div class="flex items-center gap-4 pl-6">
@@ -59,22 +59,21 @@
       </div>
 
       <!-- Podium of Shame -->
-      <div v-if="isFinal && mostInvalidatedPlayer" class="mx-6 mb-6 bg-[#3a1212] border-4 border-[#7f1d1d] rounded-2xl p-4 flex items-center justify-center gap-4 relative overflow-hidden z-10 shadow-inner">
-        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
-        <div class="relative z-10 bg-[#7f1d1d] p-3 rounded-full shadow-inner border-2 border-red-900">
-          <svg class="w-8 h-8 text-red-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path><line x1="4" y1="20" x2="20" y2="4"></line></svg>
+      <div v-if="isFinal && mostInvalidatedPlayer" class="mx-auto mb-6 bg-black/20 border border-white/10 rounded-full px-6 py-2 flex items-center justify-center gap-3 relative z-10 shadow-sm backdrop-blur-sm w-max">
+        <div class="relative z-10 text-white/50">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
         </div>
-        <div class="relative z-10 flex flex-col justify-center">
-          <div class="text-red-400 font-black tracking-widest uppercase text-[10px] sm:text-xs font-['Comic_Sans_MS',_cursive,sans-serif]">El Rey de la Trampa</div>
-          <div class="text-white font-black text-lg sm:text-xl tracking-wider font-['Comic_Sans_MS',_cursive,sans-serif] flex items-baseline gap-2">
+        <div class="relative z-10 flex items-center gap-2">
+          <div class="text-white/60 font-medium tracking-wide text-xs">Mente en Blanco:</div>
+          <div class="text-white/90 font-bold text-sm tracking-wide flex items-center gap-1.5">
             {{ mostInvalidatedPlayer.nickname }} 
-            <span class="text-[10px] sm:text-xs text-red-300">con {{ mostInvalidatedPlayer.invalidatedCount }} invalidadas</span>
+            <span class="text-[10px] bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded">{{ mostInvalidatedPlayer.invalidatedCount }} invalidadas</span>
           </div>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="bg-[#173119] p-6 border-t-4 border-white/10 relative z-10 flex justify-center shadow-[0_-5px_15px_rgba(0,0,0,0.3)]">
+      <div class="bg-[#173119]/80 p-6 border-t border-white/10 relative z-10 flex justify-center backdrop-blur-md">
         <button 
           v-if="isHost && !isFinal" 
           class="px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-[#2d1b11] font-black tracking-[0.2em] uppercase rounded border-b-4 border-yellow-700 active:translate-y-1 active:border-b-0 shadow-[0_5px_15px_rgba(0,0,0,0.4)] transition-all w-full sm:w-auto font-['Comic_Sans_MS',_cursive,sans-serif]"

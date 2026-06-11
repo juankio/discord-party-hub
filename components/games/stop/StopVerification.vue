@@ -3,23 +3,30 @@
     <div class="w-full max-w-[1000px] mx-auto z-10 flex flex-col gap-6">
       
       <!-- Header Pizarra -->
-      <div class="bg-[#1e3f20] p-6 border-[12px] border-[#8b5a2b] rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative overflow-hidden">
+      <div class="bg-[#1e3f20] p-6 pb-8 border-[12px] border-[#8b5a2b] rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative overflow-hidden">
         <!-- Textura de Pizarra (Ruido/Tiza) -->
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
         
-        <div class="text-center sm:text-left relative z-10">
-          <h2 class="text-2xl sm:text-3xl font-black tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase font-['Comic_Sans_MS',_cursive,sans-serif]">Fase de Revisión</h2>
-          <p class="text-[#e2e8f0] mt-1 uppercase font-bold tracking-widest text-xs font-['Comic_Sans_MS',_cursive,sans-serif]">
-            Letra Activa: <span class="text-3xl font-black text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ml-2">{{ letter }}</span>
-          </p>
+        <div class="text-center sm:text-left relative z-10 w-full flex justify-between items-center">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-black tracking-widest text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase font-['Comic_Sans_MS',_cursive,sans-serif]">Fase de Revisión</h2>
+            <p class="text-[#e2e8f0] mt-1 uppercase font-bold tracking-widest text-xs font-['Comic_Sans_MS',_cursive,sans-serif]">
+              Letra Activa: <span class="text-3xl font-black text-yellow-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ml-2">{{ letter }}</span>
+            </p>
+          </div>
+          <div class="text-4xl font-black text-yellow-400 font-['Comic_Sans_MS',_cursive,sans-serif] drop-shadow-md">
+            {{ Math.ceil(localTimeRemaining) }}s
+          </div>
         </div>
-        <button 
-          v-if="isHost"
-          class="relative z-10 px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-[#2d1b11] font-black rounded border-b-4 border-yellow-700 active:translate-y-1 active:border-b-0 shadow-[0_5px_15px_rgba(0,0,0,0.4)] tracking-widest uppercase text-sm font-['Comic_Sans_MS',_cursive,sans-serif]"
-          @click="finishVerification"
-        >
-          Confirmar Votos y Puntuar
-        </button>
+
+        <!-- Animated Progress Bar -->
+        <div class="absolute bottom-0 left-0 right-0 h-3 bg-[#173119] z-20">
+          <div 
+            class="h-full transition-none shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+            :class="localTimeRemaining <= 10 ? 'bg-red-500' : 'bg-yellow-400'"
+            :style="{ width: `${progressPercentage}%` }"
+          ></div>
+        </div>
       </div>
 
       <!-- Scrollable Matrix Pizarra -->
@@ -89,7 +96,7 @@
                     INVÁLIDOS: {{ getVetoCount(catData, player.userId) }}
                   </div>
                   <div v-if="getAnswerObj(catData, player.userId)?.answer && isAutoInvalid(catData, player.userId)" class="text-[10px] font-black uppercase tracking-widest text-red-400 mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]">
-                    (Letra Incorrecta)
+                    (Letra Incorrecta / Muy Corta)
                   </div>
                 </div>
               </td>
@@ -102,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps<{
   players: any[]
@@ -110,9 +117,43 @@ const props = defineProps<{
   letter: string
   myUserId: string
   isHost: boolean
+  timeRemaining?: number
+  verificationTime?: number
 }>()
 
-const emit = defineEmits(['veto', 'finish_verification'])
+const emit = defineEmits(['veto'])
+
+const localTimeRemaining = ref(props.timeRemaining ?? 30)
+const lastSyncTime = ref(Date.now())
+
+watch(() => props.timeRemaining, (newVal) => {
+  if (newVal !== undefined) {
+    localTimeRemaining.value = newVal
+    lastSyncTime.value = Date.now()
+  }
+})
+
+let frameId: number
+const updateProgress = () => {
+  const now = Date.now()
+  const elapsed = (now - lastSyncTime.value) / 1000
+  localTimeRemaining.value = Math.max(0, (props.timeRemaining ?? 30) - elapsed)
+  frameId = requestAnimationFrame(updateProgress)
+}
+
+onMounted(() => {
+  frameId = requestAnimationFrame(updateProgress)
+})
+
+onUnmounted(() => {
+  cancelAnimationFrame(frameId)
+})
+
+const progressPercentage = computed(() => {
+  const total = props.verificationTime || 30
+  const pct = (localTimeRemaining.value / total) * 100
+  return Math.min(100, Math.max(0, pct))
+})
 
 const totalPlayers = computed(() => props.players.length)
 const vetoThreshold = computed(() => Math.floor(totalPlayers.value / 2))
@@ -129,7 +170,8 @@ const getVetoCount = (catData: any, userId: string) => {
 const isAutoInvalid = (catData: any, userId: string) => {
   const ans = getAnswerObj(catData, userId)
   if (!ans || !ans.answer) return false
-  return !ans.answer.toLowerCase().startsWith(props.letter.toLowerCase())
+  const answer = ans.answer.trim().toLowerCase()
+  return !answer.startsWith(props.letter.toLowerCase()) || answer.length < 2
 }
 
 const isVetoed = (catData: any, userId: string) => {
@@ -145,10 +187,6 @@ const hasMyVeto = (catData: any, userId: string) => {
 
 const toggleVeto = (targetId: string, cat: string) => {
   emit('veto', { targetId, category: cat })
-}
-
-const finishVerification = () => {
-  emit('finish_verification')
 }
 </script>
 
