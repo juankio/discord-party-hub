@@ -86,7 +86,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
 
 const playerStore = usePlayerStore()

@@ -8,21 +8,16 @@
         class="flex items-end min-w-max mx-auto px-4 md:px-0" 
         :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')"
       >
-        <div
+        <UnoHandCard
 v-for="(card, index) in myHand" :key="card.id" 
-             class="card-wrapper transition-all duration-300"
-             :style="calculateCardStyle(index, myHand.length)"
-             :data-index="index">
-          
-          <UnoCard
              :card="card"
-             :playable="isPlayable(card)"
-             class="hand-card cursor-pointer"
-             @click="playCard(card, $event)"
-             @mouseenter="localHoverIndex = index; $emit('hover-card', index)"
-             @mouseleave="localHoverIndex = null; $emit('hover-card', null)"
-          />
-        </div>
+             :index="index"
+             :total="myHand.length"
+             :local-hover-index="localHoverIndex"
+             :is-playable="isPlayable(card)"
+             @play-card="$emit('play-card', $event.id)"
+             @hover-card="localHoverIndex = $event; $emit('hover-card', $event)"
+        />
       </TransitionGroup>
     </div>
 
@@ -38,34 +33,9 @@ class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white t
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import anime from 'animejs'
-import UnoCard from './UnoCard.vue'
 
-const localHoverIndex = ref<number | null>(null)
-
-const calculateCardStyle = (index: number, total: number) => {
-  const isTooMany = total > 7;
-  const spreadAngle = isTooMany ? (total > 15 ? 1 : 2) : 4; // Menos ángulo si hay muchas
-  const yOffsetMultiplier = isTooMany ? 1.5 : 3;
-  
-  const middle = (total - 1) / 2;
-  const rotate = (index - middle) * spreadAngle;
-  let translateY = Math.abs(index - middle) * yOffsetMultiplier;
-  let scale = 1;
-  let zIndex = index;
-
-  if (index === localHoverIndex.value) {
-    translateY -= 40;
-    scale = 1.15;
-    zIndex = 50;
-  }
-  
-  return {
-    transform: `rotate(${rotate}deg) translateY(${translateY}px) scale(${scale})`,
-    zIndex: zIndex
-  };
-}
+const localHoverIndex = ref<number | undefined>(undefined)
 
 const props = defineProps({
   myHand: { type: Array as () => any[], required: true },
@@ -138,55 +108,6 @@ const isPlayable = (card: any) => {
   const validColor = card.color === 'wild' || card.color === props.currentColor || card.color === props.topCard?.color
   const validValue = card.value === props.topCard?.value
   return validColor || validValue
-}
-
-const playCard = (card: any, event: Event) => {
-  if (!props.isMyTurn || !isPlayable(card)) {
-    // Efecto de negar
-    const target = event.currentTarget as HTMLElement
-    anime({ targets: target, translateX: [0, -5, 5, -5, 5, 0], duration: 300 })
-    return
-  }
-  
-  const target = event.currentTarget as HTMLElement
-  target.style.pointerEvents = 'none'
-
-  // Clon volador a la mesa
-  const rect = target.getBoundingClientRect()
-  const topCardEl = document.querySelector('.top-card-placeholder')
-  const topRect = topCardEl ? topCardEl.getBoundingClientRect() : { top: window.innerHeight/2 - 80, left: window.innerWidth/2 - 55 }
-
-  // Obtener la rotación actual para que no salte al inicio de la animación
-  const currentTransform = getComputedStyle(target.parentElement!).transform
-  
-  const clone = target.cloneNode(true) as HTMLElement
-  document.body.appendChild(clone)
-  
-  clone.style.position = 'fixed'
-  clone.style.top = `${rect.top}px`
-  clone.style.left = `${rect.left}px`
-  clone.style.margin = '0'
-  clone.style.zIndex = '9999'
-  clone.style.transform = currentTransform
-  clone.style.transformOrigin = 'center center'
-  
-  target.style.opacity = '0'
-
-  anime({
-    targets: clone,
-    top: topRect.top,
-    left: topRect.left,
-    rotate: anime.random(-25, 25),
-    scale: topCardEl ? 1 : 0.8,
-    duration: 350,
-    easing: 'easeOutCubic',
-    begin: () => {
-      emit('play-card', card.id)
-    },
-    complete: () => {
-      clone.remove()
-    }
-  })
 }
 </script>
 

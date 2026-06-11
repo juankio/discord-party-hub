@@ -79,12 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useUnoStore } from '~/stores/games/unoStore'
-import { useSocket } from '~/composables/useSocket'
-import { useUnoAnimations } from '~/composables/useUnoAnimations'
 
 const route = useRoute()
 const router = useRouter()

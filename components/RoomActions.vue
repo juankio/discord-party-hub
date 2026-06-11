@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import anime from 'animejs'
 
 const props = defineProps({

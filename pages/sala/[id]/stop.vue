@@ -57,16 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watchEffect, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useSocket } from '~/composables/useSocket'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useStopStore } from '~/stores/games/stopStore'
 
 // Components
-import StopBoard from '~/components/games/stop/StopBoard.vue'
-import StopVerification from '~/components/games/stop/StopVerification.vue'
-import StopScoreboard from '~/components/games/stop/StopScoreboard.vue'
 
 const route = useRoute()
 const router = useRouter()

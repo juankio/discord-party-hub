@@ -104,10 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, toRaw } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { usePlayerStore } from '~/stores/playerStore'
-import { useSocket } from '~/composables/useSocket'
 import anime from 'animejs'
 
 const route = useRoute()

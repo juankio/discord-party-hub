@@ -23,7 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import anime from 'animejs'
 
 onMounted(() => {

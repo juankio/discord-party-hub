@@ -49,7 +49,6 @@
 </template>
 
 <script setup lang="ts">
-import { watch, nextTick, onUnmounted } from 'vue'
 import anime from 'animejs'
 
 const props = defineProps({

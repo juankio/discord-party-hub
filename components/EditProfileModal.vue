@@ -93,9 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
-import { useSocket } from '~/composables/useSocket'
 
 const props = defineProps({
   isOpen: { type: Boolean, required: true }
