@@ -1,44 +1,41 @@
 <template>
   <div class="app-loader fixed inset-0 z-[9999] bg-[#0A0A0A] flex flex-col items-center justify-center overflow-hidden">
-    
-    <!-- Animación de Trayectoria SVG -->
-    <div class="relative w-[300px] h-[200px] sm:w-[400px] sm:h-[300px] flex items-center justify-center mb-12 perspective-1000">
-      
-      <!-- Glow de fondo -->
-      <div 
-        class="absolute inset-0 opacity-25 blur-[50px] transition-colors duration-500 will-change-transform"
-        :style="{ backgroundColor: currentCardColor }"
-      ></div>
+    <!-- Ambient Tavern Glow -->
+    <div class="absolute inset-0 opacity-40 blur-[80px] bg-[radial-gradient(circle_at_center,rgba(180,83,9,0.3)_0%,transparent_50%)]"></div>
 
-      <!-- El Camino (Pista Infinito) -->
-      <AppLoaderTrack :current-card-color="currentCardColor" />
+    <!-- Center Emblem / Ring -->
+    <div class="relative w-32 h-32 flex items-center justify-center mb-10 perspective-1000">
       
-      <!-- La Carta de UNO Viajera -->
-      <AppLoaderCard 
-        :current-card-class="currentCardClass"
-        :current-text-class="currentTextClass"
-        :current-card-color="currentCardColor"
-      />
-
+      <!-- Outer Rotating Rings -->
+      <svg class="loader-ring absolute inset-0 w-full h-full text-amber-700/60" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <circle cx="50" cy="50" r="46" stroke-width="1.5" stroke-dasharray="70 200" stroke-linecap="round" />
+        <circle class="loader-ring-inner" cx="50" cy="50" r="38" stroke-width="1" stroke-dasharray="10 15" stroke-opacity="0.4" />
+      </svg>
+      
+      <!-- Inner Floating Element (Rustic Chip/Gem) -->
+      <div class="loader-core w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-900 rounded-sm rotate-45 shadow-[0_0_25px_rgba(217,119,6,0.5)] border border-amber-500/50 flex items-center justify-center relative">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30 mix-blend-overlay"></div>
+        <div class="w-6 h-6 border border-amber-300/30 rounded-sm rotate-45"></div>
+      </div>
+      
     </div>
 
     <!-- Animated Text -->
-    <div class="text-container h-12 relative w-full flex justify-center items-center px-4 mt-8">
+    <div class="text-container h-12 relative w-full flex justify-center items-center px-4 mt-2">
       <Transition name="phrase-fade" mode="out-in">
         <span 
           :key="currentPhraseIndex" 
-          class="phrase font-black tracking-widest text-lg md:text-xl text-center uppercase will-change-transform"
-          :class="currentTextClass"
-          style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.8));"
+          class="phrase font-serif tracking-[0.2em] text-sm md:text-base text-amber-500/90 text-center uppercase"
+          style="text-shadow: 0 0 12px rgba(245, 158, 11, 0.4);"
         >
           {{ phrases[currentPhraseIndex] }}
         </span>
       </Transition>
     </div>
 
-    <!-- Progress bar hint (pulsing line) -->
-    <div class="absolute bottom-16 w-48 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-      <div class="loading-bar h-full w-full origin-left transition-colors duration-300 will-change-transform" :style="{ backgroundColor: currentCardColor }"></div>
+    <!-- Loading Bar -->
+    <div class="absolute bottom-16 w-48 h-[1px] bg-amber-950/40 overflow-hidden">
+      <div class="loading-bar h-full w-full bg-amber-500/80 shadow-[0_0_8px_rgba(245,158,11,0.8)] origin-left"></div>
     </div>
   </div>
 </template>
@@ -56,86 +53,47 @@ const phrases = [
   "Calentando motores..."
 ]
 
-const colors = [
-  { class: 'bg-red-500', textClass: 'text-red-500', hex: '#ef4444' },
-  { class: 'bg-blue-500', textClass: 'text-blue-500', hex: '#3b82f6' },
-  { class: 'bg-green-500', textClass: 'text-green-500', hex: '#22c55e' },
-  { class: 'bg-yellow-400', textClass: 'text-yellow-400', hex: '#eab308' }
-]
-
 const currentPhraseIndex = ref(0)
-const colorIndex = ref(0)
-
-const currentCardClass = ref(colors[0]!.class)
-const currentTextClass = ref(colors[0]!.textClass)
-const currentCardColor = ref(colors[0]!.hex)
-
 let textInterval: ReturnType<typeof setInterval> | null = null
 
 onMounted(() => {
-  const path = anime.path('.track-path-base');
-  
-  // Fisicas fluidas: El recorrido de la carta en infinito (∞)
-  // Usamos easeInOutSine para que acelere en el centro y se frene suave en las curvas
+  // Rotate the outer ring
   anime({
-    targets: '.traveling-card',
-    translateX: path('x'),
-    translateY: path('y'),
-    rotate: path('angle'),
-    easing: 'easeInOutSine',
-    duration: 3500,
-    loop: true,
-    update: function(anim) {
-      // Cambiamos el color cada vez que pasa por el centro (0%, 50%, 100%)
-      const prog = Math.round(anim.progress)
-      
-      // En 25% y 75% estamos en los bordes de la curva, es el momento perfecto para hacer el flip
-      if (prog === 25 || prog === 75) {
-        if (!document.querySelector('.traveling-card')?.hasAttribute('data-flipped')) {
-            document.querySelector('.traveling-card')?.setAttribute('data-flipped', 'true');
-            
-            // Hacemos un giro rápido (flip 3D) a la carta
-            anime({
-              targets: '.traveling-card',
-              rotateY: '+=180',
-              duration: 800,
-              easing: 'easeOutElastic(1, .5)' // Física de rebote real
-            });
-
-            // Cambiamos color
-            colorIndex.value = (colorIndex.value + 1) % colors.length;
-            const nextColorObj = colors[colorIndex.value];
-            if(nextColorObj) {
-              currentCardClass.value = nextColorObj.class;
-              currentTextClass.value = nextColorObj.textClass;
-              currentCardColor.value = nextColorObj.hex;
-            }
-        }
-      }
-      
-      // Limpiamos el lock cuando salimos de las curvas
-      if (prog > 35 && prog < 65 || prog > 85 || prog < 15) {
-         document.querySelector('.traveling-card')?.removeAttribute('data-flipped');
-      }
-    }
-  });
-
-  // El láser de neón que persigue a la carta
-  anime({
-    targets: '.track-laser',
-    strokeDashoffset: [anime.setDashoffset, 0],
-    easing: 'easeInOutSine',
-    duration: 3500,
+    targets: '.loader-ring',
+    rotateZ: 360,
+    duration: 12000,
+    easing: 'linear',
     loop: true
-  });
+  })
 
-  // Loading bar pulse
+  // Counter-rotate the inner dashed ring
+  anime({
+    targets: '.loader-ring-inner',
+    rotateZ: -360,
+    duration: 18000,
+    easing: 'linear',
+    loop: true,
+    transformOrigin: ['50px', '50px']
+  })
+  
+  // Floating and flipping animation for the core coin
+  anime({
+    targets: '.loader-core',
+    translateY: [-6, 6],
+    rotateZ: 45, // Keep it diamond shaped relative to its container
+    rotateY: [0, 180, 360],
+    duration: 4000,
+    easing: 'easeInOutSine',
+    loop: true
+  })
+
+  // Loading bar pulse/progress
   anime({
     targets: '.loading-bar',
     scaleX: [0, 1],
-    opacity: [1, 0.5],
-    easing: 'easeInOutQuad',
-    duration: 1500,
+    opacity: [0.9, 0.3],
+    easing: 'easeInOutSine',
+    duration: 2000,
     direction: 'alternate',
     loop: true
   })
@@ -143,13 +101,14 @@ onMounted(() => {
   // Phrase cycler
   textInterval = setInterval(() => {
     currentPhraseIndex.value = (currentPhraseIndex.value + 1) % phrases.length
-  }, 2400)
+  }, 2500)
 })
 
 onUnmounted(() => {
   if (textInterval) clearInterval(textInterval)
-  anime.remove('.traveling-card')
-  anime.remove('.track-laser')
+  anime.remove('.loader-ring')
+  anime.remove('.loader-ring-inner')
+  anime.remove('.loader-core')
   anime.remove('.loading-bar')
 })
 </script>
@@ -160,14 +119,14 @@ onUnmounted(() => {
 }
 .phrase-fade-enter-active,
 .phrase-fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .phrase-fade-enter-from {
   opacity: 0;
-  transform: translateY(10px) scale(0.95);
+  transform: translateY(8px);
 }
 .phrase-fade-leave-to {
   opacity: 0;
-  transform: translateY(-10px) scale(0.95);
+  transform: translateY(-8px);
 }
 </style>
