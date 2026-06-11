@@ -169,7 +169,7 @@ watch(() => playerStore.roomRules, (newRules) => {
   }
 }, { deep: true })
 
-const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: playerStore.roomRules })
+const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: toRaw(playerStore.roomRules) })
 const leaveRoom = () => {
   socket.value?.emit('leave_room')
   router.push('/')

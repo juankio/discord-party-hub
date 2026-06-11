@@ -98,7 +98,7 @@ const initRoom = () => {
   
   socket.value?.on('game_started', (data) => {
     // Solo redirige si estamos en el lobby
-    if (route.path === `/sala/${roomId}`) {
+    if (route.path.replace(/\/$/, '') === `/sala/${roomId}`) {
       document.body.style.transition = 'opacity 0.5s'
       document.body.style.opacity = '0'
       setTimeout(() => {
