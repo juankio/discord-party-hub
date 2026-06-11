@@ -43,7 +43,7 @@
         v-else-if="stopStore.gameState === 'SCORING' || stopStore.gameState === 'FINISHED'"
         :players="stopStore.players"
         :scores="stopStore.roundScores"
-        :round-scores="roundScores"
+        :round-scores="stopStore.roundScores"
         :current-round="stopStore.currentRound"
         :total-rounds="stopStore.rounds"
         :is-final="stopStore.gameState === 'FINISHED'"
@@ -113,6 +113,7 @@ const backToLobby = () => {
 watch(() => stopStore.gameState, (newState) => {
   if (newState === 'PLAYING') {
     panicMode.value = false
+    localAnswers = {} // Fix: Limpiar las respuestas locales de la ronda anterior
   }
 })
 
@@ -120,12 +121,6 @@ onMounted(() => {
   let joined = false
   watchEffect(() => {
     if (socket.value && !joined) {
-      // Escuchar round_scores
-      socket.value.off('stop:round_scores')
-      socket.value.on('stop:round_scores', (scores: Record<string, number>) => {
-        roundScores.value = scores
-      })
-      
       // Auto-submit mechanism when someone else calls stop
       socket.value.off('stop_called')
       socket.value.on('stop_called', () => {
@@ -144,7 +139,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (socket.value) {
-    socket.value.off('stop:round_scores')
     socket.value.off('stop_called')
   }
 })
