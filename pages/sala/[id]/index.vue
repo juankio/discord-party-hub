@@ -46,23 +46,26 @@
           <!-- Zona de Control Dinámica -->
           <div class="w-full flex justify-center pb-24 mt-8 lg:mt-4 relative z-10">
             <Transition name="fade" mode="out-in">
-              <!-- Panel de Control (Host) -->
-          <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
-            <h3 class="text-white/30 mb-2 lg:mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
-            
-            <!-- Estante de Billar (Flat 2D Vectorial) -->
-            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
-              <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"/>
+              <!-- Panel de Control -->
+          <div class="flex flex-col items-center w-full max-w-3xl relative">
+            <div :class="{ 'pointer-events-none opacity-80': !isHost }" class="w-full flex flex-col items-center">
+              <h3 class="text-white/30 mb-2 lg:mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
               
-              <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
+              <!-- Estante de Billar (Flat 2D Vectorial) -->
+              <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
+                <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"/>
+                
+                <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
+              </div>
+              
+              <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
+              <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
+              <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
             </div>
-            
-            <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
-            <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
-            <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
             
             <!-- Botón Arcade 2D Macizo -->
             <button 
+              v-if="isHost"
               class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
               :disabled="players.length < 2 || !['uno', 'stop'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
               style="
@@ -77,17 +80,21 @@
             >
               Empezar Partida
             </button>
+            <button 
+              v-else
+              class="mt-12 w-[280px] h-[60px] rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-100 opacity-60 cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/10 bg-gray-800 text-gray-300"
+              style="
+                box-shadow: 0 4px 0 rgba(0,0,0,0.6), 0 8px 10px rgba(0,0,0,0.4);
+              "
+              disabled
+            >
+              <UIcon name="i-lucide-loader-2" class="w-5 h-5 animate-spin" />
+              Esperando al Host...
+            </button>
             
             <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
             <p v-else-if="!['uno', 'stop'].includes(selectedGame)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
             <p v-else-if="selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Faltan categorías para Stop</p>
-          </div>
-          
-          <!-- Panel de Espera (Invitados) -->
-          <div v-else class="text-center">
-            <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
-            <h3 class="text-xl font-bold text-gray-200">Esperando al Host...</h3>
-            <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
           </div>
         </Transition>
           </div>
@@ -132,7 +139,15 @@ const isHost = computed(() => playerStore.userId !== '' && playerStore.userId ==
 
 const isEditProfileOpen = ref(false)
 
-const selectedGame = ref('uno')
+const selectedGame = computed({
+  get: () => playerStore.selectedGame,
+  set: (val: string) => {
+    if (isHost.value) {
+      playerStore.selectedGame = val
+      socket.value?.emit('update_selected_game', val)
+    }
+  }
+})
 const games = [
   { id: 'uno', name: 'UNO', color: 'bg-[#151515]', labelColor: 'text-red-500', disabled: false },
   { id: 'parchis', name: 'Parchís', color: 'bg-[#151515]', labelColor: 'text-yellow-500', disabled: true },

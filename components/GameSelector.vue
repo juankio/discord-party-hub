@@ -26,10 +26,10 @@
           :key="game.id"
           class="relative group outline-none focus:outline-none transition-none duration-0 shrink-0 w-[80px] sm:w-[120px] h-[120px] sm:h-[140px] flex flex-col justify-end"
         :class="[
-          game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer hover:z-[30]',
+          game.disabled ? 'opacity-60 grayscale cursor-not-allowed' : (isReadOnly ? 'cursor-default' : 'cursor-pointer hover:z-[30]'),
           selectedGame === game.id ? 'z-[30]' : 'z-10'
         ]"
-        :disabled="game.disabled"
+        :disabled="game.disabled || isReadOnly"
         @click="$emit('select', game.id)"
       >
         <div
@@ -39,7 +39,7 @@ class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] ro
         <div
 class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
              :class="[
-               game.disabled ? '' : 'group-hover:-translate-y-4',
+               game.disabled || isReadOnly ? '' : 'group-hover:-translate-y-4',
                selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
              ]">
             
@@ -143,7 +143,8 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
 <script setup lang="ts">
 defineProps({
   games: { type: Array as () => any[], required: true },
-  selectedGame: { type: String, required: true }
+  selectedGame: { type: String, required: true },
+  isReadOnly: { type: Boolean, default: false }
 })
 defineEmits(['select'])
 </script>
