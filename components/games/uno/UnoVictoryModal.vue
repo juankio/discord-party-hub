@@ -1,10 +1,10 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden">
+  <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="victory-title">
     <!-- Overlay -->
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-500" @click="$emit('lobby')"></div>
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-500" @click="$emit('lobby')" aria-hidden="true"></div>
     
     <!-- Background glowing shapes for depth -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center" aria-hidden="true">
       <div class="winner-glow absolute w-[24rem] h-[24rem] md:w-[32rem] md:h-[32rem] bg-amber-500/20 rounded-full blur-[100px] opacity-0 mix-blend-screen"></div>
       <div class="winner-glow-2 absolute w-[24rem] h-[24rem] md:w-[32rem] md:h-[32rem] bg-indigo-500/10 rounded-full blur-[120px] opacity-0 mix-blend-screen translate-y-20"></div>
     </div>
@@ -16,13 +16,13 @@
       <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
 
       <!-- Crown SVG -->
-      <div class="mb-6 opacity-90">
+      <div class="mb-6 opacity-90" aria-hidden="true">
         <svg class="w-16 h-16 text-amber-400 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"></path>
         </svg>
       </div>
 
-      <h2 class="text-5xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-amber-200 to-amber-500 mb-4 drop-shadow-sm">
+      <h2 id="victory-title" class="text-5xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-amber-200 to-amber-500 mb-4 drop-shadow-sm">
         VICTORIA
       </h2>
       
@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, nextTick } from 'vue'
+import { watch, nextTick, onUnmounted } from 'vue'
 import anime from 'animejs'
 
 const props = defineProps({
@@ -59,8 +59,15 @@ const props = defineProps({
 
 defineEmits(['lobby'])
 
+const cleanupAnimations = () => {
+  anime.remove('.winner-glow')
+  anime.remove('.winner-glow-2')
+  anime.remove('.winner-anim')
+}
+
 watch(() => props.isOpen, async (val) => {
   if (val) {
+    cleanupAnimations()
     await nextTick()
     
     const tl = anime.timeline({
@@ -102,6 +109,12 @@ watch(() => props.isOpen, async (val) => {
       duration: 5000,
       easing: 'easeInOutSine'
     })
+  } else {
+    cleanupAnimations()
   }
 }, { immediate: true })
+
+onUnmounted(() => {
+  cleanupAnimations()
+})
 </script>
