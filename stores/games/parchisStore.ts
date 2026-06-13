@@ -8,10 +8,10 @@ export interface ParchisTokenState {
 
 export interface ParchisPlayer {
   userId: string;
-  username: string;
+  nickname: string;
   avatar: string | null;
   color: string;
-  figureId?: string;
+  selectedFigure?: string;
   hasChosenFigure: boolean;
   score?: number;
   tokens: ParchisTokenState[];

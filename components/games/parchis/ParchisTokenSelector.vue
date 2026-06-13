@@ -4,9 +4,9 @@ import anime from 'animejs';
 
 interface ParchisPlayer {
   userId: string;
-  username: string;
+  nickname: string;
   color: string;
-  figureId?: string;
+  selectedFigure?: string;
   hasChosenFigure: boolean;
 }
 
@@ -56,7 +56,7 @@ const myPlayerInfo = computed(() => {
 });
 
 const getPlayerWhoChose = (figureId: string) => {
-  return props.players.find(p => p.figureId === figureId);
+  return props.players.find(p => p.selectedFigure === figureId);
 };
 
 const handleSelect = (figureId: string) => {
@@ -132,7 +132,7 @@ const handleSelect = (figureId: string) => {
                 borderColor: `${getPlayerWhoChose(fig.id)?.color}40`
               }"
             >
-              {{ getPlayerWhoChose(fig.id)?.username }}
+              {{ getPlayerWhoChose(fig.id)?.nickname }}
             </div>
           </button>
         </div>

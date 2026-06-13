@@ -102,6 +102,11 @@ const savePlayerAndRedirect = (roomId: string) => {
 
 const handleCreateRoom = async () => {
   if (!isValid.value) return
+  
+  if (activeTab.value === 'guest') {
+    playerStore.setPlayerSetup(nickname.value.trim(), avatarId.value, selectedColor.value)
+  }
+
   try {
     const config = useRuntimeConfig()
     const baseUrl = (config.public.socketUrl || 'http://localhost:3001').replace(/\/$/, '')
