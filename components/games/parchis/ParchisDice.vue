@@ -3,8 +3,12 @@
     <div 
       v-for="(val, index) in diceValues" 
       :key="index"
-      class="dice-wrapper relative w-12 h-12 flex items-center justify-center transform-style-3d transition-transform"
+      class="dice-wrapper relative w-12 h-12 flex items-center justify-center transform-style-3d transition-transform cursor-pointer"
+      :class="{
+        'ring-4 ring-yellow-400 ring-offset-2 rounded-lg scale-110 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] z-10': index === parchisStore.selectedDiceIndex
+      }"
       :ref="(el) => { if (el) diceElements[index] = el as HTMLElement; }"
+      @click="selectDice(index)"
     >
       <div class="dice-spin w-full h-full relative transform-style-3d shadow-xl rounded-lg">
         <!-- 1 -->
@@ -27,12 +31,20 @@
 <script setup lang="ts">
 import { watch, ref, onMounted } from 'vue'
 import anime from 'animejs'
+import { useParchisStore } from '~/stores/games/parchisStore'
 
 const props = defineProps<{
   diceValues: number[]
 }>()
 
+const parchisStore = useParchisStore()
 const diceElements = ref<HTMLElement[]>([])
+
+const selectDice = (index: number) => {
+  if (parchisStore.isMyTurn) {
+    parchisStore.selectedDiceIndex = index
+  }
+}
 
 const getRotationsForFace = (face: number) => {
   switch(face) {

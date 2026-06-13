@@ -2,6 +2,9 @@
   <div 
     ref="tokenContainer"
     class="absolute z-10 w-[4%] h-[4%] -ml-[2%] -mt-[2%] flex items-center justify-center parchis-token transition-all duration-300 pointer-events-auto cursor-pointer"
+    :class="{
+      'animate-pulse hover:scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] z-20': isClickable
+    }"
     :style="{
       left: `${(coordinates.x / 1000) * 100}%`,
       top: `${(coordinates.y / 1000) * 100}%`
@@ -36,9 +39,13 @@
        </div>
 
        <!-- DEFAULT -->
-       <div v-else class="w-full h-full rounded-full border-2 shadow-[inset_0_-2px_4px_rgba(0,0,0,0.4)]" 
-            :style="{ backgroundColor: token.color, borderColor: 'white' }">
-          <div class="absolute top-[15%] left-[15%] w-1/3 h-1/3 rounded-full bg-white/40 blur-[1px]"></div>
+       <div v-else class="w-full h-full rounded-full border-[2px] shadow-[4px_6px_8px_rgba(0,0,0,0.5),inset_0_-4px_6px_rgba(0,0,0,0.3)] relative" 
+            :style="{ backgroundColor: token.color, borderColor: token.color }">
+          <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.7),_transparent)]"></div>
+          <div class="absolute inset-[25%] rounded-full border border-black/10 shadow-[0_3px_5px_rgba(0,0,0,0.4)]"
+               :style="{ backgroundColor: token.color }">
+               <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_30%,_rgba(255,255,255,0.9),_transparent)]"></div>
+          </div>
        </div>
 
     </div>
@@ -46,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, nextTick } from 'vue'
+import { watch, ref, computed, nextTick } from 'vue'
 import anime from 'animejs'
 import { Car } from 'lucide-vue-next'
 import { useParchisStore } from '~/stores/games/parchisStore'
@@ -63,16 +70,41 @@ const tokenContainer = ref<HTMLElement | null>(null)
 const parchisStore = useParchisStore()
 const playerStore = usePlayerStore()
 const { socket } = useSocket()
+const toast = useToast()
+
+const isClickable = computed(() => {
+  return parchisStore.isMyTurn && playerStore.userId === props.token.ownerId
+})
 
 const onTokenClick = () => {
-  if (parchisStore.isMyTurn && playerStore.userId === props.token.ownerId) {
-    if (parchisStore.availableMoves && parchisStore.availableMoves.length > 0) {
-      socket.value?.emit('parchis:move_token', { 
-        tokenId: props.token.id, 
-        diceValue: parchisStore.availableMoves[0] 
-      })
-    }
+  if (!parchisStore.isMyTurn) {
+    toast.add({ title: 'No es tu turno', color: 'red' })
+    return
   }
+
+  if (playerStore.userId !== props.token.ownerId) {
+    return // Not my token
+  }
+
+  if (!parchisStore.availableMoves || parchisStore.availableMoves.length === 0) {
+    toast.add({ title: 'Tira los dados primero', color: 'orange' })
+    return
+  }
+
+  if (props.token.state === 'HOME' && !parchisStore.availableMoves.includes(5)) {
+    toast.add({ title: 'Necesitas sacar un 5 para salir de la cárcel', color: 'amber' })
+    return
+  }
+
+  const selectedIdx = parchisStore.selectedDiceIndex
+  const diceValue = (selectedIdx !== null && selectedIdx >= 0 && selectedIdx < parchisStore.availableMoves.length)
+    ? parchisStore.availableMoves[selectedIdx]
+    : parchisStore.availableMoves[0]
+
+  socket.value?.emit('parchis:move_token', { 
+    tokenId: props.token.id, 
+    diceValue 
+  })
 }
 
 watch(() => props.coordinates, (newVal, oldVal) => {
