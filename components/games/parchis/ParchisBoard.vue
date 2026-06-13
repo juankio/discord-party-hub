@@ -257,7 +257,7 @@ const allTokens = computed(() => {
           ];
           tokenCoords = positions[token.id % 4] || positions[0]!;
         }
-      } else if (token.state === 'TRACK') {
+      } else if (token.state === 'TRACK' || token.state === 'BOARD') {
         const trackCell = coords.track[token.position];
         if (trackCell) tokenCoords = { x: trackCell.x, y: trackCell.y };
       } else if (token.state === 'META') {

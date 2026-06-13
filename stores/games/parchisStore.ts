@@ -3,7 +3,7 @@ import { usePlayerStore } from '~/stores/playerStore';
 
 export interface ParchisTokenState {
   id: number;
-  state: 'HOME' | 'TRACK' | 'META' | 'FINISHED';
+  state: 'HOME' | 'TRACK' | 'BOARD' | 'META' | 'FINISHED';
   position: number; // For HOME, 0-3. For TRACK, 0-67. For META, 0-7.
 }
 
