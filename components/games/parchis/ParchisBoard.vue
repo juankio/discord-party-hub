@@ -98,12 +98,23 @@
       </div>
       <div class="h-8 w-[1px] bg-white/20"></div>
       
-      <ParchisDice :diceValues="diceValues" />
+      <div class="flex flex-col items-center gap-1">
+        <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : [1, 6]" />
+        <div v-if="parchisStore.availableMoves.length > 0 && parchisStore.isMyTurn" class="text-xs text-white bg-green-600/80 px-2 py-0.5 rounded animate-pulse shadow-md">
+          Mueve: {{ parchisStore.availableMoves.join(', ') }}
+        </div>
+      </div>
 
       <div class="h-8 w-[1px] bg-white/20"></div>
       <button 
         @click="rollDice"
-        class="px-6 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(217,119,6,0.5)] cursor-pointer"
+        :disabled="!parchisStore.isMyTurn || parchisStore.availableMoves.length > 0"
+        :class="[
+          'px-6 py-2 font-bold rounded-full transition-transform shadow-lg cursor-pointer',
+          parchisStore.isMyTurn && parchisStore.availableMoves.length === 0 
+            ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(217,119,6,0.5)]' 
+            : 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
+        ]"
       >
         Tirar Dados
       </button>
@@ -116,19 +127,16 @@ import { computed, ref } from 'vue'
 import { useParchisStore } from '~/stores/games/parchisStore'
 import ParchisToken from './ParchisToken.vue'
 import ParchisDice from './ParchisDice.vue'
+import { useSocket } from '~/composables/useSocket'
 
 const parchisStore = useParchisStore()
+const { socket } = useSocket()
 const safeZones = [5, 12, 17, 22, 29, 34, 39, 46, 51, 56, 63, 68]
 
-const diceValues = ref<number[]>([1, 6])
-
 const rollDice = () => {
-  // Simulate rolling for now
-  diceValues.value = [
-    Math.floor(Math.random() * 6) + 1,
-    Math.floor(Math.random() * 6) + 1
-  ]
-  // In real app: emit('parchis:roll_dice') via socket
+  if (parchisStore.isMyTurn && parchisStore.availableMoves.length === 0) {
+    socket.value?.emit('parchis:roll_dice')
+  }
 }
 
 const getColor = (color: string | number) => {
@@ -253,7 +261,7 @@ const boardCoordinates = computed<BoardCoordinates>(() => {
 });
 
 const allTokens = computed(() => {
-  const tokens: { player: any; token: any; data: { color: string; ownerId: string; position: number; state: string }; coords: { x: number; y: number } }[] = [];
+  const tokens: { player: any; token: any; data: { id: number; color: string; ownerId: string; position: number; state: string }; coords: { x: number; y: number } }[] = [];
   const coords = boardCoordinates.value;
   
   parchisStore.players.forEach(player => {
@@ -291,7 +299,7 @@ const allTokens = computed(() => {
       tokens.push({
         player,
         token,
-        data: { color: getColor(player.color), ownerId: player.userId, position: token.position, state: token.state },
+        data: { id: token.id, color: getColor(player.color), ownerId: player.userId, position: token.position, state: token.state },
         coords: tokenCoords
       });
     });

@@ -1,11 +1,12 @@
 <template>
   <div 
     ref="tokenContainer"
-    class="absolute z-10 w-[4%] h-[4%] -ml-[2%] -mt-[2%] flex items-center justify-center parchis-token transition-all duration-300 pointer-events-none"
+    class="absolute z-10 w-[4%] h-[4%] -ml-[2%] -mt-[2%] flex items-center justify-center parchis-token transition-all duration-300 pointer-events-auto cursor-pointer"
     :style="{
       left: `${(coordinates.x / 1000) * 100}%`,
       top: `${(coordinates.y / 1000) * 100}%`
     }"
+    @click="onTokenClick"
   >
     <div class="token-body relative w-full h-full drop-shadow-lg flex items-center justify-center transform-style-3d">
        
@@ -48,14 +49,31 @@
 import { watch, ref, nextTick } from 'vue'
 import anime from 'animejs'
 import { Car } from 'lucide-vue-next'
+import { useParchisStore } from '~/stores/games/parchisStore'
+import { usePlayerStore } from '~/stores/playerStore'
+import { useSocket } from '~/composables/useSocket'
 
 const props = defineProps<{
-  token: { color: string, ownerId: string, position: number, state: string },
+  token: { color: string, ownerId: string, position: number, state: string, id: number },
   figureId?: string,
   coordinates: { x: number, y: number }
 }>()
 
 const tokenContainer = ref<HTMLElement | null>(null)
+const parchisStore = useParchisStore()
+const playerStore = usePlayerStore()
+const { socket } = useSocket()
+
+const onTokenClick = () => {
+  if (parchisStore.isMyTurn && playerStore.userId === props.token.ownerId) {
+    if (parchisStore.availableMoves && parchisStore.availableMoves.length > 0) {
+      socket.value?.emit('parchis:move_token', { 
+        tokenId: props.token.id, 
+        diceValue: parchisStore.availableMoves[0] 
+      })
+    }
+  }
+}
 
 watch(() => props.coordinates, (newVal, oldVal) => {
   if (oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {

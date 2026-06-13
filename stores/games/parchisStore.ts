@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { usePlayerStore } from '~/stores/playerStore';
 
 export interface ParchisTokenState {
   id: number;
@@ -23,8 +24,15 @@ export const useParchisStore = defineStore('parchis', {
     players: [] as ParchisPlayer[],
     currentTurnIndex: 0,
     winner: null as string | null,
-    // Add more state as needed later
+    diceValue: [] as number[],
+    availableMoves: [] as number[],
   }),
+  getters: {
+    isMyTurn: (state) => {
+      const playerStore = usePlayerStore();
+      return state.players[state.currentTurnIndex]?.userId === playerStore.userId;
+    }
+  },
   actions: {
     updateState(data: any) {
       if (!data) return;
@@ -32,6 +40,8 @@ export const useParchisStore = defineStore('parchis', {
       this.players = data.players || [];
       this.currentTurnIndex = data.currentTurnIndex || 0;
       this.winner = data.winner || null;
+      this.diceValue = data.diceValue || [];
+      this.availableMoves = data.availableMoves || [];
     }
   }
 });
