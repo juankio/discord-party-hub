@@ -75,16 +75,36 @@
       </g>
     </svg>
 
-    <!-- Player HUD Placeholder -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-[#2a180c]/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl">
+    <!-- Render Tokens (HTML Overlay) -->
+    <ParchisToken 
+      v-for="(tokenObj, i) in allTokens" 
+      :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
+      :token="tokenObj.data"
+      :figureId="tokenObj.player.figureId"
+      :coordinates="tokenObj.coords"
+    />
+
+    <!-- Player HUD -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-[#2a180c]/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl z-20">
       <div class="flex items-center gap-2">
-        <div class="w-10 h-10 rounded-full bg-red-500 border-2 border-white/20 shadow-inner"></div>
-        <div class="w-10 h-10 rounded-full bg-blue-500 border-2 border-white/20 shadow-inner opacity-50 grayscale"></div>
-        <div class="w-10 h-10 rounded-full bg-yellow-500 border-2 border-white/20 shadow-inner opacity-50 grayscale"></div>
-        <div class="w-10 h-10 rounded-full bg-green-500 border-2 border-white/20 shadow-inner opacity-50 grayscale"></div>
+        <div 
+          v-for="(player, idx) in parchisStore.players" 
+          :key="player.userId"
+          :class="['w-10 h-10 rounded-full border-2 shadow-inner bg-cover bg-center transition-all duration-300', 
+            idx === parchisStore.currentTurnIndex ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.5)]' : 'border-white/20 opacity-50 grayscale'
+          ]"
+          :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatar ? `url(${player.avatar})` : 'none' }"
+        ></div>
       </div>
       <div class="h-8 w-[1px] bg-white/20"></div>
-      <button class="px-6 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(217,119,6,0.5)] cursor-pointer">
+      
+      <ParchisDice :diceValues="diceValues" />
+
+      <div class="h-8 w-[1px] bg-white/20"></div>
+      <button 
+        @click="rollDice"
+        class="px-6 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-full hover:scale-105 active:scale-95 transition-transform shadow-[0_0_15px_rgba(217,119,6,0.5)] cursor-pointer"
+      >
         Tirar Dados
       </button>
     </div>
@@ -92,9 +112,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useParchisStore } from '~/stores/games/parchisStore'
+import ParchisToken from './ParchisToken.vue'
+import ParchisDice from './ParchisDice.vue'
 
+const parchisStore = useParchisStore()
 const safeZones = [5, 12, 17, 22, 29, 34, 39, 46, 51, 56, 63, 68]
+
+const diceValues = ref<number[]>([1, 6])
+
+const rollDice = () => {
+  // Simulate rolling for now
+  diceValues.value = [
+    Math.floor(Math.random() * 6) + 1,
+    Math.floor(Math.random() * 6) + 1
+  ]
+  // In real app: emit('parchis:roll_dice') via socket
+}
 
 const getColor = (color: string | number) => {
   const map: Record<string, string> = { red: '#ef4444', blue: '#3b82f6', yellow: '#eab308', green: '#22c55e' }
@@ -215,6 +250,54 @@ const boardCoordinates = computed<BoardCoordinates>(() => {
       green: { x: 220, y: 780, size: 140 },
     }
   };
+});
+
+const allTokens = computed(() => {
+  const tokens: { player: any; token: any; data: { color: string; ownerId: string; position: number; state: string }; coords: { x: number; y: number } }[] = [];
+  const coords = boardCoordinates.value;
+  
+  parchisStore.players.forEach(player => {
+    if (!player.tokens) return;
+    
+    player.tokens.forEach(token => {
+      let tokenCoords = { x: 500, y: 500 }; // fallback center
+      const color = player.color.toLowerCase() as 'red' | 'blue' | 'yellow' | 'green';
+      
+      if (token.state === 'HOME') {
+        const nest = coords.nests[color];
+        if (nest) {
+          // Arrange 4 tokens in a small 2x2 grid inside the nest
+          const offset = 40;
+          const positions = [
+            { x: nest.x - offset, y: nest.y - offset },
+            { x: nest.x + offset, y: nest.y - offset },
+            { x: nest.x - offset, y: nest.y + offset },
+            { x: nest.x + offset, y: nest.y + offset },
+          ];
+          tokenCoords = positions[token.id % 4] || positions[0]!;
+        }
+      } else if (token.state === 'TRACK') {
+        const trackCell = coords.track[token.position];
+        if (trackCell) {
+          tokenCoords = { x: trackCell.x, y: trackCell.y };
+        }
+      } else if (token.state === 'META') {
+        const corridorCell = coords.corridors[color][token.position];
+        if (corridorCell) {
+          tokenCoords = { x: corridorCell.x, y: corridorCell.y };
+        }
+      }
+      
+      tokens.push({
+        player,
+        token,
+        data: { color: getColor(player.color), ownerId: player.userId, position: token.position, state: token.state },
+        coords: tokenCoords
+      });
+    });
+  });
+  
+  return tokens;
 });
 
 defineExpose({

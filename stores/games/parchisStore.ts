@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia';
 
+export interface ParchisTokenState {
+  id: number;
+  state: 'HOME' | 'TRACK' | 'META' | 'FINISHED';
+  position: number; // For HOME, 0-3. For TRACK, 0-67. For META, 0-7.
+}
+
 export interface ParchisPlayer {
   userId: string;
   username: string;
@@ -8,6 +14,7 @@ export interface ParchisPlayer {
   figureId?: string;
   hasChosenFigure: boolean;
   score?: number;
+  tokens: ParchisTokenState[];
 }
 
 export const useParchisStore = defineStore('parchis', {
