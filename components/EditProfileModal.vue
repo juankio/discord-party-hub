@@ -78,52 +78,6 @@
           </div>
         </div>
 
-        <!-- Fila 3: Estilo de Ficha (Parchís) -->
-        <div class="flex flex-col gap-2 mt-2">
-          <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Estilo de Ficha</label>
-          <div class="flex gap-5 justify-center w-full">
-            <!-- Gem -->
-            <button 
-              class="w-12 h-12 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-gradient-to-tr from-cyan-400 to-blue-600"
-              :class="[
-                localTokenType === 'gem'
-                  ? 'ring-2 ring-white ring-offset-4 ring-offset-[#111] scale-110'
-                  : 'opacity-50 hover:opacity-100'
-              ]"
-              @click="localTokenType = 'gem'"
-            >
-              <div class="absolute inset-1 rounded-full border-t border-white/50"></div>
-              <div class="w-2.5 h-2.5 bg-white/50 rounded-full absolute top-2 right-2 blur-[1px]"></div>
-            </button>
-
-            <!-- Wood -->
-            <button 
-              class="w-12 h-12 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-[#8b5a2b] border-[3px] border-[#5c3a21]"
-              :class="[
-                localTokenType === 'wood'
-                  ? 'ring-2 ring-white ring-offset-4 ring-offset-[#111] scale-110'
-                  : 'opacity-50 hover:opacity-100'
-              ]"
-              @click="localTokenType = 'wood'"
-            >
-              <div class="w-full h-full rounded-full border border-black/30 absolute inset-0"></div>
-            </button>
-
-            <!-- Metal -->
-            <button 
-              class="w-12 h-12 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-gray-400 border-[3px] border-gray-500"
-              :class="[
-                localTokenType === 'metal'
-                  ? 'ring-2 ring-white ring-offset-4 ring-offset-[#111] scale-110'
-                  : 'opacity-50 hover:opacity-100'
-              ]"
-              @click="localTokenType = 'metal'"
-            >
-              <div class="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent rounded-full"></div>
-            </button>
-          </div>
-        </div>
-
         <!-- Acción -->
         <button 
           class="mt-4 w-full h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden group"
@@ -158,7 +112,6 @@ const { updateProfile } = useSocket()
 const localNickname = ref(playerStore.nickname)
 const localAvatarId = ref(playerStore.avatarId)
 const localColor = ref(playerStore.color)
-const localTokenType = ref(playerStore.tokenType || 'gem')
 
 const colors = [
   { val: '#ff0000' },
@@ -177,7 +130,6 @@ watch(() => props.isOpen, (newVal) => {
     localNickname.value = playerStore.nickname
     localAvatarId.value = playerStore.avatarId
     localColor.value = playerStore.color
-    localTokenType.value = playerStore.tokenType || 'gem'
   }
 })
 
@@ -191,12 +143,11 @@ const save = () => {
   const data = {
     nickname: localNickname.value,
     avatarId: localAvatarId.value,
-    color: localColor.value,
-    tokenType: localTokenType.value
+    color: localColor.value
   }
 
   // Update Pinia (local optimistic)
-  playerStore.setPlayerSetup(data.nickname, data.avatarId, data.color, data.tokenType)
+  playerStore.setPlayerSetup(data.nickname, data.avatarId, data.color)
   
   // Emit to Server
   updateProfile(data)

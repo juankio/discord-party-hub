@@ -42,52 +42,6 @@
       />
     </div>
 
-    <!-- Fila 3: Estilo de Ficha (Parchís) -->
-    <div class="flex flex-col items-center gap-2 w-full mt-1">
-      <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">Estilo de Ficha</label>
-      <div class="flex gap-4 justify-center w-full">
-        <!-- Gem -->
-        <button 
-          class="w-10 h-10 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-gradient-to-tr from-cyan-400 to-blue-600"
-          :class="[
-            tokenType === 'gem'
-              ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
-              : 'opacity-50 hover:opacity-100'
-          ]"
-          @click="$emit('update:tokenType', 'gem')"
-        >
-          <div class="absolute inset-1 rounded-full border-t border-white/50"></div>
-          <div class="w-2 h-2 bg-white/50 rounded-full absolute top-2 right-2 blur-[1px]"></div>
-        </button>
-
-        <!-- Wood -->
-        <button 
-          class="w-10 h-10 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-[#8b5a2b] border-[3px] border-[#5c3a21]"
-          :class="[
-            tokenType === 'wood'
-              ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
-              : 'opacity-50 hover:opacity-100'
-          ]"
-          @click="$emit('update:tokenType', 'wood')"
-        >
-          <div class="w-full h-full rounded-full border border-black/30 absolute inset-0"></div>
-        </button>
-
-        <!-- Metal -->
-        <button 
-          class="w-10 h-10 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner relative flex items-center justify-center bg-gray-400 border-[3px] border-gray-500"
-          :class="[
-            tokenType === 'metal'
-              ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
-              : 'opacity-50 hover:opacity-100'
-          ]"
-          @click="$emit('update:tokenType', 'metal')"
-        >
-          <div class="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent rounded-full"></div>
-        </button>
-      </div>
-    </div>
-
     <!-- Input de Usuario -->
     <div class="w-full flex flex-col gap-1.5">
       <label class="text-[10px] font-bold tracking-[0.2em] uppercase ml-3" style="color: var(--theme-color);">Nombre de Usuario</label>
@@ -107,10 +61,9 @@
 defineProps({
   avatarId: { type: Number, required: true },
   color: { type: String, required: true },
-  tokenType: { type: String, default: 'gem' },
   nickname: { type: String, required: true }
 })
-defineEmits(['update:avatarId', 'update:color', 'update:tokenType', 'update:nickname'])
+defineEmits(['update:avatarId', 'update:color', 'update:nickname'])
 
 const colors = [
   { val: '#ff0000' }, // Blanco
