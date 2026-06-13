@@ -10,6 +10,7 @@
         <ProfileSetup 
           v-model:avatar-id="tempAvatarId"
           v-model:color="tempColor"
+          v-model:token-type="tempTokenType"
           v-model:nickname="tempNickname"
         />
 
@@ -62,6 +63,7 @@ const hasSetup = ref(false)
 const tempNickname = ref('')
 const tempAvatarId = ref(1)
 const tempColor = ref('#f97316')
+const tempTokenType = ref('gem')
 
 onMounted(() => {
   document.body.style.backgroundColor = '#0A0A0A'
@@ -86,7 +88,7 @@ onUnmounted(() => {
 })
 
 const saveAndJoin = () => {
-  playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value)
+  playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value, tempTokenType.value)
   showSetupModal.value = false
   hasSetup.value = true
   setTimeout(() => { initRoom() }, 50)

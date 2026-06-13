@@ -61,13 +61,14 @@
               <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
               <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
               <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
+              <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" />
             </div>
             
             <!-- Botón Arcade 2D Macizo -->
             <button 
               v-if="isHost"
               class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
-              :disabled="players.length < 2 || !['uno', 'stop'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
+              :disabled="players.length < 2 || !['uno', 'stop', 'parchis'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
               style="
                 background-color: var(--theme-color); 
                 color: var(--theme-text-color, white);
@@ -93,7 +94,7 @@
             </button>
             
             <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
-            <p v-else-if="!['uno', 'stop'].includes(selectedGame)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
+            <p v-else-if="!['uno', 'stop', 'parchis'].includes(selectedGame)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
             <p v-else-if="selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3)" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Faltan categorías para Stop</p>
           </div>
         </Transition>
@@ -150,7 +151,7 @@ const selectedGame = computed({
 })
 const games = [
   { id: 'uno', name: 'UNO', color: 'bg-[#151515]', labelColor: 'text-red-500', disabled: false },
-  { id: 'parchis', name: 'Parchís', color: 'bg-[#151515]', labelColor: 'text-yellow-500', disabled: true },
+  { id: 'parchis', name: 'Parchís', color: 'bg-[#151515]', labelColor: 'text-yellow-500', disabled: false },
   { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', labelColor: 'text-gray-400', disabled: true },
   { id: 'stop', name: 'Stop', color: 'bg-[#151515]', labelColor: 'text-blue-500', disabled: false },
   { id: 'pinturillo', name: 'Pinturillo', color: 'bg-[#151515]', labelColor: 'text-purple-500', disabled: true },

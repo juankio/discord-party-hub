@@ -7,6 +7,7 @@ export const usePlayerStore = defineStore('player', {
     nickname: '',
     avatarId: 1, // 1 a 16
     color: '#f97316', // Color por defecto (naranja)
+    tokenType: 'gem', // Opciones: 'gem', 'wood', 'metal'
     roomId: '',
     hostUserId: '', // El ID del creador de la sala
     playersInRoom: [] as any[],
@@ -23,12 +24,13 @@ export const usePlayerStore = defineStore('player', {
     }
   }),
   actions: {
-    setPlayerSetup(nickname: string, avatarId: number, color: string = '#f97316') {
+    setPlayerSetup(nickname: string, avatarId: number, color: string = '#f97316', tokenType: string = 'gem') {
       this.nickname = nickname
       this.avatarId = avatarId
       this.color = color
+      this.tokenType = tokenType
       if (!this.userId) this.userId = generateId()
-      saveUserToStorage({ userId: this.userId, nickname, avatarId, color })
+      saveUserToStorage({ userId: this.userId, nickname, avatarId, color, tokenType })
     },
 
     loadPlayerSetup() {
@@ -40,6 +42,7 @@ export const usePlayerStore = defineStore('player', {
         this.nickname = parsed.nickname || ''
         this.avatarId = parsed.avatarId || 1
         this.color = parsed.color || '#f97316'
+        this.tokenType = parsed.tokenType || 'gem'
         this.isLoggedIn = parsed.isLoggedIn || false
         this.token = parsed.token || ''
         this.totalWins = parsed.totalWins || 0
@@ -79,6 +82,7 @@ export const usePlayerStore = defineStore('player', {
       this.nickname = user.username
       this.avatarId = user.avatarId || 1
       this.color = user.color || '#f97316'
+      this.tokenType = user.tokenType || 'gem'
       this.totalWins = user.stats?.totalWins || 0
       this.gamesPlayed = user.gamesPlayed || 0
       this.lastPlayed = user.lastPlayed || null
@@ -86,7 +90,7 @@ export const usePlayerStore = defineStore('player', {
       if (!this.userId) this.userId = generateId()
       
       saveUserToStorage({ 
-        userId: this.userId, nickname: this.nickname, avatarId: this.avatarId, color: this.color,
+        userId: this.userId, nickname: this.nickname, avatarId: this.avatarId, color: this.color, tokenType: this.tokenType,
         isLoggedIn: this.isLoggedIn, token: this.token, totalWins: this.totalWins, picture: this.picture
       })
     },
@@ -124,6 +128,7 @@ export const usePlayerStore = defineStore('player', {
         nickname: this.nickname, 
         avatarId: this.avatarId, 
         color: this.color,
+        tokenType: this.tokenType,
         isLoggedIn: false,
         token: '',
         totalWins: 0
