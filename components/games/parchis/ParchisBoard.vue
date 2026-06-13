@@ -1,80 +1,144 @@
 <template>
   <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] p-4 md:p-8 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10">
-    <!-- SVG Board -->
-    <svg viewBox="0 0 1000 1000" class="w-full h-full drop-shadow-2xl">
-      <defs>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <pattern id="wood" patternUnits="userSpaceOnUse" width="100" height="100">
-          <path d="M0 0h100v100H0z" fill="#3a2212"/>
-          <path d="M0 50 Q 25 25 50 50 T 100 50" fill="none" stroke="#2a180c" stroke-width="2" opacity="0.3"/>
-          <path d="M0 80 Q 30 60 60 80 T 100 80" fill="none" stroke="#2a180c" stroke-width="1.5" opacity="0.2"/>
-        </pattern>
-      </defs>
-
-      <!-- Base Wood Board -->
-      <rect x="0" y="0" width="1000" height="1000" fill="#2a180c" rx="50" />
-      <rect x="20" y="20" width="960" height="960" fill="url(#wood)" rx="40" stroke="#1f1107" stroke-width="8" />
-      
-      <!-- Central Meta -->
-      <polygon points="500,500 420,420 580,420" fill="#ef4444" opacity="0.9" /> <!-- Red -->
-      <polygon points="500,500 580,420 580,580" fill="#3b82f6" opacity="0.9" /> <!-- Blue -->
-      <polygon points="500,500 580,580 420,580" fill="#eab308" opacity="0.9" /> <!-- Yellow -->
-      <polygon points="500,500 420,580 420,420" fill="#22c55e" opacity="0.9" /> <!-- Green -->
-      
-      <!-- Nests / Homes -->
-      <g id="nests">
-        <!-- Top Left: Red -->
-        <circle cx="220" cy="220" r="140" fill="#1f1107" />
-        <circle cx="220" cy="220" r="120" fill="#ef4444" opacity="0.9" stroke="#fff" stroke-width="2" stroke-opacity="0.2" />
-        
-        <!-- Top Right: Blue -->
-        <circle cx="780" cy="220" r="140" fill="#1f1107" />
-        <circle cx="780" cy="220" r="120" fill="#3b82f6" opacity="0.9" stroke="#fff" stroke-width="2" stroke-opacity="0.2" />
-        
-        <!-- Bottom Right: Yellow -->
-        <circle cx="780" cy="780" r="140" fill="#1f1107" />
-        <circle cx="780" cy="780" r="120" fill="#eab308" opacity="0.9" stroke="#fff" stroke-width="2" stroke-opacity="0.2" />
-        
-        <!-- Bottom Left: Green -->
-        <circle cx="220" cy="780" r="140" fill="#1f1107" />
-        <circle cx="220" cy="780" r="120" fill="#22c55e" opacity="0.9" stroke="#fff" stroke-width="2" stroke-opacity="0.2" />
-      </g>
-
-      <!-- Render the 68 path squares -->
-      <g id="track">
-        <rect v-for="(cell, index) in boardCoordinates.track" :key="'track-'+index"
-              :x="cell.x - cell.size/2" :y="cell.y - cell.size/2"
-              :width="cell.size" :height="cell.size"
-              fill="#d4a373" stroke="#2a180c" stroke-width="3" rx="4" />
-        
-        <!-- Highlight Safe Zones -->
-        <g v-for="index in safeZones" :key="'safe-'+index">
-          <template v-if="boardCoordinates.track[index - 1]">
-            <rect :x="boardCoordinates.track[index - 1]!.x - boardCoordinates.track[index - 1]!.size/2" 
-                  :y="boardCoordinates.track[index - 1]!.y - boardCoordinates.track[index - 1]!.size/2"
-                  :width="boardCoordinates.track[index - 1]!.size" :height="boardCoordinates.track[index - 1]!.size"
-                  fill="#fcd34d" opacity="0.3" rx="4" />
-            <circle :cx="boardCoordinates.track[index - 1]!.x" 
-                    :cy="boardCoordinates.track[index - 1]!.y" 
-                    r="8" fill="#f59e0b" filter="url(#glow)" />
-          </template>
-        </g>
-      </g>
-      
-      <!-- Corridors (Meta) -->
-      <g id="corridors">
-        <g v-for="(path, color) in boardCoordinates.corridors" :key="'corr-'+color">
-          <rect v-for="(cell, index) in path" :key="'corr-'+color+'-'+index"
-                :x="cell.x - cell.size/2" :y="cell.y - cell.size/2"
-                :width="cell.size" :height="cell.size"
-                :fill="getColor(color)" stroke="#1f1107" stroke-width="2" rx="4" opacity="0.9" />
-        </g>
-      </g>
-    </svg>
-
+    <svg viewBox="0 0 1140 1140" class="w-full h-full drop-shadow-2xl">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.5"/>
+    </filter>
+    <filter id="inset-shadow">
+      <feOffset dx="0" dy="2"/>
+      <feGaussianBlur stdDeviation="2" result="offset-blur"/>
+      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+      <feFlood flood-color="black" flood-opacity="0.5" result="color"/>
+      <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+      <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <!-- Base Madera -->
+  <rect width="1140" height="1140" fill="#e6c280" rx="40" />
+<rect x="0" y="0" width="480" height="480" fill="#4ade80" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
+<circle cx="240" cy="240" r="150" fill="#fff" opacity="0.2" />
+<rect x="660" y="0" width="480" height="480" fill="#3b82f6" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
+<circle cx="900" cy="240" r="150" fill="#fff" opacity="0.2" />
+<rect x="0" y="660" width="480" height="480" fill="#eab308" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
+<circle cx="240" cy="900" r="150" fill="#fff" opacity="0.2" />
+<rect x="660" y="660" width="480" height="480" fill="#ef4444" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
+<circle cx="900" cy="900" r="150" fill="#fff" opacity="0.2" />
+<polygon points="480,480 660,480 570,570" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<polygon points="660,480 660,660 570,570" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<polygon points="660,660 480,660 570,570" fill="#eab308" stroke="#000" stroke-width="2"/>
+<polygon points="480,660 480,480 570,570" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="540" y="60" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="120" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="180" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="240" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="300" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="360" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="540" y="420" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
+<rect x="1020" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="960" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="900" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="840" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="780" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="720" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="660" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
+<rect x="540" y="1020" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="960" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="900" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="840" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="780" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="720" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="540" y="660" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
+<rect x="60" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="120" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="180" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="240" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="300" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="360" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="420" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
+<rect x="0" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="60" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="120" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="180" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="240" y="480" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="270" cy="510" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="300" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="360" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="420" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="420" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="360" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="300" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="240" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="510" cy="270" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="480" y="180" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="120" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="60" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="0" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="540" y="0" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="570" cy="30" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="600" y="0" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="60" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="120" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="180" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="240" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="630" cy="270" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="600" y="300" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="360" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="420" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="660" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="720" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="780" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="840" y="480" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="870" cy="510" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="900" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="960" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="1020" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="1080" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="1080" y="540" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="1110" cy="570" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="1080" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="1020" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="960" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="900" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="840" y="600" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="870" cy="630" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="780" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="720" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="660" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="660" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="720" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="780" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="840" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="630" cy="870" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="600" y="900" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="960" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="1020" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="600" y="1080" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="540" y="1080" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="570" cy="1110" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="480" y="1080" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="1020" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="960" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="900" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="840" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="510" cy="870" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="480" y="780" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="720" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="480" y="660" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="420" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="360" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="300" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="240" y="600" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="270" cy="630" r="15" fill="#f59e0b" opacity="0.6"/>
+<rect x="180" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="120" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="60" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="0" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
+<rect x="0" y="540" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
+<circle cx="30" cy="570" r="15" fill="#f59e0b" opacity="0.6"/>
+<text x="270" y="522" font-size="14" font-weight="bold" fill="#000" text-anchor="middle" transform="rotate(-90 270,522)">SALIDA</text>
+</svg>
+    
     <!-- Render Tokens (HTML Overlay) -->
     <ParchisToken 
       v-for="(tokenObj, i) in allTokens" 
@@ -125,13 +189,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useParchisStore } from '~/stores/games/parchisStore'
+import { usePlayerStore } from '~/stores/playerStore'
+import { useSocket } from '~/composables/useSocket'
 import ParchisToken from './ParchisToken.vue'
 import ParchisDice from './ParchisDice.vue'
-import { useSocket } from '~/composables/useSocket'
 
 const parchisStore = useParchisStore()
+const playerStore = usePlayerStore()
 const { socket } = useSocket()
-const safeZones = [5, 12, 17, 22, 29, 34, 39, 46, 51, 56, 63, 68]
 
 const rollDice = () => {
   if (parchisStore.isMyTurn && parchisStore.availableMoves.length === 0) {
@@ -144,138 +209,46 @@ const getColor = (color: string | number) => {
   return map[String(color)] || '#ffffff'
 }
 
-export interface BoardCoordinate {
-  x: number;
-  y: number;
-  size: number;
-}
+export interface BoardCoordinate { x: number; y: number; size: number; }
 
-export interface BoardCoordinates {
-  track: BoardCoordinate[];
-  corridors: {
-    red: BoardCoordinate[];
-    blue: BoardCoordinate[];
-    yellow: BoardCoordinate[];
-    green: BoardCoordinate[];
-  };
-  nests: {
-    red: BoardCoordinate;
-    blue: BoardCoordinate;
-    yellow: BoardCoordinate;
-    green: BoardCoordinate;
-  };
-}
-
-const boardCoordinates = computed<BoardCoordinates>(() => {
-  const track: BoardCoordinate[] = [];
-  const size = 36;
-  const step = 42;
+const boardCoordinates = computed(() => {
+  const size = 60;
+  // Use the exact same track from generation
+  const track = [{"x":0,"y":8},{"x":1,"y":8},{"x":2,"y":8},{"x":3,"y":8},{"x":4,"y":8},{"x":5,"y":8},{"x":6,"y":8},{"x":7,"y":8},{"x":8,"y":7},{"x":8,"y":6},{"x":8,"y":5},{"x":8,"y":4},{"x":8,"y":3},{"x":8,"y":2},{"x":8,"y":1},{"x":8,"y":0},{"x":9,"y":0},{"x":10,"y":0},{"x":10,"y":1},{"x":10,"y":2},{"x":10,"y":3},{"x":10,"y":4},{"x":10,"y":5},{"x":10,"y":6},{"x":10,"y":7},{"x":11,"y":8},{"x":12,"y":8},{"x":13,"y":8},{"x":14,"y":8},{"x":15,"y":8},{"x":16,"y":8},{"x":17,"y":8},{"x":18,"y":8},{"x":18,"y":9},{"x":18,"y":10},{"x":17,"y":10},{"x":16,"y":10},{"x":15,"y":10},{"x":14,"y":10},{"x":13,"y":10},{"x":12,"y":10},{"x":11,"y":10},{"x":10,"y":11},{"x":10,"y":12},{"x":10,"y":13},{"x":10,"y":14},{"x":10,"y":15},{"x":10,"y":16},{"x":10,"y":17},{"x":10,"y":18},{"x":9,"y":18},{"x":8,"y":18},{"x":8,"y":17},{"x":8,"y":16},{"x":8,"y":15},{"x":8,"y":14},{"x":8,"y":13},{"x":8,"y":12},{"x":8,"y":11},{"x":7,"y":10},{"x":6,"y":10},{"x":5,"y":10},{"x":4,"y":10},{"x":3,"y":10},{"x":2,"y":10},{"x":1,"y":10},{"x":0,"y":10},{"x":0,"y":9}].map(t => ({ x: t.x * size + size/2, y: t.y * size + size/2, size }));
   
-  // Center is at 500,500. Inner square is 160x160 (from 420 to 580)
-  // Left Arm (Green to Red): 420 to 84 (X), 420 to 580 (Y)
-  // Generating a highly precise cross path for 68 tiles:
-  
-  const addSegment = (startX: number, startY: number, dx: number, dy: number, count: number) => {
-    for (let i = 0; i < count; i++) {
-      track.push({
-        x: startX + dx * i * step,
-        y: startY + dy * i * step,
-        size
-      });
-    }
-  }
-
-  // 1 to 8: Bottom Arm (left column, moving UP)
-  addSegment(440, 916, 0, -1, 8);
-  // 9 to 16: Left Arm (bottom row, moving LEFT)
-  addSegment(400, 560, -1, 0, 8);
-  // 17: Left Arm (leftmost cap, bottom)
-  addSegment(84, 560, 0, 0, 1);
-  // 18: Left Arm (leftmost cap, top)
-  addSegment(84, 440, 0, 0, 1);
-  // 19 to 26: Left Arm (top row, moving RIGHT)
-  addSegment(126, 440, 1, 0, 8);
-  // 27 to 34: Top Arm (left column, moving UP)
-  addSegment(440, 400, 0, -1, 8);
-  // 35: Top Arm (topmost cap, left)
-  addSegment(440, 84, 0, 0, 1);
-  // 36: Top Arm (topmost cap, right)
-  addSegment(560, 84, 0, 0, 1);
-  // 37 to 44: Top Arm (right column, moving DOWN)
-  addSegment(560, 126, 0, 1, 8);
-  // 45 to 52: Right Arm (top row, moving RIGHT)
-  addSegment(600, 440, 1, 0, 8);
-  // 53: Right Arm (rightmost cap, top)
-  addSegment(916, 440, 0, 0, 1);
-  // 54: Right Arm (rightmost cap, bottom)
-  addSegment(916, 560, 0, 0, 1);
-  // 55 to 62: Right Arm (bottom row, moving LEFT)
-  addSegment(874, 560, -1, 0, 8);
-  // 63 to 68: Bottom Arm (right column, moving DOWN)
-  addSegment(560, 600, 0, 1, 6);
-  // Complete the bottom loop (69 and 70 would be caps)
-  // Wait, standard is 68. Let's fix count:
-  // 8 + 8 + 1 + 1 + 8 + 8 + 1 + 1 + 8 + 8 + 1 + 1 + 8 + 8? = 4 * (8+8+1) = 68. Wait. 8(up) + 8(left) + 2(cap) = 18. 18*4 = 72?
-  // Real parchis: each arm has 3 columns. Middle is corridor (7 or 8 tiles). 
-  // Sides are 8 tiles. 8 * 8 = 64. Plus 4 corners of the cross = 68 tiles!
-  // Ah! So cap is only 1 tile long implicitly if we count the corner as part of the next row.
-  
-  // Let's just create a visually perfect 68 tiles via an ellipse to avoid math errors ruining the UI if we don't have exact specs.
-  track.length = 0; // reset
-  const rX = 380;
-  const rY = 380;
-  for (let i = 0; i < 68; i++) {
-    const angle = (i / 68) * Math.PI * 2 + Math.PI / 2;
-    track.push({
-      x: 500 + Math.cos(angle) * rX,
-      y: 500 + Math.sin(angle) * rY,
-      size: 32
-    });
-  }
-
-  // Define Corridors
   const corridors = {
-    red: [] as BoardCoordinate[],
-    blue: [] as BoardCoordinate[],
-    yellow: [] as BoardCoordinate[],
-    green: [] as BoardCoordinate[]
+    green: Array.from({length: 7}).map((_, i) => ({ x: (i+1)*size + size/2, y: 9*size + size/2, size })),
+    blue: Array.from({length: 7}).map((_, i) => ({ x: 9*size + size/2, y: (i+1)*size + size/2, size })),
+    red: Array.from({length: 7}).map((_, i) => ({ x: (17-i)*size + size/2, y: 9*size + size/2, size })),
+    yellow: Array.from({length: 7}).map((_, i) => ({ x: 9*size + size/2, y: (17-i)*size + size/2, size }))
   };
-
-  for (let i = 0; i < 8; i++) {
-    corridors.red.push({ x: 500, y: 126 + i * step, size }); // Top
-    corridors.blue.push({ x: 874 - i * step, y: 500, size }); // Right
-    corridors.yellow.push({ x: 500, y: 874 - i * step, size }); // Bottom
-    corridors.green.push({ x: 126 + i * step, y: 500, size }); // Left
-  }
-
+  
   return {
-    track,
-    corridors,
+    track, corridors,
     nests: {
-      red: { x: 220, y: 220, size: 140 },
-      blue: { x: 780, y: 220, size: 140 },
-      yellow: { x: 780, y: 780, size: 140 },
-      green: { x: 220, y: 780, size: 140 },
+      green: { x: 4*size, y: 4*size, size: 8*size },
+      blue: { x: 15*size, y: 4*size, size: 8*size },
+      yellow: { x: 4*size, y: 15*size, size: 8*size },
+      red: { x: 15*size, y: 15*size, size: 8*size }
     }
   };
 });
 
 const allTokens = computed(() => {
-  const tokens: { player: any; token: any; data: { id: number; color: string; ownerId: string; position: number; state: string }; coords: { x: number; y: number } }[] = [];
+  const tokens: any[] = [];
   const coords = boardCoordinates.value;
   
   parchisStore.players.forEach(player => {
     if (!player.tokens) return;
     
     player.tokens.forEach(token => {
-      let tokenCoords = { x: 500, y: 500 }; // fallback center
+      let tokenCoords = { x: 570, y: 570 }; 
       const color = player.color.toLowerCase() as 'red' | 'blue' | 'yellow' | 'green';
       
       if (token.state === 'HOME') {
         const nest = coords.nests[color];
         if (nest) {
-          // Arrange 4 tokens in a small 2x2 grid inside the nest
-          const offset = 40;
+          const offset = 60;
           const positions = [
             { x: nest.x - offset, y: nest.y - offset },
             { x: nest.x + offset, y: nest.y - offset },
@@ -286,29 +259,19 @@ const allTokens = computed(() => {
         }
       } else if (token.state === 'TRACK') {
         const trackCell = coords.track[token.position];
-        if (trackCell) {
-          tokenCoords = { x: trackCell.x, y: trackCell.y };
-        }
+        if (trackCell) tokenCoords = { x: trackCell.x, y: trackCell.y };
       } else if (token.state === 'META') {
         const corridorCell = coords.corridors[color][token.position];
-        if (corridorCell) {
-          tokenCoords = { x: corridorCell.x, y: corridorCell.y };
-        }
+        if (corridorCell) tokenCoords = { x: corridorCell.x, y: corridorCell.y };
       }
       
       tokens.push({
-        player,
-        token,
+        player, token,
         data: { id: token.id, color: getColor(player.color), ownerId: player.userId, position: token.position, state: token.state },
         coords: tokenCoords
       });
     });
   });
-  
   return tokens;
-});
-
-defineExpose({
-  boardCoordinates
 });
 </script>
