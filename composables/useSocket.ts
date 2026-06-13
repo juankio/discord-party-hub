@@ -7,6 +7,7 @@ import { usePlayerStore } from '~/stores/playerStore'
 
 import { useUnoStore } from '~/stores/games/unoStore'
 import { useStopStore } from '~/stores/games/stopStore'
+import { useParchisStore } from '~/stores/games/parchisStore'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
@@ -43,11 +44,13 @@ export const useSocket = () => {
     })
 
     socket.value.on('game_state_update', (data) => {
-      // Enrutar dependiendo de la estructura del payload
-      if (data && (data.myHand || data.rivals)) {
+      const selectedGame = playerStore.selectedGame;
+      if (selectedGame === 'uno') {
         useUnoStore().updateState(data)
-      } else if (data && data.categories !== undefined) {
+      } else if (selectedGame === 'stop') {
         useStopStore().updateState(data)
+      } else if (selectedGame === 'parchis') {
+        useParchisStore().updateState(data)
       }
     })
 

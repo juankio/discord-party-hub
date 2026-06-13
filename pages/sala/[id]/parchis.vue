@@ -14,12 +14,6 @@ const playerStore = usePlayerStore();
 // Watch for socket events
 watch(socket, (newSocket) => {
   if (newSocket) {
-    newSocket.on('game_state_update', (payload) => {
-      if (payload.gameId === 'parchis') {
-        parchisStore.updateState(payload);
-      }
-    });
-
     // Enviar join al montar
     newSocket.emit('parchis:join', { roomId });
   }
@@ -33,7 +27,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (socket.value) {
-    socket.value.off('game_state_update');
     // Perhaps emit a leave event if required by the backend
   }
 });
