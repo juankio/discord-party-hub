@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] p-4 md:p-8 rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10">
+  <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10">
     <svg viewBox="0 0 1140 1140" class="w-full h-full drop-shadow-2xl">
   <defs>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
@@ -237,16 +237,18 @@ const boardCoordinates = computed(() => {
 const allTokens = computed(() => {
   const tokens: any[] = [];
   const coords = boardCoordinates.value;
+  const baseColors = ['green', 'blue', 'red', 'yellow'] as const;
   
   parchisStore.players.forEach(player => {
     if (!player.tokens) return;
     
     player.tokens.forEach(token => {
       let tokenCoords = { x: 570, y: 570 }; 
-      const color = player.color.toLowerCase() as 'red' | 'blue' | 'yellow' | 'green';
+      const colorIndex = parchisStore.players.findIndex((p: any) => p.userId === player.userId);
+      const baseColor = baseColors[colorIndex >= 0 ? colorIndex : 0]!;
       
       if (token.state === 'HOME') {
-        const nest = coords.nests[color];
+        const nest = coords.nests[baseColor];
         if (nest) {
           const offset = 60;
           const positions = [
@@ -255,13 +257,14 @@ const allTokens = computed(() => {
             { x: nest.x - offset, y: nest.y + offset },
             { x: nest.x + offset, y: nest.y + offset },
           ];
-          tokenCoords = positions[token.id % 4] || positions[0]!;
+          const tokenIdx = parseInt(String(token.id).split('-').pop() || '0');
+          tokenCoords = positions[tokenIdx % 4] || positions[0]!;
         }
       } else if (token.state === 'TRACK' || token.state === 'BOARD') {
         const trackCell = coords.track[token.position];
         if (trackCell) tokenCoords = { x: trackCell.x, y: trackCell.y };
       } else if (token.state === 'META') {
-        const corridorCell = coords.corridors[color][token.position];
+        const corridorCell = coords.corridors[baseColor][token.position];
         if (corridorCell) tokenCoords = { x: corridorCell.x, y: corridorCell.y };
       }
       
