@@ -11,16 +11,16 @@
     <div v-else-if="error" class="text-center py-4 text-red-500 text-xs">Error al cargar</div>
     <div v-else class="flex flex-col gap-2">
       <div
-v-for="(player, index) in leaderboard" :key="player.username" 
+v-for="(player, index) in leaderboard" :key="player?.username" 
            class="flex items-center justify-between bg-black/50 p-2 rounded-lg border border-white/5 transition-all hover:bg-yellow-900/10 hover:border-yellow-600/30">
         <div class="flex items-center gap-3">
           <span class="text-yellow-600 font-black text-sm w-4 text-center">{{ index + 1 }}</span>
-          <div class="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden border border-white/10" :style="{ borderColor: player.color }">
-            <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-5 h-5 object-contain mt-1" >
+          <div class="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden border border-white/10" :style="{ borderColor: player?.color || '#fff' }">
+            <img :src="`/avatars/avatar-${player?.avatarId}.svg?v=2`" class="w-5 h-5 object-contain mt-1" >
           </div>
-          <span class="text-white font-bold text-xs">{{ player.username }}</span>
+          <span class="text-white font-bold text-xs">{{ player?.username }}</span>
         </div>
-        <div class="text-yellow-500 font-black text-sm">{{ player.totalWins }}<span class="text-yellow-800 text-[10px] ml-1">W</span></div>
+        <div class="text-yellow-500 font-black text-sm">{{ player?.totalWins }}<span class="text-yellow-800 text-[10px] ml-1">W</span></div>
       </div>
       
       <div v-if="leaderboard?.length === 0" class="text-center py-4 text-gray-500 text-xs italic">
@@ -31,7 +31,14 @@ v-for="(player, index) in leaderboard" :key="player.username"
 </template>
 
 <script setup lang="ts">
-const config = useRuntimeConfig()
-const baseUrl = (config.public.socketUrl || 'http://localhost:3001').replace(/\/$/, '')
-const { data: leaderboard, pending, error } = useFetch<any[]>(`${baseUrl}/api/leaderboard/top`, { lazy: true })
+const config = useRuntimeConfig();
+const baseUrl = (config.public.socketUrl || "http://localhost:3001").replace(
+	/\/$/,
+	"",
+);
+const {
+	data: leaderboard,
+	pending,
+	error,
+} = useFetch<any[]>(`${baseUrl}/api/leaderboard/top`, { lazy: true });
 </script>
