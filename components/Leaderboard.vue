@@ -31,14 +31,20 @@ v-for="(player, index) in leaderboard" :key="player?.username"
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 const config = useRuntimeConfig();
 const baseUrl = (config.public.socketUrl || "http://localhost:3001").replace(
 	/\/$/,
 	"",
 );
 const {
-	data: leaderboard,
+	data: responseData,
 	pending,
 	error,
-} = useFetch<any[]>(`${baseUrl}/api/leaderboard/top`, { lazy: true });
+} = useFetch<any>(`${baseUrl}/api/leaderboard/top`, { lazy: true });
+
+const leaderboard = computed(() => 
+  Array.isArray(responseData.value) ? responseData.value : (responseData.value?.data || [])
+);
 </script>
