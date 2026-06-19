@@ -61,14 +61,14 @@
               <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
               <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
               <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
-              <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" />
+              <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" :is-host="isHost" />
             </div>
             
             <!-- Botón Arcade 2D Macizo -->
             <button 
               v-if="isHost"
               class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
-              :disabled="players.length < 2 || !['uno', 'stop', 'parchis'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
+              :disabled="isStarting || players.length < 2 || !['uno', 'stop', 'parchis'].includes(selectedGame) || (selectedGame === 'stop' && (!playerStore.roomRules?.stopCategories || playerStore.roomRules.stopCategories.length < 3))"
               style="
                 background-color: var(--theme-color); 
                 color: var(--theme-text-color, white);
@@ -79,7 +79,13 @@
               onmouseleave="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4)'; }"
               @click="startGame"
             >
-              Empezar Partida
+              <template v-if="isStarting">
+                <UIcon name="i-lucide-loader-2" class="animate-spin w-5 h-5" />
+                Iniciando...
+              </template>
+              <template v-else>
+                Empezar Partida
+              </template>
             </button>
             <button 
               v-else
@@ -112,73 +118,128 @@
 </template>
 
 <script setup lang="ts">
-import { usePlayerStore } from '~/stores/playerStore'
-import anime from 'animejs'
+import anime from "animejs";
+import { usePlayerStore } from "~/stores/playerStore";
 
-const route = useRoute()
-const router = useRouter()
-const playerStore = usePlayerStore()
-const { socket } = useSocket()
-const roomId = computed(() => route.params.id as string)
+const route = useRoute();
+const router = useRouter();
+const playerStore = usePlayerStore();
+const { socket } = useSocket();
+const roomId = computed(() => route.params.id as string);
 
 useSeoMeta({
-  title: `Lobby: ${roomId.value} - Discord Party Hub`,
-  ogTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
-  description: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
-  ogDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4',
-  ogImageWidth: 1200,
-  ogImageHeight: 630,
-  twitterCard: 'summary_large_image',
-  twitterTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
-  twitterDescription: 'La sala está abierta. ¡Entra a jugar wachoo o te cagas!',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4'
-})
+	title: `Lobby: ${roomId.value} - Discord Party Hub`,
+	ogTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
+	description: "La sala está abierta. ¡Entra a jugar wachoo o te cagas!",
+	ogDescription: "La sala está abierta. ¡Entra a jugar wachoo o te cagas!",
+	ogImage: "https://discord-party-hub.vercel.app/banner.jpg?v=4",
+	ogImageWidth: 1200,
+	ogImageHeight: 630,
+	twitterCard: "summary_large_image",
+	twitterTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
+	twitterDescription: "La sala está abierta. ¡Entra a jugar wachoo o te cagas!",
+	twitterImage: "https://discord-party-hub.vercel.app/banner.jpg?v=4",
+});
 
-const players = computed(() => playerStore.playersInRoom)
-const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
+const players = computed(() => playerStore.playersInRoom);
+const isHost = computed(
+	() =>
+		playerStore.userId !== "" && playerStore.userId === playerStore.hostUserId,
+);
 
-const isEditProfileOpen = ref(false)
+const isEditProfileOpen = ref(false);
 
 const selectedGame = computed({
-  get: () => playerStore.selectedGame,
-  set: (val: string) => {
-    if (isHost.value) {
-      playerStore.selectedGame = val
-      socket.value?.emit('update_selected_game', val)
-    }
-  }
-})
+	get: () => playerStore.selectedGame,
+	set: (val: string) => {
+		if (isHost.value) {
+			playerStore.selectedGame = val;
+			socket.value?.emit("update_selected_game", val);
+		}
+	},
+});
 const games = [
-  { id: 'uno', name: 'UNO', color: 'bg-[#151515]', labelColor: 'text-red-500', disabled: false },
-  { id: 'parchis', name: 'Parchís', color: 'bg-[#151515]', labelColor: 'text-yellow-500', disabled: false },
-  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', labelColor: 'text-gray-400', disabled: true },
-  { id: 'stop', name: 'Stop', color: 'bg-[#151515]', labelColor: 'text-blue-500', disabled: false },
-  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-[#151515]', labelColor: 'text-purple-500', disabled: true },
-]
+	{
+		id: "uno",
+		name: "UNO",
+		color: "bg-[#151515]",
+		labelColor: "text-red-500",
+		disabled: false,
+	},
+	{
+		id: "parchis",
+		name: "Parchís",
+		color: "bg-[#151515]",
+		labelColor: "text-yellow-500",
+		disabled: false,
+	},
+	{
+		id: "liars",
+		name: "Liar's Bar",
+		color: "bg-[#111111]",
+		labelColor: "text-gray-400",
+		disabled: true,
+	},
+	{
+		id: "stop",
+		name: "Stop",
+		color: "bg-[#151515]",
+		labelColor: "text-blue-500",
+		disabled: false,
+	},
+	{
+		id: "pinturillo",
+		name: "Pinturillo",
+		color: "bg-[#151515]",
+		labelColor: "text-purple-500",
+		disabled: true,
+	},
+];
 
-let lastSentRules = JSON.stringify(playerStore.roomRules)
+let lastSentRules = JSON.stringify(playerStore.roomRules);
 
-watch(() => playerStore.roomRules, (newRules) => {
-  if (isHost.value) {
-    const rulesStr = JSON.stringify(newRules)
-    // Si las reglas son idénticas a las que enviamos la última vez, ignoramos el loop
-    if (rulesStr !== lastSentRules) {
-      lastSentRules = rulesStr
-      socket.value?.emit('update_room_rules', toRaw(newRules))
-    }
-  }
-}, { deep: true })
+watch(
+	() => playerStore.roomRules,
+	(newRules) => {
+		if (isHost.value) {
+			const rulesStr = JSON.stringify(newRules);
+			// Si las reglas son idénticas a las que enviamos la última vez, ignoramos el loop
+			if (rulesStr !== lastSentRules) {
+				lastSentRules = rulesStr;
+				socket.value?.emit("update_room_rules", toRaw(newRules));
+			}
+		}
+	},
+	{ deep: true },
+);
 
-const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: toRaw(playerStore.roomRules) })
+const isStarting = ref(false);
+
+const startGame = () => {
+	isStarting.value = true;
+	socket.value?.emit("start_game", {
+		gameType: selectedGame.value,
+		rules: toRaw(playerStore.roomRules),
+	});
+};
 const leaveRoom = () => {
-  socket.value?.emit('leave_room')
-  router.push('/')
-}
+	socket.value?.emit("leave_room");
+	router.push("/");
+};
 
 onMounted(() => {
-  setTimeout(() => anime({ targets: '.header-anim', opacity: [0, 1], translateY: [-20, 0], duration: 800, easing: 'easeOutExpo' }), 100)
-})
+	setTimeout(
+		() =>
+			anime({
+				targets: ".header-anim",
+				opacity: [0, 1],
+				translateY: [-20, 0],
+				duration: 800,
+				easing: "easeOutExpo",
+			}),
+		100,
+	);
+});
 </script>
 
 <style scoped>

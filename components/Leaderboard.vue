@@ -14,7 +14,7 @@
 v-for="(player, index) in leaderboard" :key="player?.username" 
            class="flex items-center justify-between bg-black/50 p-2 rounded-lg border border-white/5 transition-all hover:bg-yellow-900/10 hover:border-yellow-600/30">
         <div class="flex items-center gap-3">
-          <span class="text-yellow-600 font-black text-sm w-4 text-center">{{ index + 1 }}</span>
+          <span class="text-yellow-600 font-black text-sm w-4 text-center">{{ Number(index) + 1 }}</span>
           <div class="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden border border-white/10" :style="{ borderColor: player?.color || '#fff' }">
             <img :src="`/avatars/avatar-${player?.avatarId}.svg?v=2`" class="w-5 h-5 object-contain mt-1" >
           </div>
@@ -44,7 +44,10 @@ const {
 	error,
 } = useFetch<any>(`${baseUrl}/api/leaderboard/top`, { lazy: true });
 
-const leaderboard = computed(() => 
-  Array.isArray(responseData.value) ? responseData.value : (responseData.value?.data || [])
-);
+const leaderboard = computed(() => {
+  if (!responseData.value) return [];
+  if (Array.isArray(responseData.value)) return responseData.value;
+  if (responseData.value.data && Array.isArray(responseData.value.data)) return responseData.value.data;
+  return [];
+});
 </script>

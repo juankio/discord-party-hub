@@ -1,155 +1,57 @@
 <template>
-  <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10">
-    <svg viewBox="0 0 1140 1140" class="w-full h-full drop-shadow-2xl">
-  <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.5"/>
-    </filter>
-    <filter id="inset-shadow">
-      <feOffset dx="0" dy="2"/>
-      <feGaussianBlur stdDeviation="2" result="offset-blur"/>
-      <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
-      <feFlood flood-color="black" flood-opacity="0.5" result="color"/>
-      <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
-      <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
-    </filter>
-  </defs>
-  <!-- Base Madera -->
-  <rect width="1140" height="1140" fill="#e6c280" rx="40" />
-<rect x="0" y="0" width="480" height="480" fill="#4ade80" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
-<circle cx="240" cy="240" r="150" fill="#fff" opacity="0.2" />
-<rect x="660" y="0" width="480" height="480" fill="#3b82f6" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
-<circle cx="900" cy="240" r="150" fill="#fff" opacity="0.2" />
-<rect x="0" y="660" width="480" height="480" fill="#eab308" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
-<circle cx="240" cy="900" r="150" fill="#fff" opacity="0.2" />
-<rect x="660" y="660" width="480" height="480" fill="#ef4444" rx="20" stroke="#000" stroke-width="4" opacity="0.9" />
-<circle cx="900" cy="900" r="150" fill="#fff" opacity="0.2" />
-<polygon points="480,480 660,480 570,570" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<polygon points="660,480 660,660 570,570" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<polygon points="660,660 480,660 570,570" fill="#eab308" stroke="#000" stroke-width="2"/>
-<polygon points="480,660 480,480 570,570" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="540" y="60" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="120" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="180" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="240" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="300" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="360" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="540" y="420" width="60" height="60" fill="#3b82f6" stroke="#000" stroke-width="2"/>
-<rect x="1020" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="960" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="900" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="840" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="780" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="720" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="660" y="540" width="60" height="60" fill="#ef4444" stroke="#000" stroke-width="2"/>
-<rect x="540" y="1020" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="960" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="900" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="840" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="780" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="720" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="540" y="660" width="60" height="60" fill="#eab308" stroke="#000" stroke-width="2"/>
-<rect x="60" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="120" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="180" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="240" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="300" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="360" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="420" y="540" width="60" height="60" fill="#4ade80" stroke="#000" stroke-width="2"/>
-<rect x="0" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="60" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="120" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="180" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="240" y="480" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="270" cy="510" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="300" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="360" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="420" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="420" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="360" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="300" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="240" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="510" cy="270" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="480" y="180" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="120" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="60" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="0" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="540" y="0" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="570" cy="30" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="600" y="0" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="60" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="120" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="180" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="240" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="630" cy="270" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="600" y="300" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="360" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="420" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="660" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="720" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="780" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="840" y="480" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="870" cy="510" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="900" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="960" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="1020" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="1080" y="480" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="1080" y="540" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="1110" cy="570" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="1080" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="1020" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="960" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="900" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="840" y="600" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="870" cy="630" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="780" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="720" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="660" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="660" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="720" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="780" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="840" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="630" cy="870" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="600" y="900" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="960" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="1020" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="600" y="1080" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="540" y="1080" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="570" cy="1110" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="480" y="1080" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="1020" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="960" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="900" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="840" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="510" cy="870" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="480" y="780" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="720" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="480" y="660" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="420" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="360" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="300" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="240" y="600" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="270" cy="630" r="15" fill="#f59e0b" opacity="0.6"/>
-<rect x="180" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="120" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="60" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="0" y="600" width="60" height="60" fill="#e6c280" stroke="#000" stroke-width="2" />
-<rect x="0" y="540" width="60" height="60" fill="#fcd34d" stroke="#000" stroke-width="2" />
-<circle cx="30" cy="570" r="15" fill="#f59e0b" opacity="0.6"/>
-<text x="270" y="522" font-size="14" font-weight="bold" fill="#000" text-anchor="middle" transform="rotate(-90 270,522)">SALIDA</text>
-</svg>
+  <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#e6c280' }">
     
+    <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
+    <svg viewBox="-800 -800 1600 1600" class="w-full h-full drop-shadow-2xl">
+      <!-- Base Madera -->
+      <rect v-if="sides === 4" x="-750" y="-750" width="1500" height="1500" rx="80" fill="#e6c280" stroke="#d4a373" stroke-width="15" />
+      <circle v-else cx="0" cy="0" r="780" fill="#e6c280" stroke="#d4a373" stroke-width="15" />
+
+      <!-- Center Goal Polygon (Drawn beneath arms) -->
+      <polygon :points="centerPolygon" fill="#222" stroke="#111" stroke-width="4"/>
+
+      <!-- Render Circular Grid (Track) -->
+      <g v-for="(sq, i) in trackSquares" :key="'sq'+i">
+        <path :d="sq.d" :fill="sq.fill" stroke="#111" stroke-width="2" />
+        <!-- Star Icon for Salida/Seguro -->
+        <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#f59e0b" stroke="#92400e" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.1)`" />
+      </g>
+
+      <!-- Llegadas (Meta) -->
+      <g v-for="(sq, i) in llegadaPaths" :key="'llegada'+i">
+        <path :d="sq.d" :fill="sq.color" stroke="#111" stroke-width="2" />
+        <!-- Golden Star for final meta cell -->
+        <polygon v-if="sq.isFinal" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.3)`" />
+      </g>
+
+      <!-- Center Hole overlay -->
+      <polygon :points="centerPolygon" fill="#222" stroke="#111" stroke-width="4"/>
+
+      <!-- Nests (Bases) -->
+      <g v-for="(nest, i) in nests" :key="'nest'+i">
+        <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r" :fill="nest.color" stroke="#111" stroke-width="4" opacity="0.9" />
+        <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r * 0.7" fill="#fff" opacity="0.15" />
+        <circle :cx="nest.cx - nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.2" />
+        <circle :cx="nest.cx + nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.2" />
+        <circle :cx="nest.cx - nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.2" />
+        <circle :cx="nest.cx + nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.2" />
+      </g>
+    </svg>
+
     <!-- Render Tokens (HTML Overlay) -->
-    <ParchisToken 
-      v-for="(tokenObj, i) in allTokens" 
-      :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
-      :token="tokenObj.data"
-      :figureId="tokenObj.player.figureId"
-      :coordinates="tokenObj.coords"
-    />
+    <div class="absolute inset-0 z-10 pointer-events-none">
+      <ParchisToken 
+        v-for="(tokenObj, i) in allTokens" 
+        :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
+        :token="tokenObj.data"
+        :figureId="tokenObj.player.selectedFigure"
+        :coordinates="tokenObj.coords"
+        :boardSize="1600"
+      />
+    </div>
 
     <!-- Player HUD -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-[#2a180c]/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl z-20">
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-[#2a180c]/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl z-20 pointer-events-auto">
       <div class="flex items-center gap-2">
         <div 
           v-for="(player, idx) in parchisStore.players" 
@@ -163,7 +65,7 @@
       <div class="h-8 w-[1px] bg-white/20"></div>
       
       <div class="flex flex-col items-center gap-1">
-        <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : [1, 6]" />
+        <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
         <div v-if="parchisStore.availableMoves.length > 0 && parchisStore.isMyTurn" class="text-xs text-white bg-green-600/80 px-2 py-0.5 rounded animate-pulse shadow-md">
           Mueve: {{ parchisStore.availableMoves.join(', ') }}
         </div>
@@ -187,90 +89,224 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useParchisStore } from '~/stores/games/parchisStore'
-import { usePlayerStore } from '~/stores/playerStore'
-import { useSocket } from '~/composables/useSocket'
+import { computed } from 'vue'
 import ParchisToken from './ParchisToken.vue'
 import ParchisDice from './ParchisDice.vue'
+import { useParchisStore } from '~/stores/games/parchisStore'
+import { useSocket } from '~/composables/useSocket'
 
 const parchisStore = useParchisStore()
-const playerStore = usePlayerStore()
 const { socket } = useSocket()
 
 const rollDice = () => {
-  if (parchisStore.isMyTurn && parchisStore.availableMoves.length === 0) {
+  if (parchisStore.isMyTurn) {
     socket.value?.emit('parchis:roll_dice')
   }
 }
 
-const getColor = (color: string | number) => {
-  const map: Record<string, string> = { red: '#ef4444', blue: '#3b82f6', yellow: '#eab308', green: '#22c55e' }
-  return map[String(color)] || '#ffffff'
+const colorPalette = ['#eab308', '#3b82f6', '#ef4444', '#4ade80', '#a855f7', '#f97316', '#ec4899', '#06b6d4'];
+const getColor = (colorStr: string) => {
+  const map: Record<string, string> = {
+    green: '#4ade80', blue: '#3b82f6', red: '#ef4444', yellow: '#eab308', purple: '#a855f7', orange: '#f97316'
+  };
+  return map[colorStr] || colorStr;
 }
 
-export interface BoardCoordinate { x: number; y: number; size: number; }
+const sides = computed(() => parchisStore.rules?.parchisBoardSize || 4);
 
-const boardCoordinates = computed(() => {
-  const size = 60;
-  // Use the exact same track from generation
-  const track = [{"x":0,"y":8},{"x":1,"y":8},{"x":2,"y":8},{"x":3,"y":8},{"x":4,"y":8},{"x":5,"y":8},{"x":6,"y":8},{"x":7,"y":8},{"x":8,"y":7},{"x":8,"y":6},{"x":8,"y":5},{"x":8,"y":4},{"x":8,"y":3},{"x":8,"y":2},{"x":8,"y":1},{"x":8,"y":0},{"x":9,"y":0},{"x":10,"y":0},{"x":10,"y":1},{"x":10,"y":2},{"x":10,"y":3},{"x":10,"y":4},{"x":10,"y":5},{"x":10,"y":6},{"x":10,"y":7},{"x":11,"y":8},{"x":12,"y":8},{"x":13,"y":8},{"x":14,"y":8},{"x":15,"y":8},{"x":16,"y":8},{"x":17,"y":8},{"x":18,"y":8},{"x":18,"y":9},{"x":18,"y":10},{"x":17,"y":10},{"x":16,"y":10},{"x":15,"y":10},{"x":14,"y":10},{"x":13,"y":10},{"x":12,"y":10},{"x":11,"y":10},{"x":10,"y":11},{"x":10,"y":12},{"x":10,"y":13},{"x":10,"y":14},{"x":10,"y":15},{"x":10,"y":16},{"x":10,"y":17},{"x":10,"y":18},{"x":9,"y":18},{"x":8,"y":18},{"x":8,"y":17},{"x":8,"y":16},{"x":8,"y":15},{"x":8,"y":14},{"x":8,"y":13},{"x":8,"y":12},{"x":8,"y":11},{"x":7,"y":10},{"x":6,"y":10},{"x":5,"y":10},{"x":4,"y":10},{"x":3,"y":10},{"x":2,"y":10},{"x":1,"y":10},{"x":0,"y":10},{"x":0,"y":9}].map(t => ({ x: t.x * size + size/2, y: t.y * size + size/2, size }));
-  
-  const corridors = {
-    green: Array.from({length: 7}).map((_, i) => ({ x: (i+1)*size + size/2, y: 9*size + size/2, size })),
-    blue: Array.from({length: 7}).map((_, i) => ({ x: 9*size + size/2, y: (i+1)*size + size/2, size })),
-    red: Array.from({length: 7}).map((_, i) => ({ x: (17-i)*size + size/2, y: 9*size + size/2, size })),
-    yellow: Array.from({length: 7}).map((_, i) => ({ x: 9*size + size/2, y: (17-i)*size + size/2, size }))
-  };
-  
+function rotatePoint(x: number, y: number, degrees: number) {
+  const rad = degrees * Math.PI / 180;
   return {
-    track, corridors,
-    nests: {
-      green: { x: 4*size, y: 4*size, size: 8*size },
-      blue: { x: 15*size, y: 4*size, size: 8*size },
-      yellow: { x: 4*size, y: 15*size, size: 8*size },
-      red: { x: 15*size, y: 15*size, size: 8*size }
-    }
+    x: x * Math.cos(rad) - y * Math.sin(rad),
+    y: x * Math.sin(rad) + y * Math.cos(rad)
   };
+}
+
+const boardGeometry = computed(() => {
+  const N = sides.value;
+
+  const trackSquares = [];
+  const llegadaPaths = [];
+  const nests = [];
+  const coordsMap = { track: [] as any[], meta: [] as any[], nests: [] as any[] };
+
+  const rowHeight = 50;
+  // Compute innerRadius so the arm width of 150 forms a complete regular polygon at the center
+  const innerRadius = 75 / Math.tan(Math.PI / N);
+  const trackLength = innerRadius + 8 * rowHeight;
+
+  for (let p = 0; p < N; p++) {
+    const armAngle = p * (360 / N);
+    const baseColor = colorPalette[p % colorPalette.length];
+
+    // TRACK (17 squares per player)
+    for (let i = 0; i < 17; i++) {
+      let globalIndex = p * 17 + i;
+      let cx = 0, cy = 0, d = "", fill = "#e6c280", rot = armAngle;
+      let isSalida = false;
+      let isSeguro = false;
+
+      if (i < 8) {
+        // Left column of current arm, going UP (outwards)
+        let row = i;
+        let localX = -75;
+        let localY = -innerRadius - (row + 1) * rowHeight;
+        let ptCenter = rotatePoint(localX + 25, localY + 25, armAngle);
+        cx = ptCenter.x; cy = ptCenter.y;
+        
+        let p1 = rotatePoint(localX, localY, armAngle);
+        let p2 = rotatePoint(localX + 50, localY, armAngle);
+        let p3 = rotatePoint(localX + 50, localY + 50, armAngle);
+        let p4 = rotatePoint(localX, localY + 50, armAngle);
+        d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
+        
+        // 5th cell from bottom (i=4) is Salida
+        if (i === 4) {
+          isSalida = true;
+          fill = baseColor;
+        }
+      } else if (i === 8) {
+        // Corner "Pizza Junction"
+        // Connects outer left of CURRENT arm to outer right of NEXT arm (in CCW direction)
+        let p1_local = { x: -75, y: -trackLength };
+        let p2_local = { x: -25, y: -trackLength };
+        let p3_local = rotatePoint(25, -trackLength, -360/N);
+        let p4_local = rotatePoint(75, -trackLength, -360/N);
+        
+        let p1 = rotatePoint(p1_local.x, p1_local.y, armAngle);
+        let p2 = rotatePoint(p2_local.x, p2_local.y, armAngle);
+        let p3 = rotatePoint(p3_local.x, p3_local.y, armAngle);
+        let p4 = rotatePoint(p4_local.x, p4_local.y, armAngle);
+        
+        d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
+        
+        cx = (p1.x + p2.x + p3.x + p4.x) / 4;
+        cy = (p1.y + p2.y + p3.y + p4.y) / 4;
+        
+        isSeguro = true;
+        fill = "#fcd34d";
+      } else {
+        // Right column of NEXT arm, going DOWN (inwards)
+        let row = 16 - i; // i=9 -> 7, i=16 -> 0
+        let localX = 25;
+        let localY = -innerRadius - (row + 1) * rowHeight;
+        
+        let nextArmAngle = armAngle - (360 / N);
+        let ptCenter = rotatePoint(localX + 25, localY + 25, nextArmAngle);
+        cx = ptCenter.x; cy = ptCenter.y;
+        
+        let p1 = rotatePoint(localX, localY, nextArmAngle);
+        let p2 = rotatePoint(localX + 50, localY, nextArmAngle);
+        let p3 = rotatePoint(localX + 50, localY + 50, nextArmAngle);
+        let p4 = rotatePoint(localX, localY + 50, nextArmAngle);
+        d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
+        
+        // Seguro on cell 12
+        if (i === 12) {
+          isSeguro = true;
+          fill = "#fcd34d";
+        }
+      }
+
+      trackSquares.push({
+        d, fill, isSalida, isSeguro, cx, cy, rot
+      });
+      coordsMap.track[globalIndex] = { x: cx, y: cy };
+    }
+
+    // META
+    coordsMap.meta[p] = [];
+    for (let r = 0; r < 8; r++) {
+      // r=0 is outer, r=7 is inner (near center)
+      let localX = -25;
+      let localY = -innerRadius - (8 - r) * rowHeight;
+      
+      let p1 = rotatePoint(localX, localY, armAngle);
+      let p2 = rotatePoint(localX + 50, localY, armAngle);
+      let p3 = rotatePoint(localX + 50, localY + 50, armAngle);
+      let p4 = rotatePoint(localX, localY + 50, armAngle);
+      let d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
+      
+      let ptCenter = rotatePoint(0, localY + 25, armAngle);
+      let isFinal = (r === 7);
+      
+      llegadaPaths.push({
+        d, color: baseColor, cx: ptCenter.x, cy: ptCenter.y, rot: armAngle, isFinal
+      });
+      coordsMap.meta[p][r] = { x: ptCenter.x, y: ptCenter.y };
+    }
+
+    // NESTS
+    // Positioned in the space between arms on the CCW side
+    let nestAngle = armAngle - (360 / N) / 2;
+    let nestDist = innerRadius + 220;
+    if (N === 4) nestDist = 320;
+    if (N === 6) nestDist = 380;
+    if (N === 8) nestDist = 420;
+    
+    let nestRadius = N === 4 ? 110 : (N === 6 ? 90 : 70);
+    let tokenOffset = N === 4 ? 40 : (N === 6 ? 30 : 25);
+    
+    let pt = rotatePoint(0, -nestDist, nestAngle);
+    
+    nests.push({
+      cx: pt.x, cy: pt.y, color: baseColor, r: nestRadius, offset: tokenOffset, wedgePath: ""
+    });
+    coordsMap.nests[p] = { x: pt.x, y: pt.y, offset: tokenOffset };
+  }
+
+  // CENTER POLYGON
+  const polyPts = [];
+  for (let p = 0; p < N; p++) {
+    let p1 = rotatePoint(-75, -innerRadius, p * 360 / N);
+    let p2 = rotatePoint(75, -innerRadius, p * 360 / N);
+    polyPts.push(`${p1.x},${p1.y}`);
+    polyPts.push(`${p2.x},${p2.y}`);
+  }
+
+  return { trackSquares, llegadaPaths, nests, centerPolygon: polyPts.join(" "), coordsMap };
 });
+
+const trackSquares = computed(() => boardGeometry.value.trackSquares);
+const llegadaPaths = computed(() => boardGeometry.value.llegadaPaths);
+const nests = computed(() => boardGeometry.value.nests);
+const centerPolygon = computed(() => boardGeometry.value.centerPolygon);
 
 const allTokens = computed(() => {
   const tokens: any[] = [];
-  const coords = boardCoordinates.value;
-  const baseColors = ['green', 'blue', 'red', 'yellow'] as const;
+  const coordsMap = boardGeometry.value.coordsMap;
   
-  parchisStore.players.forEach(player => {
+  parchisStore.players.forEach((player, pIdx) => {
     if (!player.tokens) return;
     
-    player.tokens.forEach(token => {
-      let tokenCoords = { x: 570, y: 570 }; 
-      const colorIndex = parchisStore.players.findIndex((p: any) => p.userId === player.userId);
-      const baseColor = baseColors[colorIndex >= 0 ? colorIndex : 0]!;
+    const baseP = pIdx % sides.value;
+    
+    player.tokens.forEach((token, tIdx) => {
+      let tokenCoords = { x: 0, y: 0 }; 
       
       if (token.state === 'HOME') {
-        const nest = coords.nests[baseColor];
+        const nest = coordsMap.nests[baseP];
         if (nest) {
-          const offset = 60;
+          const offset = nest.offset;
           const positions = [
             { x: nest.x - offset, y: nest.y - offset },
             { x: nest.x + offset, y: nest.y - offset },
             { x: nest.x - offset, y: nest.y + offset },
             { x: nest.x + offset, y: nest.y + offset },
           ];
-          const tokenIdx = parseInt(String(token.id).split('-').pop() || '0');
-          tokenCoords = positions[tokenIdx % 4] || positions[0]!;
+          tokenCoords = positions[tIdx % 4] || {x: 0, y: 0};
         }
-      } else if (token.state === 'TRACK' || token.state === 'BOARD') {
-        const trackCell = coords.track[token.position];
+      } else if (token.state === 'BOARD' || token.state === 'TRACK') {
+        const trackCell = coordsMap.track[token.position % (sides.value * 17)] as any;
         if (trackCell) tokenCoords = { x: trackCell.x, y: trackCell.y };
       } else if (token.state === 'META') {
-        const corridorCell = coords.corridors[baseColor][token.position];
+        const corridorCell = coordsMap.meta[baseP]?.[token.position - 1] as any;
         if (corridorCell) tokenCoords = { x: corridorCell.x, y: corridorCell.y };
       }
       
       tokens.push({
         player, token,
-        data: { id: token.id, color: getColor(player.color), ownerId: player.userId, position: token.position, state: token.state },
+        data: { id: token.id, color: colorPalette[baseP], ownerId: player.userId, position: token.position, state: token.state },
         coords: tokenCoords
       });
     });
