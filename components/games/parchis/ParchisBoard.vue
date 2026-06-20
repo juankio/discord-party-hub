@@ -235,14 +235,14 @@ const boardGeometry = computed(() => {
 	};
 
 	for (let p = 0; p < N; p++) {
-		const armAngle = -p * (360 / N); // Counter-Clockwise flow
+		const armAngle = p * (360 / N); // Counter-Clockwise flow
 		const baseColor = colorPalette[p % colorPalette.length];
 
 		// 1. Left Column (Outbound - Salida) -> indices 0-7
 		for (let row = 0; row < 8; row++) {
 			let y_bot = -R_c - row * 50;
 			let y_top = -R_c - (row + 1) * 50;
-			let pts = getLeftCellPolygon(y_bot, y_top, M);
+			let pts = getRightCellPolygon(y_bot, y_top, M);
 			
 			let globalIndex = p * 17 + row;
 			let isSalida = (row === 4);
@@ -362,11 +362,11 @@ const boardGeometry = computed(() => {
 	// Center black star
 	const polyPts = [];
 	for (let p = 0; p < N; p++) {
-		const armAngle = -p * (360 / N);
+		const armAngle = p * (360 / N);
 		let p1 = rotatePoint(-25, -R_c, armAngle);
 		let p2 = rotatePoint(25, -R_c, armAngle);
 		let intersectionRadius = R_c / Math.cos(Math.PI / N);
-		let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle + 180 / N);
+		let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle - 180 / N);
 		
 		polyPts.push(`${p1.x},${p1.y}`);
 		polyPts.push(`${p2.x},${p2.y}`);
