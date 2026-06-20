@@ -31,7 +31,7 @@
         <polygon v-if="sq.isFinal" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.3)`" filter="url(#glow)" />
       </g>
 
-      <!-- Track Squares (Radial Arms) -->
+      <!-- Track Squares (Radial Arms with Trapezoids at base) -->
       <g v-for="(sq, i) in trackSquares" :key="'sq'+i">
         <path :d="sq.d" :fill="sq.fill" stroke="#222" stroke-width="2" />
         <!-- Highlight borders for Salida/Seguro/Tip -->
@@ -161,9 +161,9 @@ function rotatePoint(x: number, y: number, degrees: number) {
 const boardGeometry = computed(() => {
 	const N = sides.value;
 
-	const trackSquares = [];
-	const llegadaPaths = [];
-	const nests = [];
+	const trackSquares: any[] = [];
+	const llegadaPaths: any[] = [];
+	const nests: any[] = [];
 	const coordsMap = {
 		track: [] as any[],
 		meta: [] as any[],
@@ -171,10 +171,10 @@ const boardGeometry = computed(() => {
 	};
 
 	const rowHeight = 50;
-	const armWidth = 150;
-	// Compute innerRadius so the center polygon edge exactly matches the arm width (150)
-	const innerRadius = armWidth / 2 / Math.tan(Math.PI / N);
-	const trackLength = innerRadius + 8 * rowHeight;
+	// Compute base innerRadius where the arms would be 150px wide
+	const baseInnerRadius = 75 / Math.tan(Math.PI / N);
+	// Pull the arms 1 row inward to form perfect trapezoids at the base
+	const innerRadius = baseInnerRadius - 50;
 
 	for (let p = 0; p < N; p++) {
 		const armAngle = p * (360 / N);
@@ -195,18 +195,45 @@ const boardGeometry = computed(() => {
 			if (i < 8) {
 				// Going UP the RIGHT column of the arm
 				let row = i; // 0 to 7
-				let localX = 25; // Left edge of this column is 25, Right edge is 75
 				let localY = -innerRadius - (row + 1) * rowHeight;
+				let localYBottom = -innerRadius - row * rowHeight;
 
-				let p1 = rotatePoint(localX, localY, armAngle);
-				let p2 = rotatePoint(localX + 50, localY, armAngle);
-				let p3 = rotatePoint(localX + 50, localY + 50, armAngle);
-				let p4 = rotatePoint(localX, localY + 50, armAngle);
+				let p1, p2, p3, p4;
+
+				if (i === 0) {
+					// BASE SQUARE RIGHT COLUMN (Trapezoid to close the gap)
+					// Mathematically enforce the outer edge to perfectly match square 1
+					let xBaseInner = Math.abs(localYBottom) * Math.tan(Math.PI / N);
+					let xBaseOuter = 75; // Ensures no "casillas separadas"
+
+					p1 = rotatePoint(25, localYBottom, armAngle);
+					p2 = rotatePoint(xBaseInner, localYBottom, armAngle);
+					p3 = rotatePoint(xBaseOuter, localY, armAngle);
+					p4 = rotatePoint(25, localY, armAngle);
+
+					// Calculate center for token placing (centroid of trapezoid at mid-Y)
+					let midY = localYBottom - 25;
+					let midOuterX = Math.abs(midY) * Math.tan(Math.PI / N);
+					let ptCenter = rotatePoint(
+						(25 + midOuterX) / 2,
+						midY,
+						armAngle,
+					);
+					cx = ptCenter.x;
+					cy = ptCenter.y;
+				} else {
+					let localX = 25;
+					p1 = rotatePoint(localX, localYBottom, armAngle);
+					p2 = rotatePoint(localX + 50, localYBottom, armAngle);
+					p3 = rotatePoint(localX + 50, localY, armAngle);
+					p4 = rotatePoint(localX, localY, armAngle);
+
+					let ptCenter = rotatePoint(localX + 25, localYBottom - 25, armAngle);
+					cx = ptCenter.x;
+					cy = ptCenter.y;
+				}
+
 				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-				let ptCenter = rotatePoint(localX + 25, localY + 25, armAngle);
-				cx = ptCenter.x;
-				cy = ptCenter.y;
 
 				if (i === 4) {
 					isSalida = true;
@@ -215,13 +242,15 @@ const boardGeometry = computed(() => {
 			} else if (i === 8) {
 				// TIP of the arm (Turnaround). Spans all 3 columns
 				let localY = -innerRadius - 8 * rowHeight - 50;
-				let p1 = rotatePoint(-75, localY, armAngle);
-				let p2 = rotatePoint(75, localY, armAngle);
-				let p3 = rotatePoint(75, localY + 50, armAngle);
-				let p4 = rotatePoint(-75, localY + 50, armAngle);
+				let localYBottom = -innerRadius - 8 * rowHeight;
+
+				let p1 = rotatePoint(-75, localYBottom, armAngle);
+				let p2 = rotatePoint(75, localYBottom, armAngle);
+				let p3 = rotatePoint(75, localY, armAngle);
+				let p4 = rotatePoint(-75, localY, armAngle);
 				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
 
-				let ptCenter = rotatePoint(0, localY + 25, armAngle);
+				let ptCenter = rotatePoint(0, localYBottom - 25, armAngle);
 				cx = ptCenter.x;
 				cy = ptCenter.y;
 
@@ -231,18 +260,43 @@ const boardGeometry = computed(() => {
 			} else {
 				// Going DOWN the LEFT column of the arm
 				let row = 16 - i; // i=9 -> row=7, i=16 -> row=0
-				let localX = -75; // Left edge is -75, Right edge is -25
 				let localY = -innerRadius - (row + 1) * rowHeight;
+				let localYBottom = -innerRadius - row * rowHeight;
 
-				let p1 = rotatePoint(localX, localY, armAngle);
-				let p2 = rotatePoint(localX + 50, localY, armAngle);
-				let p3 = rotatePoint(localX + 50, localY + 50, armAngle);
-				let p4 = rotatePoint(localX, localY + 50, armAngle);
+				let p1, p2, p3, p4;
+
+				if (i === 16) {
+					// BASE SQUARE LEFT COLUMN (Trapezoid to close the gap)
+					let xBaseInner = -Math.abs(localYBottom) * Math.tan(Math.PI / N);
+					let xBaseOuter = -75; // Ensures no "casillas separadas"
+
+					p1 = rotatePoint(xBaseInner, localYBottom, armAngle);
+					p2 = rotatePoint(-25, localYBottom, armAngle);
+					p3 = rotatePoint(-25, localY, armAngle);
+					p4 = rotatePoint(xBaseOuter, localY, armAngle);
+
+					let midY = localYBottom - 25;
+					let midOuterX = -Math.abs(midY) * Math.tan(Math.PI / N);
+					let ptCenter = rotatePoint(
+						(-25 + midOuterX) / 2,
+						midY,
+						armAngle,
+					);
+					cx = ptCenter.x;
+					cy = ptCenter.y;
+				} else {
+					let localX = -75;
+					p1 = rotatePoint(localX, localYBottom, armAngle);
+					p2 = rotatePoint(localX + 50, localYBottom, armAngle);
+					p3 = rotatePoint(localX + 50, localY, armAngle);
+					p4 = rotatePoint(localX, localY, armAngle);
+
+					let ptCenter = rotatePoint(localX + 25, localYBottom - 25, armAngle);
+					cx = ptCenter.x;
+					cy = ptCenter.y;
+				}
+
 				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-				let ptCenter = rotatePoint(localX + 25, localY + 25, armAngle);
-				cx = ptCenter.x;
-				cy = ptCenter.y;
 
 				if (i === 12) {
 					isSeguro = true;
@@ -263,19 +317,19 @@ const boardGeometry = computed(() => {
 			coordsMap.track[globalIndex] = { x: cx, y: cy };
 		}
 
-		// META (Llegadas) - Middle column
+		// META (Llegadas) - Middle column touches the center hole
 		coordsMap.meta[p] = [];
 		for (let r = 0; r < 8; r++) {
-			let localX = -25;
 			let localY = -innerRadius - (8 - r) * rowHeight;
+			let localYBottom = localY + 50;
 
-			let p1 = rotatePoint(localX, localY, armAngle);
-			let p2 = rotatePoint(localX + 50, localY, armAngle);
-			let p3 = rotatePoint(localX + 50, localY + 50, armAngle);
-			let p4 = rotatePoint(localX, localY + 50, armAngle);
+			let p1 = rotatePoint(-25, localYBottom, armAngle);
+			let p2 = rotatePoint(25, localYBottom, armAngle);
+			let p3 = rotatePoint(25, localY, armAngle);
+			let p4 = rotatePoint(-25, localY, armAngle);
 			let d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
 
-			let ptCenter = rotatePoint(0, localY + 25, armAngle);
+			let ptCenter = rotatePoint(0, localYBottom - 25, armAngle);
 			let isFinal = r === 7;
 
 			llegadaPaths.push({
@@ -289,25 +343,13 @@ const boardGeometry = computed(() => {
 			coordsMap.meta[p][r] = { x: ptCenter.x, y: ptCenter.y };
 		}
 
-		// NESTS (Bases)
-		// The nest sits perfectly in the V-gap between Arm P and Arm P-1 (Counter Clockwise arrangement).
-		// So nest P is at angle: armAngle - 360/(2N)
+		// NESTS (Bases) - Pushed deeply into the V-gap
 		let nestAngle = armAngle - 360 / N / 2;
-
-		// Distance from center to nest center.
-		// It should fit snugly in the V shape.
-		// Width of V gap increases with radius.
 		let nestRadius = N === 4 ? 120 : N === 6 ? 100 : 80;
-		// Distance calculation to nest so it touches the inner radius boundary roughly
-		let nestDist = innerRadius + nestRadius + 20;
-
-		// Custom tweaks for perfect optical alignment depending on N
-		if (N === 4) nestDist = innerRadius + 180;
-		if (N === 6) nestDist = innerRadius + 150;
-		if (N === 8) nestDist = innerRadius + 140;
+		// Push the nest closer to the center hole to clear the arm tips
+		let nestDist = baseInnerRadius + nestRadius + (N === 4 ? 60 : 30);
 
 		let tokenOffset = N === 4 ? 45 : N === 6 ? 35 : 28;
-
 		let pt = rotatePoint(0, -nestDist, nestAngle);
 
 		nests.push({
@@ -320,13 +362,24 @@ const boardGeometry = computed(() => {
 		coordsMap.nests[p] = { x: pt.x, y: pt.y, offset: tokenOffset };
 	}
 
-	// CENTER POLYGON
-	const polyPts = [];
+	// CENTER POLYGON (Star-shaped hole that touches the trapezoids)
+	const polyPts: string[] = [];
 	for (let p = 0; p < N; p++) {
-		let p1 = rotatePoint(-75, -innerRadius, (p * 360) / N);
-		let p2 = rotatePoint(75, -innerRadius, (p * 360) / N);
+		// Middle column bases
+		let p1 = rotatePoint(-25, -innerRadius, (p * 360) / N);
+		let p2 = rotatePoint(25, -innerRadius, (p * 360) / N);
+
+		// The inner intersection point of the trapezoids on the bisector line
+		let intersectionRadius = innerRadius / Math.cos(Math.PI / N);
+		let intersectionPt = rotatePoint(
+			0,
+			-intersectionRadius,
+			(p * 360) / N + 360 / (2 * N),
+		);
+
 		polyPts.push(`${p1.x},${p1.y}`);
 		polyPts.push(`${p2.x},${p2.y}`);
+		polyPts.push(`${intersectionPt.x},${intersectionPt.y}`);
 	}
 
 	return {
