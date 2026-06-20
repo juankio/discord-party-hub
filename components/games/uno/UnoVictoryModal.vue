@@ -59,9 +59,12 @@ const props = defineProps({
 defineEmits(['lobby'])
 
 const cleanupAnimations = () => {
-  anime.remove('.winner-glow')
-  anime.remove('.winner-glow-2')
-  anime.remove('.winner-anim')
+  if (!import.meta.client) return;
+  try {
+    anime.remove('.winner-glow');
+    anime.remove('.winner-glow-2');
+    anime.remove('.winner-anim');
+  } catch(e) {}
 }
 
 watch(() => props.isOpen, async (val) => {

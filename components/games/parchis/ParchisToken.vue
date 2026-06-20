@@ -211,7 +211,7 @@ const onTokenClick = () => {
 watch(
 	() => props.coordinates,
 	(newVal, oldVal) => {
-		if (oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {
+		if (import.meta.client && oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {
             const distance = Math.sqrt(Math.pow(newVal.x - oldVal.x, 2) + Math.pow(newVal.y - oldVal.y, 2));
             const duration = Math.min(Math.max(distance * 1.5, 400), 800); // Dynamic duration based on distance
 
