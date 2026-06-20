@@ -44,6 +44,7 @@ export const useParchisStore = defineStore('parchis', {
       this.winner = data.winner || null;
       this.diceValue = data.diceValue || [];
       this.availableMoves = data.availableMoves || [];
+      if (data.rules) this.rules = data.rules;
     }
   }
 });
