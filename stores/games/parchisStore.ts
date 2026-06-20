@@ -27,6 +27,7 @@ export const useParchisStore = defineStore('parchis', {
     diceValue: [] as number[],
     availableMoves: [] as number[],
     selectedDiceIndex: null as number | null,
+    rules: {} as any,
   }),
   getters: {
     isMyTurn: (state) => {
