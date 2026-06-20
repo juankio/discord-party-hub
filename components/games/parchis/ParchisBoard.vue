@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[95vmin] h-[95vmin] max-w-[1200px] max-h-[1200px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
+  <div class="relative w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
     
     <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
     <svg viewBox="-800 -800 1600 1600" class="w-full h-full drop-shadow-2xl">
@@ -19,30 +19,31 @@
       </defs>
 
       <!-- Base Madera -->
-      <rect v-if="sides === 4" x="-750" y="-750" width="1500" height="1500" rx="80" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="20" />
-      <circle v-else cx="0" cy="0" r="780" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="20" />
+      <polygon :points="basePolygonPoints" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" />
 
-      <!-- Center Goal Polygon -->
+      <!-- Center Goal Polygon Background -->
       <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="8"/>
 
       <!-- Meta / Llegadas (Middle column of each arm) -->
       <g v-for="(sq, i) in llegadaPaths" :key="'llegada'+i">
-        <path :d="sq.d" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
-        <polygon v-if="sq.isFinal" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.3)`" filter="url(#glow)" />
+        <polygon :points="sq.points" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
       </g>
 
       <!-- Track Squares (Radial Arms with Trapezoids at base) -->
       <g v-for="(sq, i) in trackSquares" :key="'sq'+i">
-        <path :d="sq.d" :fill="sq.fill" stroke="#222" stroke-width="2" />
+        <polygon :points="sq.points" :fill="sq.fill" stroke="#222" stroke-width="2" />
         <!-- Highlight borders for Salida/Seguro/Tip -->
-        <path v-if="sq.isSalida || sq.isSeguro || sq.isTip" :d="sq.d" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
+        <polygon v-if="sq.isSalida || sq.isSeguro || sq.isTip" :points="sq.points" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
         
         <!-- Star Icon for Salida/Seguro -->
         <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.1)`" filter="url(#glow)" />
       </g>
 
-      <!-- Center Hole overlay -->
-      <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="6"/>
+      <!-- Final Center Triangles -->
+      <g v-for="(sq, i) in finalTriangles" :key="'final'+i">
+        <polygon :points="sq.points" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
+        <polygon points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.3)`" filter="url(#glow)" />
+      </g>
 
       <!-- Nests (Bases) -->
       <g v-for="(nest, i) in nests" :key="'nest'+i">
@@ -158,225 +159,207 @@ function rotatePoint(x: number, y: number, degrees: number) {
 	};
 }
 
+function getRightCellPolygon(y_bot: number, y_top: number, M: number) {
+	const x_bot = Math.abs(y_bot) * M; 
+	const x_top = Math.abs(y_top) * M;
+	
+	const pts = [];
+	pts.push({ x: 25, y: y_bot });
+	if (x_bot >= 75) pts.push({ x: 75, y: y_bot });
+	else pts.push({ x: x_bot, y: y_bot });
+	
+	if (x_bot < 75 && x_top > 75) pts.push({ x: 75, y: -75 / M });
+	
+	if (x_top >= 75) pts.push({ x: 75, y: y_top });
+	else pts.push({ x: x_top, y: y_top });
+	
+	pts.push({ x: 25, y: y_top });
+	
+	const uniquePts: {x: number, y: number}[] = [];
+	pts.forEach(p => {
+		if (uniquePts.length === 0 || Math.abs(uniquePts[uniquePts.length - 1].x - p.x) > 0.1 || Math.abs(uniquePts[uniquePts.length - 1].y - p.y) > 0.1) {
+			uniquePts.push(p);
+		}
+	});
+	return uniquePts;
+}
+
+function getLeftCellPolygon(y_bot: number, y_top: number, M: number) {
+	const rightPts = getRightCellPolygon(y_bot, y_top, M);
+	return rightPts.map(p => ({ x: -p.x, y: p.y })).reverse();
+}
+
+const basePolygonPoints = computed(() => {
+	const N = sides.value;
+	const M = Math.tan(Math.PI / N);
+	const R_c = 25 / M;
+	const padding = 60;
+	const R_max = R_c + 400 + padding;
+	const pts = [];
+	for (let i = 0; i < N; i++) {
+		// Counter Clockwise
+		const pt = rotatePoint(R_max * M, -R_max, -i * (360 / N));
+		pts.push(`${pt.x},${pt.y}`);
+	}
+	return pts.join(" ");
+});
+
 const boardGeometry = computed(() => {
 	const N = sides.value;
+	const M = Math.tan(Math.PI / N);
+	const R_c = 25 / M;
 
 	const trackSquares: any[] = [];
 	const llegadaPaths: any[] = [];
+	const finalTriangles: any[] = [];
 	const nests: any[] = [];
 	const coordsMap = {
-		track: [] as any[],
-		meta: [] as any[],
-		nests: [] as any[],
+		track: [] as {x: number, y: number}[],
+		meta: [] as {x: number, y: number}[][],
+		nests: [] as {x: number, y: number, offset: number}[],
 	};
 
-	const rowHeight = 50;
-	// Compute base innerRadius where the arms would be 150px wide
-	const baseInnerRadius = 75 / Math.tan(Math.PI / N);
-	// Pull the arms 1 row inward to form perfect trapezoids at the base
-	const innerRadius = baseInnerRadius - 50;
+	const toPts = (pts: {x: number, y: number}[], angle: number) => {
+		return pts.map(p => {
+			const rot = rotatePoint(p.x, p.y, angle);
+			return `${rot.x},${rot.y}`;
+		}).join(" ");
+	};
+
+	const toCenter = (pts: {x: number, y: number}[], angle: number) => {
+		let sumX = 0, sumY = 0;
+		pts.forEach(p => { sumX += p.x; sumY += p.y; });
+		const cx = sumX / pts.length;
+		const cy = sumY / pts.length;
+		return rotatePoint(cx, cy, angle);
+	};
 
 	for (let p = 0; p < N; p++) {
-		const armAngle = -p * (360 / N);
+		const armAngle = -p * (360 / N); // Counter-Clockwise flow
 		const baseColor = colorPalette[p % colorPalette.length];
 
-		// RADIAL ARM TRACK (17 squares per quadrant)
-		for (let i = 0; i < 17; i++) {
+		// 1. Left Column (Outbound - Salida) -> indices 0-7
+		for (let row = 0; row < 8; row++) {
+			let y_bot = -R_c - row * 50;
+			let y_top = -R_c - (row + 1) * 50;
+			let pts = getLeftCellPolygon(y_bot, y_top, M);
+			
+			let globalIndex = p * 17 + row;
+			let isSalida = (row === 4);
+			let fill = isSalida ? baseColor : "#f5ebd5";
+			let center = toCenter(pts, armAngle);
+			
+			trackSquares.push({
+				points: toPts(pts, armAngle),
+				fill,
+				isSalida, isSeguro: false, isTip: false,
+				cx: center.x, cy: center.y, rot: armAngle
+			});
+			coordsMap.track[globalIndex] = center;
+		}
+
+		// 2. Tip (Turnaround) -> index 8
+		let tipY_bot = -R_c - 400;
+		let tipY_top = tipY_bot - 50;
+		let tipPts = [
+			{x: -75, y: tipY_bot},
+			{x: 75, y: tipY_bot},
+			{x: 75, y: tipY_top},
+			{x: -75, y: tipY_top}
+		];
+		let tipCenter = toCenter(tipPts, armAngle);
+		trackSquares.push({
+			points: toPts(tipPts, armAngle),
+			fill: "#fcd34d",
+			isSalida: false, isSeguro: true, isTip: true,
+			cx: tipCenter.x, cy: tipCenter.y, rot: armAngle
+		});
+		coordsMap.track[p * 17 + 8] = tipCenter;
+
+		// 3. Right Column (Inbound - Llegada) -> indices 9-16
+		for (let row = 7; row >= 0; row--) {
+			let y_bot = -R_c - row * 50;
+			let y_top = -R_c - (row + 1) * 50;
+			let pts = getRightCellPolygon(y_bot, y_top, M);
+			
+			let i = 16 - row;
 			let globalIndex = p * 17 + i;
-			let cx = 0,
-				cy = 0,
-				d = "",
-				fill = "#f5ebd5",
-				rot = armAngle;
-			let isSalida = false;
-			let isSeguro = false;
-			let isTip = false;
-
-			if (i < 8) {
-				// Going UP the RIGHT column of the arm
-				let row = i; // 0 to 7
-				let localY = -innerRadius - (row + 1) * rowHeight;
-				let localYBottom = -innerRadius - row * rowHeight;
-
-				let p1, p2, p3, p4;
-
-				if (i === 0) {
-					// BASE SQUARE RIGHT COLUMN (Trapezoid to close the gap)
-					// Mathematically enforce the outer edge to perfectly match square 1
-					let xBaseInner = Math.abs(localYBottom) * Math.tan(Math.PI / N);
-					let xBaseOuter = 75; // Ensures no "casillas separadas"
-
-					p1 = rotatePoint(25, localYBottom, armAngle);
-					p2 = rotatePoint(xBaseInner, localYBottom, armAngle);
-					p3 = rotatePoint(xBaseOuter, localY, armAngle);
-					p4 = rotatePoint(25, localY, armAngle);
-
-					// Calculate center for token placing (centroid of trapezoid at mid-Y)
-					let midY = localYBottom - 25;
-					let midOuterX = Math.abs(midY) * Math.tan(Math.PI / N);
-					let ptCenter = rotatePoint(
-						(25 + midOuterX) / 2,
-						midY,
-						armAngle,
-					);
-					cx = ptCenter.x;
-					cy = ptCenter.y;
-				} else {
-					let localX = 25;
-					p1 = rotatePoint(localX, localYBottom, armAngle);
-					p2 = rotatePoint(localX + 50, localYBottom, armAngle);
-					p3 = rotatePoint(localX + 50, localY, armAngle);
-					p4 = rotatePoint(localX, localY, armAngle);
-
-					let ptCenter = rotatePoint(localX + 25, localYBottom - 25, armAngle);
-					cx = ptCenter.x;
-					cy = ptCenter.y;
-				}
-
-				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-				if (i === 4) {
-					isSalida = true;
-					fill = baseColor; // Start square matches player color
-				}
-			} else if (i === 8) {
-				// TIP of the arm (Turnaround). Spans all 3 columns
-				let localY = -innerRadius - 8 * rowHeight - 50;
-				let localYBottom = -innerRadius - 8 * rowHeight;
-
-				let p1 = rotatePoint(-75, localYBottom, armAngle);
-				let p2 = rotatePoint(75, localYBottom, armAngle);
-				let p3 = rotatePoint(75, localY, armAngle);
-				let p4 = rotatePoint(-75, localY, armAngle);
-				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-				let ptCenter = rotatePoint(0, localYBottom - 25, armAngle);
-				cx = ptCenter.x;
-				cy = ptCenter.y;
-
-				isSeguro = true;
-				isTip = true;
-				fill = "#fcd34d"; // Safe corner color
-			} else {
-				// Going DOWN the LEFT column of the arm
-				let row = 16 - i; // i=9 -> row=7, i=16 -> row=0
-				let localY = -innerRadius - (row + 1) * rowHeight;
-				let localYBottom = -innerRadius - row * rowHeight;
-
-				let p1, p2, p3, p4;
-
-				if (i === 16) {
-					// BASE SQUARE LEFT COLUMN (Trapezoid to close the gap)
-					let xBaseInner = -Math.abs(localYBottom) * Math.tan(Math.PI / N);
-					let xBaseOuter = -75; // Ensures no "casillas separadas"
-
-					p1 = rotatePoint(xBaseInner, localYBottom, armAngle);
-					p2 = rotatePoint(-25, localYBottom, armAngle);
-					p3 = rotatePoint(-25, localY, armAngle);
-					p4 = rotatePoint(xBaseOuter, localY, armAngle);
-
-					let midY = localYBottom - 25;
-					let midOuterX = -Math.abs(midY) * Math.tan(Math.PI / N);
-					let ptCenter = rotatePoint(
-						(-25 + midOuterX) / 2,
-						midY,
-						armAngle,
-					);
-					cx = ptCenter.x;
-					cy = ptCenter.y;
-				} else {
-					let localX = -75;
-					p1 = rotatePoint(localX, localYBottom, armAngle);
-					p2 = rotatePoint(localX + 50, localYBottom, armAngle);
-					p3 = rotatePoint(localX + 50, localY, armAngle);
-					p4 = rotatePoint(localX, localY, armAngle);
-
-					let ptCenter = rotatePoint(localX + 25, localYBottom - 25, armAngle);
-					cx = ptCenter.x;
-					cy = ptCenter.y;
-				}
-
-				d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-				if (i === 12) {
-					isSeguro = true;
-					fill = "#fcd34d";
-				}
-			}
+			let isSeguro = (row === 4); 
+			let fill = isSeguro ? "#fcd34d" : "#f5ebd5";
+			let center = toCenter(pts, armAngle);
 
 			trackSquares.push({
-				d,
+				points: toPts(pts, armAngle),
 				fill,
-				isSalida,
-				isSeguro,
-				isTip,
-				cx,
-				cy,
-				rot,
+				isSalida: false, isSeguro, isTip: false,
+				cx: center.x, cy: center.y, rot: armAngle
 			});
-			coordsMap.track[globalIndex] = { x: cx, y: cy };
+			coordsMap.track[globalIndex] = center;
 		}
 
-		// META (Llegadas) - Middle column touches the center hole
+		// 4. Meta Column (7 rectangular cells + 1 triangle)
 		coordsMap.meta[p] = [];
-		for (let r = 0; r < 8; r++) {
-			let localY = -innerRadius - (8 - r) * rowHeight;
-			let localYBottom = localY + 50;
-
-			let p1 = rotatePoint(-25, localYBottom, armAngle);
-			let p2 = rotatePoint(25, localYBottom, armAngle);
-			let p3 = rotatePoint(25, localY, armAngle);
-			let p4 = rotatePoint(-25, localY, armAngle);
-			let d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} L ${p4.x} ${p4.y} Z`;
-
-			let ptCenter = rotatePoint(0, localYBottom - 25, armAngle);
-			let isFinal = r === 7;
-
+		const H = 400 / 7; 
+		for (let row = 0; row < 7; row++) {
+			let y_bot = -R_c - 400 + (row + 1) * H;
+			let y_top = -R_c - 400 + row * H;
+			let pts = [
+				{x: -25, y: y_bot},
+				{x: 25, y: y_bot},
+				{x: 25, y: y_top},
+				{x: -25, y: y_top}
+			];
+			let center = toCenter(pts, armAngle);
 			llegadaPaths.push({
-				d,
+				points: toPts(pts, armAngle),
 				color: baseColor,
-				cx: ptCenter.x,
-				cy: ptCenter.y,
-				rot: armAngle,
-				isFinal,
+				isFinal: false,
+				cx: center.x, cy: center.y, rot: armAngle
 			});
-			coordsMap.meta[p][r] = { x: ptCenter.x, y: ptCenter.y };
+			coordsMap.meta[p][row] = center;
 		}
+		
+		// Final Triangle touches exactly (0,0)
+		let triPts = [
+			{x: -25, y: -R_c},
+			{x: 25, y: -R_c},
+			{x: 0, y: 0}
+		];
+		let triCenter = rotatePoint(0, -R_c * 0.6, armAngle); 
+		finalTriangles.push({
+			points: toPts(triPts, armAngle),
+			color: baseColor,
+			cx: triCenter.x, cy: triCenter.y, rot: armAngle
+		});
+		coordsMap.meta[p][7] = triCenter;
 
-		// NESTS (Bases) - Pushed deeply into the V-gap
-		let nestAngle = armAngle - 360 / N / 2;
-		let nestRadius = N === 4 ? 120 : N === 6 ? 100 : 80;
-		// Push the nest closer to the center hole to clear the arm tips
-		let nestDist = baseInnerRadius + nestRadius + (N === 4 ? 60 : 30);
-
-		let tokenOffset = N === 4 ? 45 : N === 6 ? 35 : 28;
-		let pt = rotatePoint(0, -nestDist, nestAngle);
+		// 5. Nests
+		// Nests are on the RIGHT side of the arm so you exit CCW on the Left.
+		let nestAngle = armAngle + (180 / N);
+		let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
+		let nestDist = (nestRadius + 95) / Math.sin(Math.PI / N);
+		let nestCenter = rotatePoint(0, -nestDist, nestAngle);
+		let tokenOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
 
 		nests.push({
-			cx: pt.x,
-			cy: pt.y,
+			cx: nestCenter.x,
+			cy: nestCenter.y,
 			color: baseColor,
 			r: nestRadius,
-			offset: tokenOffset,
+			offset: tokenOffset
 		});
-		coordsMap.nests[p] = { x: pt.x, y: pt.y, offset: tokenOffset };
+		coordsMap.nests[p] = { x: nestCenter.x, y: nestCenter.y, offset: tokenOffset };
 	}
 
-	// CENTER POLYGON (Star-shaped hole that touches the trapezoids)
-	const polyPts: string[] = [];
+	// Center black star
+	const polyPts = [];
 	for (let p = 0; p < N; p++) {
-		// Middle column bases
-		let p1 = rotatePoint(-25, -innerRadius, (p * 360) / N);
-		let p2 = rotatePoint(25, -innerRadius, (p * 360) / N);
-
-		// The inner intersection point of the trapezoids on the bisector line
-		let intersectionRadius = innerRadius / Math.cos(Math.PI / N);
-		let intersectionPt = rotatePoint(
-			0,
-			-intersectionRadius,
-			(p * 360) / N + 360 / (2 * N),
-		);
-
+		const armAngle = -p * (360 / N);
+		let p1 = rotatePoint(-25, -R_c, armAngle);
+		let p2 = rotatePoint(25, -R_c, armAngle);
+		let intersectionRadius = R_c / Math.cos(Math.PI / N);
+		let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle + 180 / N);
+		
 		polyPts.push(`${p1.x},${p1.y}`);
 		polyPts.push(`${p2.x},${p2.y}`);
 		polyPts.push(`${intersectionPt.x},${intersectionPt.y}`);
@@ -385,14 +368,16 @@ const boardGeometry = computed(() => {
 	return {
 		trackSquares,
 		llegadaPaths,
+		finalTriangles,
 		nests,
 		centerPolygon: polyPts.join(" "),
-		coordsMap,
+		coordsMap
 	};
 });
 
 const trackSquares = computed(() => boardGeometry.value.trackSquares);
 const llegadaPaths = computed(() => boardGeometry.value.llegadaPaths);
+const finalTriangles = computed(() => boardGeometry.value.finalTriangles);
 const nests = computed(() => boardGeometry.value.nests);
 const centerPolygon = computed(() => boardGeometry.value.centerPolygon);
 
@@ -400,12 +385,12 @@ const allTokens = computed(() => {
 	const tokens: any[] = [];
 	const coordsMap = boardGeometry.value.coordsMap;
 
-	parchisStore.players.forEach((player, pIdx) => {
+	parchisStore.players.forEach((player: any, pIdx: number) => {
 		if (!player.tokens) return;
 
 		const baseP = pIdx % sides.value;
 
-		player.tokens.forEach((token, tIdx) => {
+		player.tokens.forEach((token: any, tIdx: number) => {
 			let tokenCoords = { x: 0, y: 0 };
 
 			if (token.state === "HOME") {
@@ -425,7 +410,7 @@ const allTokens = computed(() => {
 					token.position % (sides.value * 17)
 				] as any;
 				if (trackCell) {
-					// Check how many tokens are in this exact cell across ALL players
+					// Token Stacking Logic
 					let occupants = 0;
 					let myIndexInCell = 0;
 					parchisStore.players.forEach((p: any) => {
@@ -442,7 +427,6 @@ const allTokens = computed(() => {
 					let offsetX = 0;
 					let offsetY = 0;
 					if (occupants > 1) {
-						// Small scatter based on index
 						const offsets = [
 							{x: -12, y: -12},
 							{x: 12, y: 12},
