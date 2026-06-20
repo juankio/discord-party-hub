@@ -81,27 +81,22 @@ const rollDice = (index: number) => {
   
   anime.remove(el)
   
-  // Flat 2D Shake & Bounce animation
+  // Fast scale pop-in & out punch
   anime({
     targets: el,
+    scale: [
+      { value: 1.4, duration: 60, easing: 'easeOutSine' },
+      { value: 1, duration: 150, easing: 'spring(1, 80, 10, 0)' }
+    ],
     translateY: [
-      { value: -30, duration: 200, easing: 'easeOutQuad' },
-      { value: 0, duration: 250, easing: 'easeInQuad' },
-      { value: -15, duration: 150, easing: 'easeOutQuad' },
-      { value: 0, duration: 200, easing: 'easeInQuad' }
+      { value: -15, duration: 60, easing: 'easeOutSine' },
+      { value: 0, duration: 150, easing: 'spring(1, 80, 10, 0)' }
     ],
     rotate: [
-      { value: 15, duration: 100 },
-      { value: -15, duration: 100 },
-      { value: 15, duration: 100 },
-      { value: -15, duration: 100 },
-      { value: 0, duration: 150 }
+      { value: (Math.random() > 0.5 ? 15 : -15), duration: 60, easing: 'easeOutSine' },
+      { value: 0, duration: 150, easing: 'spring(1, 80, 10, 0)' }
     ],
-    scale: [
-      { value: 1.1, duration: 200 },
-      { value: 1, duration: 300 }
-    ],
-    delay: index * 100
+    delay: index * 50
   })
 }
 

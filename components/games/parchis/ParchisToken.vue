@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import anime from "animejs";
 import { Car, Dog, Gem, HardHat, Sailboat, Trees } from "lucide-vue-next";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, nextTick } from "vue";
 import { useToast } from "#imports";
 import { useSocket } from "~/composables/useSocket";
 import { useParchisStore } from "~/stores/games/parchisStore";
@@ -212,47 +212,71 @@ watch(
 	() => props.coordinates,
 	(newVal, oldVal) => {
 		if (import.meta.client && oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {
-            const distance = Math.sqrt(Math.pow(newVal.x - oldVal.x, 2) + Math.pow(newVal.y - oldVal.y, 2));
-            const duration = Math.min(Math.max(distance * 1.5, 400), 800); // Dynamic duration based on distance
-
-			// Animate the X/Y position proxy
-            const proxy = { x: oldVal.x, y: oldVal.y };
-            anime({
-                targets: proxy,
-                x: newVal.x,
-                y: newVal.y,
-                duration: duration,
-                easing: 'easeInOutSine',
-                update: () => {
-                    animCoords.value.x = proxy.x;
-                    animCoords.value.y = proxy.y;
-                }
-            });
+			const distance = Math.sqrt(Math.pow(newVal.x - oldVal.x, 2) + Math.pow(newVal.y - oldVal.y, 2));
+			const duration = Math.min(Math.max(distance * 0.5, 150), 250); // Ultra-fast duration
 
 			if (tokenContainer.value) {
-				const body = tokenContainer.value.querySelector(".token-body");
-				if (body) {
-					anime.remove(body);
-                    // Beautiful parabolic jump
+				const el = tokenContainer.value;
+				
+				// FLIP technique: measure current visual position
+				const firstRect = el.getBoundingClientRect();
+				
+				// Clear any ongoing transforms to get clean layout measure
+				anime.remove(el);
+				el.style.transform = '';
+				
+				// Update base layout coordinates
+				animCoords.value.x = newVal.x;
+				animCoords.value.y = newVal.y;
+
+				nextTick(() => {
+					// Measure new static position
+					const lastRect = el.getBoundingClientRect();
+					
+					// Invert
+					const invertX = firstRect.left - lastRect.left;
+					const invertY = firstRect.top - lastRect.top;
+					
+					// Animate from inverted to 0 using translate3d
 					anime({
-						targets: body,
-						translateY: [
-							{ value: -80, duration: duration * 0.5, easing: "easeOutSine" },
-							{ value: 0, duration: duration * 0.5, easing: "easeInQuad" }
-						],
-						scale: [
-							{ value: 1.4, duration: duration * 0.5, easing: "easeOutSine" },
-							{ value: 1, duration: duration * 0.5, easing: "easeInQuad" }
-						]
+						targets: el,
+						translateX: [invertX, 0],
+						translateY: [invertY, 0],
+						translateZ: 0,
+						duration: duration,
+						easing: 'spring(1, 80, 10, 0)',
+						complete: () => {
+							el.style.transform = '';
+						}
 					});
-				}
+
+					const body = el.querySelector(".token-body");
+					if (body) {
+						anime.remove(body);
+						// Snappy jump
+						anime({
+							targets: body,
+							translateY: [
+								{ value: -30, duration: duration * 0.4, easing: "easeOutSine" },
+								{ value: 0, duration: duration * 0.6, easing: "easeInQuad" }
+							],
+							scale: [
+								{ value: 1.25, duration: duration * 0.4, easing: "easeOutSine" },
+								{ value: 1, duration: duration * 0.6, easing: "easeInQuad" }
+							]
+						});
+					}
+				});
+			} else {
+				animCoords.value.x = newVal.x;
+				animCoords.value.y = newVal.y;
 			}
 		} else {
-            animCoords.value.x = newVal.x;
-            animCoords.value.y = newVal.y;
-        }
+			animCoords.value.x = newVal.x;
+			animCoords.value.y = newVal.y;
+		}
 	},
-    { immediate: true }
+	{ immediate: true }
 );
 </script>
 
