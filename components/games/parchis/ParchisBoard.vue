@@ -1,4 +1,4 @@
-<template>
+<                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      emplate>
   <div class="relative w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
     
     <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
@@ -36,7 +36,7 @@
         <polygon v-if="sq.isSalida || sq.isSeguro || sq.isTip" :points="sq.points" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
         
         <!-- Star Icon for Salida/Seguro -->
-        <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.1)`" filter="url(#glow)" />
+        <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${-sq.rot}) scale(1.1)`" filter="url(#glow)" />
       </g>
 
       
@@ -148,7 +148,7 @@ const getColor = (colorStr: string) => {
 const sides = computed(() => parchisStore.rules?.parchisBoardSize || 4);
 
 function rotatePoint(x: number, y: number, degrees: number) {
-	const rad = (degrees * Math.PI) / 180;
+	const rad = (-degrees * Math.PI) / 180;
 	return {
 		x: x * Math.cos(rad) - y * Math.sin(rad),
 		y: x * Math.sin(rad) + y * Math.cos(rad),
@@ -188,13 +188,13 @@ function getLeftCellPolygon(y_bot: number, y_top: number, M: number) {
 const basePolygonPoints = computed(() => {
 	const N = sides.value;
 	const M = Math.tan(Math.PI / N);
-	const R_c = 25 / M;
+	const R_c = 75 / M;
 	const padding = 60;
 	const R_max = R_c + 400 + padding;
 	const pts = [];
 	for (let i = 0; i < N; i++) {
-		// Counter Clockwise
-		const pt = rotatePoint(R_max * M, -R_max, -i * (360 / N));
+		// Clockwise (inverted as requested)
+		const pt = rotatePoint(R_max * M, -R_max, i * (360 / N));
 		pts.push(`${pt.x},${pt.y}`);
 	}
 	return pts.join(" ");
@@ -203,7 +203,7 @@ const basePolygonPoints = computed(() => {
 const boardGeometry = computed(() => {
 	const N = sides.value;
 	const M = Math.tan(Math.PI / N);
-	const R_c = 25 / M;
+	const R_c = 75 / M;
 
 	const trackSquares: any[] = [];
 	const llegadaPaths: any[] = [];
@@ -231,7 +231,7 @@ const boardGeometry = computed(() => {
 	};
 
 	for (let p = 0; p < N; p++) {
-		const armAngle = p * (360 / N); // Counter-Clockwise flow
+		const armAngle = p * (360 / N); // Inverted to Clockwise flow as requested
 		const baseColor = colorPalette[p % colorPalette.length];
 
 		// 1. Left Column (Outbound - Salida) -> indices 0-7
@@ -336,8 +336,8 @@ const boardGeometry = computed(() => {
 	const polyPts = [];
 	for (let p = 0; p < N; p++) {
 		const armAngle = p * (360 / N);
-		let p1 = rotatePoint(-25, -R_c, armAngle);
-		let p2 = rotatePoint(25, -R_c, armAngle);
+		let p1 = rotatePoint(-75, -R_c, armAngle);
+		let p2 = rotatePoint(75, -R_c, armAngle);
 		let intersectionRadius = R_c / Math.cos(Math.PI / N);
 		let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle - 180 / N);
 		
