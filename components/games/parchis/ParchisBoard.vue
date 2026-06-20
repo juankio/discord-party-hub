@@ -148,7 +148,7 @@ const getColor = (colorStr: string) => {
 const sides = computed(() => parchisStore.rules?.parchisBoardSize || 4);
 
 function rotatePoint(x: number, y: number, degrees: number) {
-	const rad = (-degrees * Math.PI) / 180;
+	const rad = (degrees * Math.PI) / 180;
 	return {
 		x: x * Math.cos(rad) - y * Math.sin(rad),
 		y: x * Math.sin(rad) + y * Math.cos(rad),
@@ -265,7 +265,7 @@ const boardGeometry = computed(() => {
 			}
 			
 			let globalIndex = p * 17 + row;
-			let isSalida = (row === 0); // Pegada a la base
+			let isSalida = (row === 4); // Mitad del brazo (Salida Clásica)
 			let fill = isSalida ? baseColor : "#f5ebd5";
 			
 			trackSquares.push({
