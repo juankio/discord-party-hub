@@ -2,7 +2,7 @@
   <div class="relative w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
     
     <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
-    <svg viewBox="-800 -800 1600 1600" class="w-full h-full drop-shadow-2xl">
+    <svg viewBox="-700 -700 1400 1400" class="w-full h-full drop-shadow-2xl">
       <defs>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="5" result="blur" />
@@ -69,7 +69,7 @@
         :token="tokenObj.data"
         :figureId="tokenObj.player.selectedFigure"
         :coordinates="tokenObj.coords"
-        :boardSize="1600"
+        :boardSize="1400"
       />
     </div>
 

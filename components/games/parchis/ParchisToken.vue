@@ -3,8 +3,8 @@
     ref="tokenContainer"
     class="absolute z-10 w-[38px] h-[38px] -ml-[19px] -mt-[19px] flex items-center justify-center parchis-token pointer-events-auto cursor-pointer"
     :style="{
-      left: `${((animCoords.x + 800) / 1600) * 100}%`,
-      top: `${((animCoords.y + 800) / 1600) * 100}%`
+      left: `${((animCoords.x + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`,
+      top: `${((animCoords.y + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`
     }"
     @click="onTokenClick"
   >
