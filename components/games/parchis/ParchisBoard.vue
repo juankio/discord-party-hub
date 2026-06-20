@@ -188,12 +188,12 @@ function getLeftCellPolygon(y_bot: number, y_top: number, M: number) {
 const basePolygonPoints = computed(() => {
 	const N = sides.value;
 	const M = Math.tan(Math.PI / N);
-	const R_c = 75 / M;
+	const baseInnerRadius = 75 / M;
+	const innerRadius = baseInnerRadius - 50;
 	const padding = 60;
-	const R_max = R_c + 400 + padding;
+	const R_max = innerRadius + 400 + padding;
 	const pts = [];
 	for (let i = 0; i < N; i++) {
-		// Clockwise (inverted as requested)
 		const pt = rotatePoint(R_max * M, -R_max, i * (360 / N));
 		pts.push(`${pt.x},${pt.y}`);
 	}
@@ -203,15 +203,16 @@ const basePolygonPoints = computed(() => {
 const boardGeometry = computed(() => {
 	const N = sides.value;
 	const M = Math.tan(Math.PI / N);
-	const R_c = 75 / M;
+	const baseInnerRadius = 75 / M;
+	const innerRadius = baseInnerRadius - 50;
+	const rowHeight = 50;
 
 	const trackSquares: any[] = [];
 	const llegadaPaths: any[] = [];
-	
 	const nests: any[] = [];
 	const coordsMap = {
 		track: [] as {x: number, y: number}[],
-		meta: [] as {x: number, y: number}[][],
+		meta: [] as {x: number, y: number}[],
 		nests: [] as {x: number, y: number, offset: number}[],
 	};
 
@@ -231,19 +232,41 @@ const boardGeometry = computed(() => {
 	};
 
 	for (let p = 0; p < N; p++) {
-		const armAngle = p * (360 / N); // Inverted to Clockwise flow as requested
+		const armAngle = p * (360 / N); // Clockwise flow
 		const baseColor = colorPalette[p % colorPalette.length];
 
 		// 1. Left Column (Outbound - Salida) -> indices 0-7
 		for (let row = 0; row < 8; row++) {
-			let y_bot = -R_c - row * 50;
-			let y_top = -R_c - (row + 1) * 50;
-			let pts = getLeftCellPolygon(y_bot, y_top, M);
+			let y_bot = -innerRadius - row * rowHeight;
+			let y_top = -innerRadius - (row + 1) * rowHeight;
+			let pts, center;
+
+			if (row === 0) {
+				// Base Trapezoid LEFT COLUMN
+				let xBaseInner = -Math.abs(y_bot) * M;
+				let xBaseOuter = -75; // Align perfectly with row 1
+				pts = [
+					{ x: xBaseInner, y: y_bot },
+					{ x: -25, y: y_bot },
+					{ x: -25, y: y_top },
+					{ x: xBaseOuter, y: y_top }
+				];
+				let midY = y_bot - 25;
+				let midOuterX = -Math.abs(midY) * M;
+				center = rotatePoint((-25 + midOuterX) / 2, midY, armAngle);
+			} else {
+				pts = [
+					{ x: -75, y: y_bot },
+					{ x: -25, y: y_bot },
+					{ x: -25, y: y_top },
+					{ x: -75, y: y_top }
+				];
+				center = rotatePoint(-50, y_bot - 25, armAngle);
+			}
 			
 			let globalIndex = p * 17 + row;
-			let isSalida = (row === 0);
+			let isSalida = (row === 0); // Pegada a la base
 			let fill = isSalida ? baseColor : "#f5ebd5";
-			let center = toCenter(pts, armAngle);
 			
 			trackSquares.push({
 				points: toPts(pts, armAngle),
@@ -255,7 +278,7 @@ const boardGeometry = computed(() => {
 		}
 
 		// 2. Tip (Turnaround) -> index 8
-		let tipY_bot = -R_c - 400;
+		let tipY_bot = -innerRadius - 400;
 		let tipY_top = tipY_bot - 50;
 		let tipPts = [
 			{x: -75, y: tipY_bot},
@@ -263,7 +286,7 @@ const boardGeometry = computed(() => {
 			{x: 75, y: tipY_top},
 			{x: -75, y: tipY_top}
 		];
-		let tipCenter = toCenter(tipPts, armAngle);
+		let tipCenter = rotatePoint(0, tipY_bot - 25, armAngle);
 		trackSquares.push({
 			points: toPts(tipPts, armAngle),
 			fill: "#fcd34d",
@@ -274,15 +297,37 @@ const boardGeometry = computed(() => {
 
 		// 3. Right Column (Inbound - Llegada) -> indices 9-16
 		for (let row = 7; row >= 0; row--) {
-			let y_bot = -R_c - row * 50;
-			let y_top = -R_c - (row + 1) * 50;
-			let pts = getRightCellPolygon(y_bot, y_top, M);
+			let y_bot = -innerRadius - row * rowHeight;
+			let y_top = -innerRadius - (row + 1) * rowHeight;
+			let pts, center;
+
+			if (row === 0) {
+				// Base Trapezoid RIGHT COLUMN
+				let xBaseInner = Math.abs(y_bot) * M;
+				let xBaseOuter = 75; // Align perfectly with row 1
+				pts = [
+					{ x: 25, y: y_bot },
+					{ x: xBaseInner, y: y_bot },
+					{ x: xBaseOuter, y: y_top },
+					{ x: 25, y: y_top }
+				];
+				let midY = y_bot - 25;
+				let midOuterX = Math.abs(midY) * M;
+				center = rotatePoint((25 + midOuterX) / 2, midY, armAngle);
+			} else {
+				pts = [
+					{ x: 25, y: y_bot },
+					{ x: 75, y: y_bot },
+					{ x: 75, y: y_top },
+					{ x: 25, y: y_top }
+				];
+				center = rotatePoint(50, y_bot - 25, armAngle);
+			}
 			
 			let i = 16 - row;
 			let globalIndex = p * 17 + i;
-			let isSeguro = (row === 4); 
+			let isSeguro = (row === 4); // Mitad del brazo
 			let fill = isSeguro ? "#fcd34d" : "#f5ebd5";
-			let center = toCenter(pts, armAngle);
 
 			trackSquares.push({
 				points: toPts(pts, armAngle),
@@ -293,18 +338,18 @@ const boardGeometry = computed(() => {
 			coordsMap.track[globalIndex] = center;
 		}
 
-						// 4. Meta Column (8 rectangular cells)
+		// 4. Meta Column (8 rectangular cells)
 		coordsMap.meta[p] = [];
 		for (let row = 0; row < 8; row++) {
-			let y_bot = -R_c - 400 + (row + 1) * 50;
-			let y_top = -R_c - 400 + row * 50;
+			let y_bot = -innerRadius - 400 + (row + 1) * 50;
+			let y_top = -innerRadius - 400 + row * 50;
 			let pts = [
 				{x: -25, y: y_bot},
 				{x: 25, y: y_bot},
 				{x: 25, y: y_top},
 				{x: -25, y: y_top}
 			];
-			let center = toCenter(pts, armAngle);
+			let center = rotatePoint(0, y_bot - 25, armAngle);
 			llegadaPaths.push({
 				points: toPts(pts, armAngle),
 				color: baseColor,
@@ -314,11 +359,12 @@ const boardGeometry = computed(() => {
 			coordsMap.meta[p][row] = center;
 		}
 
-		// 5. Nests// 5. Nests
-		// Nests are on the LEFT side of the arm to match the LEFT column Salida.
+		// 5. Nests
+		// Left side of the arm
 		let nestAngle = armAngle - (180 / N);
 		let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
-		let nestDist = (nestRadius + 95) / Math.sin(Math.PI / N);
+		// Distance so it rests beautifully in the V-gap
+		let nestDist = baseInnerRadius + nestRadius + (N === 4 ? 60 : 30);
 		let nestCenter = rotatePoint(0, -nestDist, nestAngle);
 		let tokenOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
 
@@ -336,9 +382,9 @@ const boardGeometry = computed(() => {
 	const polyPts = [];
 	for (let p = 0; p < N; p++) {
 		const armAngle = p * (360 / N);
-		let p1 = rotatePoint(-75, -R_c, armAngle);
-		let p2 = rotatePoint(75, -R_c, armAngle);
-		let intersectionRadius = R_c / Math.cos(Math.PI / N);
+		let p1 = rotatePoint(-25, -innerRadius, armAngle);
+		let p2 = rotatePoint(25, -innerRadius, armAngle);
+		let intersectionRadius = innerRadius / Math.cos(Math.PI / N);
 		let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle - 180 / N);
 		
 		polyPts.push(`${p1.x},${p1.y}`);
@@ -349,7 +395,6 @@ const boardGeometry = computed(() => {
 	return {
 		trackSquares,
 		llegadaPaths,
-		
 		nests,
 		centerPolygon: polyPts.join(" "),
 		coordsMap
