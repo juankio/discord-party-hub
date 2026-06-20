@@ -297,12 +297,16 @@ const boardGeometry = computed(() => {
 			coordsMap.track[globalIndex] = center;
 		}
 
-		// 4. Meta Column (7 rectangular cells + 1 triangle)
+				// 4. Meta Column (7 rectangular cells + 1 triangle)
 		coordsMap.meta[p] = [];
-		const H = 400 / 7; 
 		for (let row = 0; row < 7; row++) {
-			let y_bot = -R_c - 400 + (row + 1) * H;
-			let y_top = -R_c - 400 + row * H;
+			// To align the grid lines with the side columns, 
+			// the 7 rectangles must perfectly match the 7 outer cells of the side columns.
+			// The side columns have 8 cells total (1 base trapezoid + 7 rectangles).
+			// The tip is at -R_c - 400. The base of the rectangles is at -R_c - 50.
+			// So row 0 of Meta (closest to Tip) is from -350 to -400.
+			let y_bot = -R_c - 400 + (row + 1) * 50;
+			let y_top = -R_c - 400 + row * 50;
 			let pts = [
 				{x: -25, y: y_bot},
 				{x: 25, y: y_bot},
@@ -319,20 +323,24 @@ const boardGeometry = computed(() => {
 			coordsMap.meta[p][row] = center;
 		}
 		
-		// Final Triangle touches exactly (0,0)
+		// Final Triangle touches exactly (0,0) and covers the remaining space from -R_c - 50 to 0.
+		// Actually, the trapezoids occupy the space from -R_c to -R_c - 50.
+		// The triangle should start at -R_c - 50 and point to 0,0?
+		// No, the trapezoids connect the outer columns. The middle column has a gap from -R_c to -R_c - 50.
+		// Let's make the triangle start at -R_c - 50, but we also want it to look good.
+		// If it starts at -R_c - 50, the base is 50px wide.
 		let triPts = [
-			{x: -25, y: -R_c},
-			{x: 25, y: -R_c},
+			{x: -25, y: -R_c - 50},
+			{x: 25, y: -R_c - 50},
 			{x: 0, y: 0}
 		];
-		let triCenter = rotatePoint(0, -R_c * 0.6, armAngle); 
+		let triCenter = rotatePoint(0, -R_c - 15, armAngle); 
 		finalTriangles.push({
 			points: toPts(triPts, armAngle),
 			color: baseColor,
 			cx: triCenter.x, cy: triCenter.y, rot: armAngle
 		});
 		coordsMap.meta[p][7] = triCenter;
-
 		// 5. Nests
 		// Nests are on the LEFT side of the arm to match the LEFT column Salida.
 		let nestAngle = armAngle - (180 / N);
