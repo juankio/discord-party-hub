@@ -364,7 +364,7 @@ const boardGeometry = computed(() => {
 		let nestAngle = armAngle - (180 / N);
 		let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
 		// Distance so it rests beautifully in the V-gap
-		let nestDist = baseInnerRadius + nestRadius + (N === 4 ? 60 : 30);
+		let nestDist = ((nestRadius + 75) / Math.sin(Math.PI / N)) + 15;
 		let nestCenter = rotatePoint(0, -nestDist, nestAngle);
 		let tokenOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
 
