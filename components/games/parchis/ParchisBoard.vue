@@ -39,11 +39,7 @@
         <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.1)`" filter="url(#glow)" />
       </g>
 
-      <!-- Final Center Triangles -->
-      <g v-for="(sq, i) in finalTriangles" :key="'final'+i">
-        <polygon :points="sq.points" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
-        <polygon points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fbbf24" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${sq.rot}) scale(1.3)`" filter="url(#glow)" />
-      </g>
+      
 
       <!-- Nests (Bases) -->
       <g v-for="(nest, i) in nests" :key="'nest'+i">
@@ -211,7 +207,7 @@ const boardGeometry = computed(() => {
 
 	const trackSquares: any[] = [];
 	const llegadaPaths: any[] = [];
-	const finalTriangles: any[] = [];
+	
 	const nests: any[] = [];
 	const coordsMap = {
 		track: [] as {x: number, y: number}[],
@@ -297,14 +293,9 @@ const boardGeometry = computed(() => {
 			coordsMap.track[globalIndex] = center;
 		}
 
-				// 4. Meta Column (7 rectangular cells + 1 triangle)
+						// 4. Meta Column (8 rectangular cells)
 		coordsMap.meta[p] = [];
-		for (let row = 0; row < 7; row++) {
-			// To align the grid lines with the side columns, 
-			// the 7 rectangles must perfectly match the 7 outer cells of the side columns.
-			// The side columns have 8 cells total (1 base trapezoid + 7 rectangles).
-			// The tip is at -R_c - 400. The base of the rectangles is at -R_c - 50.
-			// So row 0 of Meta (closest to Tip) is from -350 to -400.
+		for (let row = 0; row < 8; row++) {
 			let y_bot = -R_c - 400 + (row + 1) * 50;
 			let y_top = -R_c - 400 + row * 50;
 			let pts = [
@@ -317,31 +308,13 @@ const boardGeometry = computed(() => {
 			llegadaPaths.push({
 				points: toPts(pts, armAngle),
 				color: baseColor,
-				isFinal: false,
+				isFinal: (row === 7),
 				cx: center.x, cy: center.y, rot: armAngle
 			});
 			coordsMap.meta[p][row] = center;
 		}
-		
-		// Final Triangle touches exactly (0,0) and covers the remaining space from -R_c - 50 to 0.
-		// Actually, the trapezoids occupy the space from -R_c to -R_c - 50.
-		// The triangle should start at -R_c - 50 and point to 0,0?
-		// No, the trapezoids connect the outer columns. The middle column has a gap from -R_c to -R_c - 50.
-		// Let's make the triangle start at -R_c - 50, but we also want it to look good.
-		// If it starts at -R_c - 50, the base is 50px wide.
-		let triPts = [
-			{x: -25, y: -R_c - 50},
-			{x: 25, y: -R_c - 50},
-			{x: 0, y: 0}
-		];
-		let triCenter = rotatePoint(0, -R_c - 15, armAngle); 
-		finalTriangles.push({
-			points: toPts(triPts, armAngle),
-			color: baseColor,
-			cx: triCenter.x, cy: triCenter.y, rot: armAngle
-		});
-		coordsMap.meta[p][7] = triCenter;
-		// 5. Nests
+
+		// 5. Nests// 5. Nests
 		// Nests are on the LEFT side of the arm to match the LEFT column Salida.
 		let nestAngle = armAngle - (180 / N);
 		let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
@@ -376,7 +349,7 @@ const boardGeometry = computed(() => {
 	return {
 		trackSquares,
 		llegadaPaths,
-		finalTriangles,
+		
 		nests,
 		centerPolygon: polyPts.join(" "),
 		coordsMap
@@ -385,7 +358,7 @@ const boardGeometry = computed(() => {
 
 const trackSquares = computed(() => boardGeometry.value.trackSquares);
 const llegadaPaths = computed(() => boardGeometry.value.llegadaPaths);
-const finalTriangles = computed(() => boardGeometry.value.finalTriangles);
+
 const nests = computed(() => boardGeometry.value.nests);
 const centerPolygon = computed(() => boardGeometry.value.centerPolygon);
 
