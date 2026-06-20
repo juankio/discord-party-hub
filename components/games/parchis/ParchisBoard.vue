@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full max-w-4xl mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
+  <div class="relative w-[95vmin] h-[95vmin] max-w-[1200px] max-h-[1200px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
     
     <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
     <svg viewBox="-800 -800 1600 1600" class="w-full h-full drop-shadow-2xl">
@@ -177,7 +177,7 @@ const boardGeometry = computed(() => {
 	const innerRadius = baseInnerRadius - 50;
 
 	for (let p = 0; p < N; p++) {
-		const armAngle = p * (360 / N);
+		const armAngle = -p * (360 / N);
 		const baseColor = colorPalette[p % colorPalette.length];
 
 		// RADIAL ARM TRACK (17 squares per quadrant)
@@ -424,7 +424,41 @@ const allTokens = computed(() => {
 				const trackCell = coordsMap.track[
 					token.position % (sides.value * 17)
 				] as any;
-				if (trackCell) tokenCoords = { x: trackCell.x, y: trackCell.y };
+				if (trackCell) {
+					// Check how many tokens are in this exact cell across ALL players
+					let occupants = 0;
+					let myIndexInCell = 0;
+					parchisStore.players.forEach((p: any) => {
+						p.tokens?.forEach((t: any) => {
+							if ((t.state === "BOARD" || t.state === "TRACK") && (t.position % (sides.value * 17)) === (token.position % (sides.value * 17))) {
+								if (p.userId === player.userId && t.id === token.id) {
+									myIndexInCell = occupants;
+								}
+								occupants++;
+							}
+						});
+					});
+					
+					let offsetX = 0;
+					let offsetY = 0;
+					if (occupants > 1) {
+						// Small scatter based on index
+						const offsets = [
+							{x: -12, y: -12},
+							{x: 12, y: 12},
+							{x: -12, y: 12},
+							{x: 12, y: -12},
+							{x: 0, y: -16},
+							{x: 0, y: 16},
+							{x: -16, y: 0},
+							{x: 16, y: 0}
+						];
+						offsetX = offsets[myIndexInCell % offsets.length].x;
+						offsetY = offsets[myIndexInCell % offsets.length].y;
+					}
+					
+					tokenCoords = { x: trackCell.x + offsetX, y: trackCell.y + offsetY };
+				}
 			} else if (token.state === "META") {
 				const corridorCell = coordsMap.meta[baseP]?.[token.position - 1] as any;
 				if (corridorCell)
