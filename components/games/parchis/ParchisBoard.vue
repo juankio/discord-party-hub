@@ -334,8 +334,8 @@ const boardGeometry = computed(() => {
 		coordsMap.meta[p][7] = triCenter;
 
 		// 5. Nests
-		// Nests are on the RIGHT side of the arm so you exit CCW on the Left.
-		let nestAngle = armAngle + (180 / N);
+		// Nests are on the LEFT side of the arm to match the LEFT column Salida.
+		let nestAngle = armAngle - (180 / N);
 		let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
 		let nestDist = (nestRadius + 95) / Math.sin(Math.PI / N);
 		let nestCenter = rotatePoint(0, -nestDist, nestAngle);
