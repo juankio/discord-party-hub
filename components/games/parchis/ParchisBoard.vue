@@ -242,7 +242,7 @@ const boardGeometry = computed(() => {
 		for (let row = 0; row < 8; row++) {
 			let y_bot = -R_c - row * 50;
 			let y_top = -R_c - (row + 1) * 50;
-			let pts = getRightCellPolygon(y_bot, y_top, M);
+			let pts = getLeftCellPolygon(y_bot, y_top, M);
 			
 			let globalIndex = p * 17 + row;
 			let isSalida = (row === 4);
