@@ -1,108 +1,145 @@
 <template>
-  <div class="relative w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] mx-auto aspect-square bg-[#1a0f08] rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10" :style="{ backgroundColor: '#2a1a10' }">
+  <div class="relative w-full h-full flex flex-col items-center justify-between gap-2 sm:gap-4 overflow-hidden">
     
-    <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
-    <svg viewBox="-700 -700 1400 1400" class="w-full h-full drop-shadow-2xl">
-      <defs>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="5" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <filter id="inner-shadow">
-          <feOffset dx="0" dy="0"/>
-          <feGaussianBlur stdDeviation="3" result="offset-blur"/>
-          <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
-          <feFlood flood-color="black" flood-opacity="0.5" result="color"/>
-          <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
-          <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
-        </filter>
-      </defs>
+    <!-- Tablero contenedor dinámico (Se adapta con CSS functions) -->
+    <div class="flex-1 w-full flex items-center justify-center min-h-0 relative z-0 p-2 sm:p-4 mt-2 sm:mt-0">
+      <div 
+        class="relative aspect-square mx-auto bg-[#2a1a10] rounded-3xl sm:rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden ring-[1px] ring-white/20 border-[3px] sm:border-[4px] border-[#4a2e1b] shrink-0" 
+        style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px;"
+      >
+        <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
+        <svg viewBox="-700 -700 1400 1400" class="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]">
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <filter id="inner-shadow">
+              <feOffset dx="0" dy="0"/>
+              <feGaussianBlur stdDeviation="3" result="offset-blur"/>
+              <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+              <feFlood flood-color="black" flood-opacity="0.5" result="color"/>
+              <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+              <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+            </filter>
+          </defs>
 
-      <!-- Base Madera -->
-      <polygon :points="basePolygonPoints" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" />
+          <!-- Base Madera -->
+          <polygon :points="basePolygonPoints" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" />
 
-      <!-- Center Goal Polygon Background -->
-      <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="8"/>
+          <!-- Center Goal Polygon Background -->
+          <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="8"/>
 
-      <!-- Meta / Llegadas (Middle column of each arm) -->
-      <g v-for="(sq, i) in llegadaPaths" :key="'llegada'+i">
-        <polygon :points="sq.points" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
-      </g>
+          <!-- Meta / Llegadas (Middle column of each arm) -->
+          <g v-for="(sq, i) in llegadaPaths" :key="'llegada'+i">
+            <polygon :points="sq.points" :fill="sq.color" stroke="#111" stroke-width="2" filter="url(#inner-shadow)" />
+          </g>
 
-      <!-- Track Squares (Radial Arms with Trapezoids at base) -->
-      <g v-for="(sq, i) in trackSquares" :key="'sq'+i">
-        <polygon :points="sq.points" :fill="sq.fill" stroke="#222" stroke-width="2" />
-        <!-- Highlight borders for Salida/Seguro/Tip -->
-        <polygon v-if="sq.isSalida || sq.isSeguro || sq.isTip" :points="sq.points" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
-        
-        <!-- Star Icon for Salida/Seguro -->
-        <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${-sq.rot}) scale(1.1)`" filter="url(#glow)" />
-      </g>
+          <!-- Track Squares (Radial Arms with Trapezoids at base) -->
+          <g v-for="(sq, i) in trackSquares" :key="'sq'+i">
+            <polygon :points="sq.points" :fill="sq.fill" stroke="#222" stroke-width="2" />
+            <!-- Highlight borders for Salida/Seguro/Tip -->
+            <polygon v-if="sq.isSalida || sq.isSeguro || sq.isTip" :points="sq.points" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
+            
+            <!-- Star Icon for Salida/Seguro -->
+            <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${-sq.rot}) scale(1.1)`" filter="url(#glow)" />
+          </g>
 
-      
+          <!-- Nests (Bases) -->
+          <g v-for="(nest, i) in nests" :key="'nest'+i">
+            <!-- Shadow -->
+            <circle :cx="nest.cx + 5" :cy="nest.cy + 5" :r="nest.r" fill="#000" opacity="0.4" filter="url(#glow)" />
+            <!-- Main Base -->
+            <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r" :fill="nest.color" stroke="#111" stroke-width="6" opacity="0.95" />
+            <!-- Inner ring -->
+            <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r * 0.75" fill="#fff" opacity="0.1" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+            <!-- Token spots -->
+            <circle :cx="nest.cx - nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+            <circle :cx="nest.cx + nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+            <circle :cx="nest.cx - nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+            <circle :cx="nest.cx + nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+          </g>
+        </svg>
 
-      <!-- Nests (Bases) -->
-      <g v-for="(nest, i) in nests" :key="'nest'+i">
-        <!-- Shadow -->
-        <circle :cx="nest.cx + 5" :cy="nest.cy + 5" :r="nest.r" fill="#000" opacity="0.4" filter="url(#glow)" />
-        <!-- Main Base -->
-        <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r" :fill="nest.color" stroke="#111" stroke-width="6" opacity="0.95" />
-        <!-- Inner ring -->
-        <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r * 0.75" fill="#fff" opacity="0.1" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
-        <!-- Token spots -->
-        <circle :cx="nest.cx - nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-        <circle :cx="nest.cx + nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-        <circle :cx="nest.cx - nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-        <circle :cx="nest.cx + nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-      </g>
-    </svg>
-
-    <!-- Render Tokens (HTML Overlay) -->
-    <div class="absolute inset-0 z-10 pointer-events-none">
-      <ParchisToken 
-        v-for="(tokenObj, i) in allTokens" 
-        :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
-        :token="tokenObj.data"
-        :figureId="tokenObj.player.selectedFigure"
-        :coordinates="tokenObj.coords"
-        :boardSize="1400"
-      />
-    </div>
-
-    <!-- Player HUD -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 bg-[#1a0f08]/95 backdrop-blur-xl px-6 py-3 rounded-full border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-20 pointer-events-auto">
-      <div class="flex items-center gap-2">
-        <div 
-          v-for="(player, idx) in parchisStore.players" 
-          :key="player.userId"
-          :class="['w-10 h-10 rounded-full border-2 shadow-inner bg-cover bg-center transition-all duration-300', 
-            idx === parchisStore.currentTurnIndex ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.5)]' : 'border-white/20 opacity-50 grayscale'
-          ]"
-          :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatar ? `url(${player.avatar})` : 'none' }"
-        ></div>
-      </div>
-      <div class="h-8 w-[1px] bg-white/20"></div>
-      
-      <div class="flex flex-col items-center gap-1">
-        <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
-        <div v-if="parchisStore.availableMoves.length > 0 && parchisStore.isMyTurn" class="text-xs text-white bg-green-600/90 px-2 py-0.5 rounded animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]">
-          Mueve: {{ parchisStore.availableMoves.join(', ') }}
+        <!-- Render Tokens (HTML Overlay) -->
+        <div class="absolute inset-0 z-10 pointer-events-none">
+          <ParchisToken 
+            v-for="(tokenObj, i) in allTokens" 
+            :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
+            :token="tokenObj.data"
+            :figureId="tokenObj.player.selectedFigure"
+            :coordinates="tokenObj.coords"
+            :boardSize="1400"
+          />
         </div>
       </div>
+    </div>
 
-      <div class="h-8 w-[1px] bg-white/20"></div>
-      <button 
-        @click="rollDice"
-        :disabled="!parchisStore.isMyTurn || parchisStore.availableMoves.length > 0"
-        :class="[
-          'px-6 py-2 font-bold rounded-full transition-all shadow-lg cursor-pointer',
-          parchisStore.isMyTurn && parchisStore.availableMoves.length === 0 
-            ? 'bg-gradient-to-b from-amber-500 to-orange-600 text-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(217,119,6,0.6)] border border-orange-400/50' 
-            : 'bg-gray-800 text-gray-500 cursor-not-allowed border border-gray-700'
-        ]"
-      >
-        Tirar Dados
-      </button>
+    <!-- Player HUD (Ahora reside afuera, inferior y no solapa nada) -->
+    <div class="w-full max-w-[600px] shrink-0 z-20 pointer-events-auto px-2 sm:px-4 mb-2 sm:mb-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-[#1a0f08]/95 backdrop-blur-2xl px-4 py-3 sm:px-6 sm:py-4 rounded-[1.5rem] border border-white/10 shadow-[0_10px_50px_rgba(0,0,0,0.8)] relative overflow-hidden ring-1 ring-white/5">
+        
+        <!-- Glow ambiental -->
+        <div class="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/20 blur-[50px] rounded-full pointer-events-none"></div>
+        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+
+        <!-- Avatares de Jugadores -->
+        <div class="flex items-center gap-2 sm:gap-3 relative z-10 w-full sm:w-auto justify-center">
+          <div 
+            v-for="(player, idx) in parchisStore.players" 
+            :key="player.userId"
+            :class="['w-10 h-10 sm:w-12 sm:h-12 rounded-full border-[2px] shadow-inner bg-cover bg-center transition-all duration-300 relative', 
+              idx === parchisStore.currentTurnIndex ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.6)] z-10' : 'border-white/10 opacity-60 grayscale hover:grayscale-0 hover:opacity-100'
+            ]"
+            :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatar ? `url(${player.avatar})` : 'none' }"
+          >
+            <!-- Turn Indicator Dot -->
+            <div v-if="idx === parchisStore.currentTurnIndex" class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#1a0f08] shadow-[0_0_10px_rgba(74,222,128,0.8)] animate-pulse"></div>
+          </div>
+        </div>
+        
+        <div class="hidden sm:block h-10 w-[1px] bg-white/10 relative z-10"></div>
+        
+        <!-- Zona Central: Dados y Move Text -->
+        <div class="flex flex-col items-center justify-center gap-1 sm:gap-1.5 relative z-10 min-h-[50px]">
+          <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
+          
+          <div class="h-[24px] flex items-center justify-center"> <!-- Espacio fijo UI -->
+            <Transition
+              enter-active-class="transition-all duration-300 ease-out"
+              enter-from-class="opacity-0 translate-y-2"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition-all duration-200 ease-in"
+              leave-from-class="opacity-100"
+              leave-to-class="opacity-0 translate-y-1"
+            >
+              <div v-if="parchisStore.availableMoves.length > 0 && parchisStore.isMyTurn" class="text-[10px] sm:text-xs font-bold tracking-wider text-green-300 bg-green-500/20 border border-green-500/30 px-2 py-0.5 rounded-md shadow-[0_0_15px_rgba(74,222,128,0.15)] whitespace-nowrap">
+                MUEVE: {{ parchisStore.availableMoves.join(', ') }}
+              </div>
+            </Transition>
+          </div>
+        </div>
+
+        <div class="hidden sm:block h-10 w-[1px] bg-white/10 relative z-10"></div>
+
+        <!-- Botón de Tirar Dados -->
+        <button 
+          @click="rollDice"
+          :disabled="!parchisStore.isMyTurn || parchisStore.availableMoves.length > 0"
+          :class="[
+            'w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-black tracking-wide rounded-xl sm:rounded-2xl transition-all duration-300 relative z-10 overflow-hidden group',
+            parchisStore.isMyTurn && parchisStore.availableMoves.length === 0 
+              ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-[0_5px_20px_rgba(245,158,11,0.4)] hover:shadow-[0_10px_30px_rgba(245,158,11,0.6)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-orange-400/50 cursor-pointer' 
+              : 'bg-white/5 text-white/30 cursor-not-allowed border border-white/5'
+          ]"
+        >
+          <div v-if="parchisStore.isMyTurn && parchisStore.availableMoves.length === 0" class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+          <span class="relative flex items-center justify-center gap-2 drop-shadow-md">
+            <UIcon v-if="parchisStore.isMyTurn && parchisStore.availableMoves.length === 0" name="i-heroicons-sparkles" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-200" />
+            TIRAR DADOS
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -239,7 +276,7 @@ const boardGeometry = computed(() => {
 		for (let row = 0; row < 8; row++) {
 			let y_bot = -innerRadius - row * rowHeight;
 			let y_top = -innerRadius - (row + 1) * rowHeight;
-			let pts, center;
+			let pts: {x: number, y: number}[], center: {x: number, y: number};
 
 			if (row === 0) {
 				// Base Trapezoid LEFT COLUMN
@@ -299,7 +336,7 @@ const boardGeometry = computed(() => {
 		for (let row = 7; row >= 0; row--) {
 			let y_bot = -innerRadius - row * rowHeight;
 			let y_top = -innerRadius - (row + 1) * rowHeight;
-			let pts, center;
+			let pts: {x: number, y: number}[], center: {x: number, y: number};
 
 			if (row === 0) {
 				// Base Trapezoid RIGHT COLUMN
