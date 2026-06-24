@@ -8,7 +8,7 @@
         style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px;"
       >
         <!-- UNIVERSAL PARCHÍS BOARD (4, 6, 8 PLAYERS) -->
-        <svg viewBox="-700 -700 1400 1400" class="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]">
+        <svg :viewBox="dynamicViewBox" class="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)]">
           <defs>
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="5" result="blur" />
@@ -69,7 +69,7 @@
             :token="tokenObj.data"
             :figureId="tokenObj.player.selectedFigure"
             :coordinates="tokenObj.coords"
-            :boardSize="1400"
+            :boardSize="dynamicBoardSize"
           />
         </div>
       </div>
@@ -221,6 +221,29 @@ function getLeftCellPolygon(y_bot: number, y_top: number, M: number) {
 	const rightPts = getRightCellPolygon(y_bot, y_top, M);
 	return rightPts.map(p => ({ x: -p.x, y: p.y })).reverse();
 }
+
+const dynamicViewBox = computed(() => {
+	const N = sides.value;
+	const M = Math.tan(Math.PI / N);
+	const baseInnerRadius = 75 / M;
+	const innerRadius = baseInnerRadius - 50;
+	const padding = 60; // Extra padding for tokens that might slightly overhang
+	const R_max = innerRadius + 400 + padding; // Maximum distance to the tip of an arm
+	
+	// Since the board is symmetrical and centered at (0,0), the viewBox is a square from -R_max to R_max
+	const size = R_max * 2;
+	return `${-R_max} ${-R_max} ${size} ${size}`;
+});
+
+const dynamicBoardSize = computed(() => {
+	const N = sides.value;
+	const M = Math.tan(Math.PI / N);
+	const baseInnerRadius = 75 / M;
+	const innerRadius = baseInnerRadius - 50;
+	const padding = 60;
+	const R_max = innerRadius + 400 + padding;
+	return R_max * 2;
+});
 
 const basePolygonPoints = computed(() => {
 	const N = sides.value;

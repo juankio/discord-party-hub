@@ -81,22 +81,21 @@ const rollDice = (index: number) => {
   
   anime.remove(el)
   
-  // Fast scale pop-in & out punch
+  // Pro Max: Impactful 3D jump and roll! Yohohoho!
   anime({
     targets: el,
-    scale: [
-      { value: 1.4, duration: 60, easing: 'easeOutSine' },
-      { value: 1, duration: 150, easing: 'spring(1, 80, 10, 0)' }
-    ],
     translateY: [
-      { value: -15, duration: 60, easing: 'easeOutSine' },
-      { value: 0, duration: 150, easing: 'spring(1, 80, 10, 0)' }
+      { value: -80, duration: 350, easing: 'easeOutCubic' },
+      { value: 0, duration: 600, easing: 'easeOutBounce' }
     ],
-    rotate: [
-      { value: (Math.random() > 0.5 ? 15 : -15), duration: 60, easing: 'easeOutSine' },
-      { value: 0, duration: 150, easing: 'spring(1, 80, 10, 0)' }
+    rotateX: { value: [0, 720], duration: 950, easing: 'easeOutQuad' },
+    rotateY: { value: [0, 720], duration: 950, easing: 'easeOutQuad' },
+    rotateZ: { value: [0, 720], duration: 950, easing: 'easeOutQuad' },
+    scale: [
+      { value: 1.3, duration: 350, easing: 'easeOutCubic' },
+      { value: 1, duration: 600, easing: 'easeOutBounce' }
     ],
-    delay: index * 50
+    delay: index * 100
   })
 }
 
