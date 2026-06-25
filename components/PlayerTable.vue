@@ -44,53 +44,55 @@
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Avatares de Jugadores -->
-    <TransitionGroup 
-      name="avatar-pop" 
-      tag="div" 
-      class="absolute inset-0 pointer-events-none"
-    >
-      <div
-        v-for="(player, index) in players" 
-        :key="player.userId"
-        class="player-avatar pointer-events-auto absolute w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-black rounded-full border-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-visible transition-transform duration-300"
-        :class="{ 'cursor-pointer hover:scale-110 hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:z-50': player.isBot && hostUserId === playerStore.userId }"
-        :style="{
-          left: getAvatarPosition(index, players.length).left,
-          top: getAvatarPosition(index, players.length).top,
-          transform: getAvatarPosition(index, players.length).transform,
-          borderColor: player.color || '#f97316'
-        }"
-        @click="$emit('avatar-click', player)"
+          <!-- Avatares de Jugadores -->
+      <TransitionGroup 
+        name="avatar-pop" 
+        tag="div" 
+        class="absolute inset-0 pointer-events-none"
       >
-        <div v-if="player.userId === hostUserId" class="absolute -top-4 -right-2 z-20 rotate-12 drop-shadow-md">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b" stroke="#2c190d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/>
-          </svg>
-        </div>
-
-        <!-- Overlay Offline -->
-        <div v-if="player.isOffline" class="absolute inset-0 bg-black/70 rounded-full flex flex-col items-center justify-center z-30 backdrop-blur-[2px]">
-          <UIcon name="i-lucide-wifi-off" class="w-6 h-6 md:w-8 md:h-8 text-orange-500 animate-pulse" />
-        </div>
-        <span v-if="player.isOffline" class="absolute -top-6 text-[8px] md:text-[9px] font-black text-orange-400 bg-black/90 px-2 py-0.5 rounded border border-orange-500/50 whitespace-nowrap animate-pulse z-40">
-          Reconectando...
-        </span>
-
-        <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" :class="{'grayscale opacity-50': player.isOffline}">
-        <span 
-          class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[70px] sm:max-w-[100px] truncate"
-          :class="player.color === '#ffffff' ? 'text-black' : 'text-white'"
-          :style="{ backgroundColor: player.color || '#f97316' }"
+        <div
+          v-for="(player, index) in players" 
+          :key="player.userId"
+          class="player-avatar pointer-events-auto absolute w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-black rounded-full border-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] flex flex-col items-center overflow-visible transition-all duration-500"
+          :class="{ 'cursor-pointer hover:scale-110 hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:z-50': player.isBot && hostUserId === playerStore.userId }"
+          :style="{
+            left: getAvatarPosition(index, players.length).left,
+            top: getAvatarPosition(index, players.length).top,
+            transform: getAvatarPosition(index, players.length).transform,
+            borderColor: player.color || '#f97316'
+          }"
+          @click="$emit('avatar-click', player)"
         >
-          {{ player.nickname }}
-        </span>
-      </div>
-    </TransitionGroup>
+          <div v-if="player.userId === hostUserId" class="absolute -top-4 -right-2 z-20 rotate-12 drop-shadow-md">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b" stroke="#2c190d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/>
+            </svg>
+          </div>
+  
+          <!-- Overlay Offline -->
+          <div v-if="player.isOffline" class="absolute inset-0 bg-black/70 rounded-full flex flex-col items-center justify-center z-30 backdrop-blur-[2px]">
+            <UIcon name="i-lucide-wifi-off" class="w-6 h-6 md:w-8 md:h-8 text-orange-500 animate-pulse" />
+          </div>
+          <span v-if="player.isOffline" class="absolute -top-6 text-[8px] md:text-[9px] font-black text-orange-400 bg-black/90 px-2 py-0.5 rounded border border-orange-500/50 whitespace-nowrap animate-pulse z-40">
+            Reconectando...
+          </span>
+  
+          <img :src="`/avatars/avatar-${player.avatarId}.svg?v=2`" class="w-full h-full rounded-full object-contain bg-[#151515]" :class="{'grayscale opacity-50': player.isOffline}">
+          <span 
+            class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[70px] sm:max-w-[100px] truncate"
+            :class="player.color === '#ffffff' ? 'text-black' : 'text-white'"
+            :style="{ backgroundColor: player.color || '#f97316' }"
+          >
+            {{ player.nickname }}
+          </span>
+        </div>
+      </TransitionGroup>
+
+          </div>
+
+        </div>
+  </div>
   </div>
 </template>
 
@@ -118,14 +120,12 @@ const allowBots = computed(() => ['uno', 'parchis'].includes(props.selectedGame)
 // Calcula posiciones basadas en las buchacas de la mesa
 const getAvatarPosition = (index: number, total: number) => {
   const slots = [
-    { left: '50%', top: 'calc(100% - clamp(1.5rem, 5vw, 2.5rem))', transform: 'translate(-50%, -50%)' }, // 0: Abajo Centro (Local)
-    { left: '50%', top: 'clamp(1.5rem, 5vw, 2.5rem)', transform: 'translate(-50%, -50%)' },   // 1: Arriba Centro
-    { left: 'clamp(1.5rem, 8vw, 2.5rem)', top: 'clamp(1.5rem, 5vw, 2.5rem)', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
-    { left: 'calc(100% - clamp(1.5rem, 8vw, 2.5rem))', top: 'clamp(1.5rem, 5vw, 2.5rem)', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
-    { left: 'clamp(1.5rem, 8vw, 2.5rem)', top: 'calc(100% - clamp(1.5rem, 5vw, 2.5rem))', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
-    { left: 'calc(100% - clamp(1.5rem, 8vw, 2.5rem))', top: 'calc(100% - clamp(1.5rem, 5vw, 2.5rem))', transform: 'translate(-50%, -50%)' }, // 5: Abajo Derecha
-    { left: 'clamp(1.5rem, 8vw, 2.5rem)', top: '50%', transform: 'translate(-50%, -50%)' }, // 6: Centro Izquierda
-    { left: 'calc(100% - clamp(1.5rem, 8vw, 2.5rem))', top: '50%', transform: 'translate(-50%, -50%)' } // 7: Centro Derecha
+    { left: '50%', top: 'calc(100% - var(--hole-mid-y))', transform: 'translate(-50%, -50%)' }, // 0: Abajo Centro
+    { left: '50%', top: 'var(--hole-mid-y)', transform: 'translate(-50%, -50%)' },   // 1: Arriba Centro
+    { left: 'var(--hole-offset-x)', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
+    { left: 'calc(100% - var(--hole-offset-x))', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
+    { left: 'var(--hole-offset-x)', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
+    { left: 'calc(100% - var(--hole-offset-x))', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' } // 5: Abajo Derecha
   ]
 
   const myIndex = props.players.findIndex(p => p.userId === playerStore.userId)
@@ -137,17 +137,13 @@ const getAvatarPosition = (index: number, total: number) => {
   if (total <= 2) {
     layout = [0, 1]
   } else if (total === 3) {
-    layout = [0, 2, 3]
+    layout = [4, 2, 3]
   } else if (total === 4) {
-    layout = [0, 4, 2, 3]
+    layout = [4, 2, 3, 5]
   } else if (total === 5) {
-    layout = [0, 4, 2, 1, 3]
-  } else if (total === 6) {
-    layout = [0, 4, 2, 1, 3, 5]
-  } else if (total === 7) {
-    layout = [0, 4, 6, 2, 1, 3, 5]
+    layout = [4, 2, 1, 3, 5]
   } else {
-    layout = [0, 4, 6, 2, 1, 3, 7, 5]
+    layout = [4, 2, 1, 3, 5, 0]
   }
 
   const slotIndex = layout[distance] !== undefined ? layout[distance] : 0
@@ -191,6 +187,19 @@ const copyLink = () => {
 </script>
 
 <style scoped>
+.player-table-container {
+  --hole-offset-x: 0.25rem;
+  --hole-offset-y: 0.25rem;
+  --hole-mid-y: 0rem;
+}
+@media (min-width: 768px) {
+  .player-table-container {
+    --hole-offset-x: 0.5rem;
+    --hole-offset-y: 0.5rem;
+    --hole-mid-y: 0.25rem;
+  }
+}
+
 .avatar-pop-move, .avatar-pop-enter-active, .avatar-pop-leave-active {
   transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
