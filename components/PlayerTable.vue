@@ -186,15 +186,15 @@ const copyLink = () => {
 
 <style scoped>
 .player-table-container {
-  --hole-offset-x: 0.25rem;
-  --hole-offset-y: 0.25rem;
-  --hole-mid-y: 0rem;
+  --hole-offset-x: -0.25rem;
+  --hole-offset-y: -0.25rem;
+  --hole-mid-y: -0.75rem;
 }
 @media (min-width: 768px) {
   .player-table-container {
-    --hole-offset-x: 0.5rem;
-    --hole-offset-y: 0.5rem;
-    --hole-mid-y: 0.25rem;
+    --hole-offset-x: -0.5rem;
+    --hole-offset-y: -0.5rem;
+    --hole-mid-y: -1.25rem;
   }
 }
 

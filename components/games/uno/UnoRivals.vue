@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden h-full min-h-[40vh]">
-    <div class="w-full h-full relative max-w-screen-2xl mx-auto px-4 mt-8 sm:mt-16">
+    <div class="w-full h-full relative px-2 sm:px-4 mt-8 sm:mt-16">
       <div 
         v-for="(rival, index) in rivals" 
         :id="`rival-avatar-${rival.userId}`" 
@@ -83,8 +83,8 @@ const getRivalPosition = (index: number, total: number) => {
   const angleStep = (maxAngle - minAngle) / (total - 1);
   const angle = maxAngle - (index * angleStep);
 
-  const radiusX = 42; // 42% of screen width spread
-  const radiusY = 32; // 32% of screen height curve
+  const radiusX = 46; // 46% of screen width spread
+  const radiusY = 34; // 34% of screen height curve
 
   const x = 50 + radiusX * Math.cos(angle);
   const y = 38 - radiusY * Math.sin(angle); // 38 is the origin Y (base curve)
