@@ -34,6 +34,9 @@ class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white t
 
 <script setup lang="ts">
 import anime from 'animejs'
+import { usePlayerStore } from '~/stores/playerStore'
+
+const playerStore = usePlayerStore()
 
 const localHoverIndex = ref<number | undefined>(undefined)
 
@@ -97,7 +100,14 @@ const onCardEnter = (el: Element, done: () => void) => {
 
 // Validar si la carta brilla o se oscurece
 const isPlayable = (card: any) => {
-  if (!props.isMyTurn) return true // Si no es turno, no las oscurecemos
+  if (!props.isMyTurn) {
+    if (playerStore.roomRules?.interceptExact) {
+      if (card.color !== 'wild' && props.topCard && card.color === props.topCard.color && card.value === props.topCard.value) {
+        return true
+      }
+    }
+    return false // Si no es turno ni es corte válido, no se puede jugar
+  }
   
   if (props.pendingDraws > 0) {
     // Solo podemos jugar +2 o +4 para acumular
