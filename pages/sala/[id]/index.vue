@@ -36,7 +36,7 @@
         <!-- Columna Izquierda (Mesa y Controles) -->
         <div class="flex-1 w-full flex flex-col gap-4 lg:gap-0">
           <!-- Componente Mesa -->
-          <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" @add-bot="addBot" />
+          <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" :selected-game="selectedGame" @add-bot="addBot" @avatar-click="handleAvatarClick" />
 
           <!-- Clasificación en Móvil (Oculta en LG porque irá en la columna derecha) -->
           <div class="block lg:hidden w-full max-w-md mx-auto">
@@ -114,6 +114,12 @@
       </div>
     </div>
     <EditProfileModal v-model:isOpen="isEditProfileOpen" />
+    <BotConfigModal 
+      v-model:isOpen="showBotConfigModal" 
+      :bot="selectedBotForConfig" 
+      @update-config="updateBotConfig" 
+      @kick-bot="kickBot"
+    />
   </div>
 </template>
 
@@ -148,6 +154,23 @@ const isHost = computed(
 );
 
 const isEditProfileOpen = ref(false);
+const showBotConfigModal = ref(false);
+const selectedBotForConfig = ref<any>(null);
+
+const handleAvatarClick = (player: any) => {
+	if (player.isBot && isHost.value) {
+		selectedBotForConfig.value = player;
+		showBotConfigModal.value = true;
+	}
+};
+
+const updateBotConfig = (botId: string, difficulty: number) => {
+	socket.value?.emit("update_bot_config", { botId, difficulty });
+};
+
+const kickBot = (botId: string) => {
+	socket.value?.emit("kick_bot", { botId });
+};
 
 const selectedGame = computed({
 	get: () => playerStore.selectedGame,
@@ -226,9 +249,9 @@ const leaveRoom = () => {
 	socket.value?.emit("leave_room");
 	router.push("/");
 };
-const addBot = () => {
+const addBot = (difficulty: number = 5) => {
 	if (isHost.value) {
-		socket.value?.emit("add_bots", { roomId: roomId.value, count: 1, difficulty: 5 });
+		socket.value?.emit("add_bots", { roomId: roomId.value, count: 1, difficulty: difficulty });
 	}
 };
 
