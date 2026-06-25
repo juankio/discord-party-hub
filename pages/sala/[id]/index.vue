@@ -36,7 +36,7 @@
         <!-- Columna Izquierda (Mesa y Controles) -->
         <div class="flex-1 w-full flex flex-col gap-4 lg:gap-0">
           <!-- Componente Mesa -->
-          <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" />
+          <PlayerTable :room-id="roomId" :players="players" :host-user-id="playerStore.hostUserId" @add-bot="addBot" />
 
           <!-- Clasificación en Móvil (Oculta en LG porque irá en la columna derecha) -->
           <div class="block lg:hidden w-full max-w-md mx-auto">
@@ -225,6 +225,11 @@ const startGame = () => {
 const leaveRoom = () => {
 	socket.value?.emit("leave_room");
 	router.push("/");
+};
+const addBot = () => {
+	if (isHost.value) {
+		socket.value?.emit("add_bots", { roomId: roomId.value, count: 1, difficulty: 5 });
+	}
 };
 
 onMounted(() => {

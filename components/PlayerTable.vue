@@ -23,14 +23,25 @@
         <div class="text-center relative z-10 flex flex-col items-center p-3 sm:p-6 bg-black/20 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10 w-[90%] sm:w-auto max-w-full">
           <p class="text-[9px] sm:text-[10px] md:text-xs text-green-100 mb-1 sm:mb-2 uppercase tracking-[0.2em] sm:tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
           <h2 class="text-2xl sm:text-5xl md:text-7xl font-mono font-black text-white tracking-[0.1em] sm:tracking-[0.2em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] mb-3 sm:mb-4 truncate w-full px-2">{{ roomId }}</h2>
-          <button 
-            class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 border"
-            :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20'"
-            @click="copyLink"
-          >
-            <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
-            {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
-          </button>
+          <div class="flex items-center gap-2 justify-center w-full">
+            <button 
+              class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 border"
+              :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20'"
+              @click="copyLink"
+            >
+              <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
+              {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
+            </button>
+            <button
+              v-if="hostUserId === playerStore.userId"
+              class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/40 hover:bg-blue-600/80 hover:scale-105 active:scale-95 text-white border-blue-400/50 shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_20px_rgba(37,99,235,0.6)]"
+              @click="$emit('add-bot')"
+              title="Añadir Bot"
+            >
+              <UIcon name="i-lucide-bot" class="w-4 h-4" />
+              <span class="hidden sm:inline">Añadir Bot</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +91,8 @@ const props = defineProps({
   players: { type: Array as () => any[], required: true },
   hostUserId: { type: String, required: true }
 })
+
+defineEmits(['add-bot'])
 
 const toast = useToast()
 const playerStore = usePlayerStore()
