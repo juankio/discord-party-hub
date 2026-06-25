@@ -18,41 +18,51 @@ export function useUnoActionFx(unoStore: any) {
       const interceptorX = interceptorEl ? interceptorEl.getBoundingClientRect().left + 30 : window.innerWidth / 2;
       const interceptorY = interceptorEl ? interceptorEl.getBoundingClientRect().top + 30 : window.innerHeight / 2;
 
-      // Pantallazo Flash rojo
-      const flash = document.createElement('div');
-      flash.className = 'fixed inset-0 bg-red-600/30 z-[9998] pointer-events-none mix-blend-overlay';
-      document.body.appendChild(flash);
+      // Onda expansiva localizada (Shockwave ring)
+      const ring = document.createElement('div');
+      ring.className = 'fixed z-[9998] rounded-full border-[3px] border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.8)] pointer-events-none';
+      ring.style.left = `${interceptorX}px`;
+      ring.style.top = `${interceptorY}px`;
+      ring.style.transform = 'translate(-50%, -50%)';
+      document.body.appendChild(ring);
+
       anime({
-        targets: flash,
+        targets: ring,
+        width: ['0px', '250px'],
+        height: ['0px', '250px'],
         opacity: [1, 0],
-        duration: 800,
-        easing: 'easeOutExpo',
-        complete: () => flash.remove()
+        borderWidth: ['10px', '0px'],
+        duration: 600,
+        easing: 'easeOutCubic',
+        complete: () => ring.remove()
       });
 
-      // Texto grande "¡ROBO DE TURNO!"
+      // Tipografía veloz y de neón "CORTE EXACTO"
       const text = document.createElement('div');
-      text.textContent = '¡CORTE EXACTO!';
-      text.className = 'fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl md:text-7xl text-yellow-400 font-black drop-shadow-[0_0_30px_rgba(234,179,8,1)] uppercase italic text-center whitespace-nowrap pointer-events-none';
+      text.textContent = 'CORTE EXACTO';
+      text.className = 'fixed z-[9999] top-1/2 left-1/2 text-4xl md:text-6xl text-white font-black uppercase italic tracking-[0.2em] whitespace-nowrap pointer-events-none';
+      text.style.textShadow = '0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(34,211,238,0.8), 0 0 30px rgba(34,211,238,0.6)';
       document.body.appendChild(text);
-      
+
       anime.timeline({
         targets: text,
         complete: () => text.remove()
       })
       .add({
-        scale: [0, 1.5, 1],
+        translateX: ['-100vw', '-50%'],
+        translateY: ['-50%', '-50%'],
+        skewX: [45, 15],
         opacity: [0, 1],
-        rotate: [-10, 5, 0],
-        duration: 600,
-        easing: 'easeOutElastic(1, .5)'
+        duration: 400,
+        easing: 'easeOutCubic'
       })
       .add({
-        scale: 0.5,
-        opacity: 0,
-        duration: 400,
-        delay: 800,
-        easing: 'easeInBack'
+        translateX: ['-50%', '100vw'],
+        skewX: [15, -45],
+        opacity: [1, 0],
+        duration: 350,
+        delay: 500,
+        easing: 'easeInCubic'
       });
       return;
     }
