@@ -73,26 +73,23 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  const positions: Record<number, { x: number, y: number }[]> = {
-    1: [{ x: 50, y: 10 }],
-    2: [{ x: 30, y: 15 }, { x: 70, y: 15 }],
-    3: [{ x: 20, y: 30 }, { x: 50, y: 5 }, { x: 80, y: 30 }],
-    4: [{ x: 15, y: 40 }, { x: 35, y: 10 }, { x: 65, y: 10 }, { x: 85, y: 40 }],
-    5: [{ x: 10, y: 50 }, { x: 30, y: 15 }, { x: 50, y: 0 }, { x: 70, y: 15 }, { x: 90, y: 50 }],
-    6: [{ x: 5, y: 60 }, { x: 20, y: 25 }, { x: 40, y: 5 }, { x: 60, y: 5 }, { x: 80, y: 25 }, { x: 95, y: 60 }],
-    7: [{ x: 5, y: 60 }, { x: 15, y: 35 }, { x: 35, y: 10 }, { x: 50, y: 0 }, { x: 65, y: 10 }, { x: 85, y: 35 }, { x: 95, y: 60 }]
-  }
+  if (total === 0 || total === 1) return { x: 50, y: 15 };
+
+  // Angle bounds: from roughly left side to roughly right side
+  const minAngle = Math.PI * 0.05;
+  const maxAngle = Math.PI * 0.95;
   
-  if (positions[total] && positions[total][index]) {
-    return positions[total][index]
-  }
-  
-  // Fallback for > 7 players or edge cases
-  if (total === 0) return { x: 50, y: 10 }
-  return { 
-    x: 10 + (80 / (total > 1 ? total - 1 : 1)) * index, 
-    y: 20 
-  }
+  // Distribute index evenly between maxAngle and minAngle
+  const angleStep = (maxAngle - minAngle) / (total - 1);
+  const angle = maxAngle - (index * angleStep);
+
+  const radiusX = 42; // 42% of screen width spread
+  const radiusY = 32; // 32% of screen height curve
+
+  const x = 50 + radiusX * Math.cos(angle);
+  const y = 38 - radiusY * Math.sin(angle); // 38 is the origin Y (base curve)
+
+  return { x, y };
 }
 </script>
 
