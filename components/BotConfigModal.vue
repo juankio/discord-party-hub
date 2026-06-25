@@ -18,24 +18,22 @@
 
             <div class="space-y-8 w-full" v-if="bot">
               <!-- Bot Info -->
-              <div class="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border-2 border-[#5c3a21] shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
-                <div class="w-16 h-16 rounded-full overflow-hidden border-2 flex-shrink-0" :style="{ borderColor: bot.color || '#f97316' }">
-                  <img :src="`/avatars/avatar-${bot.avatarId}.svg?v=2`" class="w-full h-full object-cover bg-[#151515]">
-                </div>
-                <div class="min-w-0 overflow-hidden">
-                  <h4 class="font-black tracking-wider uppercase text-lg truncate" :style="{ color: bot.color || '#f97316' }">{{ bot.nickname }}</h4>
-                  <p class="text-xs text-gray-500 font-bold tracking-widest uppercase truncate">ID: {{ bot.userId.substring(0, 8) }}</p>
-                </div>
-              </div>
+              <ProfileSetup 
+                v-model:nickname="tempNickname" 
+                v-model:avatar-id="tempAvatarId" 
+                v-model:color="tempColor" 
+                class="w-full"
+                :style="{ '--theme-color': tempColor }"
+              />
 
               <!-- Difficulty Slider -->
               <div class="space-y-4 bg-black/20 p-4 rounded-2xl border border-white/5">
                 <div class="flex justify-between items-center">
                   <label class="text-sm font-black text-gray-400 uppercase tracking-widest">Dificultad</label>
-                  <span class="text-xl font-black text-orange-500">{{ difficulty }}</span>
+                  <span class="text-xl font-black text-orange-500">{{ tempDifficulty }}</span>
                 </div>
                 <URange 
-                  v-model="difficulty" 
+                  v-model="tempDifficulty" 
                   :min="1" 
                   :max="10" 
                   :step="1"
@@ -51,6 +49,12 @@
 
               <!-- Action Buttons -->
               <div class="flex flex-col gap-4 pt-2">
+                <button 
+                  @click="saveConfig"
+                  class="w-full px-4 py-4 bg-green-600 hover:bg-green-500 text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none"
+                >
+                  Guardar Cambios
+                </button>
                 <button 
                   @click="kickBot"
                   class="w-full flex items-center justify-center gap-2 px-4 py-4 bg-red-600 hover:bg-red-500 text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none group"
@@ -74,8 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import { watchDebounced } from '@vueuse/core'
-
 const props = defineProps<{
   isOpen: boolean
   bot: any
@@ -83,30 +85,36 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:isOpen', value: boolean): void
-  (e: 'update-config', botId: string, difficulty: number): void
+  (e: 'update-config', botId: string, config: { difficulty: number, nickname: string, avatarId: number, color: string }): void
   (e: 'kick-bot', botId: string): void
 }>()
 
-const difficulty = ref(5)
+const tempDifficulty = ref(5)
+const tempNickname = ref('')
+const tempAvatarId = ref(1)
+const tempColor = ref('#f97316')
 
-// Inicializar dificultad cuando se abre con un bot nuevo
+// Inicializar cuando se abre con un bot nuevo
 watch(() => props.bot, (newBot) => {
-  if (newBot && newBot.difficulty) {
-    difficulty.value = newBot.difficulty
-  } else {
-    difficulty.value = 5
+  if (newBot) {
+    tempDifficulty.value = newBot.difficulty ?? 5
+    tempNickname.value = newBot.nickname ?? ''
+    tempAvatarId.value = Number(newBot.avatarId) || 1
+    tempColor.value = newBot.color ?? '#f97316'
   }
 }, { immediate: true })
 
-watchDebounced(
-  difficulty,
-  (newVal) => {
-    if (props.bot && props.isOpen) {
-      emit('update-config', props.bot.userId, newVal)
-    }
-  },
-  { debounce: 500, maxWait: 1000 }
-)
+const saveConfig = () => {
+  if (props.bot && props.isOpen) {
+    emit('update-config', props.bot.userId, {
+      difficulty: tempDifficulty.value,
+      nickname: tempNickname.value,
+      avatarId: tempAvatarId.value,
+      color: tempColor.value
+    })
+    closeModal()
+  }
+}
 
 const closeModal = () => {
   emit('update:isOpen', false)

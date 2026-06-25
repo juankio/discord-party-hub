@@ -164,8 +164,8 @@ const handleAvatarClick = (player: any) => {
 	}
 };
 
-const updateBotConfig = (botId: string, difficulty: number) => {
-	socket.value?.emit("update_bot_config", { botId, difficulty });
+const updateBotConfig = (botId: string, config: { difficulty: number, nickname: string, avatarId: number, color: string }) => {
+	socket.value?.emit("update_bot_config", { botId, ...config });
 };
 
 const kickBot = (botId: string) => {
