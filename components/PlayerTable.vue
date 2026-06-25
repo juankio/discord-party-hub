@@ -44,13 +44,14 @@
               </button>
             </div>
           </div>
+        </div>
 
-          <!-- Avatares de Jugadores -->
-      <TransitionGroup 
-        name="avatar-pop" 
-        tag="div" 
-        class="absolute inset-0 pointer-events-none"
-      >
+        <!-- Avatares de Jugadores -->
+        <TransitionGroup 
+          name="avatar-pop" 
+          tag="div" 
+          class="absolute inset-0 pointer-events-none"
+        >
         <div
           v-for="(player, index) in players" 
           :key="player.userId"
@@ -88,11 +89,8 @@
           </span>
         </div>
       </TransitionGroup>
-
-          </div>
-
-        </div>
-  </div>
+      </div> <!-- Closes Paño Verde -->
+    </div>
   </div>
 </template>
 
@@ -188,15 +186,15 @@ const copyLink = () => {
 
 <style scoped>
 .player-table-container {
-  --hole-offset-x: 0.25rem;
-  --hole-offset-y: 0.25rem;
-  --hole-mid-y: 0rem;
+  --hole-offset-x: 0rem;
+  --hole-offset-y: 0rem;
+  --hole-mid-y: -0.5rem;
 }
 @media (min-width: 768px) {
   .player-table-container {
-    --hole-offset-x: 0.5rem;
-    --hole-offset-y: 0.5rem;
-    --hole-mid-y: 0.25rem;
+    --hole-offset-x: 0rem;
+    --hole-offset-y: 0rem;
+    --hole-mid-y: -0.75rem;
   }
 }
 
