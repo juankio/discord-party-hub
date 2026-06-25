@@ -1,11 +1,16 @@
 <template>
-  <div class="flex-1 w-full flex flex-col justify-end pb-8 relative z-10 pointer-events-none overflow-hidden">
-    <div class="w-full max-w-screen-2xl mx-auto flex flex-wrap justify-center items-end gap-x-6 gap-y-14 sm:gap-x-10 sm:gap-y-20 px-4 pt-16">
+  <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden h-full min-h-[40vh]">
+    <div class="w-full h-full relative max-w-screen-2xl mx-auto px-4 mt-8 sm:mt-16">
       <div 
         v-for="(rival, index) in rivals" 
         :id="`rival-avatar-${rival.userId}`" 
         :key="rival.userId" 
-        class="flex flex-col items-center pointer-events-auto transition-all duration-500 relative"
+        class="flex flex-col items-center pointer-events-auto transition-all duration-500 ease-out absolute"
+        :style="{
+          left: `${getRivalPosition(index, rivals.length).x}%`,
+          top: `${getRivalPosition(index, rivals.length).y}%`,
+          transform: 'translate(-50%, -50%)'
+        }"
       >
           <!-- Avatar (Aumentado de tamaño) -->
           <div
@@ -66,6 +71,29 @@ defineProps({
 })
 
 defineEmits(['challenge'])
+
+const getRivalPosition = (index: number, total: number) => {
+  const positions: Record<number, { x: number, y: number }[]> = {
+    1: [{ x: 50, y: 10 }],
+    2: [{ x: 30, y: 15 }, { x: 70, y: 15 }],
+    3: [{ x: 20, y: 30 }, { x: 50, y: 5 }, { x: 80, y: 30 }],
+    4: [{ x: 15, y: 40 }, { x: 35, y: 10 }, { x: 65, y: 10 }, { x: 85, y: 40 }],
+    5: [{ x: 10, y: 50 }, { x: 30, y: 15 }, { x: 50, y: 0 }, { x: 70, y: 15 }, { x: 90, y: 50 }],
+    6: [{ x: 5, y: 60 }, { x: 20, y: 25 }, { x: 40, y: 5 }, { x: 60, y: 5 }, { x: 80, y: 25 }, { x: 95, y: 60 }],
+    7: [{ x: 5, y: 60 }, { x: 15, y: 35 }, { x: 35, y: 10 }, { x: 50, y: 0 }, { x: 65, y: 10 }, { x: 85, y: 35 }, { x: 95, y: 60 }]
+  }
+  
+  if (positions[total] && positions[total][index]) {
+    return positions[total][index]
+  }
+  
+  // Fallback for > 7 players or edge cases
+  if (total === 0) return { x: 50, y: 10 }
+  return { 
+    x: 10 + (80 / (total > 1 ? total - 1 : 1)) * index, 
+    y: 20 
+  }
+}
 </script>
 
 <style scoped>
