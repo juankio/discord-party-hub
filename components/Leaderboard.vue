@@ -7,8 +7,8 @@
       <h2 class="text-yellow-500 font-bold tracking-widest uppercase text-sm">Top Global</h2>
     </div>
 
-    <div v-if="pending" class="text-center py-4 text-gray-500 text-xs">Cargando campeones...</div>
-    <div v-else-if="error" class="text-center py-4 text-red-500 text-xs">Error al cargar</div>
+    <div v-if="pending" class="flex flex-col gap-2"><div class="text-center py-4 text-gray-500 text-xs">Cargando campeones...</div></div>
+    <div v-else-if="error" class="flex flex-col gap-2"><div class="text-center py-4 text-red-500 text-xs">Error al cargar</div></div>
     <div v-else class="flex flex-col gap-2">
       <div
 v-for="(player, index) in leaderboard" :key="player?.username" 
