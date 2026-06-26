@@ -25,13 +25,6 @@
       </button>
     </div>
 
-    <!-- Rivals Area -->
-    <UnoRivals 
-      :rivals="unoStore.rivals" 
-      :current-turn-user-id="unoStore.currentTurnUserId"
-      @challenge="challengeUno"
-    />
-
     <!-- Central Table -->
     <UnoTable 
       :top-card="unoStore.topCard"
@@ -40,8 +33,11 @@
       :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
       :has-drawn-this-turn="unoStore.hasDrawnThisTurn"
       :my-hand="unoStore.myHand"
+      :rivals="unoStore.rivals"
+      :current-turn-user-id="unoStore.currentTurnUserId"
       @draw="drawCard"
       @pass-turn="passTurn"
+      @challenge="challengeUno"
     />
 
     <!-- My Hand Area -->
