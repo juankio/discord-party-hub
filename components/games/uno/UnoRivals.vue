@@ -30,7 +30,10 @@
           <img :src="`/avatars/avatar-${rival.avatarId}.svg?v=2`" class="w-full h-full object-cover rounded-full" :class="{'grayscale opacity-50': rival.isOffline}">
           
           <!-- Mini Cards Hand (Caen dentro de la mesa) -->
-          <div class="absolute -bottom-4 sm:-bottom-5 lg:-bottom-6 left-1/2 -translate-x-1/2 flex justify-center w-max pointer-events-none drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]">
+          <div 
+            class="absolute top-1/2 left-1/2 flex justify-center w-max pointer-events-none drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] transition-all duration-500"
+            :style="getMiniCardsStyle(index, rivals.length)"
+          >
             <div class="flex -space-x-2 sm:-space-x-3">
               <div
                 v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
@@ -72,9 +75,9 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  if (total === 0) return { x: 50, y: 15 };
-  if (total === 1) return { x: 50, y: 15 };
-  if (total === 2) return index === 0 ? { x: 15, y: 25 } : { x: 85, y: 25 };
+  if (total === 0) return { x: 50, y: -5 };
+  if (total === 1) return { x: 50, y: -5 };
+  if (total === 2) return index === 0 ? { x: 5, y: 15 } : { x: 95, y: 15 };
 
   // Angle bounds: from 180deg (left) to 0deg (right)
   const minAngle = Math.PI; // left
@@ -84,15 +87,42 @@ const getRivalPosition = (index: number, total: number) => {
   const angleStep = (minAngle - maxAngle) / (total - 1);
   const angle = minAngle - (index * angleStep);
 
-  const radiusX = 42; // 42% of table width spread
-  const radiusY = 30; // 30% of table height curve
+  const radiusX = 58; // 58% of table width spread
+  const radiusY = 55; // 55% of table height curve
 
-  // Center is x: 50, y: 45
+  // Center is x: 50, y: 50
   const x = 50 + radiusX * Math.cos(angle);
-  const y = 45 - radiusY * Math.sin(angle); 
+  const y = 50 - radiusY * Math.sin(angle); 
 
   return { x, y };
 }
+  const getMiniCardsStyle = (index: number, total: number) => {
+    let angle = Math.PI / 2; // Default top center
+    if (total === 2) {
+      angle = index === 0 ? Math.PI - 0.2 : 0.2;
+    } else if (total > 2) {
+      const minAngle = Math.PI;
+      const maxAngle = 0;
+      const angleStep = (minAngle - maxAngle) / (total - 1);
+      angle = minAngle - (index * angleStep);
+    }
+
+    // Distancia fija en pixeles para empujar las cartas hacia el centro de la mesa
+    const pushDistance = 110; 
+    const dx = -pushDistance * Math.cos(angle);
+    const dy = pushDistance * Math.sin(angle); // positivo porque y crece hacia abajo
+
+    // Para que las cartas miren hacia el centro, rotamos el contenedor
+    // angle = PI/2 (top) -> rotate = 0
+    // angle = PI (left) -> rotate = -90
+    // angle = 0 (right) -> rotate = 90
+    const rotate = 90 - (angle * 180 / Math.PI);
+
+    return {
+      transform: `translate(calc(-50% + ${dx}px), ${dy}px) rotate(${rotate}deg)`,
+      transformOrigin: 'top center'
+    }
+  }
 </script>
 
 <style scoped>

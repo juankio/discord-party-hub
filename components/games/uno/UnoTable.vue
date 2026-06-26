@@ -1,9 +1,9 @@
 <template>
-  <div class="flex-1 flex justify-center items-center relative z-10 w-full py-8">
-    <div class="relative mx-auto w-full max-w-[800px] h-[350px] sm:h-[450px]">
+  <div class="flex-1 flex justify-center items-center relative z-10 w-full pb-0 pt-12 md:pt-20">
+    <div class="relative mx-auto w-[calc(100vw-6rem)] sm:w-[calc(100vw-8rem)] md:w-full max-w-[800px] h-[350px] sm:h-[450px]">
       
       <!-- Table Layer -->
-      <div class="absolute inset-0 top-[15%] h-[70%] bg-[#991b1b] rounded-[60px] sm:rounded-[100px] border-[6px] sm:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex items-center justify-center mx-4 sm:mx-8 overflow-hidden z-10">
+      <div class="absolute inset-0 top-1/2 -translate-y-1/2 h-[70%] bg-[#991b1b] rounded-[60px] sm:rounded-[100px] border-[6px] sm:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex flex-row items-center justify-center gap-4 sm:gap-8 mx-4 sm:mx-8 overflow-hidden z-10">
         
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"/>
 
