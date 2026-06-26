@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden h-full min-h-[40vh]">
-    <div class="w-full h-full relative px-2 sm:px-4 mt-8 sm:mt-16">
+  <div class="flex-1 w-full relative z-10 pointer-events-none overflow-hidden min-h-[40vh]">
+    <div class="absolute inset-0 px-2 sm:px-4 mt-8 sm:mt-16">
       <div 
         v-for="(rival, index) in rivals" 
         :id="`rival-avatar-${rival.userId}`" 

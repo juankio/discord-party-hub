@@ -131,6 +131,7 @@ const route = useRoute();
 const router = useRouter();
 const playerStore = usePlayerStore();
 const { socket } = useSocket();
+const toast = useToast();
 const roomId = computed(() => route.params.id as string);
 
 useSeoMeta({
@@ -176,6 +177,11 @@ const selectedGame = computed({
 	get: () => playerStore.selectedGame,
 	set: (val: string) => {
 		if (isHost.value) {
+			const hasBots = players.value.some((p: any) => p.isBot);
+			if (hasBots && !['uno', 'parchis'].includes(val)) {
+				toast.add({ title: 'Bots no compatibles', description: 'Expulsa a los bots primero para jugar este juego.', color: 'red' });
+				return;
+			}
 			playerStore.selectedGame = val;
 			socket.value?.emit("update_selected_game", val);
 		}
@@ -240,6 +246,16 @@ const isStarting = ref(false);
 
 const startGame = () => {
 	isStarting.value = true;
+	
+	if (selectedGame.value === 'parchis') {
+		const boardSize = playerStore.roomRules?.parchisBoardSize || 4;
+		if (players.value.length > boardSize) {
+			toast.add({ title: 'Mesa llena', description: 'Hay más jugadores que espacios en el tablero. Aumenta el tamaño del tablero de Parchís o expulsa a alguien.', color: 'red' });
+			isStarting.value = false;
+			return;
+		}
+	}
+
 	socket.value?.emit("start_game", {
 		gameType: selectedGame.value,
 		rules: toRaw(playerStore.roomRules),
