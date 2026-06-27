@@ -1,10 +1,13 @@
-import { io, Socket } from 'socket.io-client'
+import type { Socket } from 'socket.io-client';
+import { io } from 'socket.io-client'
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
 import { useUnoStore } from '~/stores/games/unoStore'
+import { useStopStore } from '~/stores/games/stopStore'
+import { useParchisStore } from '~/stores/games/parchisStore'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
@@ -31,23 +34,37 @@ export const useSocket = () => {
         userId: playerStore.userId,
         nickname: playerStore.nickname,
         avatarId: playerStore.avatarId,
-        color: playerStore.color
+        color: playerStore.color,
+        totalWins: playerStore.totalWins
       })
     })
 
     socket.value.on('room_update', (data) => {
-      playerStore.updateRoomState(data.users, data.hostUserId)
+      playerStore.updateRoomState(data.users, data.hostUserId, data.roomRules, data.selectedGame)
     })
 
     socket.value.on('game_state_update', (data) => {
-      useUnoStore().updateState(data)
+      const selectedGame = playerStore.selectedGame;
+      if (selectedGame === 'uno') {
+        useUnoStore().updateState(data)
+      } else if (selectedGame === 'stop') {
+        useStopStore().updateState(data)
+      } else if (selectedGame === 'parchis') {
+        useParchisStore().updateState(data)
+      }
     })
 
     socket.value.on('game_action', (data) => {
       // Usaremos un custom event para que los componentes puedan reaccionar a acciones físicas
       try {
         window.dispatchEvent(new CustomEvent('uno:action', { detail: data }))
-      } catch(e) {}
+      } catch {}
+    })
+
+    socket.value.on('player_won', (userId: string) => {
+      if (userId === playerStore.userId) {
+        playerStore.incrementWin()
+      }
     })
 
     socket.value.on('uno:rival_hover', (data) => {
@@ -58,6 +75,19 @@ export const useSocket = () => {
       if (route.path !== `/sala/${roomId}`) {
         router.push(`/sala/${roomId}`)
       }
+    })
+
+    socket.value.on('room_not_found', () => {
+      disconnect()
+      playerStore.updateRoomState([], '')
+      useToast().add({ title: 'Sala Cerrada', description: 'La sala que buscas no existe o fue cerrada.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      router.push('/')
+    })
+
+    socket.value.on('room_full', () => {
+      disconnect()
+      useToast().add({ title: 'Sala Llena', description: 'La sala ha alcanzado su límite de jugadores.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      router.push('/')
     })
 
     socket.value.on('disconnect', () => {
@@ -73,10 +103,17 @@ export const useSocket = () => {
     }
   }
 
+  const updateProfile = (data: { nickname: string, avatarId: number, color: string }) => {
+    if (socket.value) {
+      socket.value.emit('update_profile', data)
+    }
+  }
+
   return {
     socket,
     isConnected,
     connect,
-    disconnect
+    disconnect,
+    updateProfile
   }
 }
