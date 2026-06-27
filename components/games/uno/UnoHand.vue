@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex justify-center items-end z-10 relative w-full max-w-full">
+  <div class="flex-none flex justify-center items-end z-10 relative w-full max-w-full">
     <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-8 pt-12 px-4 md:px-0 flex justify-start md:justify-center snap-x">
       <TransitionGroup 
         tag="div" 

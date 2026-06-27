@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute left-8 md:left-16 flex flex-col items-center gap-2">
+  <div class="relative flex flex-col items-center gap-2">
     <div
          class="deck-placeholder w-20 h-32 md:w-24 md:h-36 bg-gray-900 border-2 border-gray-700 rounded-xl flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] cursor-pointer transition-transform"
          :class="[
