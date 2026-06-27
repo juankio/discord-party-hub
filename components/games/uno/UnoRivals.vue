@@ -11,6 +11,11 @@
         transform: 'translate(-50%, -50%)'
       }"
     >
+        <!-- Indicador de Turno "PRO" -->
+        <div v-if="currentTurnUserId === rival.userId" class="absolute -top-11 sm:-top-12 bg-yellow-500 text-black px-2 py-0.5 rounded text-[9px] font-black animate-bounce shadow-lg shadow-yellow-500/50 z-30 whitespace-nowrap">
+          TU TURNO
+        </div>
+
         <!-- Nombre del rival (Arriba del avatar para no superponer la mesa) -->
         <span class="absolute -top-6 sm:-top-7 text-[10px] sm:text-xs md:text-sm font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap z-20">{{ rival.nickname }}</span>
 
@@ -75,9 +80,9 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  if (total === 0) return { x: 50, y: 5 };
-  if (total === 1) return { x: 50, y: 5 };
-  if (total === 2) return index === 0 ? { x: 15, y: 20 } : { x: 85, y: 20 };
+  if (total === 0) return { x: 50, y: 10 };
+  if (total === 1) return { x: 50, y: 10 };
+  if (total === 2) return index === 0 ? { x: 15, y: 25 } : { x: 85, y: 25 };
 
   // Angle bounds: from 180deg (left) to 0deg (right)
   const minAngle = Math.PI + 0.3; // left
@@ -90,9 +95,9 @@ const getRivalPosition = (index: number, total: number) => {
   const radiusX = 46; // 46% of table width spread (ajustado para no cortar avatars)
   const radiusY = 40; // 40% of table height curve
 
-  // Center is x: 50, y: 50
+  // Center is x: 50, y: 55
   const x = 50 + radiusX * Math.cos(angle);
-  const y = 50 - radiusY * Math.sin(angle); 
+  const y = 55 - radiusY * Math.sin(angle); 
 
   return { x, y };
 }
@@ -101,8 +106,8 @@ const getRivalPosition = (index: number, total: number) => {
     if (total === 2) {
       angle = index === 0 ? Math.PI - 0.2 : 0.2;
     } else if (total > 2) {
-      const minAngle = Math.PI;
-      const maxAngle = 0;
+      const minAngle = Math.PI + 0.3;
+      const maxAngle = -0.3;
       const angleStep = (minAngle - maxAngle) / (total - 1);
       angle = minAngle - (index * angleStep);
     }
