@@ -129,7 +129,7 @@ export function useUnoActionFx(unoStore: any) {
       });
 
       tl.add({
-        scale: [0, 3],
+        scale: [0, 1.2],
         opacity: [0, 1],
         rotate: '1turn',
         translateX: '-50%',
@@ -166,7 +166,7 @@ export function useUnoActionFx(unoStore: any) {
       });
 
       tl.add({
-        scale: [0, 2],
+        scale: [0, 1.2],
         opacity: [0, 1],
         translateX: '-50%',
         translateY: '-50%',
@@ -198,7 +198,7 @@ export function useUnoActionFx(unoStore: any) {
       });
 
       tl.add({
-        scale: [0, 2],
+        scale: [0, 1.2],
         opacity: [0, 1],
         rotate: '1080deg',
         translateX: '-50%',

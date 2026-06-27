@@ -37,7 +37,7 @@
             <div class="flex -space-x-2 sm:-space-x-3">
               <div
                 v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
-                class="w-4 h-6 sm:w-5 sm:h-8 md:w-6 md:h-10 lg:w-8 lg:h-12 bg-gray-800 border border-gray-500 rounded-[2px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
+                class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 lg:w-6 lg:h-10 bg-gray-800 border border-gray-500 rounded-[2px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
                 :class="{'translate-y-[-10px] scale-110 z-20': useUnoStore().rivalHoverIndex[rival.userId] === (n - 1)}"
               >
                 <div
@@ -45,7 +45,7 @@
                   style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"
                 />
               </div>
-              <div v-if="rival.cardCount > 8" class="w-4 h-6 sm:w-5 sm:h-8 md:w-6 md:h-10 lg:w-8 lg:h-12 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white z-10 -ml-1 sm:-ml-2">
+              <div v-if="rival.cardCount > 8" class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 lg:w-6 lg:h-10 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white z-10 -ml-1 sm:-ml-2">
                 +
               </div>
             </div>
@@ -80,15 +80,15 @@ const getRivalPosition = (index: number, total: number) => {
   if (total === 2) return index === 0 ? { x: 15, y: 15 } : { x: 85, y: 15 };
 
   // Angle bounds: from 180deg (left) to 0deg (right)
-  const minAngle = Math.PI; // left
-  const maxAngle = 0;       // right
+  const minAngle = Math.PI + 0.3; // left
+  const maxAngle = -0.3;       // right
   
   // Distribute index evenly between maxAngle and minAngle
   const angleStep = (minAngle - maxAngle) / (total - 1);
   const angle = minAngle - (index * angleStep);
 
-  const radiusX = 40; // 40% of table width spread (ajustado para no cortar avatars)
-  const radiusY = 38; // 38% of table height curve
+  const radiusX = 46; // 46% of table width spread (ajustado para no cortar avatars)
+  const radiusY = 40; // 40% of table height curve
 
   // Center is x: 50, y: 45
   const x = 50 + radiusX * Math.cos(angle);
@@ -108,7 +108,7 @@ const getRivalPosition = (index: number, total: number) => {
     }
 
     // Distancia fija en pixeles para empujar las cartas hacia el centro de la mesa
-    const pushDistance = 40; // Ajustado a 40 para la mesa más grande
+    const pushDistance = 45; // Ajustado a 45 para la mesa más grande
     const dx = -pushDistance * Math.cos(angle);
     const dy = pushDistance * Math.sin(angle); // positivo porque y crece hacia abajo
 
@@ -116,7 +116,7 @@ const getRivalPosition = (index: number, total: number) => {
     // angle = PI/2 (top) -> rotate = 0
     // angle = PI (left) -> rotate = -90
     // angle = 0 (right) -> rotate = 90
-    const rotate = 90 - (angle * 180 / Math.PI);
+    const rotate = (90 - (angle * 180 / Math.PI)) * 0.5;
 
     return {
       transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${rotate}deg)`,
