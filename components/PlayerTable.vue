@@ -123,7 +123,9 @@ const getAvatarPosition = (index: number, total: number) => {
     { left: 'var(--hole-offset-x)', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },    // 2: Arriba Izquierda
     { left: 'calc(100% - var(--hole-offset-x))', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
     { left: 'var(--hole-offset-x)', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
-    { left: 'calc(100% - var(--hole-offset-x))', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' } // 5: Abajo Derecha
+    { left: 'calc(100% - var(--hole-offset-x))', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' }, // 5: Abajo Derecha
+    { left: 'var(--hole-offset-x)', top: '50%', transform: 'translate(-50%, -50%)' }, // 6: Medio Izquierda
+    { left: 'calc(100% - var(--hole-offset-x))', top: '50%', transform: 'translate(-50%, -50%)' } // 7: Medio Derecha
   ]
 
   const myIndex = props.players.findIndex(p => p.userId === playerStore.userId)
@@ -140,8 +142,12 @@ const getAvatarPosition = (index: number, total: number) => {
     layout = [4, 2, 3, 5]
   } else if (total === 5) {
     layout = [4, 2, 1, 3, 5]
+  } else if (total === 6) {
+    layout = [4, 6, 2, 3, 7, 5]
+  } else if (total === 7) {
+    layout = [4, 6, 2, 1, 3, 7, 5]
   } else {
-    layout = [4, 2, 1, 3, 5, 0]
+    layout = [0, 4, 6, 2, 1, 3, 7, 5]
   }
 
   const slotIndex = layout[distance] !== undefined ? layout[distance] : 0
