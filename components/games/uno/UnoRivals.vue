@@ -75,9 +75,9 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  if (total === 0) return { x: 50, y: 0 };
-  if (total === 1) return { x: 50, y: 0 };
-  if (total === 2) return index === 0 ? { x: 15, y: 15 } : { x: 85, y: 15 };
+  if (total === 0) return { x: 50, y: 5 };
+  if (total === 1) return { x: 50, y: 5 };
+  if (total === 2) return index === 0 ? { x: 15, y: 20 } : { x: 85, y: 20 };
 
   // Angle bounds: from 180deg (left) to 0deg (right)
   const minAngle = Math.PI + 0.3; // left
@@ -90,9 +90,9 @@ const getRivalPosition = (index: number, total: number) => {
   const radiusX = 46; // 46% of table width spread (ajustado para no cortar avatars)
   const radiusY = 40; // 40% of table height curve
 
-  // Center is x: 50, y: 45
+  // Center is x: 50, y: 50
   const x = 50 + radiusX * Math.cos(angle);
-  const y = 45 - radiusY * Math.sin(angle); 
+  const y = 50 - radiusY * Math.sin(angle); 
 
   return { x, y };
 }
