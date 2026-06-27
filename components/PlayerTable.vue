@@ -134,18 +134,20 @@ const getAvatarPosition = (index: number, total: number) => {
   const distance = (index - normalizedMyIndex + total) % total
 
   let layout: number[] = []
-  if (total <= 2) {
+  if (total <= 1) {
+    layout = [0]
+  } else if (total === 2) {
     layout = [0, 1]
   } else if (total === 3) {
-    layout = [4, 2, 3]
+    layout = [0, 2, 3]
   } else if (total === 4) {
-    layout = [4, 2, 3, 5]
+    layout = [0, 6, 1, 7]
   } else if (total === 5) {
-    layout = [4, 2, 1, 3, 5]
+    layout = [0, 4, 2, 3, 5]
   } else if (total === 6) {
-    layout = [4, 6, 2, 3, 7, 5]
+    layout = [0, 4, 2, 1, 3, 5]
   } else if (total === 7) {
-    layout = [4, 6, 2, 1, 3, 7, 5]
+    layout = [0, 4, 6, 2, 1, 3, 5]
   } else {
     layout = [0, 4, 6, 2, 1, 3, 7, 5]
   }

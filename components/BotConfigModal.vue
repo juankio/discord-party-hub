@@ -6,23 +6,24 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="closeModal"></div>
 
         <!-- Modal Wrapper (Billiard Aesthetic) -->
-        <div class="relative w-full max-w-sm bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
           <!-- Inner Container -->
-          <div class="bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)] p-6 relative flex flex-col items-center w-full">
+          <div class="bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)] p-4 relative flex flex-col items-center w-full min-w-0">
             
             <!-- Title -->
-            <h3 class="text-white font-black tracking-widest uppercase text-xl sm:text-2xl mb-6 flex items-center gap-3 w-full justify-center">
+            <h3 class="text-white font-black tracking-widest uppercase text-xl sm:text-2xl mb-4 flex items-center gap-3 w-full justify-center">
               <UIcon name="i-lucide-bot" class="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
               Configurar Bot
             </h3>
 
-            <div class="space-y-8 w-full" v-if="bot">
+            <div class="space-y-4 w-full min-w-0" v-if="bot">
               <!-- Bot Info -->
               <ProfileSetup 
                 v-model:nickname="tempNickname" 
                 v-model:avatar-id="tempAvatarId" 
                 v-model:color="tempColor" 
-                class="w-full"
+                class="w-full min-w-0"
+                :compact="true"
                 :style="{ '--theme-color': tempColor }"
               />
 
