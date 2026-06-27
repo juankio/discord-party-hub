@@ -118,7 +118,7 @@ export function useUnoActionFx(unoStore: any) {
 
     if (action === 'action_reverse') {
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17H3"/><path d="m6 14-3 3 3 3"/><path d="M3 7h18"/><path d="m18 10 3-3-3-3"/></svg>`;
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 sm:w-20 sm:h-20 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 17H3"/><path d="m6 14-3 3 3 3"/><path d="M3 7h18"/><path d="m18 10 3-3-3-3"/></svg>`;
       clone.className = 'fixed z-[9999] top-1/2 left-1/2 flex items-center justify-center';
       clone.style.opacity = '0';
       document.body.appendChild(clone);
@@ -153,7 +153,7 @@ export function useUnoActionFx(unoStore: any) {
       const victimY = victimAvatarEl ? victimAvatarEl.getBoundingClientRect().top + 30 : window.innerHeight / 2;
 
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 sm:w-20 sm:h-20 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
       clone.className = 'fixed z-[9999] flex items-center justify-center';
       clone.style.top = `${victimY}px`;
       clone.style.left = `${victimX}px`;
@@ -187,7 +187,7 @@ export function useUnoActionFx(unoStore: any) {
 
     if (action === 'action_zero') {
       const clone = document.createElement('div');
-      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
+      clone.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 sm:w-20 sm:h-20 ${getColorClass()}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>`;
       clone.className = 'fixed z-[9999] top-1/2 left-1/2 flex items-center justify-center';
       clone.style.opacity = '0';
       document.body.appendChild(clone);
