@@ -72,8 +72,9 @@ export const useSocket = () => {
     })
 
     socket.value.on('return_to_lobby', () => {
-      if (route.path !== `/sala/${roomId}`) {
-        router.push(`/sala/${roomId}`)
+      const targetPath = `/sala/${roomId}`
+      if (window.location.pathname !== targetPath) {
+        window.location.href = targetPath // Fuerza navegacion nativa para evitar bloqueos del router de Vue
       }
     })
 
