@@ -11,30 +11,30 @@
         transform: 'translate(-50%, -50%)'
       }"
     >
-        <!-- Indicador de Turno "PRO" -->
-        <div v-if="currentTurnUserId === rival.userId" class="absolute -top-11 sm:-top-12 bg-yellow-500 text-black px-2 py-0.5 rounded text-[9px] font-black animate-bounce shadow-lg shadow-yellow-500/50 z-30 whitespace-nowrap">
-          TU TURNO
-        </div>
-
-        <!-- Nombre del rival (Arriba del avatar para no superponer la mesa) -->
-        <span class="absolute -top-6 sm:-top-7 text-[10px] sm:text-xs md:text-sm font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap z-20">{{ rival.nickname }}</span>
+        <!-- Nombre del rival (Debajo del avatar) -->
+        <span class="absolute -bottom-6 text-[10px] sm:text-xs font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap z-20">{{ rival.nickname }}</span>
 
         <!-- Avatar (Tamaño ajustado para el efecto 3D) -->
         <div
-          class="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full border-[3px] sm:border-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative z-10 transition-colors bg-[#151515]"
+          class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[3px] sm:border-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative z-10 transition-colors bg-[#151515]"
           :style="{ borderColor: rival.color || '#f97316', color: rival.color || '#f97316' }"
           :class="{'neon-glow': currentTurnUserId === rival.userId}"
         >
+          <!-- Indicador TU TURNO -->
+          <div v-if="currentTurnUserId === rival.userId" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-2 py-0.5 rounded text-[9px] font-black animate-bounce shadow-[0_0_10px_rgba(234,179,8,0.8)] whitespace-nowrap z-50">
+            TU TURNO
+          </div>
+
           <!-- Overlay Offline -->
           <div v-if="rival.isOffline" class="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center z-30 backdrop-blur-[2px]">
-            <UIcon name="i-lucide-wifi-off" class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-orange-500 animate-pulse" />
+            <UIcon name="i-lucide-wifi-off" class="w-4 h-4 sm:w-6 sm:h-6 text-orange-500 animate-pulse" />
           </div>
           <span v-if="rival.isOffline" class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[9px] md:text-[10px] font-black text-orange-400 bg-black/90 px-2 py-0.5 rounded border border-orange-500/50 whitespace-nowrap animate-pulse z-40">
             Desconectado
           </span>
           <img :src="`/avatars/avatar-${rival.avatarId}.svg?v=2`" class="w-full h-full object-cover rounded-full" :class="{'grayscale opacity-50': rival.isOffline}">
           
-          <!-- Mini Cards Hand (Caen dentro de la mesa) -->
+          <!-- Mini Cards Hand -->
           <div 
             class="absolute top-1/2 left-1/2 flex justify-center w-max pointer-events-none drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)] transition-all duration-500"
             :style="getMiniCardsStyle(index, rivals.length)"
@@ -42,7 +42,7 @@
             <div class="flex -space-x-2 sm:-space-x-3">
               <div
                 v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
-                class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 lg:w-6 lg:h-10 bg-gray-800 border border-gray-500 rounded-[2px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
+                class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 bg-gray-800 border border-gray-500 rounded-[2px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
                 :class="{'translate-y-[-10px] scale-110 z-20': useUnoStore().rivalHoverIndex[rival.userId] === (n - 1)}"
               >
                 <div
@@ -50,7 +50,7 @@
                   style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"
                 />
               </div>
-              <div v-if="rival.cardCount > 8" class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 lg:w-6 lg:h-10 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white z-10 -ml-1 sm:-ml-2">
+              <div v-if="rival.cardCount > 8" class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white z-10 -ml-1 sm:-ml-2">
                 +
               </div>
             </div>
@@ -82,46 +82,44 @@ defineEmits(['challenge'])
 const getRivalPosition = (index: number, total: number) => {
   if (total === 0) return { x: 50, y: 10 };
   if (total === 1) return { x: 50, y: 10 };
-  if (total === 2) return index === 0 ? { x: 15, y: 25 } : { x: 85, y: 25 };
+  if (total === 2) return index === 0 ? { x: 10, y: 25 } : { x: 90, y: 25 };
 
   // Angle bounds: from 180deg (left) to 0deg (right)
-  const minAngle = Math.PI + 0.3; // left
-  const maxAngle = -0.3;       // right
+  const minAngle = Math.PI + 0.35; // left
+  const maxAngle = -0.35;       // right
   
   // Distribute index evenly between maxAngle and minAngle
   const angleStep = (minAngle - maxAngle) / (total - 1);
   const angle = minAngle - (index * angleStep);
 
-  const radiusX = 46; // 46% of table width spread (ajustado para no cortar avatars)
-  const radiusY = 40; // 40% of table height curve
+  const radiusX = 48; // 48% of container width spread
+  const radiusY = 44; // 44% of container height curve
 
-  // Center is x: 50, y: 55
+  // Center is x: 50, y: 50
   const x = 50 + radiusX * Math.cos(angle);
-  const y = 55 - radiusY * Math.sin(angle); 
+  const y = 50 - radiusY * Math.sin(angle); 
 
   return { x, y };
 }
+
   const getMiniCardsStyle = (index: number, total: number) => {
     let angle = Math.PI / 2; // Default top center
     if (total === 2) {
       angle = index === 0 ? Math.PI - 0.2 : 0.2;
     } else if (total > 2) {
-      const minAngle = Math.PI + 0.3;
-      const maxAngle = -0.3;
+      const minAngle = Math.PI + 0.35;
+      const maxAngle = -0.35;
       const angleStep = (minAngle - maxAngle) / (total - 1);
       angle = minAngle - (index * angleStep);
     }
 
-    // Distancia fija en pixeles para empujar las cartas hacia el centro de la mesa
-    const pushDistance = 45; // Ajustado a 45 para la mesa más grande
+    // Distancia de empuje más pequeña, ya que el radio ya los deja casi tocando la madera.
+    const pushDistance = 40; 
     const dx = -pushDistance * Math.cos(angle);
-    const dy = pushDistance * Math.sin(angle); // positivo porque y crece hacia abajo
+    const dy = pushDistance * Math.sin(angle);
 
-    // Para que las cartas miren hacia el centro, rotamos el contenedor
-    // angle = PI/2 (top) -> rotate = 0
-    // angle = PI (left) -> rotate = -90
-    // angle = 0 (right) -> rotate = 90
-    const rotate = (90 - (angle * 180 / Math.PI)) * 0.5;
+    // Suavizamos el ángulo para que no se acuesten horizontalmente y miren bonito al centro
+    const rotate = (90 - (angle * 180 / Math.PI)) * 0.4;
 
     return {
       transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${rotate}deg)`,
