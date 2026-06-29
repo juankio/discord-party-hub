@@ -100,13 +100,14 @@ const swapHands = (id: string) => { socket.value?.emit('uno:swap_hands', id) }
 const onCardHover = (index: number | null) => { socket.value?.emit('uno:hover_card', index) }
 const surrender = () => { socket.value?.emit('uno:surrender') }
 const exitGame = () => {
-  if (unoStore.gameState !== 'FINISHED' && unoStore.gameState !== 'WAITING') {
-    surrender()
-  }
-
-  if (unoStore.gameState === 'FINISHED') {
+  const isHost = playerStore.hostUserId === playerStore.userId;
+  
+  if (isHost || unoStore.gameState === 'FINISHED') {
     socket.value?.emit('return_to_lobby')
   } else {
+    if (unoStore.gameState !== 'WAITING') {
+      surrender()
+    }
     router.push(`/sala/${roomId}`)
   }
 }

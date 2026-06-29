@@ -48,13 +48,14 @@ const surrender = () => {
   };
 
   const exitGame = () => {
-    if (parchisStore.gameState !== "FINISHED" && parchisStore.gameState !== "WAITING") {
-        surrender();
-    }
+    const isHost = playerStore.hostUserId === playerStore.userId;
     
-    if (parchisStore.gameState === "FINISHED") {
+    if (isHost || parchisStore.gameState === "FINISHED") {
         socket.value?.emit("return_to_lobby");
     } else {
+        if (parchisStore.gameState !== "WAITING") {
+            surrender();
+        }
         router.push(`/sala/${roomId}`);
     }
   };
