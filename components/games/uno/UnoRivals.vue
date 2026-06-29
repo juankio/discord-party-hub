@@ -14,7 +14,7 @@
         <!-- Nombre del rival (Debajo del avatar) -->
         <span class="absolute -bottom-6 text-[10px] sm:text-xs font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap z-20">{{ rival.nickname }}</span>
 
-        <!-- Avatar (Tamaño ajustado para el efecto 3D) -->
+        <!-- Avatar -->
         <div
           class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-[3px] sm:border-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative z-10 transition-colors bg-[#151515]"
           :style="{ borderColor: rival.color || '#f97316', color: rival.color || '#f97316' }"
@@ -80,22 +80,18 @@ defineProps({
 defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
-  if (total === 0) return { x: 50, y: 10 };
-  if (total === 1) return { x: 50, y: 10 };
-  if (total === 2) return index === 0 ? { x: 10, y: 25 } : { x: 90, y: 25 };
+  if (total === 0) return { x: 50, y: 5 };
+  if (total === 1) return { x: 50, y: 5 };
+  if (total === 2) return index === 0 ? { x: 10, y: 30 } : { x: 90, y: 30 };
 
-  // Angle bounds: from 180deg (left) to 0deg (right)
-  const minAngle = Math.PI + 0.35; // left
-  const maxAngle = -0.35;       // right
-  
-  // Distribute index evenly between maxAngle and minAngle
+  const minAngle = Math.PI + 0.25; 
+  const maxAngle = -0.25;       
   const angleStep = (minAngle - maxAngle) / (total - 1);
   const angle = minAngle - (index * angleStep);
 
-  const radiusX = 48; // 48% of container width spread
-  const radiusY = 44; // 44% of container height curve
+  const radiusX = 48; 
+  const radiusY = 46; 
 
-  // Center is x: 50, y: 50
   const x = 50 + radiusX * Math.cos(angle);
   const y = 50 - radiusY * Math.sin(angle); 
 
@@ -103,23 +99,21 @@ const getRivalPosition = (index: number, total: number) => {
 }
 
   const getMiniCardsStyle = (index: number, total: number) => {
-    let angle = Math.PI / 2; // Default top center
+    let angle = Math.PI / 2; 
     if (total === 2) {
       angle = index === 0 ? Math.PI - 0.2 : 0.2;
     } else if (total > 2) {
-      const minAngle = Math.PI + 0.35;
-      const maxAngle = -0.35;
+      const minAngle = Math.PI + 0.25;
+      const maxAngle = -0.25;
       const angleStep = (minAngle - maxAngle) / (total - 1);
       angle = minAngle - (index * angleStep);
     }
 
-    // Distancia de empuje más pequeña, ya que el radio ya los deja casi tocando la madera.
-    const pushDistance = 40; 
+    const pushDistance = 55; 
     const dx = -pushDistance * Math.cos(angle);
     const dy = pushDistance * Math.sin(angle);
 
-    // Suavizamos el ángulo para que no se acuesten horizontalmente y miren bonito al centro
-    const rotate = (90 - (angle * 180 / Math.PI)) * 0.4;
+    const rotate = (90 - (angle * 180 / Math.PI)) * 0.7;
 
     return {
       transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${rotate}deg)`,
