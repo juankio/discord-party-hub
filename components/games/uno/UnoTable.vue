@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-1 flex justify-center items-center relative z-10 w-full pt-12 pb-2 md:pt-16 md:pb-6">
+  <div class="flex-1 flex justify-center items-end relative z-10 w-full pt-16 pb-4 sm:pt-16 sm:pb-6">
     <!-- Contenedor Maestro de la Mesa y Órbita -->
-    <div class="relative mx-auto w-full max-w-[900px] lg:max-w-[1000px] aspect-[1.3/1] sm:aspect-[2.2/1] min-h-[300px] max-h-[450px]">
+    <div class="relative mx-auto w-full max-w-[900px] lg:max-w-[1000px] aspect-[1.1/1] sm:aspect-[2.2/1] min-h-[320px] max-h-[45vh] sm:max-h-[450px]">
       
       <!-- Table Layer (Tapete de Madera) -->
       <div class="absolute inset-x-2 sm:inset-x-6 top-[15%] bottom-[5%] sm:top-[12%] sm:bottom-[8%] bg-[#991b1b] rounded-[40px] sm:rounded-[80px] lg:rounded-[100px] border-[6px] sm:border-[10px] lg:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex flex-row items-center justify-center gap-4 sm:gap-8 overflow-hidden z-10">

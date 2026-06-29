@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-screen flex flex-col bg-transparent text-white font-sans overflow-x-hidden">
+  <div class="relative h-[100dvh] max-h-screen w-full flex flex-col bg-transparent text-white font-sans overflow-hidden">
     
     <!-- Top Bar -->
     <div class="absolute top-4 left-4 z-50 flex gap-4">

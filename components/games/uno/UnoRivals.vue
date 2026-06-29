@@ -42,15 +42,15 @@
             <div class="flex -space-x-2 sm:-space-x-3">
               <div
                 v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
-                class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 bg-gray-800 border border-gray-500 rounded-[2px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
+                class="w-5 h-8 sm:w-5 sm:h-8 md:w-6 md:h-10 bg-gray-800 border border-gray-500 rounded-[3px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
                 :class="{'translate-y-[-10px] scale-110 z-20': useUnoStore().rivalHoverIndex[rival.userId] === (n - 1)}"
               >
                 <div
-                  class="w-full h-full bg-red-800 rounded-[1px] opacity-80" 
+                  class="w-full h-full bg-red-800 rounded-[2px] opacity-80" 
                   style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"
                 />
               </div>
-              <div v-if="rival.cardCount > 8" class="w-3 h-5 sm:w-4 sm:h-7 md:w-5 md:h-8 bg-black border border-gray-500 rounded-[2px] flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white z-10 -ml-1 sm:-ml-2">
+              <div v-if="rival.cardCount > 8" class="w-5 h-8 sm:w-5 sm:h-8 md:w-6 md:h-10 bg-black border border-gray-500 rounded-[3px] flex items-center justify-center text-[10px] md:text-xs font-bold text-white z-10 -ml-2 sm:-ml-3">
                 +
               </div>
             </div>
