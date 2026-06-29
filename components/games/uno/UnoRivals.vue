@@ -12,7 +12,7 @@
       }"
     >
         <!-- Nombre del rival (Debajo del avatar) -->
-        <span class="absolute -bottom-6 text-[10px] sm:text-xs font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] whitespace-nowrap z-20">{{ rival.nickname }}</span>
+        <span class="absolute -bottom-6 text-[10px] sm:text-xs font-black text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] max-w-[70px] sm:max-w-[100px] truncate z-20 text-center">{{ rival.nickname }}</span>
 
         <!-- Avatar -->
         <div
@@ -21,8 +21,9 @@
           :class="{'neon-glow': currentTurnUserId === rival.userId}"
         >
           <!-- Indicador TU TURNO -->
-          <div v-if="currentTurnUserId === rival.userId" class="absolute -top-8 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-2 py-0.5 rounded text-[9px] font-black animate-bounce shadow-[0_0_10px_rgba(234,179,8,0.8)] whitespace-nowrap z-50">
-            TU TURNO
+          <div v-if="currentTurnUserId === rival.userId" class="absolute -top-10 left-1/2 -translate-x-1/2 bg-yellow-500 text-black px-2 py-1 rounded-md text-[10px] font-black shadow-[0_0_15px_rgba(234,179,8,0.8)] whitespace-nowrap z-50 flex items-center gap-1">
+            <UIcon name="i-lucide-hourglass" class="w-3 h-3 animate-spin" />
+            JUGANDO
           </div>
 
           <!-- Overlay Offline -->
@@ -42,7 +43,7 @@
             <div class="flex -space-x-2 sm:-space-x-3">
               <div
                 v-for="n in Math.min(rival.cardCount, 8)" :key="n" 
-                class="w-5 h-8 sm:w-5 sm:h-8 md:w-6 md:h-10 bg-gray-800 border border-gray-500 rounded-[3px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
+                class="w-5 h-8 sm:w-6 sm:h-10 md:w-8 md:h-12 bg-gray-800 border border-gray-500 rounded-[3px] shadow-sm transform rotate-[-5deg] transition-transform duration-200"
                 :class="{'translate-y-[-10px] scale-110 z-20': useUnoStore().rivalHoverIndex[rival.userId] === (n - 1)}"
               >
                 <div
@@ -50,7 +51,7 @@
                   style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 2px);"
                 />
               </div>
-              <div v-if="rival.cardCount > 8" class="w-5 h-8 sm:w-5 sm:h-8 md:w-6 md:h-10 bg-black border border-gray-500 rounded-[3px] flex items-center justify-center text-[10px] md:text-xs font-bold text-white z-10 -ml-2 sm:-ml-3">
+              <div v-if="rival.cardCount > 8" class="w-5 h-8 sm:w-6 sm:h-10 md:w-8 md:h-12 bg-black border border-gray-500 rounded-[3px] flex items-center justify-center text-[10px] md:text-xs font-bold text-white z-10 -ml-3 sm:-ml-4">
                 +
               </div>
             </div>

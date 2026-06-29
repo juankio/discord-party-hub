@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .table-container {
+    aspect-ratio: 1 / 1.1;
+    max-width: min(100%, calc(45vh * (1 / 1.1)));
+    max-height: 45vh;
+    width: 100%;
+  }
+  @media (min-width: 640px) {
+    .table-container {
+      aspect-ratio: 2.2 / 1;
+      max-width: min(1000px, calc(45vh * 2.2));
+      max-height: 45vh;
+    }
+  }
+</style>
+</head>
+<body class="bg-gray-900 h-screen flex flex-col p-4 text-white">
+  <div class="bg-gray-800 flex-1 flex flex-col items-center justify-end border border-yellow-500 overflow-hidden pb-4">
+    <!-- Test container -->
+    <div class="bg-red-500 relative border-4 border-blue-500 mx-auto table-container">
+      <div class="absolute inset-x-4 top-[15%] bottom-[5%] bg-red-900 rounded-[40px] border-[6px]">Tapete</div>
+    </div>
+  </div>
+</body>
+</html>
