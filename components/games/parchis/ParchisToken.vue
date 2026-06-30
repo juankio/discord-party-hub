@@ -69,6 +69,58 @@
            <circle cx="60" cy="45" r="4" fill="#111" stroke="none"/>
          </g>
 
+         <!-- GHOST -->
+         <g v-else-if="figureId === 'ghost'">
+           <path d="M 25 80 Q 31 70 37.5 80 Q 43.75 70 50 80 Q 56.25 70 62.5 80 Q 68.75 70 75 80 L 75 50 C 75 15, 25 15, 25 50 Z" />
+           <!-- Eyes -->
+           <circle cx="40" cy="42" r="5" fill="#111" stroke="none" />
+           <circle cx="60" cy="42" r="5" fill="#111" stroke="none" />
+           <!-- Mouth -->
+           <ellipse cx="50" cy="55" rx="4" ry="6" fill="#111" stroke="none" />
+         </g>
+
+         <!-- ROCKET -->
+         <g v-else-if="figureId === 'rocket'">
+           <!-- Center Flame -->
+           <path d="M 42 80 Q 50 100 58 80 Z" fill="#f97316" stroke="#111" stroke-width="4" />
+           <!-- Fins -->
+           <path d="M 35 55 L 15 80 L 35 75 Z M 65 55 L 85 80 L 65 75 Z" />
+           <!-- Body -->
+           <path d="M 50 15 C 20 35, 30 80, 30 80 L 70 80 C 70 80, 80 35, 50 15 Z" />
+           <!-- Window -->
+           <circle cx="50" cy="45" r="8" fill="rgba(255,255,255,0.6)" stroke="#111" stroke-width="3" />
+         </g>
+
+         <!-- CROWN -->
+         <g v-else-if="figureId === 'crown'">
+           <!-- Base band -->
+           <path d="M 20 75 L 80 75 L 80 85 L 20 85 Z" />
+           <!-- Crown spikes -->
+           <path d="M 20 75 L 10 35 L 35 55 L 50 15 L 65 55 L 90 35 L 80 75 Z" />
+           <!-- Jewels -->
+           <circle cx="50" cy="25" r="5" fill="#fff" stroke="#111" stroke-width="2" />
+           <circle cx="15" cy="42" r="4" fill="#fff" stroke="#111" stroke-width="2" />
+           <circle cx="85" cy="42" r="4" fill="#fff" stroke="#111" stroke-width="2" />
+           <!-- Base Jewels -->
+           <circle cx="35" cy="80" r="2.5" fill="#fff" stroke="none" />
+           <circle cx="50" cy="80" r="2.5" fill="#fff" stroke="none" />
+           <circle cx="65" cy="80" r="2.5" fill="#fff" stroke="none" />
+         </g>
+
+         <!-- SWORD -->
+         <g v-else-if="figureId === 'sword'">
+           <!-- Blade -->
+           <path d="M 45 25 L 50 10 L 55 25 L 55 65 L 45 65 Z" />
+           <!-- Inner Line (shine) -->
+           <path d="M 50 15 L 50 62" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round" />
+           <!-- Crossguard -->
+           <path d="M 25 65 L 75 65 L 70 73 L 30 73 Z" />
+           <!-- Handle -->
+           <path d="M 45 73 L 55 73 L 53 90 L 47 90 Z" />
+           <!-- Pommel -->
+           <circle cx="50" cy="92" r="5" />
+         </g>
+
          <!-- DEFAULT (Pawn) -->
          <g v-else>
            <path d="M 25 85 L 75 85 L 65 70 Q 55 70 55 55 A 18 18 0 1 0 45 55 Q 45 70 35 70 Z" />
