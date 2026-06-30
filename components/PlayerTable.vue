@@ -19,6 +19,16 @@
         <!-- Inferior Derecha -->
         <div class="absolute -bottom-3 -right-3 md:-bottom-4 md:-right-4 w-8 h-8 md:w-12 md:h-12 bg-[#111] rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,0.8)] border border-black/50"/>
 
+        <!-- Sillas Externas (Extensiones para 7+ jugadores) -->
+        <!-- Silla Izquierda (Slot 6) -->
+        <div v-if="players.length >= 7" class="absolute -left-12 sm:-left-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3),-10px_10px_20px_rgba(0,0,0,0.6)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
+          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"></div>
+        </div>
+        <!-- Silla Derecha (Slot 7) -->
+        <div v-if="players.length === 8" class="absolute -right-12 sm:-right-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3),10px_10px_20px_rgba(0,0,0,0.6)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
+          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"></div>
+        </div>
+
         <!-- Centro de la mesa (Info) -->
         <div class="text-center relative z-10 flex flex-col items-center p-3 sm:p-6 bg-black/20 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-white/10 w-[90%] sm:w-auto max-w-full">
           <p class="text-[9px] sm:text-[10px] md:text-xs text-green-100 mb-1 sm:mb-2 uppercase tracking-[0.2em] sm:tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
@@ -61,7 +71,8 @@
             left: getAvatarPosition(index, players.length).left,
             top: getAvatarPosition(index, players.length).top,
             transform: getAvatarPosition(index, players.length).transform,
-            borderColor: player.color || '#f97316'
+            borderColor: player.color || '#f97316',
+            boxShadow: `0 0 15px ${player.color ? player.color + '80' : 'rgba(249,115,22,0.5)'}`
           }"
           @click="$emit('avatar-click', player)"
         >
@@ -124,8 +135,8 @@ const getAvatarPosition = (index: number, total: number) => {
     { left: 'calc(100% - var(--hole-offset-x))', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },  // 3: Arriba Derecha
     { left: 'var(--hole-offset-x)', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' },  // 4: Abajo Izquierda
     { left: 'calc(100% - var(--hole-offset-x))', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' }, // 5: Abajo Derecha
-    { left: 'var(--hole-offset-x)', top: '50%', transform: 'translate(-50%, -50%)' }, // 6: Medio Izquierda
-    { left: 'calc(100% - var(--hole-offset-x))', top: '50%', transform: 'translate(-50%, -50%)' } // 7: Medio Derecha
+    { left: 'calc(var(--hole-offset-x) - 1.5rem)', top: '50%', transform: 'translate(-50%, -50%)' }, // 6: Medio Izquierda (Silla Externa)
+    { left: 'calc(100% - var(--hole-offset-x) + 1.5rem)', top: '50%', transform: 'translate(-50%, -50%)' } // 7: Medio Derecha (Silla Externa)
   ]
 
   const myIndex = props.players.findIndex(p => p.userId === playerStore.userId)
@@ -141,15 +152,15 @@ const getAvatarPosition = (index: number, total: number) => {
   } else if (total === 3) {
     layout = [0, 2, 3]
   } else if (total === 4) {
-    layout = [0, 6, 1, 7]
+    layout = [4, 2, 3, 5] // Las 4 esquinas de la mesa de billar
   } else if (total === 5) {
-    layout = [0, 4, 2, 3, 5]
+    layout = [0, 4, 2, 3, 5] // 5 buchacas
   } else if (total === 6) {
-    layout = [0, 4, 2, 1, 3, 5]
+    layout = [0, 4, 2, 1, 3, 5] // Las 6 buchacas perfectas
   } else if (total === 7) {
-    layout = [0, 4, 6, 2, 1, 3, 5]
+    layout = [0, 4, 6, 2, 1, 3, 5] // 6 buchacas + 1 silla izquierda (6)
   } else {
-    layout = [0, 4, 6, 2, 1, 3, 7, 5]
+    layout = [0, 4, 6, 2, 1, 3, 7, 5] // 6 buchacas + 2 sillas laterales (6 y 7)
   }
 
   const slotIndex = layout[distance] !== undefined ? layout[distance] : 0

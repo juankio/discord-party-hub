@@ -26,6 +26,10 @@ const figures = [
   { id: 'boat', icon: 'i-lucide-sailboat', label: 'Barco', theme: 'from-sky-400 to-blue-600' },
   { id: 'gem', icon: 'i-lucide-gem', label: 'Gema', theme: 'from-purple-500 to-fuchsia-500' },
   { id: 'wood', icon: 'i-lucide-trees', label: 'Madera', theme: 'from-emerald-500 to-green-600' },
+  { id: 'ghost', icon: 'i-lucide-ghost', label: 'Fantasma', theme: 'from-slate-300 to-slate-500' },
+  { id: 'rocket', icon: 'i-lucide-rocket', label: 'Cohete', theme: 'from-rose-500 to-pink-600' },
+  { id: 'crown', icon: 'i-lucide-crown', label: 'Corona', theme: 'from-yellow-300 to-amber-500' },
+  { id: 'sword', icon: 'i-lucide-sword', label: 'Espada', theme: 'from-zinc-400 to-zinc-600' }
 ];
 
 const modalRef = ref<HTMLElement | null>(null);
@@ -123,7 +127,7 @@ const handleSelect = (figureId: string) => {
       </div>
 
       <!-- Token Grid - Fully Responsive -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full max-w-4xl relative z-10">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6 md:gap-8 w-full max-w-5xl relative z-10">
         <button
           v-for="fig in figures"
           :id="`fig-${fig.id}`"
