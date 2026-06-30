@@ -46,7 +46,15 @@
           </g>
 
           <!-- Nests (Bases) -->
-          <g v-for="(nest, i) in nests" :key="'nest'+i">
+          <g v-for="(nest, i) in nests" :key="'nest'+i"
+             @click="chooseSeat(i)"
+             :class="isSeatChoosingAndMyTurn ? 'cursor-pointer group' : ''"
+             :style="isSeatChoosingAndMyTurn ? `transform-origin: ${nest.cx}px ${nest.cy}px` : ''"
+          >
+            <!-- Glowing highlight when choosing seats -->
+            <circle v-if="isSeatChoosingAndMyTurn" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="none" stroke="#4ade80" stroke-width="6" stroke-dasharray="10 10" class="animate-[spin_8s_linear_infinite] opacity-70 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-300" />
+            <circle v-if="isSeatChoosingAndMyTurn" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="#4ade80" filter="url(#glow)" class="opacity-20 animate-pulse group-hover:opacity-40 transition-opacity" />
+            
             <!-- Shadow -->
             <circle :cx="nest.cx + 5" :cy="nest.cy + 5" :r="nest.r" fill="#000" opacity="0.4" filter="url(#glow)" />
             <!-- Main Base -->
@@ -194,6 +202,16 @@ const playerStore = usePlayerStore();
 const { socket } = useSocket();
 
 const myPlayer = computed(() => parchisStore.players.find(p => p.userId === playerStore.userId));
+
+const isSeatChoosingAndMyTurn = computed(() => {
+	return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;
+});
+
+const chooseSeat = (index: number) => {
+	if (isSeatChoosingAndMyTurn.value) {
+		socket.value?.emit("parchis:choose_seat", { targetColorIndex: index });
+	}
+};
 
 const colorNameEs = (colorStr: string) => {
 	const map: Record<string, string> = {
@@ -529,7 +547,9 @@ const allTokens = computed(() => {
 	parchisStore.players.forEach((player: any, pIdx: number) => {
 		if (!player.tokens) return;
 
-		const baseP = pIdx % sides.value;
+		const colorNames = ['yellow', 'blue', 'red', 'green', 'purple', 'orange', 'pink', 'cyan'];
+		let baseP = colorNames.indexOf(player.color?.toLowerCase());
+		if (baseP === -1) baseP = pIdx % sides.value;
 
 		player.tokens.forEach((token: any, tIdx: number) => {
 			let tokenCoords = { x: 0, y: 0 };
