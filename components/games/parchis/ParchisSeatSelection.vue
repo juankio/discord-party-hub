@@ -24,7 +24,7 @@ const standardColors = ['green', 'yellow', 'blue', 'red', 'purple', 'orange', 'c
 
 const chooseSeat = (colorIndex: number) => {
   if (socket.value && isMyTurn.value) {
-    socket.value.emit("parchis:choose_seat", { colorIndex });
+    socket.value.emit("parchis:choose_seat", { targetColorIndex: colorIndex });
   }
 };
 
