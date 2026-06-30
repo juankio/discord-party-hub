@@ -1,8 +1,8 @@
 <template>
-  <div class="relative w-full h-full flex flex-col items-center justify-center gap-6 sm:gap-8 overflow-hidden">
+  <div class="relative w-full h-full flex flex-col items-center justify-center gap-6 sm:gap-8 overflow-hidden xl:flex-row xl:items-start xl:justify-center xl:p-8">
     
     <!-- Tablero contenedor dinámico (Se adapta con CSS functions) -->
-    <div class="w-full flex items-center justify-center min-h-0 relative z-0 p-2 sm:p-4 mt-2 sm:mt-0">
+    <div class="w-full flex items-center justify-center min-h-0 relative z-0 p-2 sm:p-4 mt-2 sm:mt-0 flex-1">
       <div 
         class="relative aspect-square mx-auto bg-[#2a1a10] rounded-3xl sm:rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden ring-[1px] ring-white/20 border-[3px] sm:border-[4px] border-[#4a2e1b] shrink-0" 
         style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px;"
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Player HUD (Ahora reside afuera, inferior y no solapa nada) -->
-    <div class="w-full max-w-[800px] shrink-0 z-20 pointer-events-auto px-2 sm:px-4 mb-2 sm:mb-6">
+    <div class="w-full max-w-[800px] shrink-0 z-20 pointer-events-auto px-2 sm:px-4 mb-2 sm:mb-6 xl:absolute xl:bottom-8 xl:left-1/2 xl:-translate-x-1/2">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-[#1a0f08]/95 backdrop-blur-2xl px-4 py-3 sm:px-6 sm:py-4 rounded-[1.5rem] border border-white/10 shadow-[0_10px_50px_rgba(0,0,0,0.8)] relative overflow-hidden ring-1 ring-white/5">
         
         <!-- Glow ambiental -->
@@ -145,15 +145,34 @@
         </div>
       </div>
     </div>
+
+    <!-- Stats Panel Desktop -->
+    <ParchisStatsPanel class="hidden xl:flex" />
+    
+    <!-- Botón Stats Mobile -->
+    <button 
+      class="xl:hidden absolute top-4 right-4 z-50 p-3 bg-[#1a0f08]/90 border border-orange-500/30 rounded-xl shadow-lg backdrop-blur-md"
+      @click="showMobileStats = true"
+    >
+      <UIcon name="i-heroicons-chart-bar" class="w-6 h-6 text-orange-400" />
+    </button>
+
+    <!-- Stats Modal Mobile -->
+    <div v-if="showMobileStats" class="fixed inset-0 z-[100] xl:hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" @click.self="showMobileStats = false">
+      <ParchisStatsPanel class="!flex !w-full !max-w-md !h-[80vh] shadow-2xl" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import ParchisToken from "./ParchisToken.vue";
 import ParchisDice from "./ParchisDice.vue";
+import ParchisStatsPanel from "./ParchisStatsPanel.vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
 import { useSocket } from "~/composables/useSocket";
+
+const showMobileStats = ref(false);
 
 const parchisStore = useParchisStore();
 const { socket } = useSocket();

@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   features: {
     inlineStyles: false
   },
@@ -33,6 +33,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/**': {
+      ssr: false,
       headers: {
         'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
         'Cross-Origin-Embedder-Policy': 'unsafe-none'

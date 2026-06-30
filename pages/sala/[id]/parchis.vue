@@ -85,10 +85,13 @@ const surrender = () => {
     />
     
     <!-- Tablero de Juego Principal -->
-    <ParchisBoard v-else-if="parchisStore.gameState === 'PLAYING'" class="flex-grow" />
+    <ParchisBoard v-else-if="['PLAYING', 'ROLLING_FOR_ORDER', 'CHOOSING_SEATS'].includes(parchisStore.gameState)" class="flex-grow" />
+
+    <ParchisInitiative v-if="parchisStore.gameState === 'ROLLING_FOR_ORDER'" :players="parchisStore.players" />
+    <ParchisSeatSelection v-if="parchisStore.gameState === 'CHOOSING_SEATS'" />
 
     <!-- Estado de Espera u Otros -->
-    <div v-else class="flex flex-col items-center justify-center flex-grow">
+    <div v-else-if="parchisStore.gameState === 'WAITING'" class="flex flex-col items-center justify-center flex-grow">
       <UIcon name="i-heroicons-arrow-path" class="w-12 h-12 text-orange-500 animate-spin mb-4" />
       <h1 class="text-3xl font-black text-white tracking-wider mb-2">ESPERANDO A LOS JUGADORES</h1>
       <p class="text-gray-400">Preparando el tablero de parchís...</p>

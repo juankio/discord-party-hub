@@ -15,12 +15,13 @@ export interface ParchisPlayer {
   selectedFigure?: string;
   hasChosenFigure: boolean;
   score?: number;
+  stats?: { eaten: number; died: number; crowned: number };
   tokens: ParchisTokenState[];
 }
 
 export const useParchisStore = defineStore('parchis', {
   state: () => ({
-    gameState: 'WAITING' as 'WAITING' | 'CHOOSING_TOKENS' | 'PLAYING' | 'FINISHED',
+    gameState: 'WAITING' as 'WAITING' | 'CHOOSING_TOKENS' | 'ROLLING_FOR_ORDER' | 'CHOOSING_SEATS' | 'PLAYING' | 'FINISHED',
     players: [] as ParchisPlayer[],
     currentTurnIndex: 0,
     winner: null as string | null,
@@ -28,6 +29,8 @@ export const useParchisStore = defineStore('parchis', {
     availableMoves: [] as number[],
     selectedDiceIndex: null as number | null,
     rules: {} as any,
+    initiativeRolls: {} as Record<string, number>,
+    firstPickerUserId: null as string | null,
   }),
   getters: {
     isMyTurn: (state) => {
@@ -44,6 +47,8 @@ export const useParchisStore = defineStore('parchis', {
       this.winner = data.winner || null;
       this.diceValue = data.diceValue || [];
       this.availableMoves = data.availableMoves || [];
+      if (data.initiativeRolls) this.initiativeRolls = data.initiativeRolls;
+      if (data.firstPickerUserId) this.firstPickerUserId = data.firstPickerUserId;
       if (data.rules) this.rules = data.rules;
     }
   }
