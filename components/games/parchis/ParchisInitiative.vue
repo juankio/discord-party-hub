@@ -66,7 +66,7 @@ const rollInitiative = () => {
                 player.userId === playerStore.userId ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-[#2a1a0f]' : ''
               ]"
             >
-              <img v-if="player.avatarId" :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-full h-full object-cover" />
+              <img v-if="player.avatarId" :src="`/avatars/avatar-${player.avatarId}.svg`" alt="Avatar" class="w-full h-full object-cover" />
               <UIcon v-else name="i-heroicons-user" class="w-10 h-10 text-[#8b5a2b]" />
 
               <!-- Dice result overlay -->
