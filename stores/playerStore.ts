@@ -33,6 +33,7 @@ export const usePlayerStore = defineStore("player", {
 			safeBlocks: true,
 			autoSoplar: true,
 			extendedLobby: false,
+			autoNicknames: true,
 			stopCategories: ["NOMBRE", "ANIMAL", "COLOR", "COSA", "FRUTA"],
 			stopRounds: 5,
 			bannedLetters: ["W", "X", "Y", "Z"],

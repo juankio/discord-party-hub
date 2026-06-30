@@ -39,7 +39,6 @@ const rulesList = {
   playMultipleSame: { label: 'Tirar dobles (Mismo número)' },
   zeroAndSevenRules: { label: 'Regla del 0 (Pasa) y 7 (Cambia)' },
   drawUntilPlayable: { label: 'Robar hasta que salga carta' },
-  extendedLobby: { label: 'Lobby Extendido (hasta 8 jugadores)' },
   interceptExact: { label: 'Intercepción exacta (Corte)' }
 }
 </script>

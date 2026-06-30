@@ -59,6 +59,7 @@
               </div>
               
               <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
+              <GeneralRulesPanel v-model:rules="playerStore.roomRules" :is-host="isHost" />
               <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
               <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
               <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" :is-host="isHost" />

@@ -99,7 +99,7 @@ const tempColor = ref('#f97316')
 watch(() => props.bot, (newBot) => {
   if (newBot) {
     tempDifficulty.value = newBot.difficulty ?? 5
-    tempNickname.value = newBot.nickname ?? ''
+    tempNickname.value = newBot.originalNickname ?? newBot.nickname ?? ''
     tempAvatarId.value = Number(newBot.avatarId) || 1
     tempColor.value = newBot.color ?? '#f97316'
   }
