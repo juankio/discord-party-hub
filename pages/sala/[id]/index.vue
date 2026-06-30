@@ -57,12 +57,34 @@
                 
                 <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
               </div>
+
+              <div class="flex flex-row justify-center items-center gap-2 -mt-1 z-10 mx-auto w-full max-w-lg px-2 sm:px-4">
+                <!-- Botón Ajustes Generales -->
+                <button 
+                  @click="isGeneralRulesOpen = !isGeneralRulesOpen; isTableRulesOpen = false"
+                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-b-xl sm:rounded-b-2xl border-2 sm:border-4 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
+                  style="box-shadow: 0 8px 15px rgba(0,0,0,0.5);"
+                >
+                  <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ AJUSTES GENERALES</span>
+                  <UIcon :name="isGeneralRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
+                </button>
+
+                <!-- Botón Reglas de la Mesa -->
+                <button 
+                  @click="isTableRulesOpen = !isTableRulesOpen; isGeneralRulesOpen = false"
+                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-b-xl sm:rounded-b-2xl border-2 sm:border-4 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
+                  style="box-shadow: 0 8px 15px rgba(0,0,0,0.5);"
+                >
+                  <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ REGLAS DE LA MESA</span>
+                  <UIcon :name="isTableRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
+                </button>
+              </div>
               
               <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
-              <GeneralRulesPanel v-model:rules="playerStore.roomRules" :is-host="isHost" />
-              <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" />
-              <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" />
-              <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" :is-host="isHost" />
+              <GeneralRulesPanel v-model:rules="playerStore.roomRules" :is-host="isHost" :is-open="isGeneralRulesOpen" />
+              <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" :is-open="isTableRulesOpen" />
+              <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" :is-open="isTableRulesOpen" />
+              <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" :is-host="isHost" :is-open="isTableRulesOpen" />
             </div>
             
             <!-- Botón Arcade 2D Macizo -->
@@ -157,6 +179,8 @@ const isHost = computed(
 
 const isEditProfileOpen = ref(false);
 const showBotConfigModal = ref(false);
+const isGeneralRulesOpen = ref(false);
+const isTableRulesOpen = ref(false);
 const selectedBotForConfig = ref<any>(null);
 
 const handleAvatarClick = (player: any) => {

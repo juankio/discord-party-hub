@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-panel">
-    <div class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-4 sm:px-8">
+    <div v-show="isOpen" class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-4 sm:px-8">
       <div class="bg-[#8b5a2b] rounded-b-3xl border-4 border-t-0 border-[#5c3a21] p-6 pt-8 shadow-sm relative flex flex-col gap-6">
         <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase text-center -mb-2">
           Reglas de la Mesa (Parchís)
@@ -91,7 +91,7 @@
         <!-- Llegada Exacta a Meta -->
         <label class="group flex items-center justify-between bg-[#6d4621] hover:bg-[#7d512a] p-4 rounded-xl cursor-pointer transition-colors border-2 border-[#5c3a1b] border-b-[6px] shadow-sm relative z-10 w-full">
           <span class="text-[#f2f3f5] font-black text-xs sm:text-sm tracking-wide">Llegada Exacta a Meta</span>
-          <div class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
+          <div class="w-14 h-8 shrink-0 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
                :class="rules.exactMeta ? 'bg-[#109041]' : 'bg-[#151515]'">
             <div class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transition-all"
                  :class="rules.exactMeta ? 'right-0' : 'left-0'"/>
@@ -105,7 +105,7 @@
             <span class="text-[#f2f3f5] font-black text-xs sm:text-sm tracking-wide">Regla: Soplar (Automático)</span>
             <span class="text-[10px] text-white/60 font-bold tracking-wider">Si puedes comer y no lo haces, pierdes la ficha</span>
           </div>
-          <div class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center shrink-0"
+          <div class="w-14 h-8 shrink-0 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center shrink-0"
                :class="rules.autoSoplar ? 'bg-[#109041]' : 'bg-[#151515]'">
             <div class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transition-all"
                  :class="rules.autoSoplar ? 'right-0' : 'left-0'"/>
@@ -119,7 +119,7 @@
             <span class="text-[#f2f3f5] font-black text-xs sm:text-sm tracking-wide">Bloqueos (Barreras)</span>
             <span class="text-[10px] text-white/60 font-bold tracking-wider">Dos fichas juntas en pista no pueden ser comidas</span>
           </div>
-          <div class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center shrink-0"
+          <div class="w-14 h-8 shrink-0 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center shrink-0"
                :class="rules.safeBlocks ? 'bg-[#109041]' : 'bg-[#151515]'">
             <div class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transition-all"
                  :class="rules.safeBlocks ? 'right-0' : 'left-0'"/>
@@ -168,7 +168,8 @@
 const rules = defineModel<any>("rules", { required: true });
 
 const props = defineProps({
-  isHost: { type: Boolean, default: false }
+  isHost: { type: Boolean, default: false },
+  isOpen: { type: Boolean, default: false }
 });
 
 // Init default values if missing

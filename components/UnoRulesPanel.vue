@@ -1,6 +1,6 @@
 <template>
   <Transition name="slide-panel">
-    <div class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-4 sm:px-8">
+    <div v-show="isOpen" class="w-full max-w-[800px] mx-auto relative z-10 -mt-2 px-4 sm:px-8">
       <div class="bg-[#8b5a2b] rounded-b-3xl border-4 border-t-0 border-[#5c3a21] p-6 pt-8 shadow-sm relative">
         <h4 class="text-white/80 font-black text-[10px] tracking-[0.4em] uppercase mb-5 text-center">
           Reglas de la Mesa
@@ -14,7 +14,7 @@ v-for="(rule, key) in rulesList" :key="key"
             
             <!-- Flat Toggle -->
             <div
-class="w-14 h-8 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
+class="w-14 h-8 shrink-0 rounded-full border-4 border-[#3a2212] transition-colors relative flex items-center"
                  :class="rules[key] ? 'bg-[#109041]' : 'bg-[#151515]'">
               
               <!-- La Bola (Thumb) -->
@@ -33,6 +33,7 @@ class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transiti
 
 <script setup lang="ts">
 const rules = defineModel<any>('rules', { required: true })
+defineProps({ isOpen: { type: Boolean, default: false } })
 
 const rulesList = {
   stackDrawCards: { label: 'Acumular +2 y +4' },
