@@ -4,7 +4,7 @@
     <!-- Tablero contenedor dinámico -->
     <div class="w-full flex items-center justify-center min-h-0 relative z-0 p-2 sm:p-4 mt-2 sm:mt-0 flex-1">
       <div 
-        class="relative mx-auto bg-[#2a1a10] rounded-3xl sm:rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden ring-[1px] ring-white/20 border-[3px] sm:border-[4px] border-[#4a2e1b] shrink-0" 
+        class="relative mx-auto shrink-0" 
         style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px; aspect-ratio: 1/1;"
       >
         <!-- UNIVERSAL PARCHÍS BOARD SVG COMPONENT -->
@@ -14,7 +14,7 @@
           :centerPolygon="boardGeometry.centerPolygon"
           :llegadaPaths="boardGeometry.llegadaPaths"
           :trackSquares="boardGeometry.trackSquares"
-          :nests="boardGeometry.nests"
+          :wedges="boardGeometry.wedges"
         />
 
         <!-- Render Tokens (HTML Overlay) -->
@@ -106,16 +106,9 @@ const allTokens = computed(() => {
 			let tokenCoords = { x: 0, y: 0 };
 
 			if (token.state === "HOME") {
-				const nest = coordsMap.nests[baseP];
-				if (nest) {
-					const offset = nest.offset;
-					const positions = [
-						{ x: nest.x - offset, y: nest.y - offset },
-						{ x: nest.x + offset, y: nest.y - offset },
-						{ x: nest.x - offset, y: nest.y + offset },
-						{ x: nest.x + offset, y: nest.y + offset },
-					];
-					tokenCoords = positions[tIdx % 4] || { x: 0, y: 0 };
+				const wedge = coordsMap.wedges[baseP];
+				if (wedge && wedge.spots) {
+					tokenCoords = wedge.spots[tIdx % 4] || { x: 0, y: 0 };
 				}
 			} else if (token.state === "BOARD" || token.state === "TRACK") {
 				const pos = token.position % (sides.value * 17);

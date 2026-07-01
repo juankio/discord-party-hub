@@ -36,31 +36,24 @@
       <polygon v-if="sq.isSeguro || sq.isSalida" points="0,-12 3.5,-3.5 12,-3.5 5,2 7.5,10.5 0,6 -7.5,10.5 -5,2 -12,-3.5 -3.5,-3.5" fill="#fcd34d" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round" :transform="`translate(${sq.cx}, ${sq.cy}) rotate(${-sq.rot}) scale(1.1)`" filter="url(#glow)" />
     </g>
 
-    <!-- Nests (Bases) -->
-    <g v-for="(nest, i) in nests" :key="'nest'+i"
+    <!-- Wedges (Territories) -->
+    <g v-for="(wedge, i) in wedges" :key="'wedge'+i"
        @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
        :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
-       :style="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? `transform-origin: ${nest.cx}px ${nest.cy}px` : ''"
+       :style="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? `transform-origin: ${wedge.cx}px ${wedge.cy}px` : ''"
     >
       <!-- Glowing highlight when choosing seats -->
-      <circle v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="none" stroke="#4ade80" stroke-width="6" stroke-dasharray="10 10" class="animate-[spin_8s_linear_infinite] opacity-70 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-300" />
-      <circle v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="#4ade80" filter="url(#glow)" class="opacity-20 animate-pulse group-hover:opacity-40 transition-opacity" />
+      <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="none" stroke="#4ade80" stroke-width="8" stroke-dasharray="10 10" class="animate-[spin_8s_linear_infinite] opacity-70 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-300" />
+      <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="#4ade80" filter="url(#glow)" class="opacity-20 animate-pulse group-hover:opacity-40 transition-opacity" />
       
-      <!-- Shadow -->
-      <circle :cx="nest.cx + 5" :cy="nest.cy + 5" :r="nest.r" fill="#000" opacity="0.4" filter="url(#glow)" />
-      <!-- Main Base -->
-      <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r" :fill="nest.color" stroke="#111" stroke-width="6" opacity="0.95" />
+      <!-- Main Wedge -->
+      <polygon :points="wedge.points" :fill="wedge.color" stroke="#111" stroke-width="4" opacity="0.95" />
       
       <!-- Taken Indicator -->
-      <circle v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r" fill="#000" opacity="0.6" />
+      <polygon v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="#000" opacity="0.6" />
 
-      <!-- Inner ring -->
-      <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r * 0.75" fill="#fff" opacity="0.1" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
       <!-- Token spots -->
-      <circle :cx="nest.cx - nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-      <circle :cx="nest.cx + nest.offset" :cy="nest.cy - nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-      <circle :cx="nest.cx - nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
-      <circle :cx="nest.cx + nest.offset" :cy="nest.cy + nest.offset" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+      <circle v-for="(spot, spotIdx) in wedge.spots" :key="'spot'+spotIdx" :cx="spot.x" :cy="spot.y" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
     </g>
   </svg>
 </template>
@@ -77,7 +70,7 @@ const props = defineProps<{
   centerPolygon: string;
   llegadaPaths: any[];
   trackSquares: any[];
-  nests: any[];
+  wedges: any[];
 }>();
 
 const parchisStore = useParchisStore();

@@ -27,8 +27,9 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const innerRadius = baseInnerRadius - 50;
 		const padding = 60; 
 		const R_max = innerRadius + 400 + padding; 
-		const size = R_max * 2;
-		return `${-R_max} ${-R_max} ${size} ${size}`;
+		const strokeMargin = 30;
+		const size = (R_max + strokeMargin) * 2;
+		return `${-(R_max + strokeMargin)} ${-(R_max + strokeMargin)} ${size} ${size}`;
 	});
 
 	const dynamicBoardSize = computed(() => {
@@ -38,7 +39,8 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const innerRadius = baseInnerRadius - 50;
 		const padding = 60;
 		const R_max = innerRadius + 400 + padding;
-		return R_max * 2;
+		const strokeMargin = 30;
+		return (R_max + strokeMargin) * 2;
 	});
 
 	const basePolygonPoints = computed(() => {
@@ -50,8 +52,10 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const R_max = innerRadius + 400 + padding;
 		const pts = [];
 		for (let i = 0; i < N; i++) {
-			const pt = rotatePoint(R_max * M, -R_max, i * (360 / N));
-			pts.push(`${pt.x},${pt.y}`);
+			const pt1 = rotatePoint(-75 - padding, -R_max, i * (360 / N));
+			const pt2 = rotatePoint(75 + padding, -R_max, i * (360 / N));
+			pts.push(`${pt1.x},${pt1.y}`);
+			pts.push(`${pt2.x},${pt2.y}`);
 		}
 		return pts.join(" ");
 	});
@@ -65,8 +69,8 @@ export function useParchisBoardGeometry(sidesRef: any) {
 
 		const trackSquares: any[] = [];
 		const llegadaPaths: any[] = [];
-		const nests: any[] = [];
-		const coordsMap = { track: [] as {x: number, y: number}[], meta: [] as {x: number, y: number}[][], nests: [] as {x: number, y: number, offset: number}[] };
+		const wedges: any[] = [];
+		const coordsMap = { track: [] as {x: number, y: number}[], meta: [] as {x: number, y: number}[][], wedges: [] as {spots: {x: number, y: number}[]}[] };
 		const toPts = (pts: {x: number, y: number}[], angle: number) => pts.map(p => {
 			const rot = rotatePoint(p.x, p.y, angle);
 			return `${rot.x},${rot.y}`;
@@ -119,11 +123,23 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				if (coordsMap.meta[p]) coordsMap.meta[p]![row] = center;
 			}
 
-			let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
-			let nestCenter = rotatePoint(0, -(((nestRadius + 75) / Math.sin(Math.PI / N)) + 15), armAngle - (180 / N));
-			let offset = N === 4 ? 30 : N === 6 ? 24 : 18;
-			nests.push({ cx: nestCenter.x, cy: nestCenter.y, color: baseColor, r: nestRadius, offset });
-			coordsMap.nests[p] = { x: nestCenter.x, y: nestCenter.y, offset };
+			let p1 = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
+			let p2 = rotatePoint(75 + 60, -(innerRadius + 400 + 60), armAngle - 360 / N);
+			let p3 = rotatePoint(-75 - 60, -(innerRadius + 400 + 60), armAngle);
+			
+			let cx = (p1.x + p2.x + p3.x) / 3;
+			let cy = (p1.y + p2.y + p3.y) / 3;
+			
+			let spotOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
+			let spots = [
+				{ x: cx - spotOffset, y: cy - spotOffset },
+				{ x: cx + spotOffset, y: cy - spotOffset },
+				{ x: cx - spotOffset, y: cy + spotOffset },
+				{ x: cx + spotOffset, y: cy + spotOffset },
+			];
+			
+			wedges.push({ points: `${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`, color: baseColor, cx, cy, spots });
+			coordsMap.wedges[p] = { spots };
 		}
 
 		const polyPts = [];
@@ -142,7 +158,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		return {
 			trackSquares,
 			llegadaPaths,
-			nests,
+			wedges,
 			centerPolygon: polyPts.join(" "),
 			coordsMap
 		};
