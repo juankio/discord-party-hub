@@ -65,6 +65,8 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const M = Math.tan(Math.PI / N);
 		const baseInnerRadius = 75 / M;
 		const innerRadius = baseInnerRadius - 50;
+		const padding = 60;
+		const R_max = innerRadius + 400 + padding;
 		const rowHeight = 50;
 
 		const trackSquares: any[] = [];
@@ -124,8 +126,8 @@ export function useParchisBoardGeometry(sidesRef: any) {
 			}
 
 			let p1 = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
-			let p2 = rotatePoint(75 + 60, -(innerRadius + 400 + 60), armAngle - 360 / N);
-			let p3 = rotatePoint(-75 - 60, -(innerRadius + 400 + 60), armAngle);
+			let p2 = rotatePoint(-75, -R_max, armAngle);
+			let p3 = rotatePoint(75, -R_max, armAngle - 360 / N);
 			
 			let cx = (p1.x + p2.x + p3.x) / 3;
 			let cy = (p1.y + p2.y + p3.y) / 3;
