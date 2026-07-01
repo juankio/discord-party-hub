@@ -548,6 +548,25 @@ const allTokens = computed(() => {
 	const tokens: any[] = [];
 	const coordsMap = boardGeometry.value.coordsMap;
 
+	// Optimization: pre-calculate occupants maps
+	const trackOccupants = new Map<number, any[]>();
+	const metaOccupants = new Map<string, Map<number, any[]>>();
+
+	parchisStore.players.forEach(p => {
+		p.tokens?.forEach(t => {
+			if (t.state === "BOARD" || t.state === "TRACK") {
+				const pos = t.position % (sides.value * 17);
+				if (!trackOccupants.has(pos)) trackOccupants.set(pos, []);
+				trackOccupants.get(pos)!.push({ userId: p.userId, tokenId: t.id });
+			} else if (t.state === "META" || t.state === "PATH") {
+				if (!metaOccupants.has(p.color)) metaOccupants.set(p.color, new Map());
+				const metaMap = metaOccupants.get(p.color)!;
+				if (!metaMap.has(t.position)) metaMap.set(t.position, []);
+				metaMap.get(t.position)!.push({ userId: p.userId, tokenId: t.id });
+			}
+		});
+	});
+
 	parchisStore.players.forEach((player: any, pIdx: number) => {
 		if (!player.tokens) return;
 
@@ -571,23 +590,12 @@ const allTokens = computed(() => {
 					tokenCoords = positions[tIdx % 4] || { x: 0, y: 0 };
 				}
 			} else if (token.state === "BOARD" || token.state === "TRACK") {
-				const trackCell = coordsMap.track[
-					token.position % (sides.value * 17)
-				] as any;
+				const pos = token.position % (sides.value * 17);
+				const trackCell = coordsMap.track[pos] as any;
 				if (trackCell) {
-					// Token Stacking Logic
-					let occupants = 0;
-					let myIndexInCell = 0;
-					parchisStore.players.forEach((p: any) => {
-						p.tokens?.forEach((t: any) => {
-							if ((t.state === "BOARD" || t.state === "TRACK") && (t.position % (sides.value * 17)) === (token.position % (sides.value * 17))) {
-								if (p.userId === player.userId && t.id === token.id) {
-									myIndexInCell = occupants;
-								}
-								occupants++;
-							}
-						});
-					});
+					const occupantsList = trackOccupants.get(pos) || [];
+					const occupants = occupantsList.length;
+					const myIndexInCell = occupantsList.findIndex(o => o.userId === player.userId && o.tokenId === token.id);
 					
 					let offsetX = 0;
 					let offsetY = 0;
@@ -608,10 +616,27 @@ const allTokens = computed(() => {
 					
 					tokenCoords = { x: trackCell.x + offsetX, y: trackCell.y + offsetY };
 				}
-			} else if (token.state === "META") {
+			} else if (token.state === "META" || token.state === "PATH") {
 				const corridorCell = coordsMap.meta[baseP]?.[token.position] as any;
-				if (corridorCell)
-					tokenCoords = { x: corridorCell.x, y: corridorCell.y };
+				if (corridorCell) {
+					const occupantsList = metaOccupants.get(player.color)?.get(token.position) || [];
+					const occupants = occupantsList.length;
+					const myIndexInCell = occupantsList.findIndex(o => o.userId === player.userId && o.tokenId === token.id);
+					
+					let offsetX = 0;
+					let offsetY = 0;
+					if (occupants > 1) {
+						const offsets = [
+							{x: -8, y: -8},
+							{x: 8, y: 8},
+							{x: -8, y: 8},
+							{x: 8, y: -8}
+						];
+						offsetX = offsets[myIndexInCell % offsets.length].x;
+						offsetY = offsets[myIndexInCell % offsets.length].y;
+					}
+					tokenCoords = { x: corridorCell.x + offsetX, y: corridorCell.y + offsetY };
+				}
 			}
 
 			tokens.push({

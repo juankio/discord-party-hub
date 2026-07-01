@@ -135,7 +135,7 @@
 <script setup lang="ts">
 import anime from "animejs";
 import { Car, Dog, Gem, HardHat, Sailboat, Trees } from "lucide-vue-next";
-import { computed, ref, watch, nextTick } from "vue";
+import { computed, ref, watch, nextTick, onUnmounted } from "vue";
 import { useToast } from "#imports";
 import { useSocket } from "~/composables/useSocket";
 import { useParchisStore } from "~/stores/games/parchisStore";
@@ -334,6 +334,16 @@ watch(
 	},
 	{ immediate: true }
 );
+
+onUnmounted(() => {
+	if (tokenContainer.value) {
+		anime.remove(tokenContainer.value);
+		const body = tokenContainer.value.querySelector(".token-body");
+		if (body) {
+			anime.remove(body);
+		}
+	}
+});
 </script>
 
 
