@@ -47,18 +47,22 @@
 
           <!-- Nests (Bases) -->
           <g v-for="(nest, i) in nests" :key="'nest'+i"
-             @click="chooseSeat(i)"
-             :class="isSeatChoosingAndMyTurn ? 'cursor-pointer group' : ''"
-             :style="isSeatChoosingAndMyTurn ? `transform-origin: ${nest.cx}px ${nest.cy}px` : ''"
+             @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
+             :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
+             :style="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? `transform-origin: ${nest.cx}px ${nest.cy}px` : ''"
           >
             <!-- Glowing highlight when choosing seats -->
-            <circle v-if="isSeatChoosingAndMyTurn" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="none" stroke="#4ade80" stroke-width="6" stroke-dasharray="10 10" class="animate-[spin_8s_linear_infinite] opacity-70 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-300" />
-            <circle v-if="isSeatChoosingAndMyTurn" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="#4ade80" filter="url(#glow)" class="opacity-20 animate-pulse group-hover:opacity-40 transition-opacity" />
+            <circle v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="none" stroke="#4ade80" stroke-width="6" stroke-dasharray="10 10" class="animate-[spin_8s_linear_infinite] opacity-70 group-hover:opacity-100 group-hover:scale-[1.05] transition-all duration-300" />
+            <circle v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r + 10" fill="#4ade80" filter="url(#glow)" class="opacity-20 animate-pulse group-hover:opacity-40 transition-opacity" />
             
             <!-- Shadow -->
             <circle :cx="nest.cx + 5" :cy="nest.cy + 5" :r="nest.r" fill="#000" opacity="0.4" filter="url(#glow)" />
             <!-- Main Base -->
             <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r" :fill="nest.color" stroke="#111" stroke-width="6" opacity="0.95" />
+            
+            <!-- Taken Indicator -->
+            <circle v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :cx="nest.cx" :cy="nest.cy" :r="nest.r" fill="#000" opacity="0.6" />
+
             <!-- Inner ring -->
             <circle :cx="nest.cx" :cy="nest.cy" :r="nest.r * 0.75" fill="#fff" opacity="0.1" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
             <!-- Token spots -->

@@ -31,6 +31,8 @@ export const useParchisStore = defineStore('parchis', {
     rules: {} as any,
     initiativeRolls: {} as Record<string, number>,
     firstPickerUserId: null as string | null,
+    pickersQueue: [] as string[],
+    takenSeats: [] as number[],
   }),
   getters: {
     isMyTurn: (state) => {
@@ -47,8 +49,10 @@ export const useParchisStore = defineStore('parchis', {
       this.winner = data.winner || null;
       this.diceValue = data.diceValue || [];
       this.availableMoves = data.availableMoves || [];
-      if (data.initiativeRolls) this.initiativeRolls = data.initiativeRolls;
-      if (data.firstPickerUserId) this.firstPickerUserId = data.firstPickerUserId;
+      if (data.initiativeRolls !== undefined) this.initiativeRolls = data.initiativeRolls;
+      if (data.firstPickerUserId !== undefined) this.firstPickerUserId = data.firstPickerUserId;
+      if (data.pickersQueue !== undefined) this.pickersQueue = data.pickersQueue;
+      if (data.takenSeats !== undefined) this.takenSeats = data.takenSeats;
       if (data.rules) this.rules = data.rules;
     }
   }
