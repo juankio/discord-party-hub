@@ -1,0 +1,158 @@
+import { computed } from "vue";
+
+export function rotatePoint(x: number, y: number, degrees: number) {
+	const rad = (degrees * Math.PI) / 180;
+	return {
+		x: x * Math.cos(rad) - y * Math.sin(rad),
+		y: x * Math.sin(rad) + y * Math.cos(rad),
+	};
+}
+
+export function useParchisBoardGeometry(sidesRef: any) {
+	const colorPalette = [
+		"#eab308",
+		"#3b82f6",
+		"#ef4444",
+		"#4ade80",
+		"#a855f7",
+		"#f97316",
+		"#ec4899",
+		"#06b6d4",
+	];
+
+	const dynamicViewBox = computed(() => {
+		const N = sidesRef.value;
+		const M = Math.tan(Math.PI / N);
+		const baseInnerRadius = 75 / M;
+		const innerRadius = baseInnerRadius - 50;
+		const padding = 60; 
+		const R_max = innerRadius + 400 + padding; 
+		const size = R_max * 2;
+		return `${-R_max} ${-R_max} ${size} ${size}`;
+	});
+
+	const dynamicBoardSize = computed(() => {
+		const N = sidesRef.value;
+		const M = Math.tan(Math.PI / N);
+		const baseInnerRadius = 75 / M;
+		const innerRadius = baseInnerRadius - 50;
+		const padding = 60;
+		const R_max = innerRadius + 400 + padding;
+		return R_max * 2;
+	});
+
+	const basePolygonPoints = computed(() => {
+		const N = sidesRef.value;
+		const M = Math.tan(Math.PI / N);
+		const baseInnerRadius = 75 / M;
+		const innerRadius = baseInnerRadius - 50;
+		const padding = 60;
+		const R_max = innerRadius + 400 + padding;
+		const pts = [];
+		for (let i = 0; i < N; i++) {
+			const pt = rotatePoint(R_max * M, -R_max, i * (360 / N));
+			pts.push(`${pt.x},${pt.y}`);
+		}
+		return pts.join(" ");
+	});
+
+	const boardGeometry = computed(() => {
+		const N = sidesRef.value;
+		const M = Math.tan(Math.PI / N);
+		const baseInnerRadius = 75 / M;
+		const innerRadius = baseInnerRadius - 50;
+		const rowHeight = 50;
+
+		const trackSquares: any[] = [];
+		const llegadaPaths: any[] = [];
+		const nests: any[] = [];
+		const coordsMap = { track: [] as {x: number, y: number}[], meta: [] as {x: number, y: number}[][], nests: [] as {x: number, y: number, offset: number}[] };
+		const toPts = (pts: {x: number, y: number}[], angle: number) => pts.map(p => {
+			const rot = rotatePoint(p.x, p.y, angle);
+			return `${rot.x},${rot.y}`;
+		}).join(" ");
+
+		for (let p = 0; p < N; p++) {
+			const armAngle = p * (360 / N);
+			const baseColor = colorPalette[p % colorPalette.length];
+
+			for (let row = 0; row < 8; row++) {
+				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
+				let pts: {x: number, y: number}[], center: {x: number, y: number};
+				if (row === 0) {
+					pts = [ { x: -Math.abs(y_bot) * M, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
+					center = rotatePoint((-25 + -Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
+				} else {
+					pts = [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
+					center = rotatePoint(-50, y_bot - 25, armAngle);
+				}
+				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: false, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
+				coordsMap.track[p * 17 + row] = center;
+			}
+
+			let tipY = -innerRadius - 400;
+			let tipPts = [ {x: -75, y: tipY}, {x: 75, y: tipY}, {x: 75, y: tipY - 50}, {x: -75, y: tipY - 50} ];
+			let tipCenter = rotatePoint(0, tipY - 25, armAngle);
+			trackSquares.push({ points: toPts(tipPts, armAngle), fill: "#fcd34d", isSalida: false, isSeguro: true, isTip: true, cx: tipCenter.x, cy: tipCenter.y, rot: armAngle });
+			coordsMap.track[p * 17 + 8] = tipCenter;
+
+			for (let row = 7; row >= 0; row--) {
+				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
+				let pts: {x: number, y: number}[], center: {x: number, y: number};
+				if (row === 0) {
+					pts = [ { x: 25, y: y_bot }, { x: Math.abs(y_bot) * M, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
+					center = rotatePoint((25 + Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
+				} else {
+					pts = [ { x: 25, y: y_bot }, { x: 75, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
+					center = rotatePoint(50, y_bot - 25, armAngle);
+				}
+				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? "#fcd34d" : "#f5ebd5", isSalida: false, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
+				coordsMap.track[p * 17 + (16 - row)] = center;
+			}
+
+			coordsMap.meta[p] = [];
+			for (let row = 0; row < 8; row++) {
+				let y_bot = -innerRadius - 400 + (row + 1) * 50, y_top = -innerRadius - 400 + row * 50;
+				let pts = [ {x: -25, y: y_bot}, {x: 25, y: y_bot}, {x: 25, y: y_top}, {x: -25, y: y_top} ];
+				let center = rotatePoint(0, y_bot - 25, armAngle);
+				llegadaPaths.push({ points: toPts(pts, armAngle), color: baseColor, isFinal: row === 7, cx: center.x, cy: center.y, rot: armAngle });
+				if (coordsMap.meta[p]) coordsMap.meta[p]![row] = center;
+			}
+
+			let nestRadius = N === 4 ? 120 : N === 6 ? 90 : 75;
+			let nestCenter = rotatePoint(0, -(((nestRadius + 75) / Math.sin(Math.PI / N)) + 15), armAngle - (180 / N));
+			let offset = N === 4 ? 30 : N === 6 ? 24 : 18;
+			nests.push({ cx: nestCenter.x, cy: nestCenter.y, color: baseColor, r: nestRadius, offset });
+			coordsMap.nests[p] = { x: nestCenter.x, y: nestCenter.y, offset };
+		}
+
+		const polyPts = [];
+		for (let p = 0; p < N; p++) {
+			const armAngle = p * (360 / N);
+			let p1 = rotatePoint(-25, -innerRadius, armAngle);
+			let p2 = rotatePoint(25, -innerRadius, armAngle);
+			let intersectionRadius = innerRadius / Math.cos(Math.PI / N);
+			let intersectionPt = rotatePoint(0, -intersectionRadius, armAngle - 180 / N);
+			
+			polyPts.push(`${p1.x},${p1.y}`);
+			polyPts.push(`${p2.x},${p2.y}`);
+			polyPts.push(`${intersectionPt.x},${intersectionPt.y}`);
+		}
+
+		return {
+			trackSquares,
+			llegadaPaths,
+			nests,
+			centerPolygon: polyPts.join(" "),
+			coordsMap
+		};
+	});
+
+	return {
+		dynamicViewBox,
+		dynamicBoardSize,
+		basePolygonPoints,
+		boardGeometry,
+        colorPalette
+	};
+}
