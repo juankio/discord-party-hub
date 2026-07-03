@@ -18,7 +18,7 @@
         />
 
         <!-- Render Tokens (HTML Overlay) -->
-        <div class="absolute inset-0 z-10 pointer-events-none">
+        <div v-show="parchisStore.gameState === 'PLAYING'" class="absolute inset-0 z-10 pointer-events-none">
           <ParchisToken 
             v-for="tokenObj in allTokens" 
             :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
