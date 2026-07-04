@@ -52,10 +52,8 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const R_max = innerRadius + 400 + padding;
 		const pts = [];
 		for (let i = 0; i < N; i++) {
-			const pt1 = rotatePoint(-75 - padding, -R_max, i * (360 / N));
-			const pt2 = rotatePoint(75 + padding, -R_max, i * (360 / N));
-			pts.push(`${pt1.x},${pt1.y}`);
-			pts.push(`${pt2.x},${pt2.y}`);
+			const pt = rotatePoint(R_max * Math.tan(Math.PI / N), -R_max, i * (360 / N));
+			pts.push(`${pt.x},${pt.y}`);
 		}
 		return pts.join(" ");
 	});
@@ -126,11 +124,12 @@ export function useParchisBoardGeometry(sidesRef: any) {
 			}
 
 			let p1 = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
-			let p2 = rotatePoint(-75, -R_max, armAngle);
-			let p3 = rotatePoint(75, -R_max, armAngle - 360 / N);
+			let pTrackL = rotatePoint(-75, -R_max, armAngle);
+			let pCorner = rotatePoint(-R_max * Math.tan(Math.PI / N), -R_max, armAngle);
+			let pTrackR = rotatePoint(75, -R_max, armAngle - 360 / N);
 			
-			let cx = (p1.x + p2.x + p3.x) / 3;
-			let cy = (p1.y + p2.y + p3.y) / 3;
+			let cx = (p1.x + pTrackL.x + pCorner.x + pTrackR.x) / 4;
+			let cy = (p1.y + pTrackL.y + pCorner.y + pTrackR.y) / 4;
 			
 			let spotOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
 			let spots = [
@@ -140,7 +139,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				{ x: cx + spotOffset, y: cy + spotOffset },
 			];
 			
-			wedges.push({ points: `${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`, color: baseColor, cx, cy, spots });
+			wedges.push({ points: `${p1.x},${p1.y} ${pTrackL.x},${pTrackL.y} ${pCorner.x},${pCorner.y} ${pTrackR.x},${pTrackR.y}`, color: baseColor, cx, cy, spots });
 			coordsMap.wedges[p] = { spots };
 		}
 

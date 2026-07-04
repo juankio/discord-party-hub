@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import anime from "animejs";
-import { computed, ref, watch, nextTick, onUnmounted } from "vue";
+import { computed, ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { useToast } from "#imports";
 import { useSocket } from "~/composables/useSocket";
 import { useParchisStore } from "~/stores/games/parchisStore";
@@ -210,6 +210,21 @@ watch(
 	},
 	{ immediate: true }
 );
+
+onMounted(() => {
+	if (tokenContainer.value) {
+		const el = tokenContainer.value;
+		anime({
+			targets: el,
+			scale: [0, 1],
+			opacity: [0, 1],
+			translateY: [-50, 0],
+			duration: 800,
+			delay: anime.random(0, 400),
+			easing: 'easeOutElastic(1, .5)'
+		});
+	}
+});
 
 onUnmounted(() => {
 	if (tokenContainer.value) {
