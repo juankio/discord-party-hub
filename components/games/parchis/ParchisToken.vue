@@ -13,7 +13,7 @@
     @click="onTokenClick"
   >
     <div class="token-body relative w-full h-full flex items-center justify-center"
-         :class="[ isClickable ? 'animate-pulse scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,1)]' : 'drop-shadow-[4px_4px_0_rgba(0,0,0,0.7)]' ]">
+         :class="[ isClickable ? 'z-20 animate-pulse scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,1)]' : 'z-10 drop-shadow-[4px_4px_0_rgba(0,0,0,0.7)]' ]">
        
        <ParchisTokenSVG 
          :figureId="figureId" 
@@ -76,7 +76,8 @@ const isClickable = computed(() => {
 		}
 	}
 	if (props.token.state === "META") {
-		return false;
+		const canMoveInMeta = parchisStore.availableMoves?.some(move => props.token.position + move <= 8);
+		if (!canMoveInMeta) return false;
 	}
 	return parchisStore.availableMoves?.length > 0;
 });
@@ -119,6 +120,12 @@ const onTokenClick = () => {
 				return;
 			}
 		}
+	if (props.token.state === "META") {
+		const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + move <= 8);
+		if (!validMoves || validMoves.length === 0) {
+			toast.add({ title: "No puedes mover esta ficha (se pasa de la meta)", color: "orange" });
+			return;
+		}
 	} else {
 		if (!parchisStore.availableMoves || parchisStore.availableMoves.length === 0) {
 			toast.add({ title: "No tienes movimientos disponibles", color: "orange" });
@@ -139,6 +146,22 @@ const onTokenClick = () => {
 			}
 		} else {
 			moveVal = 5;
+		}
+	} else if (props.token.state === "META") {
+		const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + move <= 8) || [];
+		if (
+			parchisStore.selectedDiceIndex !== null &&
+			parchisStore.selectedDiceIndex !== undefined &&
+			parchisStore.selectedDiceIndex >= 0 &&
+			parchisStore.selectedDiceIndex < parchisStore.availableMoves.length
+		) {
+			moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex];
+			if (props.token.position + moveVal > 8) {
+				toast.add({ title: "El dado seleccionado te pasa de la meta", color: "orange" });
+				return;
+			}
+		} else {
+			moveVal = validMoves[0];
 		}
 	} else if (
 		parchisStore.selectedDiceIndex !== null &&

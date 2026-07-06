@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onUnmounted } from "vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
 import { usePlayerStore } from "~/stores/playerStore";
 import { useSocket } from "~/composables/useSocket";
@@ -106,6 +106,11 @@ const playerStore = usePlayerStore();
 const { socket } = useSocket();
 
 const emit = defineEmits(['hover-wedge']);
+
+onUnmounted(() => {
+  anime.remove('.wedge-inner-glow');
+  anime.remove('.wedge-pro-line');
+});
 
 const isSeatChoosingAndMyTurn = computed(() => {
 	return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;

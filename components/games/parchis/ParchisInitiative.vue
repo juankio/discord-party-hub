@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useParchisStore } from '~/stores/games/parchisStore';
 import { usePlayerStore } from '~/stores/playerStore';
 import { useSocket } from '~/composables/useSocket';
@@ -20,6 +20,8 @@ const hasRolled = computed(() => {
 const myRoll = computed(() => {
   return parchisStore.initiativeRolls[playerStore.userId];
 });
+
+let introTimeline: anime.AnimeTimelineInstance | null = null;
 
 const rollInitiative = () => {
   if (socket.value && !hasRolled.value) {
@@ -70,7 +72,7 @@ const leaveCard = (e: MouseEvent) => {
 
 onMounted(() => {
   // Modal Entrance Animation (Accelerated & Snappy)
-  anime.timeline()
+  introTimeline = anime.timeline()
     .add({
       targets: '.initiative-overlay',
       opacity: [0, 1],
@@ -107,6 +109,16 @@ onMounted(() => {
       duration: 300,
       easing: 'easeOutBack(1.2)'
     }, '-=300');
+});
+
+onUnmounted(() => {
+  if (introTimeline) introTimeline.pause();
+  anime.remove('.initiative-overlay');
+  anime.remove('.initiative-modal');
+  anime.remove('.initiative-title');
+  anime.remove('.player-card');
+  anime.remove('.roll-action');
+  anime.remove('.roll-btn');
 });
 </script>
 
