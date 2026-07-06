@@ -27,7 +27,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const innerRadius = baseInnerRadius - 50;
 		const padding = 60; 
 		const R_max = innerRadius + 400 + padding; 
-		const strokeMargin = 30;
+		const strokeMargin = 60; // Increased to prevent cutting the thick wood border
 		const size = (R_max + strokeMargin) * 2;
 		return `${-(R_max + strokeMargin)} ${-(R_max + strokeMargin)} ${size} ${size}`;
 	});
@@ -39,7 +39,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const innerRadius = baseInnerRadius - 50;
 		const padding = 60;
 		const R_max = innerRadius + 400 + padding;
-		const strokeMargin = 30;
+		const strokeMargin = 60; // Keep in sync with viewBox
 		return (R_max + strokeMargin) * 2;
 	});
 

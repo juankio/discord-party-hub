@@ -69,44 +69,44 @@ const leaveCard = (e: MouseEvent) => {
 };
 
 onMounted(() => {
-  // Modal Entrance Animation
+  // Modal Entrance Animation (Accelerated & Snappy)
   anime.timeline()
     .add({
       targets: '.initiative-overlay',
       opacity: [0, 1],
-      duration: 500,
+      duration: 300,
       easing: 'linear'
     })
     .add({
       targets: '.initiative-modal',
       opacity: [0, 1],
-      translateY: [40, 0],
+      translateY: [20, 0],
       scale: [0.95, 1],
-      duration: 600,
+      duration: 400,
       easing: 'easeOutExpo'
-    }, '-=300')
+    }, '-=200')
     .add({
       targets: '.initiative-title',
       opacity: [0, 1],
-      translateY: [20, 0],
-      duration: 500,
+      translateY: [10, 0],
+      duration: 300,
       easing: 'easeOutExpo'
-    }, '-=400')
+    }, '-=300')
     .add({
       targets: '.player-card',
       opacity: [0, 1],
-      translateY: [30, 0],
-      delay: anime.stagger(100),
-      duration: 600,
-      easing: 'easeOutBack(1.5)'
-    }, '-=400')
+      translateY: [15, 0],
+      delay: anime.stagger(50),
+      duration: 400,
+      easing: 'easeOutBack(1.2)'
+    }, '-=300')
     .add({
       targets: '.roll-action',
       opacity: [0, 1],
       scale: [0.9, 1],
-      duration: 500,
+      duration: 300,
       easing: 'easeOutBack(1.2)'
-    }, '-=400');
+    }, '-=300');
 });
 </script>
 
