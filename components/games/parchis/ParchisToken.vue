@@ -120,7 +120,7 @@ const onTokenClick = () => {
 				return;
 			}
 		}
-	if (props.token.state === "META") {
+	} else if (props.token.state === "META") {
 		const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + move <= 8);
 		if (!validMoves || validMoves.length === 0) {
 			toast.add({ title: "No puedes mover esta ficha (se pasa de la meta)", color: "orange" });
