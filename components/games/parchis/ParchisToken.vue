@@ -96,28 +96,15 @@ const onTokenClick = () => {
 
 	const isTwoDice = parchisStore.rules?.diceCount === 2;
 
-	if (props.token.state === "HOME") {
-		if (isTwoDice) {
-			const hasPairs =
-				parchisStore.diceValue.length >= 2 &&
-				parchisStore.diceValue[0] === parchisStore.diceValue[1];
-			if (!hasPairs) {
+		if (props.token.state === "HOME") {
+			if (!parchisStore.availableMoves?.includes(5)) {
 				toast.add({
-					title: "Necesitas sacar pares para salir de la cárcel",
+					title: "Necesitas un 5 para salir del nido",
 					color: "amber",
 				});
 				return;
 			}
 		} else {
-			if (!parchisStore.availableMoves?.includes(5)) {
-				toast.add({
-					title: "Necesitas sacar un 5 para salir de la cárcel",
-					color: "amber",
-				});
-				return;
-			}
-		}
-	} else {
 		if (!parchisStore.availableMoves || parchisStore.availableMoves.length === 0) {
 			toast.add({ title: "No tienes movimientos disponibles", color: "orange" });
 			return;

@@ -5,6 +5,15 @@
         <feGaussianBlur stdDeviation="5" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
+      <filter id="pro-glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur1" />
+        <feGaussianBlur stdDeviation="12" result="blur2" />
+        <feMerge>
+          <feMergeNode in="blur2" />
+          <feMergeNode in="blur1" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
       <filter id="inner-shadow">
         <feOffset dx="0" dy="0"/>
         <feGaussianBlur stdDeviation="3" result="offset-blur"/>
@@ -25,25 +34,29 @@
     <g v-for="(wedge, i) in wedges" :key="'wedge'+i"
        @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
        :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
+       @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event) : null"
+       @mouseleave="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeLeave($event) : null"
     >
       <!-- Main Wedge -->
       <polygon :points="wedge.points" :fill="wedge.color" stroke="#111" stroke-width="4" opacity="0.95" />
       
-      <!-- Hover overlay for available seats -->
+      <!-- Inner Glow Overlay (animated) -->
       <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
                :points="wedge.points" 
-               fill="#4ade80" 
-               class="opacity-10 animate-pulse group-hover:opacity-40 transition-all duration-500" 
-               filter="url(#glow)" />
-               
-      <!-- Dramatic glowing dashed stroke on hover -->
+               fill="#ffffff"
+               class="wedge-inner-glow pointer-events-none"
+               style="mix-blend-mode: overlay;"
+               opacity="0" />
+
+      <!-- Traveling Pro Line (animated) -->
       <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
                :points="wedge.points" 
                fill="none" 
-               stroke="#4ade80" 
+               stroke="#ffffff" 
                stroke-width="6" 
-               stroke-dasharray="8 8" 
-               class="opacity-40 group-hover:opacity-100 transition-opacity duration-300" />
+               class="wedge-pro-line pointer-events-none"
+               filter="url(#pro-glow)"
+               opacity="0" />
       
       <!-- Taken Indicator -->
       <polygon v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="#000" opacity="0.6" />
@@ -77,6 +90,7 @@ import { computed } from "vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
 import { usePlayerStore } from "~/stores/playerStore";
 import { useSocket } from "~/composables/useSocket";
+import anime from "animejs";
 
 const props = defineProps<{
   dynamicViewBox: string;
@@ -99,5 +113,64 @@ const chooseSeat = (index: number) => {
 	if (isSeatChoosingAndMyTurn.value) {
 		socket.value?.emit("parchis:choose_seat", { targetColorIndex: index });
 	}
+};
+
+const onWedgeEnter = (e: MouseEvent) => {
+  const target = e.currentTarget as SVGGElement;
+  if (!target) return;
+
+  const innerGlow = target.querySelector('.wedge-inner-glow');
+  const proLine = target.querySelector('.wedge-pro-line');
+
+  if (innerGlow) {
+    anime.remove(innerGlow);
+    anime({
+      targets: innerGlow,
+      opacity: [0, 0.4],
+      duration: 600,
+      easing: 'easeOutExpo'
+    });
+  }
+
+  if (proLine) {
+    anime.remove(proLine);
+    anime({
+      targets: proLine,
+      opacity: [0, 0.9],
+      strokeDashoffset: [anime.setDashoffset, 0],
+      duration: 1500,
+      easing: 'easeInOutSine',
+      direction: 'alternate',
+      loop: true
+    });
+  }
+};
+
+const onWedgeLeave = (e: MouseEvent) => {
+  const target = e.currentTarget as SVGGElement;
+  if (!target) return;
+
+  const innerGlow = target.querySelector('.wedge-inner-glow');
+  const proLine = target.querySelector('.wedge-pro-line');
+
+  if (innerGlow) {
+    anime.remove(innerGlow);
+    anime({
+      targets: innerGlow,
+      opacity: 0,
+      duration: 400,
+      easing: 'easeInQuad'
+    });
+  }
+
+  if (proLine) {
+    anime.remove(proLine);
+    anime({
+      targets: proLine,
+      opacity: 0,
+      duration: 400,
+      easing: 'easeInQuad'
+    });
+  }
 };
 </script>
