@@ -55,6 +55,9 @@
       <!-- Token spots -->
       <circle v-for="(spot, spotIdx) in wedge.spots" :key="'spot'+spotIdx" :cx="spot.x" :cy="spot.y" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
     </g>
+
+    <!-- Wooden Frame Overlay (drawn on top of wedges to prevent overlap) -->
+    <polygon :points="basePolygonPoints" fill="none" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" class="pointer-events-none" />
   </svg>
 </template>
 
