@@ -34,7 +34,7 @@
     <g v-for="(wedge, i) in wedges" :key="'wedge'+i"
        @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
        :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
-       @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event) : null"
+       @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event, i) : null"
        @mouseleave="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeLeave($event) : null"
     >
       <!-- Main Wedge -->
@@ -105,6 +105,8 @@ const parchisStore = useParchisStore();
 const playerStore = usePlayerStore();
 const { socket } = useSocket();
 
+const emit = defineEmits(['hover-wedge']);
+
 const isSeatChoosingAndMyTurn = computed(() => {
 	return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;
 });
@@ -115,7 +117,8 @@ const chooseSeat = (index: number) => {
 	}
 };
 
-const onWedgeEnter = (e: MouseEvent) => {
+const onWedgeEnter = (e: MouseEvent, index: number) => {
+  emit('hover-wedge', index);
   const target = e.currentTarget as SVGGElement;
   if (!target) return;
 
@@ -147,6 +150,7 @@ const onWedgeEnter = (e: MouseEvent) => {
 };
 
 const onWedgeLeave = (e: MouseEvent) => {
+  emit('hover-wedge', null);
   const target = e.currentTarget as SVGGElement;
   if (!target) return;
 

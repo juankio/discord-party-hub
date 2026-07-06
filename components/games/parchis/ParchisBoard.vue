@@ -24,17 +24,19 @@
           :llegadaPaths="boardGeometry.llegadaPaths"
           :trackSquares="boardGeometry.trackSquares"
           :wedges="boardGeometry.wedges"
+          @hover-wedge="handleWedgeHover"
         />
 
         <!-- Giant Token for Seat Selection (Brook) -->
         <div 
           v-if="isSeatChoosingAndMyTurn"
           class="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
+          style="perspective: 1200px;"
         >
           <div class="animate-float-token">
             <div 
-              class="w-48 h-48 sm:w-64 sm:h-64 transition-all duration-500"
-              :style="{ filter: `drop-shadow(0 0 30px ${myPlayerColorHex}) drop-shadow(0 0 60px ${myPlayerColorHex})` }"
+              class="w-48 h-48 sm:w-64 sm:h-64 will-change-transform"
+              :style="giantTokenStyle"
             >
               <ParchisTokenSVG 
                 :color="myPlayerColorHex"
@@ -95,6 +97,12 @@ const parchisStore = useParchisStore();
 const playerStore = usePlayerStore();
 const sides = computed(() => parchisStore.rules?.parchisBoardSize || 4);
 
+const hoveredWedgeIndex = ref<number | null>(null);
+
+const handleWedgeHover = (index: number | null) => {
+  hoveredWedgeIndex.value = index;
+};
+
 const { 
   dynamicViewBox, 
   dynamicBoardSize, 
@@ -120,6 +128,41 @@ const myPlayerColorHex = computed(() => {
 });
 
 const myPlayerFigure = computed(() => myPlayerInfo.value?.selectedFigure || 'default');
+
+const giantTokenStyle = computed(() => {
+  const baseStyle: any = {
+    filter: `drop-shadow(0 0 30px ${myPlayerColorHex.value}) drop-shadow(0 0 60px ${myPlayerColorHex.value})`,
+    transition: 'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    transformStyle: 'preserve-3d'
+  };
+  
+  if (hoveredWedgeIndex.value === null) {
+    return {
+      ...baseStyle,
+      transform: 'translate(0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)'
+    };
+  }
+
+  const N = sides.value;
+  // Ángulo base adaptado visualmente para que el fantasma mire a las cuñas
+  const angleDeg = (hoveredWedgeIndex.value * (360 / N)) - 135;
+  const angleRad = angleDeg * (Math.PI / 180);
+
+  const moveDist = 65; // Desplazamiento en píxeles
+  const tx = Math.cos(angleRad) * moveDist;
+  const ty = Math.sin(angleRad) * moveDist;
+
+  // Inclinación 3D para mirar el asiento
+  const tilt = 35;
+  const rx = Math.sin(angleRad) * tilt; 
+  const ry = -Math.cos(angleRad) * tilt; 
+  const rz = Math.cos(angleRad) * 12; // Un ligero giro
+
+  return {
+    ...baseStyle,
+    transform: `translate(${tx}px, ${ty}px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(1.15)`
+  };
+});
 
 const allTokens = computed(() => {
 	const tokens: any[] = [];
