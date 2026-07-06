@@ -123,7 +123,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				if (coordsMap.meta[p]) coordsMap.meta[p]![row] = center;
 			}
 
-			let p1 = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
+			let p1 = rotatePoint(-75, -innerRadius - 50, armAngle);
 			let pTrackL = rotatePoint(-75, -R_max, armAngle);
 			let pCorner = rotatePoint(-R_max * Math.tan(Math.PI / N), -R_max, armAngle);
 			let pTrackR = rotatePoint(75, -R_max, armAngle - 360 / N);
