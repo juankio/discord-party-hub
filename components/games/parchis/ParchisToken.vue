@@ -100,10 +100,12 @@ const onTokenClick = () => {
 		if (isTwoDice) {
 			const hasPairs =
 				parchisStore.diceValue.length >= 2 &&
-				parchisStore.diceValue[0] === parchisStore.diceValue[1];
-			if (!hasPairs) {
+				parchisStore.diceValue[0] === parchisStore.diceValue[1] &&
+				(parchisStore.availableMoves?.filter(m => m === parchisStore.diceValue[0]).length ?? 0) === 2;
+			const hasFive = parchisStore.availableMoves?.includes(5);
+			if (!hasPairs && !hasFive) {
 				toast.add({
-					title: "Necesitas sacar pares para salir del nido",
+					title: "Necesitas sacar pares o un 5 para salir del nido",
 					color: "amber",
 				});
 				return;
@@ -128,7 +130,16 @@ const onTokenClick = () => {
 
 	if (props.token.state === "HOME") {
 		if (isTwoDice) {
-			moveVal = parchisStore.diceValue[0];
+			const hasPairs = parchisStore.diceValue.length >= 2 && parchisStore.diceValue[0] === parchisStore.diceValue[1] && (parchisStore.availableMoves?.filter(m => m === parchisStore.diceValue[0]).length ?? 0) === 2;
+			const hasFive = parchisStore.availableMoves?.includes(5);
+			
+			if (hasPairs && !hasFive) {
+				moveVal = parchisStore.diceValue[0]; // Sale usando el valor del par
+			} else if (hasFive) {
+				moveVal = 5; // Prioriza gastar el 5 para salir
+			} else {
+				moveVal = parchisStore.diceValue[0];
+			}
 		} else {
 			moveVal = 5;
 		}
