@@ -66,10 +66,11 @@ const isClickable = computed(() => {
 
 	if (props.token.state === "HOME") {
 		if (parchisStore.rules?.diceCount === 2) {
-			return (
+			const hasPairs =
 				parchisStore.diceValue.length >= 2 &&
-				parchisStore.diceValue[0] === parchisStore.diceValue[1]
-			);
+				parchisStore.diceValue[0] === parchisStore.diceValue[1] &&
+				(parchisStore.availableMoves?.filter(m => m === parchisStore.diceValue[0]).length ?? 0) === 2;
+			return hasPairs;
 		} else {
 			return parchisStore.availableMoves?.includes(5) || false;
 		}
