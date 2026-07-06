@@ -120,11 +120,11 @@ const myPlayerInfo = computed(() => {
 });
 
 const myPlayerColorHex = computed(() => {
-  const colorNames = ['yellow', 'blue', 'red', 'green', 'purple', 'orange', 'pink', 'cyan'];
-  if (!myPlayerInfo.value?.color) return '#ffffff';
-  let baseP = colorNames.indexOf(myPlayerInfo.value.color.toLowerCase());
-  if (baseP === -1) baseP = 0;
-  return colorPalette[baseP];
+  // If we are hovering a wedge, take the color of that wedge!
+  if (hoveredWedgeIndex.value !== null) {
+    return colorPalette[hoveredWedgeIndex.value];
+  }
+  return '#9ca3af'; // Gray-400 as neutral color when not hovering
 });
 
 const myPlayerFigure = computed(() => myPlayerInfo.value?.selectedFigure || 'default');
