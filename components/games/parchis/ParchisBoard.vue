@@ -1,8 +1,17 @@
 <template>
   <div class="relative w-full h-full flex flex-col items-center justify-start sm:justify-center gap-6 sm:gap-8 overflow-x-hidden overflow-y-auto pb-36 xl:pb-8 xl:overflow-hidden xl:flex-row xl:items-start xl:justify-center xl:p-8">
     
+    <!-- Fondo oscurecido para selección de asientos (Zoro) -->
+    <div 
+      class="fixed inset-0 z-0 bg-black/70 backdrop-blur-md pointer-events-none transition-all duration-700"
+      :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'opacity-100' : 'opacity-0'"
+    ></div>
+
     <!-- Tablero contenedor dinámico -->
-    <div class="w-full flex items-center justify-center min-h-0 relative z-0 p-2 sm:p-4 mt-2 sm:mt-0 flex-1">
+    <div 
+      class="w-full flex items-center justify-center min-h-0 relative p-2 sm:p-4 mt-2 sm:mt-0 flex-1 transition-all duration-700"
+      :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'z-10 scale-105 drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]' : 'z-0'"
+    >
       <div 
         class="relative mx-auto shrink-0" 
         style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px; aspect-ratio: 1/1;"
@@ -16,6 +25,24 @@
           :trackSquares="boardGeometry.trackSquares"
           :wedges="boardGeometry.wedges"
         />
+
+        <!-- Giant Token for Seat Selection (Brook) -->
+        <div 
+          v-if="isSeatChoosingAndMyTurn"
+          class="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
+        >
+          <div class="animate-float-token">
+            <div 
+              class="w-48 h-48 sm:w-64 sm:h-64 transition-all duration-500"
+              :style="{ filter: `drop-shadow(0 0 30px ${myPlayerColorHex}) drop-shadow(0 0 60px ${myPlayerColorHex})` }"
+            >
+              <ParchisTokenSVG 
+                :color="myPlayerColorHex"
+                :figureId="myPlayerFigure"
+              />
+            </div>
+          </div>
+        </div>
 
         <!-- Render Tokens (HTML Overlay) -->
         <div v-if="parchisStore.gameState === 'PLAYING'" class="absolute inset-0 z-10 pointer-events-none">
@@ -58,11 +85,14 @@ import ParchisToken from "./ParchisToken.vue";
 import ParchisBoardSVG from "./ParchisBoardSVG.vue";
 import ParchisHudPanel from "./ParchisHudPanel.vue";
 import ParchisStatsPanel from "./ParchisStatsPanel.vue";
+import ParchisTokenSVG from "./ParchisTokenSVG.vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
+import { usePlayerStore } from "~/stores/playerStore";
 import { useParchisBoardGeometry } from "~/composables/useParchisBoardGeometry";
 
 const showMobileStats = ref(false);
 const parchisStore = useParchisStore();
+const playerStore = usePlayerStore();
 const sides = computed(() => parchisStore.rules?.parchisBoardSize || 4);
 
 const { 
@@ -72,6 +102,24 @@ const {
   boardGeometry,
   colorPalette
 } = useParchisBoardGeometry(sides);
+
+const isSeatChoosingAndMyTurn = computed(() => {
+  return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;
+});
+
+const myPlayerInfo = computed(() => {
+  return parchisStore.players.find(p => p.userId === playerStore.userId);
+});
+
+const myPlayerColorHex = computed(() => {
+  const colorNames = ['yellow', 'blue', 'red', 'green', 'purple', 'orange', 'pink', 'cyan'];
+  if (!myPlayerInfo.value?.color) return '#ffffff';
+  let baseP = colorNames.indexOf(myPlayerInfo.value.color.toLowerCase());
+  if (baseP === -1) baseP = 0;
+  return colorPalette[baseP];
+});
+
+const myPlayerFigure = computed(() => myPlayerInfo.value?.selectedFigure || 'default');
 
 const allTokens = computed(() => {
 	const tokens: any[] = [];
@@ -177,3 +225,13 @@ const allTokens = computed(() => {
 	return tokens;
 });
 </script>
+
+<style scoped>
+@keyframes float-token {
+  0%, 100% { transform: translateY(-15px); }
+  50% { transform: translateY(15px); }
+}
+.animate-float-token {
+  animation: float-token 4s ease-in-out infinite;
+}
+</style>

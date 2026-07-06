@@ -3,10 +3,10 @@
     ref="tokenContainer"
     class="absolute z-10 flex items-center justify-center parchis-token pointer-events-auto cursor-pointer"
     :style="{
-      width: '3.5%',
-      height: '3.5%',
-      marginLeft: '-1.75%',
-      marginTop: '-1.75%',
+      width: `${(45 / (boardSize || 1400)) * 100}%`,
+      height: `${(45 / (boardSize || 1400)) * 100}%`,
+      marginLeft: `${-(45 / (boardSize || 1400)) * 50}%`,
+      marginTop: `${-(45 / (boardSize || 1400)) * 50}%`,
       left: `${((animCoords.x + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`,
       top: `${((animCoords.y + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`
     }"

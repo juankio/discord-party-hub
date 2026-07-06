@@ -84,11 +84,11 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
 				let pts: {x: number, y: number}[], center: {x: number, y: number};
 				if (row === 0) {
-					pts = [ { x: -Math.abs(y_bot) * M, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
-					center = rotatePoint((-25 + -Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
+					pts = [ { x: 25, y: y_bot }, { x: Math.abs(y_bot) * M, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
+					center = rotatePoint((25 + Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
 				} else {
-					pts = [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
-					center = rotatePoint(-50, y_bot - 25, armAngle);
+					pts = [ { x: 25, y: y_bot }, { x: 75, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
+					center = rotatePoint(50, y_bot - 25, armAngle);
 				}
 				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: false, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + row] = center;
@@ -104,11 +104,11 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
 				let pts: {x: number, y: number}[], center: {x: number, y: number};
 				if (row === 0) {
-					pts = [ { x: 25, y: y_bot }, { x: Math.abs(y_bot) * M, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
-					center = rotatePoint((25 + Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
+					pts = [ { x: -Math.abs(y_bot) * M, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
+					center = rotatePoint((-25 + -Math.abs(y_bot - 25) * M) / 2, y_bot - 25, armAngle);
 				} else {
-					pts = [ { x: 25, y: y_bot }, { x: 75, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
-					center = rotatePoint(50, y_bot - 25, armAngle);
+					pts = [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
+					center = rotatePoint(-50, y_bot - 25, armAngle);
 				}
 				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? "#fcd34d" : "#f5ebd5", isSalida: false, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + (16 - row)] = center;
