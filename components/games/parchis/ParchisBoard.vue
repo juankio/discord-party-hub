@@ -92,6 +92,22 @@ import { useParchisStore } from "~/stores/games/parchisStore";
 import { usePlayerStore } from "~/stores/playerStore";
 import { useParchisBoardGeometry } from "~/composables/useParchisBoardGeometry";
 
+interface TokenData {
+	id: string | number;
+	color: string;
+	ownerId: string;
+	position: number;
+	state: string;
+}
+
+interface TokenDisplayObject {
+	player: any;
+	token: any;
+	data: TokenData;
+	coords: { x: number; y: number };
+}
+
+
 const showMobileStats = ref(false);
 const parchisStore = useParchisStore();
 const playerStore = usePlayerStore();
@@ -165,11 +181,11 @@ const giantTokenStyle = computed(() => {
 });
 
 const allTokens = computed(() => {
-	const tokens: any[] = [];
+	const tokens: TokenDisplayObject[] = [];
 	const coordsMap = boardGeometry.value.coordsMap;
 
-	const trackOccupants = new Map<number, any[]>();
-	const metaOccupants = new Map<string, Map<number, any[]>>();
+	const trackOccupants = new Map<number, { userId: string; tokenId: string | number }[]>();
+	const metaOccupants = new Map<string, Map<number, { userId: string; tokenId: string | number }[]>>();
 
 	parchisStore.players.forEach(p => {
 		p.tokens?.forEach(t => {

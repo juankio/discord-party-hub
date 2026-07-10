@@ -88,7 +88,7 @@ const surrender = () => {
     <ParchisBoard v-else-if="['PLAYING', 'ROLLING_FOR_ORDER', 'CHOOSING_SEATS'].includes(parchisStore.gameState)" class="flex-grow" />
 
     <ParchisInitiative v-if="parchisStore.gameState === 'ROLLING_FOR_ORDER'" :players="parchisStore.players" />
-    <ParchisSeatSelection v-if="parchisStore.gameState === 'CHOOSING_SEATS'" />
+
 
     <!-- Estado de Espera u Otros -->
     <div v-else-if="parchisStore.gameState === 'WAITING'" class="flex flex-col items-center justify-center flex-grow">

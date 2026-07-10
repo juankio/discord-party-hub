@@ -1,5 +1,33 @@
 import { computed } from "vue";
 
+export interface TrackSquare {
+	points: string;
+	fill: string;
+	isSalida: boolean;
+	isSeguro: boolean;
+	isTip: boolean;
+	cx: number;
+	cy: number;
+	rot: number;
+}
+
+export interface LlegadaPath {
+	points: string;
+	color: string;
+	isFinal: boolean;
+	cx: number;
+	cy: number;
+	rot: number;
+}
+
+export interface Wedge {
+	points: string;
+	color: string;
+	cx: number;
+	cy: number;
+	spots: { x: number; y: number }[];
+}
+
 export function rotatePoint(x: number, y: number, degrees: number) {
 	const rad = (degrees * Math.PI) / 180;
 	return {
@@ -69,9 +97,9 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const R_max = innerRadius + 400 + padding;
 		const rowHeight = 50;
 
-		const trackSquares: any[] = [];
-		const llegadaPaths: any[] = [];
-		const wedges: any[] = [];
+		const trackSquares: TrackSquare[] = [];
+		const llegadaPaths: LlegadaPath[] = [];
+		const wedges: Wedge[] = [];
 		const coordsMap = { track: [] as {x: number, y: number}[], meta: [] as {x: number, y: number}[][], wedges: [] as {spots: {x: number, y: number}[]}[] };
 		const toPts = (pts: {x: number, y: number}[], angle: number) => pts.map(p => {
 			const rot = rotatePoint(p.x, p.y, angle);
