@@ -8,6 +8,7 @@ import { usePlayerStore } from '~/stores/playerStore'
 import { useUnoStore } from '~/stores/games/unoStore'
 import { useStopStore } from '~/stores/games/stopStore'
 import { useParchisStore } from '~/stores/games/parchisStore'
+import { useAppAudio } from '~/composables/useAppAudio'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
@@ -17,6 +18,7 @@ export const useSocket = () => {
   const playerStore = usePlayerStore()
   const router = useRouter()
   const route = useRoute()
+  const { playJoin, playStart } = useAppAudio()
 
   const connect = (roomId: string) => {
     if (socket.value) return
@@ -40,7 +42,15 @@ export const useSocket = () => {
     })
 
     socket.value.on('room_update', (data) => {
+      const prevPlayers = playerStore.playersInRoom.length
       playerStore.updateRoomState(data.users, data.hostUserId, data.roomRules, data.selectedGame)
+      if (data.users && data.users.length > prevPlayers) {
+        playJoin()
+      }
+    })
+
+    socket.value.on('game_started', () => {
+      playStart()
     })
 
     socket.value.on('game_state_update', (data) => {

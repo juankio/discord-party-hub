@@ -108,7 +108,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 
 		for (let p = 0; p < N; p++) {
 			const armAngle = p * (360 / N);
-			const baseColor = colorPalette[p % colorPalette.length];
+			const baseColor = colorPalette[p % colorPalette.length] || "#ffffff";
 
 			for (let row = 0; row < 8; row++) {
 				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
