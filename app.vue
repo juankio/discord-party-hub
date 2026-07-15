@@ -9,6 +9,7 @@
         <NuxtPage />
       </NuxtLayout>
       <UNotifications />
+      <GameAudioController />
     </div>
   </div>
 </template>
@@ -16,7 +17,9 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { usePlayerStore } from '~/stores/playerStore'
+import { useAudioStore } from '~/stores/audioStore'
 import AppLoader from '~/components/core/AppLoader.vue'
+import GameAudioController from '~/components/core/GameAudioController.vue'
 
 useSeoMeta({
   ogTitle: 'Discord Party Hub',
@@ -32,6 +35,7 @@ const isServerReady = ref(false)
 const showLayout = ref(false)
 
 const playerStore = usePlayerStore()
+const audioStore = useAudioStore()
 
 const destroyLoader = () => {
   showLayout.value = true;
@@ -51,6 +55,7 @@ const updateThemeColor = (color: string) => {
 }
 
 onMounted(() => {
+  audioStore.initAudio()
   updateThemeColor(playerStore.color || '#f97316')
 
   const config = useRuntimeConfig()

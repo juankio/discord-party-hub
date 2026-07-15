@@ -15,7 +15,7 @@
           :class="['w-8 h-8 sm:w-12 sm:h-12 shrink-0 rounded-full border-[2px] shadow-inner bg-cover bg-center transition-all duration-300 relative mx-auto', 
             idx === parchisStore.currentTurnIndex ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.6)] z-10' : 'border-white/10 opacity-60 grayscale hover:grayscale-0 hover:opacity-100'
           ]"
-          :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatarId ? `url(/avatars/avatar-${player.avatarId}.svg)` : 'none' }"
+          :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatar ? `url(/avatars/avatar-${player.avatar}.svg)` : 'none' }"
         >
           <!-- Turn Indicator Dot -->
           <div v-if="idx === parchisStore.currentTurnIndex" class="absolute -bottom-1 -right-1 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-green-500 rounded-full border-2 border-[#1a0f08] shadow-[0_0_10px_rgba(74,222,128,0.8)] animate-pulse"></div>

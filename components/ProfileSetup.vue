@@ -22,27 +22,27 @@
               : 'opacity-50 hover:opacity-100 border border-white/10'
           ]"
           :style="avatarId === i ? { '--tw-ring-color': 'var(--theme-color)' } : {}"
-          @click="$emit('update:avatarId', i)"
-        >
-          <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" :class="[compact ? 'w-6 h-6' : 'w-8 h-8']" class="object-contain" >
-        </button>
-      </div>
+          @click="selectAvatar(i)"
+      >
+        <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" :class="[compact ? 'w-6 h-6' : 'w-8 h-8']" class="object-contain" >
+      </button>
     </div>
+  </div>
 
-    <!-- Fila 2: Colores -->
-    <div class="flex gap-3 justify-center flex-wrap w-full">
-      <button
-        v-for="c in colors" :key="c.val"
-        class="w-6 h-6 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
-        :style="{ backgroundColor: c.val }"
-        :class="[
-          color === c.val
-            ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
-            : 'opacity-60 hover:opacity-100'
-        ]"
-        @click="$emit('update:color', c.val)"
-      />
-    </div>
+  <!-- Fila 2: Colores -->
+  <div class="flex gap-3 justify-center flex-wrap w-full">
+    <button
+      v-for="c in colors" :key="c.val"
+      class="w-6 h-6 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
+      :style="{ backgroundColor: c.val }"
+      :class="[
+        color === c.val
+          ? 'ring-2 ring-white ring-offset-2 ring-offset-[#151515]'
+          : 'opacity-60 hover:opacity-100'
+      ]"
+      @click="selectColor(c.val)"
+    />
+  </div>
 
     <!-- Input de Usuario -->
     <div class="w-full flex flex-col gap-1.5">
@@ -60,13 +60,27 @@
 </template>
 
 <script setup lang="ts">
+import { useAppAudio } from '~/composables/useAppAudio'
+
+const { playUiClick } = useAppAudio()
+
 defineProps({
   avatarId: { type: Number, required: true },
   color: { type: String, required: true },
   nickname: { type: String, required: true },
   compact: { type: Boolean, default: false }
 })
-defineEmits(['update:avatarId', 'update:color', 'update:nickname'])
+const emit = defineEmits(['update:avatarId', 'update:color', 'update:nickname'])
+
+const selectAvatar = (id: number) => {
+  playUiClick()
+  emit('update:avatarId', id)
+}
+
+const selectColor = (c: string) => {
+  playUiClick()
+  emit('update:color', c)
+}
 
 const colors = [
   { val: '#ff0000' }, // Blanco

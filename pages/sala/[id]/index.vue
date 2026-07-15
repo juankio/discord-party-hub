@@ -7,7 +7,7 @@
         <div class="flex items-center gap-2 sm:gap-3">
           <!-- Botón Editar Perfil (Pro Max UI) -->
           <button 
-            @click="isEditProfileOpen = true"
+            @click="openEditProfile"
             class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-black/40 hover:bg-white/5 text-gray-300 hover:text-white rounded-xl border border-white/10 hover:border-primary/50 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0 ring-0 focus-visible:ring-0"
           >
             <!-- Efecto Pro Line (Glow en hover) -->
@@ -58,11 +58,11 @@
                 <GameSelector :games="games" :selected-game="selectedGame" @select="selectedGame = $event" />
               </div>
 
-              <div class="flex flex-row justify-center items-center gap-2 -mt-1 z-10 mx-auto w-full max-w-lg px-2 sm:px-4">
+              <div class="flex flex-row justify-center items-start -mt-2 relative z-10 mx-auto w-full max-w-lg px-8 sm:px-12">
                 <!-- Botón Ajustes Generales -->
                 <button 
-                  @click="isGeneralRulesOpen = !isGeneralRulesOpen; isTableRulesOpen = false"
-                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-b-xl sm:rounded-b-2xl border-2 sm:border-4 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
+                  @click="toggleGeneralRules"
+                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
                   style="box-shadow: 0 8px 15px rgba(0,0,0,0.5);"
                 >
                   <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ AJUSTES GENERALES</span>
@@ -71,8 +71,8 @@
 
                 <!-- Botón Reglas de la Mesa -->
                 <button 
-                  @click="isTableRulesOpen = !isTableRulesOpen; isGeneralRulesOpen = false"
-                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-b-xl sm:rounded-b-2xl border-2 sm:border-4 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
+                  @click="toggleTableRules"
+                  class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative"
                   style="box-shadow: 0 8px 15px rgba(0,0,0,0.5);"
                 >
                   <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ REGLAS DE LA MESA</span>
@@ -149,12 +149,14 @@
 <script setup lang="ts">
 import anime from "animejs";
 import { usePlayerStore } from "~/stores/playerStore";
+import { useAppAudio } from "~/composables/useAppAudio";
 
 const route = useRoute();
 const router = useRouter();
 const playerStore = usePlayerStore();
 const { socket } = useSocket();
 const toast = useToast();
+const { playSettings, playEditProfile, playCountdown, playBotConfig } = useAppAudio();
 const roomId = computed(() => route.params.id as string);
 
 useSeoMeta({
@@ -183,14 +185,33 @@ const isGeneralRulesOpen = ref(false);
 const isTableRulesOpen = ref(false);
 const selectedBotForConfig = ref<any>(null);
 
+const toggleGeneralRules = () => {
+  isGeneralRulesOpen.value = !isGeneralRulesOpen.value;
+  isTableRulesOpen.value = false;
+  playSettings();
+};
+
+const toggleTableRules = () => {
+  isTableRulesOpen.value = !isTableRulesOpen.value;
+  isGeneralRulesOpen.value = false;
+  playSettings();
+};
+
+const openEditProfile = () => {
+  isEditProfileOpen.value = true;
+  playEditProfile();
+};
+
 const handleAvatarClick = (player: any) => {
 	if (player.isBot && isHost.value) {
 		selectedBotForConfig.value = player;
 		showBotConfigModal.value = true;
+		playEditProfile();
 	}
 };
 
 const updateBotConfig = (botId: string, config: { difficulty: number, nickname: string, avatarId: number, color: string }) => {
+	playBotConfig();
 	socket.value?.emit("update_bot_config", { botId, ...config });
 };
 
@@ -270,6 +291,7 @@ watch(
 const isStarting = ref(false);
 
 const startGame = () => {
+	playCountdown();
 	isStarting.value = true;
 	
 	if (selectedGame.value === 'parchis') {

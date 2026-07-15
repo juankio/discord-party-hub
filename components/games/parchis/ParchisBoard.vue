@@ -93,7 +93,7 @@ import { usePlayerStore } from "~/stores/playerStore";
 import { useParchisBoardGeometry } from "~/composables/useParchisBoardGeometry";
 
 interface TokenData {
-	id: string | number;
+	id: number;
 	color: string;
 	ownerId: string;
 	position: number;
@@ -138,7 +138,7 @@ const myPlayerInfo = computed(() => {
 const myPlayerColorHex = computed(() => {
   // If we are hovering a wedge, take the color of that wedge!
   if (hoveredWedgeIndex.value !== null) {
-    return colorPalette[hoveredWedgeIndex.value];
+    return colorPalette[hoveredWedgeIndex.value] || '#9ca3af';
   }
   return '#9ca3af'; // Gray-400 as neutral color when not hovering
 });
@@ -193,7 +193,7 @@ const allTokens = computed(() => {
 				const pos = t.position % (sides.value * 17);
 				if (!trackOccupants.has(pos)) trackOccupants.set(pos, []);
 				trackOccupants.get(pos)!.push({ userId: p.userId, tokenId: t.id });
-			} else if (t.state === "META" || t.state === "PATH") {
+			} else if (t.state === "META") {
 				if (!metaOccupants.has(p.color)) metaOccupants.set(p.color, new Map());
 				const metaMap = metaOccupants.get(p.color)!;
 				if (!metaMap.has(t.position)) metaMap.set(t.position, []);
@@ -238,13 +238,13 @@ const allTokens = computed(() => {
 							{x: -16, y: 0},
 							{x: 16, y: 0}
 						];
-						offsetX = offsets[myIndexInCell % offsets.length].x;
-						offsetY = offsets[myIndexInCell % offsets.length].y;
+							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
+							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;
 					}
 					
 					tokenCoords = { x: trackCell.x + offsetX, y: trackCell.y + offsetY };
 				}
-			} else if (token.state === "META" || token.state === "PATH") {
+			} else if (token.state === "META") {
 				const corridorCell = coordsMap.meta[baseP]?.[token.position] as any;
 				if (corridorCell) {
 					const occupantsList = metaOccupants.get(player.color)?.get(token.position) || [];
@@ -260,8 +260,8 @@ const allTokens = computed(() => {
 							{x: -8, y: 8},
 							{x: 8, y: -8}
 						];
-						offsetX = offsets[myIndexInCell % offsets.length].x;
-						offsetY = offsets[myIndexInCell % offsets.length].y;
+							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
+							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;
 					}
 					tokenCoords = { x: corridorCell.x + offsetX, y: corridorCell.y + offsetY };
 				}
@@ -272,7 +272,7 @@ const allTokens = computed(() => {
 				token,
 				data: {
 					id: token.id,
-					color: colorPalette[baseP],
+					color: colorPalette[baseP] || '#9ca3af',
 					ownerId: player.userId,
 					position: token.position,
 					state: token.state,

@@ -8,7 +8,7 @@
         class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2" 
         :class="activeTab === 'guest' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
         :style="activeTab === 'guest' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
-        @click="activeTab = 'guest'"
+        @click="switchTab('guest')"
       >
         INVITADO
       </button>
@@ -16,7 +16,7 @@
         class="flex-1 py-4 text-xs font-bold tracking-widest transition-all outline-none border-b-2 w-full" 
         :class="activeTab === 'account' ? 'bg-white/5' : 'border-transparent text-gray-600 hover:text-gray-300'"
         :style="activeTab === 'account' ? { color: 'var(--theme-color)', borderColor: 'var(--theme-color)' } : {}"
-        @click="activeTab = 'account'"
+        @click="switchTab('account')"
       >
         CUENTA
       </button>
@@ -51,10 +51,12 @@
 
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
+import { useAppAudio } from '~/composables/useAppAudio'
 import anime from 'animejs'
 
 const router = useRouter()
 const playerStore = usePlayerStore()
+const { playTabSwitch, playCreateRoom, playJoinRoom } = useAppAudio()
 
 const avatarId = ref(playerStore.avatarId || 1)
 const nickname = ref(playerStore.nickname || '')
@@ -63,6 +65,11 @@ const selectedColor = ref(playerStore.color || '#f97316') // Orange default
 const roomCode = ref('')
 const activeTab = ref('guest')
 const showJoinInput = ref(false)
+
+const switchTab = (tab: string) => {
+  activeTab.value = tab
+  playTabSwitch()
+}
 
 const isValid = computed(() => {
   if (activeTab.value === 'account' && playerStore.isLoggedIn) return true
@@ -101,6 +108,7 @@ const savePlayerAndRedirect = (roomId: string) => {
 }
 
 const handleCreateRoom = async () => {
+  playCreateRoom()
   if (!isValid.value) return
   
   if (activeTab.value === 'guest') {
@@ -121,6 +129,7 @@ const handleCreateRoom = async () => {
 }
 
 const handleJoinRoom = () => {
+  playJoinRoom()
   if (!isValid.value || roomCode.value.length < 5) return
   savePlayerAndRedirect(roomCode.value)
 }

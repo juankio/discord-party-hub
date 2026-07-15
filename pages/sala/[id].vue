@@ -48,12 +48,14 @@
 
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
+import { useAppAudio } from '~/composables/useAppAudio'
 
 const route = useRoute()
 const router = useRouter()
 const playerStore = usePlayerStore()
 const config = useRuntimeConfig()
 const { connect, disconnect, socket } = useSocket()
+const { playEnterLobby } = useAppAudio()
 
 const roomId = route.params.id as string
 const showSetupModal = ref(false)
@@ -86,6 +88,7 @@ onUnmounted(() => {
 })
 
 const saveAndJoin = () => {
+  playEnterLobby()
   playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value)
   showSetupModal.value = false
   hasSetup.value = true

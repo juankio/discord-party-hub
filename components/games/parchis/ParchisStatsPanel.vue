@@ -63,7 +63,7 @@ const getColor = (colorStr: string) => {
             <div 
               class="w-10 h-10 rounded-full border-2 bg-cover bg-center shadow-lg bg-[#1a0f08]"
               :class="getColor(player.color).replace('bg-', 'border-')"
-              :style="{ backgroundImage: player.avatarId ? `url(/avatars/avatar-${player.avatarId}.svg)` : 'none' }"
+              :style="{ backgroundImage: player.avatar ? `url(/avatars/avatar-${player.avatar}.svg)` : 'none' }"
             ></div>
             <div 
               class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#1a0f08] shadow-inner"

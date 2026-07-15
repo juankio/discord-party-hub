@@ -46,7 +46,7 @@
               <button
                 v-if="hostUserId === playerStore.userId && allowBots"
                 class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/40 hover:bg-blue-600/80 hover:scale-105 active:scale-95 text-white border-blue-400/50 shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_20px_rgba(37,99,235,0.6)]"
-                @click="$emit('add-bot', 5)"
+                @click="handleAddBot"
                 title="Añadir Bot"
               >
                 <UIcon name="i-lucide-bot" class="w-4 h-4" />
@@ -60,7 +60,7 @@
         <TransitionGroup 
           name="avatar-pop" 
           tag="div" 
-          class="absolute inset-0 pointer-events-none"
+          class="absolute inset-0 pointer-events-none z-20"
         >
         <div
           v-for="(player, index) in players" 
@@ -108,6 +108,7 @@
 <script setup lang="ts">
 import anime from 'animejs'
 import { usePlayerStore } from '~/stores/playerStore'
+import { useAppAudio } from '~/composables/useAppAudio'
 
 const props = defineProps({
   roomId: { type: String, required: true },
@@ -116,10 +117,16 @@ const props = defineProps({
   selectedGame: { type: String, required: true }
 })
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'add-bot', difficulty: number): void
   (e: 'avatar-click', player: any): void
 }>()
+
+const { playBot, playCopyLink } = useAppAudio()
+const handleAddBot = () => {
+  playBot()
+  emit('add-bot', 5)
+}
 
 const toast = useToast()
 const playerStore = usePlayerStore()
@@ -164,7 +171,7 @@ const getAvatarPosition = (index: number, total: number) => {
   }
 
   const slotIndex = layout[distance] !== undefined ? layout[distance] : 0
-  return slots[slotIndex % slots.length]
+  return slots[slotIndex % slots.length]!
 }
 
 onMounted(() => {
@@ -179,6 +186,7 @@ onMounted(() => {
 
 const copyLink = () => {
   if (import.meta.client) {
+    playCopyLink()
     navigator.clipboard.writeText(window.location.href)
     
     anime({

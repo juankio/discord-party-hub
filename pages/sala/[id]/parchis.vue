@@ -10,6 +10,60 @@ const roomId = route.params.id as string;
 const { socket, isConnected } = useSocket();
 const parchisStore = useParchisStore();
 const playerStore = usePlayerStore();
+const { playMove, playCapture, playGoal } = useParchisAudio();
+
+// Track previous token states to play sounds
+let previousTokens = new Map<string, any>();
+
+watch(
+  () => parchisStore.players,
+  (newPlayers) => {
+    if (!newPlayers) return;
+    
+    let moved = false;
+    let captured = false;
+    let goal = false;
+
+    newPlayers.forEach((player) => {
+      player.tokens?.forEach((token: any) => {
+        const key = `${player.userId}-${token.id}`;
+        const prev = previousTokens.get(key);
+
+        if (prev) {
+          // Detect Move
+          if (prev.position !== token.position && token.state !== "HOME" && prev.state !== "HOME") {
+            moved = true;
+          }
+          if (prev.state === "HOME" && (token.state === "TRACK" || token.state === "BOARD")) {
+            // Moving out of home
+            moved = true;
+          }
+
+          // Detect Capture (was on track, now at home)
+          if ((prev.state === "TRACK" || prev.state === "BOARD") && token.state === "HOME") {
+            captured = true;
+          }
+
+          // Detect Goal
+          if (prev.state !== "FINISHED" && token.state === "FINISHED") {
+            goal = true;
+          }
+        }
+
+        previousTokens.set(key, { ...token });
+      });
+    });
+
+    if (captured) {
+      playCapture();
+    } else if (goal) {
+      playGoal();
+    } else if (moved) {
+      playMove();
+    }
+  },
+  { deep: true }
+);
 
 // Watch for socket events
 watch(

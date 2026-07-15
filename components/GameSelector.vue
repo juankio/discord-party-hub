@@ -30,7 +30,7 @@
           selectedGame === game.id ? 'z-[30]' : 'z-10'
         ]"
         :disabled="game.disabled || isReadOnly"
-        @click="$emit('select', game.id)"
+        @click="selectGame(game.id)"
       >
         <div
 class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
@@ -141,12 +141,36 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { useAppAudio } from '~/composables/useAppAudio';
+
+const { playSelectUno, stopSelectUno, playSelectParchis, stopSelectParchis, playSelectStop, stopSelectStop, playUiClick } = useAppAudio();
+
+const props = defineProps({
   games: { type: Array as () => any[], required: true },
   selectedGame: { type: String, required: true },
   isReadOnly: { type: Boolean, default: false }
 })
-defineEmits(['select'])
+
+const emit = defineEmits(['select'])
+
+const selectGame = (gameId: string) => {
+  if (!props.isReadOnly) {
+    stopSelectUno();
+    stopSelectParchis();
+    stopSelectStop();
+
+    if (gameId === 'uno') {
+      playSelectUno();
+    } else if (gameId === 'parchis') {
+      playSelectParchis();
+    } else if (gameId === 'stop') {
+      playSelectStop();
+    } else {
+      playUiClick();
+    }
+  }
+  emit('select', gameId);
+}
 </script>
 
 <style scoped>

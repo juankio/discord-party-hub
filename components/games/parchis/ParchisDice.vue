@@ -61,6 +61,7 @@ const props = defineProps<{
 }>()
 
 const parchisStore = useParchisStore()
+const { playDice } = useParchisAudio()
 const diceElements = ref<HTMLElement[]>([])
 
 const selectDice = (index: number) => {
@@ -110,6 +111,8 @@ watch(() => [...props.diceValues], (newVals, oldVals) => {
   if (newVals && newVals.length > 0) {
     const isNewRoll = oldVals.length === 0 || newVals.some((v, i) => v !== oldVals[i])
     if (isNewRoll || parchisStore.isMyTurn) {
+        // Trigger sound once per roll (not per dice)
+        playDice()
         newVals.forEach((_, i) => {
           rollDice(i)
         })

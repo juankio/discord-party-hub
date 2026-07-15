@@ -155,13 +155,15 @@ const onTokenClick = () => {
 			parchisStore.selectedDiceIndex >= 0 &&
 			parchisStore.selectedDiceIndex < parchisStore.availableMoves.length
 		) {
-			moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex];
+			moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex] as number;
+			if (moveVal === undefined) return;
 			if (props.token.position + moveVal > 8) {
 				toast.add({ title: "El dado seleccionado te pasa de la meta", color: "orange" });
 				return;
 			}
 		} else {
-			moveVal = validMoves[0];
+			moveVal = validMoves[0] as number;
+			if (moveVal === undefined) return;
 		}
 	} else if (
 		parchisStore.selectedDiceIndex !== null &&
@@ -169,7 +171,8 @@ const onTokenClick = () => {
 		parchisStore.selectedDiceIndex >= 0 &&
 		parchisStore.selectedDiceIndex < parchisStore.availableMoves.length
 	) {
-		moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex];
+		moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex] as number;
+		if (moveVal === undefined) return;
 	}
 
 	socket.value?.emit("parchis:move_token", {

@@ -39,7 +39,7 @@
                   :max="10" 
                   :step="1"
                   color="orange"
-                  size="md"
+                  @change="playBotDifficulty"
                   class="w-full"
                 />
                 <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { useAppAudio } from '~/composables/useAppAudio'
+
 const props = defineProps<{
   isOpen: boolean
   bot: any
@@ -89,6 +91,8 @@ const emit = defineEmits<{
   (e: 'update-config', botId: string, config: { difficulty: number, nickname: string, avatarId: number, color: string }): void
   (e: 'kick-bot', botId: string): void
 }>()
+
+const { playBotDifficulty, playBotKick, playUiClick } = useAppAudio()
 
 const tempDifficulty = ref(5)
 const tempNickname = ref('')
@@ -118,11 +122,13 @@ const saveConfig = () => {
 }
 
 const closeModal = () => {
+  playUiClick()
   emit('update:isOpen', false)
 }
 
 const kickBot = () => {
   if (props.bot) {
+    playBotKick()
     emit('kick-bot', props.bot.userId)
     closeModal()
   }

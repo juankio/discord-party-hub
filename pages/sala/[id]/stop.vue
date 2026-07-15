@@ -69,6 +69,7 @@ const roomId = route.params.id as string
 const { socket } = useSocket()
 const playerStore = usePlayerStore()
 const stopStore = useStopStore()
+const { playRoundStart, playBasta } = useStopAudio()
 
 const roundScores = ref<Record<string, number>>({})
 let localAnswers: Record<string, string> = {}
@@ -108,6 +109,7 @@ watch(() => stopStore.gameState, (newState) => {
   if (newState === 'PLAYING') {
     panicMode.value = false
     localAnswers = {} // Fix: Limpiar las respuestas locales de la ronda anterior
+    playRoundStart()
   }
 })
 
@@ -119,6 +121,7 @@ onMounted(() => {
       socket.value.off('stop_called')
       socket.value.on('stop_called', () => {
         panicMode.value = true
+        playBasta()
         // Delay slighty to let user realize panic mode activated
         setTimeout(() => {
           socket.value?.emit('stop:submit_answers', { answers: localAnswers })

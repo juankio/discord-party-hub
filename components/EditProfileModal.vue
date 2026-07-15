@@ -1,99 +1,113 @@
 <template>
-  <UModal v-model="isOpen" prevent-close :ui="{ base: 'relative text-left rtl:text-right overflow-hidden flex flex-col', ring: '', shadow: 'shadow-2xl shadow-black/80', rounded: 'rounded-3xl', background: 'bg-[#111] dark:bg-[#111] border border-white/5' }">
-    <div class="relative p-6 md:p-8 w-full max-w-md mx-auto">
-      <!-- Glow Decorativo -->
-      <div class="absolute -top-12 -left-12 w-48 h-48 bg-[var(--theme-color)] opacity-20 blur-[80px] pointer-events-none transition-colors duration-500 rounded-full" :style="{ backgroundColor: localColor }" />
-      <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-[var(--theme-color)] opacity-20 blur-[80px] pointer-events-none transition-colors duration-500 rounded-full" :style="{ backgroundColor: localColor }" />
+  <Teleport to="body">
+    <Transition name="fade">
+      <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="close"></div>
 
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-8 relative z-10">
-        <h2 class="text-2xl font-black text-white tracking-wide">EDITAR <span class="text-white/30">PERFIL</span></h2>
-        <button @click="close" class="text-gray-500 hover:text-white transition-colors">
-          <UIcon name="i-lucide-x" class="w-6 h-6" />
-        </button>
-      </div>
+        <!-- Modal Wrapper (Billiard Aesthetic) -->
+        <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+          <!-- Inner Container -->
+          <div class="bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)] p-4 relative flex flex-col w-full min-w-0 overflow-hidden">
+            <!-- Glow Decorativo -->
+            <div class="absolute -top-12 -left-12 w-48 h-48 opacity-20 blur-[80px] pointer-events-none transition-colors duration-500 rounded-full" :style="{ backgroundColor: localColor }" />
+            <div class="absolute -bottom-12 -right-12 w-48 h-48 opacity-20 blur-[80px] pointer-events-none transition-colors duration-500 rounded-full" :style="{ backgroundColor: localColor }" />
 
-      <!-- Contenido -->
-      <div class="flex flex-col gap-8 relative z-10">
-        <!-- Avatar Preview -->
-        <div class="flex justify-center">
-          <div 
-            class="w-32 h-32 rounded-full bg-[#151515] border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative group"
-            :style="{ borderColor: localColor, boxShadow: `0 0 30px ${localColor}30` }"
-          >
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none" />
-            <img :src="`/avatars/avatar-${localAvatarId}.svg?v=3`" alt="Avatar" class="w-24 h-24 object-contain absolute bottom-0 transition-transform duration-300 group-hover:scale-110">
-          </div>
-        </div>
+            <!-- Header -->
+            <h3 class="text-white font-black tracking-widest uppercase text-xl sm:text-2xl mb-4 flex items-center gap-3 w-full justify-center z-10 relative">
+              <UIcon name="i-heroicons-pencil-square" class="w-6 h-6 sm:w-8 sm:h-8" :style="{ color: localColor }" />
+              EDITAR PERFIL
+            </h3>
 
-        <!-- Nickname Input -->
-        <div class="flex flex-col gap-2">
-          <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Nombre de Usuario</label>
-          <input 
-            v-model="localNickname"
-            type="text"
-            placeholder="Ej: Impostor"
-            class="w-full bg-[#1a1a1a] border border-white/5 text-white px-5 py-4 rounded-2xl outline-none focus:ring-1 transition-all placeholder:text-gray-600 font-bold text-center tracking-wide shadow-inner"
-            :style="{ '--tw-ring-color': localColor }"
-          >
-        </div>
+            <!-- Contenido -->
+            <div class="flex flex-col gap-8 relative z-10">
+              <!-- Avatar Preview -->
+              <div class="flex justify-center">
+                <div 
+                  class="w-32 h-32 rounded-full bg-[#151515] border-4 flex items-center justify-center overflow-hidden transition-colors duration-300 shadow-[0_0_40px_rgba(0,0,0,0.8)] relative group"
+                  :style="{ borderColor: localColor, boxShadow: `0 0 30px ${localColor}30` }"
+                >
+                  <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none" />
+                  <img :src="`/avatars/avatar-${localAvatarId}.svg?v=3`" alt="Avatar" class="w-24 h-24 object-contain absolute bottom-0 transition-transform duration-300 group-hover:scale-110">
+                </div>
+              </div>
 
-        <!-- Avatares (1 al 24) scrollable like ProfileSetup -->
-        <div class="flex flex-col gap-2">
-          <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Avatar</label>
-          <div class="w-full overflow-x-auto py-4 custom-scrollbar">
-            <div class="flex gap-3 w-max px-2">
-              <button 
-                v-for="i in 24" :key="i"
-                class="w-14 h-14 shrink-0 rounded-full bg-[#1a1a1a] flex items-center justify-center transition-all duration-300 outline-none hover:scale-110 shadow-lg relative overflow-hidden"
-                :class="[
-                  localAvatarId === i 
-                    ? 'ring-2 ring-offset-2 ring-offset-[#111] z-10 scale-110' 
-                    : 'opacity-50 hover:opacity-100 border border-white/5'
-                ]"
-                :style="localAvatarId === i ? { '--tw-ring-color': localColor } : {}"
-                @click="localAvatarId = i"
-              >
-                <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-12 h-12 object-contain absolute bottom-0" >
-              </button>
+              <!-- Nickname Input -->
+              <div class="space-y-4 bg-black/20 p-4 rounded-2xl border border-white/5 w-full">
+                <div class="flex flex-col gap-2">
+                  <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Nombre de Usuario</label>
+                  <input 
+                    v-model="localNickname"
+                    type="text"
+                    placeholder="Ej: Impostor"
+                    class="w-full bg-[#1a1a1a] border border-white/5 text-white px-5 py-4 rounded-2xl outline-none focus:ring-2 transition-all placeholder:text-gray-600 font-bold text-center tracking-wide shadow-inner"
+                    :style="{ '--tw-ring-color': localColor }"
+                  >
+                </div>
+
+                <!-- Avatares (1 al 24) scrollable like ProfileSetup -->
+                <div class="flex flex-col gap-2">
+                  <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Avatar</label>
+                  <div class="w-full overflow-x-auto py-4 custom-scrollbar">
+                    <div class="flex gap-3 w-max px-2">
+                      <button 
+                        v-for="i in 24" :key="i"
+                        class="w-14 h-14 shrink-0 rounded-full bg-[#1a1a1a] flex items-center justify-center transition-all duration-300 outline-none hover:scale-110 shadow-lg relative overflow-hidden"
+                        :class="[
+                          localAvatarId === i 
+                            ? 'ring-2 ring-offset-2 ring-offset-[#2a1a0f] z-10 scale-110' 
+                            : 'opacity-50 hover:opacity-100 border border-white/5'
+                        ]"
+                        :style="localAvatarId === i ? { '--tw-ring-color': localColor } : {}"
+                        @click="selectAvatar(i)"
+                      >
+                        <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" class="w-12 h-12 object-contain absolute bottom-0" >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Colores -->
+                <div class="flex flex-col gap-2">
+                  <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Color Temático</label>
+                  <div class="flex gap-3 justify-center flex-wrap">
+                    <button
+                      v-for="c in colors" :key="c.val"
+                      class="w-8 h-8 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner"
+                      :style="{ backgroundColor: c.val }"
+                      :class="[
+                        localColor === c.val
+                          ? 'ring-2 ring-white ring-offset-4 ring-offset-[#2a1a0f] scale-110'
+                          : 'opacity-40 hover:opacity-100'
+                      ]"
+                      @click="selectColor(c.val)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Acción -->
+              <div class="flex flex-col gap-3 mt-4">
+                <button 
+                  class="w-full px-4 py-4 text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none"
+                  :style="{ backgroundColor: localColor }"
+                  @click="save"
+                >
+                  Guardar Cambios
+                </button>
+                <button @click="close" class="w-full px-4 py-4 bg-[#5c3a21] hover:bg-[#6c4a31] text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none">Cerrar</button>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Colores -->
-        <div class="flex flex-col gap-2">
-          <label class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 ml-2">Color Temático</label>
-          <div class="flex gap-3 justify-center flex-wrap">
-            <button
-              v-for="c in colors" :key="c.val"
-              class="w-8 h-8 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner"
-              :style="{ backgroundColor: c.val }"
-              :class="[
-                localColor === c.val
-                  ? 'ring-2 ring-white ring-offset-4 ring-offset-[#111] scale-110'
-                  : 'opacity-40 hover:opacity-100'
-              ]"
-              @click="localColor = c.val"
-            />
-          </div>
-        </div>
-
-        <!-- Acción -->
-        <button 
-          class="mt-4 w-full h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden group"
-          :style="{ backgroundColor: localColor }"
-          @click="save"
-        >
-          <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-          <span class="relative z-10 text-white drop-shadow-md">Guardar Cambios</span>
-        </button>
       </div>
-    </div>
-  </UModal>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
+import { useAppAudio } from '~/composables/useAppAudio'
 
 const props = defineProps({
   isOpen: { type: Boolean, required: true }
@@ -108,10 +122,21 @@ const isOpen = computed({
 
 const playerStore = usePlayerStore()
 const { updateProfile } = useSocket()
+const { playUiClick } = useAppAudio()
 
 const localNickname = ref(playerStore.nickname)
 const localAvatarId = ref(playerStore.avatarId)
 const localColor = ref(playerStore.color)
+
+const selectAvatar = (id: number) => {
+  localAvatarId.value = id
+  playUiClick()
+}
+
+const selectColor = (val: string) => {
+  localColor.value = val
+  playUiClick()
+}
 
 const colors = [
   { val: '#ff0000' },
@@ -134,6 +159,7 @@ watch(() => props.isOpen, (newVal) => {
 })
 
 const close = () => {
+  playUiClick()
   isOpen.value = false
 }
 
@@ -155,3 +181,14 @@ const save = () => {
   close()
 }
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
