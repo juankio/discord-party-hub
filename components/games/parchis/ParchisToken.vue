@@ -3,10 +3,10 @@
     ref="tokenContainer"
     class="absolute z-10 flex items-center justify-center parchis-token pointer-events-auto cursor-pointer"
     :style="{
-      width: `${(45 / (boardSize || 1400)) * 100}%`,
-      height: `${(45 / (boardSize || 1400)) * 100}%`,
-      marginLeft: `${-(45 / (boardSize || 1400)) * 50}%`,
-      marginTop: `${-(45 / (boardSize || 1400)) * 50}%`,
+      width: `${(65 / (boardSize || 1400)) * 100}%`,
+      height: `${(65 / (boardSize || 1400)) * 100}%`,
+      marginLeft: `${-(65 / (boardSize || 1400)) * 50}%`,
+      marginTop: `${-(65 / (boardSize || 1400)) * 50}%`,
       left: `${((animCoords.x + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`,
       top: `${((animCoords.y + (boardSize || 1400) / 2) / (boardSize || 1400)) * 100}%`
     }"
@@ -186,7 +186,7 @@ watch(
 	(newVal, oldVal) => {
 		if (import.meta.client && oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {
 			const distance = Math.sqrt(Math.pow(newVal.x - oldVal.x, 2) + Math.pow(newVal.y - oldVal.y, 2));
-			const duration = Math.min(Math.max(distance * 0.5, 150), 250); 
+			const duration = 400; 
 
 			if (tokenContainer.value) {
 				const el = tokenContainer.value;
@@ -211,7 +211,7 @@ watch(
 						translateY: [invertY, 0],
 						translateZ: 0,
 						duration: duration,
-						easing: 'spring(1, 80, 10, 0)',
+						easing: 'easeInOutSine',
 						complete: () => {
 							el.style.transform = '';
 						}
