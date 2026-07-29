@@ -2,7 +2,7 @@
   <div class="w-full max-w-3xl mx-auto border-[8px] sm:border-[16px] border-[#a06d40] bg-[#4a2e1b] rounded-2xl shadow-xl overflow-x-auto flex flex-col shadow-inner custom-scrollbar relative z-10">
     <div class="min-w-[340px] flex flex-col">
       <div
-  v-for="(row, idx) in [games.slice(0,3), games.slice(3,5)]" :key="idx" 
+  v-for="(row, idx) in [games.slice(0,3), games.slice(3,6)]" :key="idx" 
            class="relative w-full flex justify-center gap-4 sm:gap-8 items-end pb-[24px] pt-12 sm:pt-16 bg-[#382012]">
         
         <!-- Soga -->
@@ -59,70 +59,13 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
                  :class="{ 'opacity-30': selectedGame === game.id }"/>
             
             <div class="relative z-10 w-full flex items-end justify-center">
-               <!-- UNO -->
-               <div v-if="game.id === 'uno'" class="relative w-16 h-24 flex items-center justify-center">
-                 <div class="absolute w-16 h-24 bg-gray-900 border-2 border-white rounded-sm rotate-12 shadow-md"/>
-                 <div class="absolute w-16 h-24 bg-red-600 border-2 border-white rounded-sm -rotate-6 shadow-lg flex items-center justify-center overflow-hidden">
-                   <div class="w-[110%] h-[60%] bg-white rounded-[50%] -rotate-[25deg] flex items-center justify-center">
-                     <span class="text-red-600 font-black text-xl tracking-tighter" style="text-shadow: 1px 1px 0 #000;">UNO</span>
-                   </div>
-                 </div>
-               </div>
-               
-               <!-- PARCHÍS -->
-               <div v-else-if="game.id === 'parchis'" class="w-20 h-20 bg-[#eab308] border-2 border-white p-1 rounded-sm relative shadow-md">
-                 <div class="grid grid-cols-2 grid-rows-2 w-full h-full gap-1">
-                   <div class="bg-red-500 rounded-tl-sm"/>
-                   <div class="bg-blue-500 rounded-tr-sm"/>
-                   <div class="bg-green-500 rounded-bl-sm"/>
-                   <div class="bg-yellow-400 rounded-br-sm"/>
-                 </div>
-                 <div class="absolute inset-0 m-auto w-5 h-5 bg-white border border-gray-800 rounded-sm shadow-md flex items-center justify-center rotate-3">
-                   <div class="w-1.5 h-1.5 bg-black rounded-full"/>
-                 </div>
-               </div>
+               <IconGameUno v-if="game.id === 'uno'" />
+               <IconGameParchis v-else-if="game.id === 'parchis'" />
+               <IconGameLiars v-else-if="game.id === 'liars'" />
+               <IconGameStop v-else-if="game.id === 'stop'" />
+               <IconGamePinturillo v-else-if="game.id === 'pinturillo'" />
+               <IconGameImpostor v-else-if="game.id === 'impostor'" />
 
-               <!-- LIAR'S BAR -->
-               <div v-else-if="game.id === 'liars'" class="flex items-end justify-center w-20 h-20 relative">
-                 <div class="w-14 h-16 bg-[#2d1b11] border-2 border-[#1a0f0a] shadow-lg flex items-center justify-center relative z-10" style="clip-path: polygon(15% 0, 85% 0, 100% 100%, 0% 100%)">
-                    <UIcon name="i-lucide-skull" class="w-6 h-6 text-gray-400 opacity-60" />
-                 </div>
-                 <div class="absolute bottom-1 -right-1 w-4 h-4 bg-red-700 border border-red-900 rounded-sm shadow-md flex items-center justify-center rotate-12 z-20">
-                   <div class="w-1 h-1 bg-white rounded-full"/>
-                 </div>
-                 <div class="absolute bottom-2 -left-2 w-4 h-4 bg-white border border-gray-300 rounded-sm shadow-md flex items-center justify-center -rotate-12 z-20">
-                   <div class="grid grid-cols-2 grid-rows-2 gap-[2px]">
-                     <div class="w-0.5 h-0.5 bg-black rounded-full"/><div class="w-0.5 h-0.5 bg-black rounded-full"/>
-                     <div class="w-0.5 h-0.5 bg-black rounded-full"/><div class="w-0.5 h-0.5 bg-black rounded-full"/>
-                   </div>
-                 </div>
-               </div>
-
-               <!-- STOP -->
-               <div v-else-if="game.id === 'stop'" class="w-16 h-20 bg-yellow-300 border border-yellow-500 rounded-sm shadow-md flex flex-col overflow-hidden relative rotate-3">
-                 <div class="h-3 w-full bg-red-600 border-b border-red-800 flex justify-evenly items-center">
-                    <div v-for="i in 3" :key="i" class="w-1 h-1 bg-black rounded-full opacity-40"/>
-                 </div>
-                 <div class="flex-1 w-full" style="background-image: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.1) 5px, rgba(0,0,0,0.1) 6px);"/>
-                 <div class="absolute inset-0 flex items-center justify-center pt-2">
-                    <span class="text-red-600 font-black text-sm tracking-tight -rotate-12 bg-yellow-300 px-1 border-2 border-red-600 rounded">STOP</span>
-                 </div>
-               </div>
-
-               <!-- PINTURILLO -->
-               <div v-else-if="game.id === 'pinturillo'" class="w-20 h-20 relative flex flex-col items-center justify-end">
-                 <div class="w-14 h-12 bg-white border-[3px] border-[#a37648] rounded-sm shadow-md z-10 flex items-center justify-center relative">
-                    <div class="w-4 h-4 rounded-full bg-blue-500 blur-[1px] absolute top-1 left-1"/>
-                    <div class="w-4 h-4 rounded-full bg-red-500 blur-[1px] absolute bottom-1 right-1"/>
-                 </div>
-                 <div class="w-16 h-1.5 bg-[#a37648] rounded-sm mt-0 shadow-sm z-10"/>
-                 <div class="absolute bottom-0 w-full h-full flex justify-center z-0">
-                   <div class="w-1.5 h-16 bg-[#6b4726] absolute -rotate-12 origin-top -translate-x-3"/>
-                   <div class="w-1.5 h-16 bg-[#6b4726] absolute rotate-12 origin-top translate-x-3"/>
-                   <div class="w-1.5 h-20 bg-[#57391e] absolute"/>
-                 </div>
-               </div>
-               
                <!-- GENÉRICO -->
                <div v-else class="w-16 h-16 bg-gray-800 border-2 border-gray-600 rounded-lg flex items-center justify-center shadow-md">
                  <span class="text-lg font-black text-white opacity-50">{{ game.name.substring(0, 2) }}</span>
