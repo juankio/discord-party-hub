@@ -53,6 +53,7 @@
 
 <script setup lang="ts">
 const rules = defineModel<any>('rules', { required: true })
+const emit = defineEmits(['change'])
 const newCategory = ref('')
 
 const presetCategories = ['NOMBRE', 'COLOR', 'ANIMAL', 'COSA', 'PAÍS', 'FRUTA', 'PROFESIÓN', 'MARCA']
@@ -65,6 +66,7 @@ const addCategory = () => {
       stopCategories: [...rules.value.stopCategories, cat] 
     }
     newCategory.value = ''
+    emit('change')
   }
 }
 
@@ -75,6 +77,7 @@ const addPreset = (cat: string) => {
       ...rules.value, 
       stopCategories: [...rules.value.stopCategories, upperCat] 
     }
+    emit('change')
   }
 }
 
@@ -83,5 +86,6 @@ const removeCategory = (idx: number) => {
     ...rules.value, 
     stopCategories: rules.value.stopCategories.filter((_: any, i: number) => i !== idx) 
   }
+  emit('change')
 }
 </script>

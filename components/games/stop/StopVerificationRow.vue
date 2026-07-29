@@ -28,7 +28,7 @@
           
           <!-- Strikethrough line 2D style (Chalk-like) -->
           <div 
-            class="absolute top-1/2 left-[-10%] h-2 bg-red-500 origin-left rounded rotate-[-2deg] transition-transform duration-500 ease-out"
+            class="absolute top-1/2 left-[-10%] h-2 bg-red-500 origin-left rounded rotate-[-2deg] transition-transform duration-500 ease-out pointer-events-none z-10"
             :class="isVetoed(catData, player.userId) ? 'scale-x-100' : 'scale-x-0'"
             style="width: 120%; margin-top: -4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);"
           ></div>
@@ -36,9 +36,9 @@
         
         <button 
           v-if="player.userId !== myUserId && getAnswerObj(catData, player.userId)?.answer && !isAutoInvalid(catData, player.userId)"
-          @click="toggleVeto(player.userId, catData.category)"
-          class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded transition-all border-2 font-['Comic_Sans_MS',_cursive,sans-serif]"
-          :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-inner' : 'bg-[#173119] text-gray-300 border-white/20 hover:bg-[#254b27] hover:text-white shadow-sm'"
+          @click.stop="toggleVeto(player.userId, catData.category)"
+          class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded transition-all border-2 font-['Comic_Sans_MS',_cursive,sans-serif] active:scale-95 z-20 relative"
+          :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-[inset_0_3px_6px_rgba(0,0,0,0.6)]' : 'bg-[#173119] text-gray-300 border-white/20 hover:bg-[#254b27] hover:text-white shadow-[0_4px_0_rgba(0,0,0,0.3)] active:translate-y-[4px] active:shadow-none'"
         >
           INVALIDAR ({{ getVetoCount(catData, player.userId) }})
         </button>

@@ -27,11 +27,8 @@
 <script setup lang="ts">
 import anime from "animejs";
 import { computed, ref, watch, nextTick, onMounted, onUnmounted } from "vue";
-import { useToast } from "#imports";
-import { useSocket } from "~/composables/useSocket";
-import { useParchisStore } from "~/stores/games/parchisStore";
-import { usePlayerStore } from "~/stores/playerStore";
 import ParchisTokenSVG from "./ParchisTokenSVG.vue";
+import { useTokenInteraction } from "~/composables/useTokenInteraction";
 
 const props = defineProps<{
 	token: {
@@ -48,149 +45,17 @@ const props = defineProps<{
 
 const tokenContainer = ref<HTMLElement | null>(null);
 const animCoords = ref({ x: 0, y: 0 });
-const parchisStore = useParchisStore();
-const playerStore = usePlayerStore();
-const { socket } = useSocket();
-const toast = useToast();
 
-const isClickable = computed(() => {
-	if (
-		!parchisStore.isMyTurn ||
-		playerStore.userId !== props.token.ownerId
-	)
-		return false;
-
-	if (!parchisStore.diceValue || parchisStore.diceValue.length === 0) {
-		return false;
-	}
-
-	if (props.token.state === "HOME") {
-		if (parchisStore.rules?.diceCount === 2) {
-			const hasPairs =
-				parchisStore.diceValue.length >= 2 &&
-				parchisStore.diceValue[0] === parchisStore.diceValue[1] &&
-				(parchisStore.availableMoves?.filter(m => m === parchisStore.diceValue[0]).length ?? 0) === 2;
-			return hasPairs;
-		} else {
-			return parchisStore.availableMoves?.includes(5) || false;
-		}
-	}
-	if (props.token.state === "META") {
-		const canMoveInMeta = parchisStore.availableMoves?.some(move => props.token.position + move <= 8);
-		if (!canMoveInMeta) return false;
-	}
-	return parchisStore.availableMoves?.length > 0;
-});
-
-const onTokenClick = () => {
-	if (!parchisStore.isMyTurn) {
-		toast.add({ title: "No es tu turno", color: "red" });
-		return;
-	}
-	if (playerStore.userId !== props.token.ownerId) {
-		toast.add({ title: "Esta no es tu ficha", color: "red" });
-		return;
-	}
-	if (!parchisStore.diceValue || parchisStore.diceValue.length === 0) {
-		toast.add({ title: "Tira los dados primero", color: "orange" });
-		return;
-	}
-
-	const isTwoDice = parchisStore.rules?.diceCount === 2;
-
-	if (props.token.state === "HOME") {
-		if (isTwoDice) {
-			const hasPairs =
-				parchisStore.diceValue.length >= 2 &&
-				parchisStore.diceValue[0] === parchisStore.diceValue[1] &&
-				(parchisStore.availableMoves?.filter(m => m === parchisStore.diceValue[0]).length ?? 0) === 2;
-			if (!hasPairs) {
-				toast.add({
-					title: "Necesitas sacar pares para salir del nido",
-					color: "amber",
-				});
-				return;
-			}
-		} else {
-			if (!parchisStore.availableMoves?.includes(5)) {
-				toast.add({
-					title: "Necesitas un 5 para salir del nido",
-					color: "amber",
-				});
-				return;
-			}
-		}
-	} else if (props.token.state === "META") {
-		const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + move <= 8);
-		if (!validMoves || validMoves.length === 0) {
-			toast.add({ title: "No puedes mover esta ficha (se pasa de la meta)", color: "orange" });
-			return;
-		}
-	} else {
-		if (!parchisStore.availableMoves || parchisStore.availableMoves.length === 0) {
-			toast.add({ title: "No tienes movimientos disponibles", color: "orange" });
-			return;
-		}
-	}
-
-	let moveVal = parchisStore.availableMoves?.[0] || parchisStore.diceValue[0];
-
-	if (props.token.state === "HOME") {
-		if (isTwoDice) {
-			const hasPairs = parchisStore.diceValue.length >= 2 && parchisStore.diceValue[0] === parchisStore.diceValue[1];
-			
-			if (hasPairs) {
-				moveVal = parchisStore.diceValue[0]; // Sale usando el valor del par
-			} else {
-				moveVal = parchisStore.diceValue[0];
-			}
-		} else {
-			moveVal = 5;
-		}
-	} else if (props.token.state === "META") {
-		const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + move <= 8) || [];
-		if (
-			parchisStore.selectedDiceIndex !== null &&
-			parchisStore.selectedDiceIndex !== undefined &&
-			parchisStore.selectedDiceIndex >= 0 &&
-			parchisStore.selectedDiceIndex < parchisStore.availableMoves.length
-		) {
-			moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex] as number;
-			if (moveVal === undefined) return;
-			if (props.token.position + moveVal > 8) {
-				toast.add({ title: "El dado seleccionado te pasa de la meta", color: "orange" });
-				return;
-			}
-		} else {
-			moveVal = validMoves[0] as number;
-			if (moveVal === undefined) return;
-		}
-	} else if (
-		parchisStore.selectedDiceIndex !== null &&
-		parchisStore.selectedDiceIndex !== undefined &&
-		parchisStore.selectedDiceIndex >= 0 &&
-		parchisStore.selectedDiceIndex < parchisStore.availableMoves.length
-	) {
-		moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex] as number;
-		if (moveVal === undefined) return;
-	}
-
-	socket.value?.emit("parchis:move_token", {
-		tokenId: props.token.id,
-		diceValue: moveVal,
-	});
-};
+const { isClickable, onTokenClick } = useTokenInteraction(props);
 
 watch(
 	() => props.coordinates,
 	(newVal, oldVal) => {
 		if (import.meta.client && oldVal && (newVal.x !== oldVal.x || newVal.y !== oldVal.y)) {
-			const distance = Math.sqrt(Math.pow(newVal.x - oldVal.x, 2) + Math.pow(newVal.y - oldVal.y, 2));
 			const duration = 400; 
 
 			if (tokenContainer.value) {
 				const el = tokenContainer.value;
-				
 				const firstRect = el.getBoundingClientRect();
 				
 				anime.remove(el);
@@ -201,7 +66,6 @@ watch(
 
 				nextTick(() => {
 					const lastRect = el.getBoundingClientRect();
-					
 					const invertX = firstRect.left - lastRect.left;
 					const invertY = firstRect.top - lastRect.top;
 					

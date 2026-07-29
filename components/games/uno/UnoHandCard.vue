@@ -28,12 +28,15 @@ const emit = defineEmits(['play-card', 'hover-card'])
 
 const cardStyle = computed(() => {
   const isTooMany = props.total > 7
-  const spreadAngle = isTooMany ? (props.total > 15 ? 1 : 2) : 4
-  const yOffsetMultiplier = isTooMany ? 1.5 : 3
+  const spreadAngle = isTooMany ? (props.total > 15 ? 1 : 2) : 5
+  // La elevación en Y ahora tiene un base negativo Fuerte para sacarlas del piso, 
+  // pero el cálculo del arco no necesita un yOffsetMultiplier gigante si usamos transformOrigin
   
   const middle = (props.total - 1) / 2
   const rotate = (props.index - middle) * spreadAngle
-  let translateY = Math.abs(props.index - middle) * yOffsetMultiplier
+  
+  // Usamos un simple cálculo cuadrático para el arco (parábola)
+  let translateY = (Math.pow(props.index - middle, 2) * 2) - 40 // -40 es el base offset para que suban
   let scale = 1
   let zIndex = props.index
 
@@ -44,8 +47,9 @@ const cardStyle = computed(() => {
   }
   
   return {
-    transform: `rotate(${rotate}deg) translateY(${translateY}px) scale(${scale})`,
-    zIndex: zIndex
+    transform: `translateY(${translateY}px) rotate(${rotate}deg) scale(${scale})`, // OJO: El TranslateY debe ir ANTES del rotate en CSS para que la rotación sea sobre el eje Y ya movido
+    transformOrigin: 'bottom center', // Esto es CRÍTICO para que roteen como un abanico desde abajo
+    zIndex,
   }
 })
 

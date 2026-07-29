@@ -2,17 +2,7 @@
   <div class="relative min-h-screen flex flex-col bg-transparent overflow-hidden text-white font-sans">
     <!-- Top Bar actions -->
     <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <!-- Botón Salir (Pro Max UI) -->
-      <button 
-        @click="exitGame"
-        class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
-      >
-        <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
-        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
-        <!-- Icono arreglado (Heroicons) -->
-        <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 group-hover:-translate-x-0.5 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-        <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Salir de la Partida</span>
-      </button>
+      <GameExitButton @leave="exitGame" />
     </div>
 
     <Transition name="fade" mode="out-in">
@@ -52,11 +42,25 @@
         @next_round="nextRound"
         @back_to_lobby="backToLobby"
       />
+
+      <!-- Estado de Espera (Zoro added) -->
+      <div v-else-if="stopStore.gameState === 'LOBBY'" class="flex flex-col items-center justify-center flex-grow min-h-screen">
+        <UIcon name="i-heroicons-arrow-path" class="w-16 h-16 text-blue-500 animate-spin mb-6" />
+        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-widest mb-4 drop-shadow-lg text-center">PREPARANDO EL TABLERO</h1>
+        <p class="text-gray-300 text-lg sm:text-xl text-center mb-8">Cargando categorías y jugadores...</p>
+        <div class="w-full max-w-md flex flex-col gap-3 px-4">
+          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
+          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
+          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
+        </div>
+      </div>
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: ["game-guard"] })
+
 import { usePlayerStore } from '~/stores/playerStore'
 import { useStopStore } from '~/stores/games/stopStore'
 
@@ -128,6 +132,10 @@ onMounted(() => {
         }, 1500)
       })
 
+      socket.value.on('game_state_update', (data: any) => {
+        stopStore.updateState(data)
+      })
+
       socket.value.emit('stop:join', { roomId })
       joined = true
     }
@@ -137,6 +145,7 @@ onMounted(() => {
 onUnmounted(() => {
   if (socket.value) {
     socket.value.off('stop_called')
+    socket.value.off('game_state_update')
   }
 })
 </script>

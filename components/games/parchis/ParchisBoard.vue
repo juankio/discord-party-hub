@@ -91,22 +91,7 @@ import ParchisTokenSVG from "./ParchisTokenSVG.vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
 import { usePlayerStore } from "~/stores/playerStore";
 import { useParchisBoardGeometry } from "~/composables/useParchisBoardGeometry";
-
-interface TokenData {
-	id: number;
-	color: string;
-	ownerId: string;
-	position: number;
-	state: string;
-}
-
-interface TokenDisplayObject {
-	player: any;
-	token: any;
-	data: TokenData;
-	coords: { x: number; y: number };
-}
-
+import { useParchisTokens } from "~/composables/useParchisTokens";
 
 const showMobileStats = ref(false);
 const parchisStore = useParchisStore();
@@ -127,6 +112,8 @@ const {
   colorPalette
 } = useParchisBoardGeometry(sides);
 
+const { allTokens } = useParchisTokens(sides, boardGeometry, colorPalette);
+
 const isSeatChoosingAndMyTurn = computed(() => {
   return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;
 });
@@ -136,11 +123,10 @@ const myPlayerInfo = computed(() => {
 });
 
 const myPlayerColorHex = computed(() => {
-  // If we are hovering a wedge, take the color of that wedge!
   if (hoveredWedgeIndex.value !== null) {
     return colorPalette[hoveredWedgeIndex.value] || '#9ca3af';
   }
-  return '#9ca3af'; // Gray-400 as neutral color when not hovering
+  return '#9ca3af'; 
 });
 
 const myPlayerFigure = computed(() => myPlayerInfo.value?.selectedFigure || 'default');
@@ -160,128 +146,22 @@ const giantTokenStyle = computed(() => {
   }
 
   const N = sides.value;
-  // Ángulo base adaptado visualmente para que el fantasma mire a las cuñas
   const angleDeg = (hoveredWedgeIndex.value * (360 / N)) - 135;
   const angleRad = angleDeg * (Math.PI / 180);
 
-  const moveDist = 65; // Desplazamiento en píxeles
+  const moveDist = 65; 
   const tx = Math.cos(angleRad) * moveDist;
   const ty = Math.sin(angleRad) * moveDist;
 
-  // Inclinación 3D para mirar el asiento
   const tilt = 35;
   const rx = Math.sin(angleRad) * tilt; 
   const ry = -Math.cos(angleRad) * tilt; 
-  const rz = Math.cos(angleRad) * 12; // Un ligero giro
+  const rz = Math.cos(angleRad) * 12; 
 
   return {
     ...baseStyle,
     transform: `translate(${tx}px, ${ty}px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg) scale(1.15)`
   };
-});
-
-const allTokens = computed(() => {
-	const tokens: TokenDisplayObject[] = [];
-	const coordsMap = boardGeometry.value.coordsMap;
-
-	const trackOccupants = new Map<number, { userId: string; tokenId: string | number }[]>();
-	const metaOccupants = new Map<string, Map<number, { userId: string; tokenId: string | number }[]>>();
-
-	parchisStore.players.forEach(p => {
-		p.tokens?.forEach(t => {
-			if (t.state === "BOARD" || t.state === "TRACK") {
-				const pos = t.position % (sides.value * 17);
-				if (!trackOccupants.has(pos)) trackOccupants.set(pos, []);
-				trackOccupants.get(pos)!.push({ userId: p.userId, tokenId: t.id });
-			} else if (t.state === "META") {
-				if (!metaOccupants.has(p.color)) metaOccupants.set(p.color, new Map());
-				const metaMap = metaOccupants.get(p.color)!;
-				if (!metaMap.has(t.position)) metaMap.set(t.position, []);
-				metaMap.get(t.position)!.push({ userId: p.userId, tokenId: t.id });
-			}
-		});
-	});
-
-	parchisStore.players.forEach((player: any, pIdx: number) => {
-		if (!player.tokens) return;
-
-		const colorNames = ['yellow', 'blue', 'red', 'green', 'purple', 'orange', 'pink', 'cyan'];
-		let baseP = colorNames.indexOf(player.color?.toLowerCase());
-		if (baseP === -1) baseP = pIdx % sides.value;
-
-		player.tokens.forEach((token: any, tIdx: number) => {
-			let tokenCoords = { x: 0, y: 0 };
-
-			if (token.state === "HOME") {
-				const wedge = coordsMap.wedges[baseP];
-				if (wedge && wedge.spots) {
-					tokenCoords = wedge.spots[tIdx % 4] || { x: 0, y: 0 };
-				}
-			} else if (token.state === "BOARD" || token.state === "TRACK") {
-				const pos = token.position % (sides.value * 17);
-				const trackCell = coordsMap.track[pos] as any;
-				if (trackCell) {
-					const occupantsList = trackOccupants.get(pos) || [];
-					const occupants = occupantsList.length;
-					const myIndexInCell = occupantsList.findIndex(o => o.userId === player.userId && o.tokenId === token.id);
-					
-					let offsetX = 0;
-					let offsetY = 0;
-					if (occupants > 1) {
-						const offsets = [
-							{x: -12, y: -12},
-							{x: 12, y: 12},
-							{x: -12, y: 12},
-							{x: 12, y: -12},
-							{x: 0, y: -16},
-							{x: 0, y: 16},
-							{x: -16, y: 0},
-							{x: 16, y: 0}
-						];
-							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
-							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;
-					}
-					
-					tokenCoords = { x: trackCell.x + offsetX, y: trackCell.y + offsetY };
-				}
-			} else if (token.state === "META") {
-				const corridorCell = coordsMap.meta[baseP]?.[token.position] as any;
-				if (corridorCell) {
-					const occupantsList = metaOccupants.get(player.color)?.get(token.position) || [];
-					const occupants = occupantsList.length;
-					const myIndexInCell = occupantsList.findIndex(o => o.userId === player.userId && o.tokenId === token.id);
-					
-					let offsetX = 0;
-					let offsetY = 0;
-					if (occupants > 1) {
-						const offsets = [
-							{x: -8, y: -8},
-							{x: 8, y: 8},
-							{x: -8, y: 8},
-							{x: 8, y: -8}
-						];
-							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
-							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;
-					}
-					tokenCoords = { x: corridorCell.x + offsetX, y: corridorCell.y + offsetY };
-				}
-			}
-
-			tokens.push({
-				player,
-				token,
-				data: {
-					id: token.id,
-					color: colorPalette[baseP] || '#9ca3af',
-					ownerId: player.userId,
-					position: token.position,
-					state: token.state,
-				},
-				coords: tokenCoords,
-			});
-		});
-	});
-	return tokens;
 });
 </script>
 

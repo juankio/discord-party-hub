@@ -1,10 +1,10 @@
 <template>
-  <div class="flex-1 flex justify-center items-end relative z-10 w-full pt-16 pb-4 sm:pt-16 sm:pb-6">
+  <div class="flex-1 flex justify-center items-end relative z-10 w-full pt-28 pb-8 sm:pt-48 sm:pb-6">
     <!-- Contenedor Maestro de la Mesa y Órbita -->
-    <div class="relative mx-auto w-full shrink-0 max-h-[45vh] sm:max-h-[50vh] aspect-[1/1.1] sm:aspect-[2.2/1] max-w-[min(100%,calc(45vh*0.9))] sm:max-w-[min(1000px,calc(50vh*2.2))]">
+    <div class="relative mx-auto w-full shrink-0 h-[45vh] sm:h-auto sm:max-h-[45vh] sm:aspect-[2/1] max-w-full sm:max-w-[min(1000px,calc(45vh*2))]">
       
       <!-- Table Layer (Tapete de Madera) -->
-      <div class="absolute inset-x-2 sm:inset-x-6 top-[15%] bottom-[5%] sm:top-[12%] sm:bottom-[8%] bg-[#991b1b] rounded-[40px] sm:rounded-[80px] lg:rounded-[100px] border-[6px] sm:border-[10px] lg:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex flex-row items-center justify-center gap-4 sm:gap-8 overflow-hidden z-10">
+      <div class="absolute inset-x-14 sm:inset-x-24 top-[25%] bottom-[20%] sm:top-[30%] sm:bottom-0 bg-[#991b1b] rounded-[40px] sm:rounded-[80px] lg:rounded-[100px] border-[6px] sm:border-[10px] lg:border-[12px] border-[#5c3a21] shadow-[inset_0_0_40px_rgba(0,0,0,0.8),_0_20px_40px_rgba(0,0,0,0.6)] flex flex-row items-center justify-center gap-4 sm:gap-8 overflow-hidden z-10">
         
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 8px 8px;"/>
 

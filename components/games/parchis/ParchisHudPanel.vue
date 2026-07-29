@@ -37,7 +37,7 @@
         </div>
 
         <!-- Zona Central: Dados y Move Text -->
-        <div class="flex flex-col items-center justify-center gap-1 sm:gap-1.5 relative z-10 min-h-[50px] flex-1 sm:flex-none xl:w-full">
+        <div v-if="parchisStore.gameState === 'PLAYING'" class="flex flex-col items-center justify-center gap-1 sm:gap-1.5 relative z-10 min-h-[50px] flex-1 sm:flex-none xl:w-full">
           <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
           
           <div class="h-[20px] sm:h-[24px] flex items-center justify-center"> <!-- Espacio fijo UI -->
@@ -65,6 +65,7 @@
 
         <!-- Botón de Tirar Dados -->
         <button 
+          v-if="parchisStore.gameState === 'PLAYING'"
           @click="rollDice"
           :disabled="!parchisStore.isMyTurn || parchisStore.availableMoves.length > 0"
           :class="[

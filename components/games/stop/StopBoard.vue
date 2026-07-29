@@ -35,26 +35,29 @@
           <span class="text-8xl md:text-9xl font-black text-red-600 border-8 border-red-600 px-4 rounded-xl drop-shadow-lg">¡TIEMPO!</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 mt-6 relative z-10">
-          <div 
-            v-for="(cat, idx) in categories" 
-            :key="idx"
-            class="group flex flex-col gap-1 border-b-4 border-blue-300/40 relative"
-          >
-            <!-- Lineas de cuaderno -->
-            <div class="absolute bottom-0 w-full h-px bg-blue-300/60"></div>
-            
-            <label class="text-[#8c6b5d] font-black uppercase tracking-widest text-xs sm:text-sm pl-2">{{ cat }}</label>
-            <input 
-              v-model="answers[cat]" 
-              :disabled="isRolling || isFinished || panicMode || localFinished"
-              type="text"
-              class="w-full bg-transparent border-none outline-none text-[#2d201a] font-bold text-xl sm:text-2xl px-2 py-1 placeholder:text-[#bca495] placeholder:italic disabled:opacity-50 uppercase"
-              placeholder="..."
-              @input="checkCompletion"
-              autocomplete="off"
-              spellcheck="false"
-            />
+        <!-- Contenedor scrolleable de categorías -->
+        <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar-notebook pr-2 mt-6 relative z-10">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+            <div 
+              v-for="(cat, idx) in categories" 
+              :key="idx"
+              class="group flex flex-col gap-1 border-b-4 border-blue-300/40 relative"
+            >
+              <!-- Lineas de cuaderno -->
+              <div class="absolute bottom-0 w-full h-px bg-blue-300/60"></div>
+              
+              <label class="text-[#8c6b5d] font-black uppercase tracking-widest text-xs sm:text-sm pl-2">{{ cat }}</label>
+              <input 
+                v-model="answers[cat]" 
+                :disabled="isRolling || isFinished || panicMode || localFinished"
+                type="text"
+                class="w-full bg-transparent border-none outline-none text-[#2d201a] font-bold text-xl sm:text-2xl px-2 py-1 placeholder:text-[#bca495] placeholder:italic disabled:opacity-50 uppercase"
+                placeholder="..."
+                @input="checkCompletion"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
           </div>
         </div>
         
@@ -65,17 +68,13 @@
       </div>
 
       <!-- STOP Button -->
-      <div class="mt-4 flex justify-center pb-8 relative z-20">
+      <div class="mt-4 flex justify-center pb-8 relative z-20 shrink-0">
         <button 
           ref="stopBtn"
-          @click="callStop"
+          @click.prevent="callStop"
           :disabled="!canStop || isRolling || isFinished || panicMode || localFinished"
-          class="relative w-full sm:w-[400px] h-[80px] rounded-3xl text-2xl sm:text-3xl font-black uppercase tracking-[0.2em] transition-all duration-100 flex items-center justify-center border-t-4 border-white/20 disabled:border-t-0"
-          :class="canStop && !isFinished && !panicMode && !localFinished ? 'bg-[#dc2626] text-white hover:bg-[#b91c1c] shadow-[0_8px_0_#7f1d1d,0_15px_20px_rgba(0,0,0,0.5)] cursor-pointer' : 'bg-[#3a2212] text-[#cdab84] shadow-[0_8px_0_#2a180c,0_15px_20px_rgba(0,0,0,0.5)] cursor-not-allowed opacity-80'"
-          style="transform: translateY(0);"
-          onmousedown="if(!this.disabled) { this.style.transform='translateY(8px)'; this.style.boxShadow='0 0px 0 #7f1d1d, 0 5px 10px rgba(0,0,0,0.4)'; }"
-          onmouseup="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #7f1d1d, 0 15px 20px rgba(0,0,0,0.5)'; }"
-          onmouseleave="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #7f1d1d, 0 15px 20px rgba(0,0,0,0.5)'; }"
+          class="relative w-full sm:w-[400px] h-[80px] rounded-3xl text-2xl sm:text-3xl font-black uppercase tracking-[0.2em] transition-all duration-150 flex items-center justify-center border-t-4 border-white/20 disabled:border-t-0 active:scale-95"
+          :class="canStop && !isFinished && !panicMode && !localFinished ? 'bg-gradient-to-b from-[#ef4444] to-[#b91c1c] text-white hover:from-[#f87171] hover:to-[#dc2626] shadow-[0_8px_0_#7f1d1d,0_15px_20px_rgba(220,38,38,0.5)] active:translate-y-[8px] active:shadow-[0_0px_0_#7f1d1d,0_5px_10px_rgba(220,38,38,0.4)] cursor-pointer ring-4 ring-red-400/50' : 'bg-[#3a2212] text-[#cdab84] shadow-[0_8px_0_#2a180c,0_15px_20px_rgba(0,0,0,0.5)] cursor-not-allowed opacity-80'"
         >
           <span class="relative z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{{ panicMode ? 'RECOLECTANDO...' : (localFinished ? '¡ESPERANDO!' : '¡Basta para Mí!') }}</span>
         </button>
@@ -136,6 +135,16 @@ const checkCompletion = () => {
 const callStop = () => {
   if (canStop.value && !props.isFinished && !props.panicMode && !localFinished.value) {
     localFinished.value = true
+    if (stopBtn.value) {
+      anime.remove(stopBtn.value)
+      anime({
+        targets: stopBtn.value,
+        scale: 0.95,
+        duration: 100,
+        easing: 'easeOutQuad',
+        direction: 'alternate'
+      })
+    }
     emit('stop_call', answers.value)
   }
 }
@@ -147,3 +156,19 @@ watch(() => props.letter, (newVal, oldVal) => {
   }
 })
 </script>
+
+<style scoped>
+.custom-scrollbar-notebook::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar-notebook::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar-notebook::-webkit-scrollbar-thumb {
+  background: #c9b29a;
+  border-radius: 4px;
+}
+.custom-scrollbar-notebook::-webkit-scrollbar-thumb:hover {
+  background: #bca495;
+}
+</style>
