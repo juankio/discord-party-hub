@@ -86,7 +86,15 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
 <script setup lang="ts">
 import { useAppAudio } from '~/composables/useAppAudio';
 
-const { playSelectUno, stopSelectUno, playSelectParchis, stopSelectParchis, playSelectStop, stopSelectStop, playUiClick } = useAppAudio();
+const { 
+  playSelectUno, stopSelectUno, 
+  playSelectParchis, stopSelectParchis, 
+  playSelectStop, stopSelectStop, 
+  playSelectImpostor, stopSelectImpostor,
+  playSelectLiars, stopSelectLiars,
+  playSelectPinturillo, stopSelectPinturillo,
+  playUiClick 
+} = useAppAudio();
 
 const props = defineProps({
   games: { type: Array as () => any[], required: true },
@@ -101,6 +109,9 @@ const selectGame = (gameId: string) => {
     stopSelectUno();
     stopSelectParchis();
     stopSelectStop();
+    stopSelectImpostor();
+    stopSelectLiars();
+    stopSelectPinturillo();
 
     if (gameId === 'uno') {
       playSelectUno();
@@ -108,6 +119,12 @@ const selectGame = (gameId: string) => {
       playSelectParchis();
     } else if (gameId === 'stop') {
       playSelectStop();
+    } else if (gameId === 'impostor') {
+      playSelectImpostor();
+    } else if (gameId === 'liars') {
+      playSelectLiars();
+    } else if (gameId === 'pinturillo') {
+      playSelectPinturillo();
     } else {
       playUiClick();
     }

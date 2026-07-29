@@ -85,7 +85,7 @@ const emit = defineEmits<{
   (e: 'change-seat', seatIndex: number): void
 }>()
 
-const { playBot, playCopyLink } = useAppAudio()
+const { playBot, playCopyLink, playSeatMove, playTableExpand, playTableShrink } = useAppAudio()
 const handleAddBot = () => { playBot(); emit('add-bot', 5) }
 
 const toast = useToast()
@@ -146,6 +146,13 @@ const getAvatarPosition = (index: number, total: number) => {
   // para que si el jugador cambia a la silla 3, se vea físicamente viajar a la silla 3.
   return getAvatarPositionLogic(index, total, 0)
 }
+
+watch(() => paddedPlayers.value.length, (newLen, oldLen) => {
+  if (oldLen > 0) {
+    if (newLen > oldLen) playTableExpand();
+    else if (newLen < oldLen) playTableShrink();
+  }
+});
 
 onMounted(() => {
   anime({

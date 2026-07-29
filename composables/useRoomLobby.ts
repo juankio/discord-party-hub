@@ -10,7 +10,7 @@ export const useRoomLobby = (roomId: string) => {
   const playerStore = usePlayerStore();
   const { socket } = useSocket();
   const toast = useToast();
-  const { playCountdown, playBotConfig } = useAppAudio();
+  const { playCountdown, playBotConfig, playSeatMove } = useAppAudio();
 
   const isStarting = ref(false);
 
@@ -80,6 +80,7 @@ export const useRoomLobby = (roomId: string) => {
   };
 
   const changeSeat = (targetSeatIndex: number) => {
+    playSeatMove();
     socket.value?.emit("change_seat", { targetSeatIndex });
   };
 

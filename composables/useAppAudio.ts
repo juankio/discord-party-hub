@@ -9,6 +9,9 @@ export const useAppAudio = () => {
   const { play: playJoinRoom } = useGameSound('/sounds/lobby/join_room.ogg')
   const { play: playTabSwitch } = useGameSound('/sounds/lobby/tab_switch.ogg')
   const { play: playEnterLobby } = useGameSound('/sounds/lobby/enter_lobby.ogg')
+  const { play: playSeatMove } = useGameSound('/sounds/parchis/move.ogg')
+  const { play: playTableExpand } = useGameSound('/sounds/lobby/table_expand.ogg')
+  const { play: playTableShrink } = useGameSound('/sounds/lobby/table_shrink.ogg')
 
   // Nuevos sonidos del Lobby
   const { play: playBot } = useGameSound('/sounds/lobby/bot_add.ogg?v=5')
@@ -23,12 +26,15 @@ export const useAppAudio = () => {
   const { play: playSelectUno, stop: stopSelectUno } = useGameSound('/sounds/lobby/select_uno.ogg?v=4')
   const { play: playSelectParchis, stop: stopSelectParchis } = useGameSound('/sounds/lobby/select_parchis.ogg?v=4')
   const { play: playSelectStop, stop: stopSelectStop } = useGameSound('/sounds/lobby/select_stop.ogg?v=4')
+  const { play: playSelectImpostor, stop: stopSelectImpostor } = useGameSound('/sounds/lobby/select_impostor.ogg')
+  const { play: playSelectLiars, stop: stopSelectLiars } = useGameSound('/sounds/lobby/select_liars.ogg')
+  const { play: playSelectPinturillo, stop: stopSelectPinturillo } = useGameSound('/sounds/lobby/select_pinturillo.ogg')
 
   return { 
     playJoin, playStart, playUiClick, 
-    playCreateRoom, playJoinRoom, playTabSwitch, playEnterLobby,
+    playCreateRoom, playJoinRoom, playTabSwitch, playEnterLobby, playSeatMove, playTableExpand, playTableShrink,
     playBot, playBotConfig, playBotDifficulty, playBotKick, playCopyLink, playSettings, playEditProfile, playCountdown, 
-    playSelectUno, playSelectParchis, playSelectStop, 
-    stopSelectUno, stopSelectParchis, stopSelectStop 
+    playSelectUno, playSelectParchis, playSelectStop, playSelectImpostor, playSelectLiars, playSelectPinturillo, 
+    stopSelectUno, stopSelectParchis, stopSelectStop, stopSelectImpostor, stopSelectLiars, stopSelectPinturillo 
   }
 }
