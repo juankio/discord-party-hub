@@ -52,11 +52,12 @@
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
 import { useAppAudio } from '~/composables/useAppAudio'
-import anime from 'animejs'
+import { useTheme } from '~/composables/useTheme'
 
-const router = useRouter()
+const emit = defineEmits(['redirecting'])
 const playerStore = usePlayerStore()
 const { playTabSwitch, playCreateRoom, playJoinRoom } = useAppAudio()
+const { updateThemeColors } = useTheme()
 
 const avatarId = ref(playerStore.avatarId || 1)
 const nickname = ref(playerStore.nickname || '')
@@ -78,15 +79,7 @@ const isValid = computed(() => {
 
 watch(selectedColor, (newColor) => {
   playerStore.color = newColor
-  if (typeof window !== 'undefined') {
-    const hexToRgb = (hex: string) => {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? `${parseInt(result[1]!, 16)}, ${parseInt(result[2]!, 16)}, ${parseInt(result[3]!, 16)}` : '249, 115, 22';
-    }
-    document.documentElement.style.setProperty('--theme-color', newColor)
-    document.documentElement.style.setProperty('--theme-color-rgb', hexToRgb(newColor))
-    document.documentElement.style.setProperty('--theme-text-color', newColor.toLowerCase() === '#ffffff' ? '#000000' : '#ffffff')
-  }
+  updateThemeColors(newColor)
 })
 
 const savePlayerAndRedirect = (roomId: string) => {
@@ -94,17 +87,7 @@ const savePlayerAndRedirect = (roomId: string) => {
     playerStore.setPlayerSetup(nickname.value.trim(), avatarId.value, selectedColor.value)
   }
   
-  anime({
-    targets: ['.main-container', '.header-anim'],
-    opacity: 0,
-    translateY: -30,
-    scale: 0.95,
-    duration: 400,
-    easing: 'easeInQuad',
-    complete: () => {
-      router.push(`/sala/${roomId.toUpperCase()}`)
-    }
-  })
+  emit('redirecting', roomId)
 }
 
 const handleCreateRoom = async () => {

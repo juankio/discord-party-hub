@@ -4,7 +4,7 @@
       <div class="bg-[#8b5a2b] rounded-b-3xl border-4 border-t-0 border-[#5c3a21] p-6 pt-8 shadow-sm relative flex flex-col gap-6">
         
         <!-- Categorias Grid -->
-        <StopCategoriesEditor v-model:rules="rules" />
+        <StopCategoriesEditor v-model:rules="rules" @change="$emit('change')" />
 
         <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
 
@@ -43,6 +43,7 @@
               v-model.number="rules.stopRounds" 
               min="1" 
               max="10" 
+              @change="$emit('change')"
               class="w-full h-4 bg-[#2a1a0f] rounded-full outline-none appearance-none border-2 border-[#1a0f08] shadow-inner"
               style="--thumb-color: #f97316;"
             />
@@ -61,7 +62,7 @@
             <button 
               v-for="time in [15, 30, 45, 60]" 
               :key="time"
-              @click="rules.verificationTime = time"
+              @click="rules.verificationTime = time; $emit('change')"
               class="flex-1 py-2 rounded-lg border-2 font-black text-xs sm:text-sm flex items-center justify-center transition-all shadow-sm"
               :class="rules.verificationTime === time 
                 ? 'bg-[#991b1b] border-[#7f1d1d] text-white shadow-inner scale-105' 
@@ -80,6 +81,7 @@
 <script setup lang="ts">
 
 const rules = defineModel<any>('rules', { required: true })
+const emit = defineEmits(['change'])
 defineProps({ isOpen: { type: Boolean, default: false } })
 
 // Init default values if missing
@@ -109,6 +111,7 @@ const toggleBannedLetter = (letter: string) => {
       bannedLetters: rules.value.bannedLetters.filter((_: any, i: number) => i !== index) 
     }
   }
+  emit('change')
 }
 </script>
 

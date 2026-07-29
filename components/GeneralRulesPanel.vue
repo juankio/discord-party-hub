@@ -24,7 +24,7 @@
                 :class="rules[key] ? 'right-0' : 'left-0'"/>
             </div>
             
-            <input v-model="rules[key]" type="checkbox" :disabled="!isHost" class="hidden" >
+            <input v-model="rules[key]" @change="$emit('change')" type="checkbox" :disabled="!isHost" class="hidden" >
           </label>
         </div>
       </div>
@@ -36,6 +36,8 @@
 import { watchEffect } from 'vue';
 
 const rules = defineModel<any>('rules', { required: true, default: () => ({}) })
+
+defineEmits(['change']);
 
 defineProps({
   isHost: { type: Boolean, default: false },

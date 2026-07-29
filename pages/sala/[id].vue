@@ -33,10 +33,8 @@
 
         <button 
           :disabled="tempNickname.trim().length < 2"
-          class="w-full disabled:opacity-50 disabled:cursor-not-allowed px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 mt-2"
-          style="background-color: var(--theme-color); color: var(--theme-text-color, white); box-shadow: 0 0 15px rgba(var(--theme-color-rgb), 0.3);"
-          onmouseover="if(!this.disabled) { this.style.filter='brightness(1.1)'; this.style.boxShadow='0 0 20px rgba(var(--theme-color-rgb), 0.5)'; }"
-          onmouseout="if(!this.disabled) { this.style.filter='none'; this.style.boxShadow='0 0 15px rgba(var(--theme-color-rgb), 0.3)'; }"
+          class="w-full disabled:opacity-50 disabled:cursor-not-allowed px-7 py-3.5 rounded-full font-bold transition-all duration-300 hover:scale-105 active:scale-95 mt-2 hover:brightness-110 shadow-[0_0_15px_rgba(var(--theme-color-rgb),0.3)] hover:shadow-[0_0_20px_rgba(var(--theme-color-rgb),0.5)]"
+          style="background-color: var(--theme-color); color: var(--theme-text-color, white);"
           @click="saveAndJoin"
         >
           Entrar a Jugar
@@ -65,9 +63,13 @@ const tempNickname = ref('')
 const tempAvatarId = ref(1)
 const tempColor = ref('#f97316')
 
+useHead({
+  bodyAttrs: {
+    style: 'background-color: #0A0A0A'
+  }
+})
+
 onMounted(() => {
-  document.body.style.backgroundColor = '#0A0A0A'
-  
   // Limpiar el estado de la sala anterior para evitar "fantasmas" visuales
   playerStore.updateRoomState([], '')
   
@@ -102,12 +104,7 @@ const initRoom = () => {
   socket.value?.on('game_started', (data) => {
     // Solo redirige si estamos en el lobby
     if (route.path.replace(/\/$/, '') === `/sala/${roomId}`) {
-      document.body.style.transition = 'opacity 0.5s'
-      document.body.style.opacity = '0'
-      setTimeout(() => {
-        router.push(`/sala/${roomId}/${data.gameType}`)
-        setTimeout(() => { document.body.style.opacity = '1' }, 100)
-      }, 500)
+      router.push(`/sala/${roomId}/${data.gameType}`)
     }
   })
 }

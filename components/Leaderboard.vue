@@ -7,7 +7,9 @@
       <h2 class="text-yellow-500 font-bold tracking-widest uppercase text-sm">Top Global</h2>
     </div>
 
-    <div v-if="pending" class="flex flex-col gap-2"><div class="text-center py-4 text-gray-500 text-xs">Cargando campeones...</div></div>
+    <div v-if="pending" class="flex flex-col gap-2">
+      <USkeleton v-for="i in 5" :key="i" class="h-[42px] w-full rounded-lg bg-white/5" />
+    </div>
     <div v-else-if="error" class="flex flex-col gap-2"><div class="text-center py-4 text-red-500 text-xs">Error al cargar</div></div>
     <div v-else class="flex flex-col gap-2">
       <div

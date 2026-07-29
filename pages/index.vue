@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden relative">
     
     <!-- Header Decorativo -->
-    <div class="absolute top-12 text-center header-anim opacity-0 -translate-y-5">
+    <div ref="headerEl" class="absolute top-12 text-center opacity-0 -translate-y-5">
       <h1 class="text-4xl md:text-5xl font-black text-white pb-1 tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
         PARTY HUB
       </h1>
@@ -10,10 +10,10 @@
     </div>
 
     <!-- Contenedor Principal y Leaderboard -->
-    <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 mt-16 w-full max-w-5xl relative z-10 main-container opacity-0 translate-y-5">
+    <div ref="mainContainerEl" class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 mt-16 w-full max-w-5xl relative z-10 opacity-0 translate-y-5">
       
       <!-- Tarjeta Principal -->
-      <HomeCard />
+      <HomeCard @redirecting="handleRedirect" />
 
       <!-- Leaderboard -->
       <Leaderboard />
@@ -25,25 +25,51 @@
 <script setup lang="ts">
 import anime from 'animejs'
 
+const router = useRouter()
+const headerEl = ref(null)
+const mainContainerEl = ref(null)
+
+const handleRedirect = (roomId: string) => {
+  anime({
+    targets: [mainContainerEl.value, headerEl.value],
+    opacity: 0,
+    translateY: -30,
+    scale: 0.95,
+    duration: 400,
+    easing: 'easeInQuad',
+    complete: () => {
+      router.push(`/sala/${roomId.toUpperCase()}`)
+    }
+  })
+}
+
+useHead({
+  bodyAttrs: {
+    style: 'background-color: #0A0A0A'
+  }
+})
+
 onMounted(() => {
-  document.body.style.backgroundColor = '#0A0A0A'
-  
-  anime({
-    targets: '.header-anim',
-    opacity: [0, 1],
-    translateY: [-20, 0],
-    duration: 800,
-    easing: 'easeOutExpo'
-  })
-  anime({
-    targets: '.main-container',
-    scale: [0.9, 1],
-    opacity: [0, 1],
-    translateY: [20, 0],
-    duration: 800,
-    delay: 100,
-    easing: 'easeOutExpo'
-  })
+  if (headerEl.value) {
+    anime({
+      targets: headerEl.value,
+      opacity: [0, 1],
+      translateY: [-20, 0],
+      duration: 800,
+      easing: 'easeOutExpo'
+    })
+  }
+  if (mainContainerEl.value) {
+    anime({
+      targets: mainContainerEl.value,
+      scale: [0.9, 1],
+      opacity: [0, 1],
+      translateY: [20, 0],
+      duration: 800,
+      delay: 100,
+      easing: 'easeOutExpo'
+    })
+  }
 })
 </script>
 
