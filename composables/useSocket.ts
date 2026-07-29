@@ -5,9 +5,6 @@ import { useRouter, useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
-import { useUnoStore } from '~/stores/games/unoStore'
-import { useStopStore } from '~/stores/games/stopStore'
-import { useParchisStore } from '~/stores/games/parchisStore'
 import { useAppAudio } from '~/composables/useAppAudio'
 
 const socket = ref<Socket | null>(null)
@@ -53,17 +50,6 @@ export const useSocket = () => {
       playStart()
     })
 
-    socket.value.on('game_state_update', (data) => {
-      const selectedGame = playerStore.selectedGame;
-      if (selectedGame === 'uno') {
-        useUnoStore().updateState(data)
-      } else if (selectedGame === 'stop') {
-        useStopStore().updateState(data)
-      } else if (selectedGame === 'parchis') {
-        useParchisStore().updateState(data)
-      }
-    })
-
     socket.value.on('game_action', (data) => {
       // Usaremos un custom event para que los componentes puedan reaccionar a acciones físicas
       try {
@@ -75,10 +61,6 @@ export const useSocket = () => {
       if (userId === playerStore.userId) {
         playerStore.incrementWin()
       }
-    })
-
-    socket.value.on('uno:rival_hover', (data) => {
-      useUnoStore().setRivalHover(data.userId, data.index)
     })
 
     socket.value.on('return_to_lobby', () => {
