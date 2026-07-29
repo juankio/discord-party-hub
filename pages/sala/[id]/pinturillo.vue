@@ -1,12 +1,27 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center p-4">
-    <h1 class="text-4xl font-black text-white capitalize drop-shadow-md mb-4">pinturillo</h1>
-    <p class="text-gray-400">Cargando motor del juego...</p>
-    <UButton color="gray" variant="soft" class="mt-8" @click="$router.push(`/sala/${roomId}`)">Volver a la mesa</UButton>
+  <div class="min-h-screen bg-[#2c1f18] relative">
+    <GameExitButton @leave="$router.push(`/sala/${roomId}`)" />
+    <PinturilloBoard 
+      v-if="state && playerStore.userId" 
+      :game-state="state" 
+      :my-user-id="playerStore.userId"
+      :strokes-to-render="strokesToRender" 
+      @draw="handleAction.draw" 
+      @choose-word="handleAction.chooseWord"
+      @leave="$router.push(`/sala/${roomId}`)"
+    />
+    <div v-else class="text-white text-center pt-20">Colocando el lienzo...</div>
   </div>
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
-const roomId = route.params.id as string
+import { useRoute } from 'vue-router';
+import { usePinturilloEngine } from '~/composables/usePinturilloEngine';
+import PinturilloBoard from '~/components/games/pinturillo/PinturilloBoard.vue';
+import { usePlayerStore } from '~/stores/playerStore';
+
+const route = useRoute();
+const roomId = route.params.id as string;
+const { state, strokesToRender, handleAction } = usePinturilloEngine(roomId);
+const playerStore = usePlayerStore();
 </script>
