@@ -28,7 +28,8 @@
           :value="roomCode"
           type="text"
           placeholder="CÓDIGO (5 LETRAS)"
-          class="flex-1 bg-black text-white px-4 py-3 rounded-2xl outline-none focus:ring-1 focus:ring-orange-500/50 transition-all font-mono font-bold tracking-[0.2em] text-center uppercase"
+          class="flex-1 bg-black text-white px-4 py-3 rounded-2xl outline-none focus:ring-1 transition-all font-mono font-bold tracking-[0.2em] text-center uppercase"
+          style="--tw-ring-color: rgba(var(--theme-color-rgb), 0.5);"
           maxlength="5"
           @input="$emit('update:roomCode', ($event.target as HTMLInputElement).value)"
         >

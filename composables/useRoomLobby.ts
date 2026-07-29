@@ -79,6 +79,10 @@ export const useRoomLobby = (roomId: string) => {
     socket.value?.emit("kick_bot", { botId });
   };
 
+  const changeSeat = (targetSeatIndex: number) => {
+    socket.value?.emit("change_seat", { targetSeatIndex });
+  };
+
   return {
     players,
     isHost,
@@ -89,6 +93,7 @@ export const useRoomLobby = (roomId: string) => {
     leaveRoom,
     addBot,
     updateBotConfig,
-    kickBot
+    kickBot,
+    changeSeat
   };
 };

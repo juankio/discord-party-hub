@@ -19,6 +19,7 @@
             :selected-game="selectedGame" 
             @add-bot="addBot" 
             @avatar-click="handleAvatarClick" 
+            @change-seat="changeSeat"
           />
 
           <div class="block lg:hidden w-full max-w-md mx-auto">
@@ -86,7 +87,7 @@ const { playSettings, playEditProfile } = useAppAudio();
 
 const { 
   players, isHost, isStarting, selectedGame, 
-  emitRules, startGame, leaveRoom, addBot, updateBotConfig, kickBot 
+  emitRules, startGame, leaveRoom, addBot, updateBotConfig, kickBot, changeSeat
 } = useRoomLobby(roomId.value);
 
 useSeoMeta({

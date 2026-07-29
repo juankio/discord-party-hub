@@ -4,15 +4,15 @@
       <h3 class="text-white/30 mb-2 lg:mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
       
       <!-- Estante de Billar -->
-      <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
-        <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"/>
+      <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] py-4 px-2 sm:px-4 shadow-xl z-20 flex flex-col justify-center">
+        <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-inner"/>
         <GameSelector :games="games" :selected-game="selectedGame" @select="$emit('update:selectedGame', $event)" />
       </div>
 
       <div class="flex flex-row justify-center items-start -mt-2 relative z-10 mx-auto w-full max-w-lg px-8 sm:px-12">
         <button 
           @click="$emit('toggle-general')"
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-[0_8px_15px_rgba(0,0,0,0.5)]"
+          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg"
         >
           <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ AJUSTES GENERALES</span>
           <UIcon :name="isGeneralRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
@@ -20,7 +20,7 @@
 
         <button 
           @click="$emit('toggle-table')"
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-[0_8px_15px_rgba(0,0,0,0.5)]"
+          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg"
         >
           <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ REGLAS DE LA MESA</span>
           <UIcon :name="isTableRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
