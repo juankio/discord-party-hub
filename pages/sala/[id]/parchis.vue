@@ -11,7 +11,7 @@ const { state, playerState, handleAction, exitGame } = useParchisEngine(roomId)
 </script>
 
 <template>
-  <div class="relative w-full h-full min-h-[80vh] flex flex-col p-4 md:p-8">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col p-4 md:p-8 relative">
     <GameExitButton @leave="exitGame" />
 
     <!-- Overlay de Selección de Fichas -->

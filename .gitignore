@@ -37,3 +37,4 @@ mobile_qa.mjs
 run_tests.js
 test.js
 test-env.mjs
+.logs/

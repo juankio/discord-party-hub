@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col items-center pt-8 md:pt-16 p-4">
-    <div class="w-full max-w-6xl">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col items-center pt-8 md:pt-16 p-4">
+    <div class="w-full max-w-6xl flex-1 overflow-y-auto">
       <LobbyHeader 
         :room-id="roomId" 
         :players-count="players.length" 

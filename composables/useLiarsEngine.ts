@@ -11,6 +11,7 @@ export const useLiarsEngine = (roomId: string) => {
 
   onMounted(() => {
     socket.value?.on('game_state_update', handleUpdate);
+    socket.value?.emit('request_game_state');
   });
 
   onUnmounted(() => {

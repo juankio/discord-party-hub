@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
 import { useAppAudio } from '~/composables/useAppAudio'
+import { useTheme } from '~/composables/useTheme'
 
 const route = useRoute()
 const router = useRouter()
@@ -54,6 +55,7 @@ const playerStore = usePlayerStore()
 const config = useRuntimeConfig()
 const { connect, disconnect, socket } = useSocket()
 const { playEnterLobby } = useAppAudio()
+const { updateThemeColors } = useTheme()
 
 const roomId = route.params.id as string
 const showSetupModal = ref(false)
@@ -62,6 +64,10 @@ const hasSetup = ref(false)
 const tempNickname = ref('')
 const tempAvatarId = ref(1)
 const tempColor = ref('#f97316')
+
+watch(tempColor, (newColor) => {
+  updateThemeColors(newColor)
+})
 
 useHead({
   bodyAttrs: {

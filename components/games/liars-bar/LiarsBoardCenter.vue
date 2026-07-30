@@ -34,7 +34,7 @@
 
     <!-- RESOLUTION -->
     <div v-else-if="gameState === 'RESOLUTION'" class="bg-[#8b2323]/95 text-red-50 p-6 md:p-10 rounded-xl border-4 border-[#4a1212] shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_0_30px_rgba(0,0,0,0.5)] text-center animate-in zoom-in duration-300">
-      <h2 class="text-4xl md:text-6xl font-black uppercase tracking-widest mb-4 drop-shadow-[0_5px_5px_rgba(0,0,0,0.9)] text-red-100">¡RESULTADO!</h2>
+      <h2 class="text-3xl md:text-6xl font-black uppercase tracking-widest mb-4 drop-shadow-[0_5px_5px_rgba(0,0,0,0.9)] text-red-100">¡RESULTADO!</h2>
       
       <div class="bg-black/30 rounded p-4 mb-4 border border-red-950 shadow-inner">
         <p class="text-xl md:text-3xl font-bold text-red-200 uppercase tracking-wide">

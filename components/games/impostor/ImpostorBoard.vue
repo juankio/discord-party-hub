@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import type { ImpostorPrivateState } from '../../../../discord-party-hub-backend/src/games/impostor/ImpostorTypes';
 import ImpostorCard from './ImpostorCard.vue';
 import ImpostorDiscussion from './ImpostorDiscussion.vue';
 import ImpostorVoting from './ImpostorVoting.vue';
 import ImpostorResults from './ImpostorResults.vue';
+import { useImpostorAudio } from '@/composables/useImpostorAudio';
 
 const props = defineProps<{
   gameState: ImpostorPrivateState;
@@ -18,19 +19,31 @@ const emit = defineEmits<{
 }>();
 
 const currentState = computed(() => props.gameState?.state || 'WAITING');
+
+const { playReveal, playVote, playResults } = useImpostorAudio();
+
+watch(() => props.gameState?.state, (newState) => {
+  if (newState === 'WORDS_REVEALED') {
+    playReveal();
+  } else if (newState === 'VOTING') {
+    playVote();
+  } else if (newState === 'RESULTS') {
+    playResults();
+  }
+});
 </script>
 
 <template>
-  <div class="relative w-full h-full min-h-[600px] flex items-center justify-center bg-[#8b5a2b] p-6 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] overflow-hidden font-mono text-[#3e2723]">
+  <div class="relative w-full h-full flex-1 flex flex-col items-center justify-center bg-[#8b5a2b] p-6 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] overflow-hidden font-mono text-[#3e2723]">
     <!-- Wooden Table Background Texture (CSS grid/stripes) -->
     <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 42px);"></div>
     
-    <div class="relative z-10 w-full max-w-4xl">
+    <div class="relative z-10 w-full max-w-4xl overflow-y-auto max-h-full">
       <!-- State Routing -->
       <transition name="fade-slide" mode="out-in">
         <!-- WAITING -->
         <div v-if="currentState === 'WAITING'" key="waiting" class="bg-[#f4e4bc] border-4 border-[#3e2723] border-b-[8px] p-8 rounded-sm shadow-[8px_8px_0_rgba(0,0,0,0.5)] flex flex-col items-center">
-          <h2 class="text-4xl font-black mb-6 uppercase tracking-widest border-b-4 border-[#3e2723] pb-2">Investigación Pendiente</h2>
+          <h2 class="text-2xl md:text-4xl font-black mb-6 uppercase tracking-widest border-b-4 border-[#3e2723] pb-2">Investigación Pendiente</h2>
           <p class="text-xl mb-8 font-bold">Esperando que el director del buró inicie el caso...</p>
           <div class="flex flex-wrap gap-4 justify-center">
             <div v-for="p in gameState?.players || []" :key="p.userId || p.id" class="flex flex-col items-center p-3 border-2 border-[#3e2723] border-b-4 bg-[#e8d5a5] shadow-[4px_4px_0_rgba(0,0,0,0.3)] transform -rotate-2">

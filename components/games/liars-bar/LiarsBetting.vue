@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import LiarsBettingControls from './LiarsBettingControls.vue';
+import { useLiarsAudio } from '@/composables/useLiarsAudio';
 
 const props = defineProps<{
   currentBet?: { amount: number, face: number } | null;
@@ -132,14 +133,18 @@ const decrementFace = () => {
   }
 };
 
+const { playBet, playCall } = useLiarsAudio();
+
 const onPlaceBet = () => {
   if (isValidBet.value) {
+    playBet();
     emit('place-bet', { amount: amount.value, face: face.value });
   }
 };
 
 const onCallLiar = () => {
   if (canCallLiar.value) {
+    playCall();
     emit('call-liar');
   }
 };

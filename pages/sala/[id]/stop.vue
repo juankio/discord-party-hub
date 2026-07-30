@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-screen flex flex-col bg-transparent overflow-hidden text-white font-sans">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col bg-transparent relative text-white font-sans">
     <!-- Top Bar actions -->
     <div class="absolute top-4 left-4 z-50 flex gap-4">
       <GameExitButton @leave="exitGame" />

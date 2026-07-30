@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen p-4 sm:p-8 flex flex-col text-white relative z-10" style="color: var(--theme-text-color, white);">
+  <div class="h-full w-full flex-1 p-4 sm:p-8 flex flex-col text-white relative z-10 overflow-hidden" style="color: var(--theme-text-color, white);">
     
     <div class="w-full max-w-5xl mx-auto flex-1 flex flex-col gap-6">
       

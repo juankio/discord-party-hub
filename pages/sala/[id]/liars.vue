@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#1a1a1a] relative">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col bg-[#1a1a1a] relative">
     <GameExitButton @leave="$router.push(`/sala/${roomId}`)" />
     <LiarsBoard v-if="state && playerStore.userId" :game-state="state" :local-player-id="playerStore.userId" @action="handleGameAction" @leave="$router.push(`/sala/${roomId}`)" />
     <div v-else class="text-white text-center pt-20">Acomodando los dados...</div>

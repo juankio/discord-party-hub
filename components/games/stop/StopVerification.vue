@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen p-4 sm:p-8 relative flex flex-col items-center" style="color: var(--theme-text-color, white);">
+  <div class="h-full w-full flex-1 p-4 sm:p-8 relative flex flex-col items-center overflow-y-auto" style="color: var(--theme-text-color, white);">
     <div class="w-full max-w-[1000px] mx-auto z-10 flex flex-col gap-6">
       
       <!-- Header Pizarra -->

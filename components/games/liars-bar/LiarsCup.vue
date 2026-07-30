@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col items-center">
+  <div class="relative flex flex-col items-center scale-[0.8] md:scale-100 origin-center">
     <div 
       class="font-bold mb-2 uppercase tracking-widest drop-shadow-md text-sm md:text-base px-3 py-1 rounded-sm border-2 transition-all duration-300"
       :class="isCurrentTurn ? 'bg-green-100 text-green-900 border-green-500 ring-4 ring-green-500 shadow-[0_0_20px_rgba(34,197,94,0.6)] scale-110' : 'bg-[#2a170b] text-amber-100 border-[#4a2e19]'"

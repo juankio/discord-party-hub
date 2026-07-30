@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center bg-[#4a2e1b] relative">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col items-center justify-center bg-[#4a2e1b] relative">
     <GameExitButton @leave="$router.push(`/sala/${roomId}`)" />
     <ImpostorBoard 
       v-if="state && playerStore.userId" 

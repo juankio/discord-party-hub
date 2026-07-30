@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import type { DrawEvent } from './types';
+import { usePinturilloAudio } from '@/composables/usePinturilloAudio';
 
 const props = defineProps<{
   isDrawer: boolean;
@@ -97,11 +98,14 @@ function getCoords(e: MouseEvent | TouchEvent) {
   };
 }
 
+const { playDraw, stopDraw } = usePinturilloAudio();
+
 const startDrawing = (e: MouseEvent | TouchEvent) => {
   if (!props.isDrawer) return;
   e.preventDefault(); // Prevent scrolling on touch
   isDrawing.value = true;
   lastPos.value = getCoords(e);
+  playDraw();
 };
 
 const draw = (e: MouseEvent | TouchEvent) => {
@@ -131,6 +135,7 @@ const draw = (e: MouseEvent | TouchEvent) => {
 const stopDrawing = () => {
   isDrawing.value = false;
   lastPos.value = null;
+  stopDraw();
 };
 </script>
 

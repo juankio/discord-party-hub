@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import type { PinturilloPublicState, DrawEvent } from './types';
 import PinturilloCanvas from './PinturilloCanvas.vue';
 import PinturilloTools from './PinturilloTools.vue';
+import { usePinturilloAudio } from '@/composables/usePinturilloAudio';
 
 // Accept the state from the room orchestrator
 const props = defineProps<{
   gameState: PinturilloPublicState;
   myUserId: string;
+  chatMessages?: any[];
 }>();
 
 const emit = defineEmits<{
@@ -54,13 +56,21 @@ const displayWord = computed(() => {
 });
 
 const wordOptions = computed(() => props.gameState?.wordOptions || []);
+
+const { playCorrect } = usePinturilloAudio();
+
+watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
+  if (newScore !== undefined && oldScore !== undefined && newScore > oldScore && !isDrawer.value) {
+    playCorrect();
+  }
+});
 </script>
 
 <template>
-  <div class="flex flex-col lg:flex-row h-full w-full gap-4 p-4 bg-[#f0e6d2] font-sans selection:bg-[#ffb0b0]">
+  <div class="flex-1 flex flex-col lg:flex-row h-full w-full gap-4 p-4 bg-[#f0e6d2] font-sans selection:bg-[#ffb0b0] overflow-hidden">
     
     <!-- Left Column: Players / Scores -->
-    <div class="w-full lg:w-64 flex flex-col gap-3">
+    <div class="w-full lg:w-64 flex flex-col gap-3 overflow-y-auto min-h-0">
       <div class="bg-[#e4d5b7] p-4 rounded-xl border-b-[6px] border-[#cbbca0] shadow-sm flex flex-col gap-2">
         <h2 class="text-xl font-bold text-[#5c3a21] uppercase tracking-wider drop-shadow-sm">Jugadores</h2>
         <ul class="flex flex-col gap-2">
@@ -93,7 +103,7 @@ const wordOptions = computed(() => props.gameState?.wordOptions || []);
     </div>
 
     <!-- Center Column: Canvas & Tools -->
-    <div class="flex-1 flex flex-col gap-4 min-w-0">
+    <div class="flex-1 flex flex-col gap-4 min-w-0 overflow-y-auto min-h-0">
       
       <!-- Top Bar: Word to draw/guess -->
       <div class="bg-white p-4 rounded-xl border-b-[6px] border-gray-300 shadow-sm flex flex-col items-center justify-center relative min-h-[5rem]">
@@ -132,7 +142,7 @@ const wordOptions = computed(() => props.gameState?.wordOptions || []);
       </div>
 
       <!-- The Canvas -->
-      <div class="flex-1 min-h-[300px]">
+      <div class="flex-1 min-h-[150px]">
         <PinturilloCanvas
           :isDrawer="isDrawer && gameState?.state === 'DRAWING'"
           :currentColor="currentColor"
@@ -162,13 +172,18 @@ const wordOptions = computed(() => props.gameState?.wordOptions || []);
       </div>
       
       <div class="flex-1 p-3 overflow-y-auto flex flex-col gap-2">
-        <!-- Mocked chat messages -->
-        <div class="bg-green-100 border border-green-300 p-2 rounded text-sm text-green-800 font-bold shadow-sm">
-          ¡Player 1234 ha acertado!
-        </div>
-        <div class="p-2 text-sm bg-white border border-gray-200 rounded shadow-sm">
-          <span class="font-bold text-gray-700">Player ABCD: </span>
-          <span>¿Es un perro?</span>
+        <div v-for="(msg, i) in chatMessages" :key="i" class="flex flex-col gap-1">
+          <template v-if="msg.isSystem">
+            <div class="bg-green-100 border border-green-300 p-2 rounded text-sm text-green-800 font-bold shadow-sm">
+              {{ msg.text }}
+            </div>
+          </template>
+          <template v-else>
+            <div class="p-2 text-sm bg-white border border-gray-200 rounded shadow-sm">
+              <span class="font-bold text-gray-700">{{ msg.playerName }}: </span>
+              <span>{{ msg.text }}</span>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -178,12 +193,12 @@ const wordOptions = computed(() => props.gameState?.wordOptions || []);
             v-model="guessInput"
             type="text" 
             placeholder="Escribe aquí..." 
-            class="flex-1 px-3 py-2 rounded border-2 border-[#bca17d] focus:outline-none focus:border-[#8b5a2b] shadow-inner font-bold text-gray-700"
+            class="flex-1 min-w-0 px-3 py-2 rounded border-2 border-[#bca17d] focus:outline-none focus:border-[#8b5a2b] shadow-inner font-bold text-gray-700"
             :disabled="isDrawer || gameState?.state !== 'DRAWING'"
           />
           <button 
             type="submit"
-            class="px-4 py-2 bg-green-500 text-white font-bold rounded border-b-4 border-green-700 hover:-translate-y-1 active:translate-y-0 active:border-b-0 transition-transform shadow-md"
+            class="shrink-0 px-4 py-2 bg-green-500 text-white font-bold rounded border-b-4 border-green-700 hover:-translate-y-1 active:translate-y-0 active:border-b-0 transition-transform shadow-md"
             :disabled="isDrawer || gameState?.state !== 'DRAWING'"
           >
             Enviar
