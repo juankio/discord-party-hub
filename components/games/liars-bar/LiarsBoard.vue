@@ -56,7 +56,7 @@
             v-if="localPlayer"
             :player-name="'TÚ (' + localPlayer.name + ')'"
             :dice-count="localPlayer.diceCount"
-            :dice-values="localPlayer.diceValues"
+            :dice-values="gameState?.myDice || localPlayer.diceValues"
             :is-local="true"
             :is-current-turn="gameState?.currentTurnId === localPlayer.id"
             :force-reveal="gameState?.state === 'RESOLUTION'"
@@ -98,6 +98,7 @@ export interface GameState {
   totalDiceCount: number;
   loserId?: string;
   winnerId?: string;
+  myDice?: number[];
 }
 
 const props = defineProps<{

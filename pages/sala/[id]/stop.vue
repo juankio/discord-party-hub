@@ -1,10 +1,10 @@
 <template>
-  <div class="h-[100dvh] w-full overflow-hidden flex flex-col bg-transparent relative text-white font-sans">
-    <!-- Top Bar actions -->
-    <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <GameExitButton @leave="exitGame" />
-    </div>
-
+  <GameLayout
+    bg-class="bg-transparent text-white font-sans"
+    :is-finished="stopStore.gameState === 'FINISHED'"
+    :winner-message="stopWinnerMessage"
+    @leave="exitGame"
+  >
     <Transition name="fade" mode="out-in">
       <StopBoard
         v-if="stopStore.gameState === 'PLAYING'"
@@ -43,19 +43,10 @@
         @back_to_lobby="backToLobby"
       />
 
-      <!-- Estado de Espera (Zoro added) -->
-      <div v-else-if="stopStore.gameState === 'LOBBY'" class="flex flex-col items-center justify-center flex-grow min-h-screen">
-        <UIcon name="i-heroicons-arrow-path" class="w-16 h-16 text-blue-500 animate-spin mb-6" />
-        <h1 class="text-3xl sm:text-5xl font-black text-white tracking-widest mb-4 drop-shadow-lg text-center">PREPARANDO EL TABLERO</h1>
-        <p class="text-gray-300 text-lg sm:text-xl text-center mb-8">Cargando categorías y jugadores...</p>
-        <div class="w-full max-w-md flex flex-col gap-3 px-4">
-          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
-          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
-          <USkeleton class="h-12 w-full bg-gray-800/80 rounded-xl" />
-        </div>
-      </div>
+      <!-- Estado de Espera -->
+      <GameLoading v-else-if="stopStore.gameState === 'LOBBY'" message="PREPARANDO EL TABLERO" icon="i-heroicons-arrow-path" />
     </Transition>
-  </div>
+  </GameLayout>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +99,14 @@ const nextRound = () => {
 const backToLobby = () => {
   socket.value?.emit('stop:back_to_lobby')
 }
+
+const stopWinnerMessage = computed(() => {
+  if (stopStore.players.length === 0) return ''
+  const sorted = [...stopStore.players].sort((a, b) => (b.score || 0) - (a.score || 0))
+  const winner = sorted[0]
+  if (winner.userId === playerStore.userId) return '¡Has ganado la partida!'
+  return `El ganador es ${winner.nickname}.`
+})
 
 watch(() => stopStore.gameState, (newState) => {
   if (newState === 'PLAYING') {

@@ -24,7 +24,7 @@ export const useRoomLobby = (roomId: string) => {
     set: (val: string) => {
       if (isHost.value) {
         const hasBots = players.value.some((p: any) => p.isBot);
-        if (hasBots && !['uno', 'parchis'].includes(val)) {
+        if (hasBots && !['uno', 'parchis', 'liars'].includes(val)) {
           toast.add({ title: 'Bots no compatibles', description: 'Expulsa a los bots primero para jugar este juego.', color: 'red' });
           return;
         }

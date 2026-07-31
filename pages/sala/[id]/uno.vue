@@ -1,21 +1,20 @@
 <template>
-  <div class="relative h-[100dvh] max-h-[100dvh] w-full flex flex-col bg-transparent text-white font-sans overflow-hidden">
-    
-    <!-- Top Bar -->
-    <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <GameExitButton @leave="exitGame" />
-      
-      <!-- Botón Rendirse -->
-      <button 
-        @click="handleAction.surrender()"
-        class="group relative flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
-      >
-        <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
-        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
-        <UIcon name="i-heroicons-flag" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-        <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Rendirse</span>
-      </button>
-    </div>
+  <GameLayout
+    bg-class="bg-transparent text-white font-sans"
+    :is-finished="state.gameState === 'FINISHED'"
+    :winner-message="state.winner === playerState.userId ? '¡Has ganado la partida!' : `El ganador es ${state.rivals.find((r: any) => r.userId === state.winner)?.nickname || 'un rival'}.`"
+    @leave="exitGame"
+  >
+    <!-- Botón Rendirse -->
+    <button 
+      @click="handleAction.surrender()"
+      class="absolute top-4 right-4 z-50 group flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+    >
+      <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
+      <UIcon name="i-heroicons-flag" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+      <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Rendirse</span>
+    </button>
 
     <!-- Turn Banner -->
     <div v-if="state.gameState !== 'WAITING'" class="absolute top-0 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-500" 
@@ -58,18 +57,8 @@
       />
     </template>
 
-    <!-- Estado de Espera (Zoro added) -->
-    <div v-else class="flex flex-col items-center justify-center flex-grow w-full h-full absolute inset-0 z-10 bg-black/50 backdrop-blur-sm">
-      <UIcon name="i-heroicons-arrow-path" class="w-16 h-16 text-yellow-500 animate-spin mb-6" />
-      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-widest mb-4 drop-shadow-lg text-center">PREPARANDO LA MESA</h1>
-      <p class="text-gray-300 text-lg sm:text-xl text-center mb-8">Repartiendo cartas...</p>
-      <!-- Skeletons to simulate UI -->
-      <div class="flex gap-4 opacity-50 pointer-events-none">
-        <USkeleton class="h-32 w-20 sm:h-48 sm:w-32 rounded-xl bg-gray-800" />
-        <USkeleton class="h-32 w-20 sm:h-48 sm:w-32 rounded-xl bg-gray-800" />
-        <USkeleton class="h-32 w-20 sm:h-48 sm:w-32 rounded-xl bg-gray-800" />
-      </div>
-    </div>
+    <!-- Estado de Espera -->
+    <GameLoading v-else message="PREPARANDO LA MESA" icon="i-heroicons-arrow-path" />
 
     <!-- Color Modal -->
     <UnoColorModal 
@@ -83,14 +72,7 @@
       :rivals="state.rivals"
       @select="handleAction.swapHands"
     />
-
-    <!-- Victory Modal -->
-    <UnoVictoryModal
-      :is-open="state.gameState === 'FINISHED'"
-      :winner-message="state.winner === playerState.userId ? '¡Has ganado la partida!' : `El ganador es ${state.rivals.find((r: any) => r.userId === state.winner)?.nickname || 'un rival'}.`"
-      @lobby="exitGame"
-    />
-  </div>
+  </GameLayout>
 </template>
 
 <script setup lang="ts">

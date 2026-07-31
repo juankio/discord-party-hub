@@ -23,6 +23,9 @@ export const usePinturilloEngine = (roomId: string) => {
     socket.value?.on('game_state_update', handleUpdate);
     socket.value?.on('draw_event', handleDraw);
     socket.value?.on('chat_message', handleChat);
+    socket.value?.on('draw_history_sync', (history: any[]) => {
+      strokesToRender.value = history;
+    });
     socket.value?.emit('request_game_state');
     
     timerInterval = setInterval(() => {
@@ -36,6 +39,7 @@ export const usePinturilloEngine = (roomId: string) => {
     socket.value?.off('game_state_update', handleUpdate);
     socket.value?.off('draw_event', handleDraw);
     socket.value?.off('chat_message', handleChat);
+    socket.value?.off('draw_history_sync');
     if (timerInterval) clearInterval(timerInterval);
   });
 

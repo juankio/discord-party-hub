@@ -73,22 +73,15 @@
       </div>
 
       <!-- Footer -->
-      <div class="bg-[#173119]/80 p-6 border-t border-white/10 relative z-10 flex justify-center backdrop-blur-md">
+      <div v-if="!isFinal" class="bg-[#173119]/80 p-6 border-t border-white/10 relative z-10 flex justify-center backdrop-blur-md">
         <button 
-          v-if="isHost && !isFinal" 
+          v-if="isHost" 
           class="px-8 py-4 bg-yellow-500 hover:bg-yellow-400 text-[#2d1b11] font-black tracking-[0.2em] uppercase rounded border-b-4 border-yellow-700 active:translate-y-1 active:border-b-0 shadow-[0_5px_15px_rgba(0,0,0,0.4)] transition-all w-full sm:w-auto font-['Comic_Sans_MS',_cursive,sans-serif]"
           @click="$emit('next_round')"
         >
           Siguiente Ronda ({{ currentRound + 1 }}/{{ totalRounds }})
         </button>
-        <button 
-          v-if="isHost && isFinal" 
-          class="px-8 py-4 bg-[#109041] hover:bg-[#15b051] text-white font-black tracking-[0.2em] uppercase rounded border-b-4 border-[#0a5c28] active:translate-y-1 active:border-b-0 shadow-[0_5px_15px_rgba(0,0,0,0.4)] transition-all w-full sm:w-auto font-['Comic_Sans_MS',_cursive,sans-serif]"
-          @click="$emit('back_to_lobby')"
-        >
-          Volver al Lobby
-        </button>
-        <div v-if="!isHost" class="flex flex-col items-center justify-center gap-2 py-2">
+        <div v-else class="flex flex-col items-center justify-center gap-2 py-2">
           <div class="w-8 h-8 rounded-full border-4 border-white/20 border-t-yellow-400 animate-spin"></div>
           <span class="text-gray-300 uppercase tracking-widest text-[10px] font-black font-['Comic_Sans_MS',_cursive,sans-serif]">Esperando al Host...</span>
         </div>

@@ -1,9 +1,13 @@
 <template>
-  <div class="h-[100dvh] w-full overflow-hidden flex flex-col bg-[#1a1a1a] relative">
-    <GameExitButton @leave="$router.push(`/sala/${roomId}`)" />
+  <GameLayout
+    bg-class="bg-[#1a1a1a]"
+    :is-finished="state?.state === 'FINISHED'"
+    :winner-message="`¡${winnerName} sobrevive y gana la partida!`"
+    @leave="$router.push(`/sala/${roomId}`)"
+  >
     <LiarsBoard v-if="state && playerStore.userId" :game-state="state" :local-player-id="playerStore.userId" @action="handleGameAction" @leave="$router.push(`/sala/${roomId}`)" />
-    <div v-else class="text-white text-center pt-20">Acomodando los dados...</div>
-  </div>
+    <GameLoading v-else message="Acomodando los dados..." icon="i-lucide-loader-2" />
+  </GameLayout>
 </template>
 
 <script setup lang="ts">
@@ -24,4 +28,10 @@ const handleGameAction = (action: any) => {
     handleAction.callLiar();
   }
 };
+
+const winnerName = computed(() => {
+  if (!state.value?.winnerId) return '';
+  const p = state.value?.players?.find((p: any) => p.id === state.value.winnerId);
+  return p ? p.name : 'Alguien';
+});
 </script>

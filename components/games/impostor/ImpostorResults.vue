@@ -74,10 +74,11 @@ const isFinished = computed(() => props.gameState?.state === 'FINISHED');
 
         <div class="mt-8 pt-6 border-t-2 border-gray-500 w-full flex justify-center relative z-10">
           <button 
+            v-if="!isFinished"
             @click="emit('ready')"
             class="bg-[#2a1a17] text-[#dcd3b6] font-mono font-bold uppercase px-8 py-3 border-2 border-black border-b-[6px] active:border-b-2 active:translate-y-[4px] hover:bg-[#3e2723] transition-all"
           >
-            {{ isFinished ? 'Volver al Inicio' : 'Siguiente Fase' }}
+            Siguiente Fase
           </button>
         </div>
 
