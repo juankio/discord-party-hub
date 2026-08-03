@@ -117,6 +117,16 @@ body {
   background: #383a40; 
 }
 
+.custom-scrollbar-wood::-webkit-scrollbar { width: 8px; }
+.custom-scrollbar-wood::-webkit-scrollbar-track { background: #2c190d; border-radius: 4px; }
+.custom-scrollbar-wood::-webkit-scrollbar-thumb { background: #5c3a21; border-radius: 4px; border: 1px solid #2c190d; }
+.custom-scrollbar-wood::-webkit-scrollbar-thumb:hover { background: #7a4f2d; }
+
+.custom-scrollbar-notebook::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar-notebook::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar-notebook::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+.custom-scrollbar-notebook::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
+
 /* Glow helpers */
 .neon-glow {
   box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);

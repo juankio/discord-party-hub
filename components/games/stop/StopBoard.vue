@@ -156,19 +156,3 @@ watch(() => props.letter, (newVal, oldVal) => {
   }
 })
 </script>
-
-<style scoped>
-.custom-scrollbar-notebook::-webkit-scrollbar {
-  width: 8px;
-}
-.custom-scrollbar-notebook::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar-notebook::-webkit-scrollbar-thumb {
-  background: #c9b29a;
-  border-radius: 4px;
-}
-.custom-scrollbar-notebook::-webkit-scrollbar-thumb:hover {
-  background: #bca495;
-}
-</style>

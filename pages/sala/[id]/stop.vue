@@ -3,6 +3,7 @@
     bg-class="bg-transparent text-white font-sans"
     :is-finished="stopStore.gameState === 'FINISHED'"
     :winner-message="stopWinnerMessage"
+    :rules="['Escribe una palabra que empiece con la letra indicada para cada categoría.', '¡Sé rápido! El primero en llenar todo pulsa STOP y detiene el tiempo.', 'Las respuestas idénticas a otros jugadores valen 50 puntos.', 'En la fase de verificación, veta las palabras que no tengan sentido.']"
     @leave="exitGame"
   >
     <Transition name="fade" mode="out-in">

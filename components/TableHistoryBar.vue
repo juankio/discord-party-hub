@@ -6,7 +6,7 @@
       </h3>
     </div>
     
-    <div class="p-4 flex flex-col gap-3">
+    <div class="p-4 flex flex-col gap-3 max-h-[300px] overflow-y-auto custom-scrollbar-wood">
       <div 
         v-for="(player, index) in sortedPlayers" 
         :key="player.userId"

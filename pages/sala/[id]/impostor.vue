@@ -3,6 +3,7 @@
     bg-class="bg-[#4a2e1b] flex items-center justify-center"
     :is-finished="state?.state === 'FINISHED'"
     :winner-message="winnerMessage"
+    :rules="['Todos reciben una palabra, excepto el Impostor, que recibe la categoría.', 'Tienen unos minutos para debatir e intentar descubrir quién es el impostor.', 'Voten por el jugador que consideren sospechoso.', 'El Impostor gana si sobrevive a las votaciones.']"
     @leave="$router.push(`/sala/${roomId}`)"
   >
     <ImpostorBoard 

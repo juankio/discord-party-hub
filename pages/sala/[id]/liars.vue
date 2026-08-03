@@ -3,6 +3,7 @@
     bg-class="bg-[#1a1a1a]"
     :is-finished="state?.state === 'FINISHED'"
     :winner-message="`¡${winnerName} sobrevive y gana la partida!`"
+    :rules="['Cada jugador tiene dados ocultos (el 1 es comodín).', 'Adivina cuántos dados de una cara hay EN TOTAL en toda la mesa.', 'Sube la apuesta (ej. de \&quot;3 cuatros\&quot; a \&quot;4 cuatros\&quot;) o llama ¡Mentiroso! si crees que no los hay.', 'El que se equivoque al dudar, pierde un dado.']"
     @leave="$router.push(`/sala/${roomId}`)"
   >
     <LiarsBoard v-if="state && playerStore.userId" :game-state="state" :local-player-id="playerStore.userId" @action="handleGameAction" @leave="$router.push(`/sala/${roomId}`)" />

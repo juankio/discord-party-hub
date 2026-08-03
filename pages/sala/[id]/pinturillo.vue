@@ -3,6 +3,7 @@
     bg-class="bg-[#2c1f18]"
     :is-finished="state?.state === 'FINISHED'"
     :winner-message="winnerMessage"
+    :rules="['El dibujante elige una palabra y debe dibujarla sin usar letras.', 'Los demás deben escribir la palabra exacta en el chat para ganar puntos.', 'Adivinar más rápido otorga más puntos.', '¡Si estás muy cerca, el sistema te avisará por privado!']"
     @leave="$router.push(`/sala/${roomId}`)"
   >
     <PinturilloBoard 

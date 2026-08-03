@@ -3,7 +3,7 @@
     <div class="min-w-[340px] flex flex-col">
       <div
   v-for="(row, idx) in [games.slice(0,3), games.slice(3,6)]" :key="idx" 
-           class="relative w-full flex justify-center gap-4 sm:gap-8 items-end pb-[24px] pt-12 sm:pt-16 bg-[#382012]">
+           class="relative w-full flex justify-center gap-4 sm:gap-8 items-end pb-[24px] pt-24 sm:pt-28 bg-[#382012]">
         
         <!-- Soga -->
         <div class="absolute left-0 right-0 h-[10px] z-[25] pointer-events-none" style="bottom: 50px;">
@@ -53,12 +53,9 @@ class="absolute -top-6 text-white font-bold text-[10px] uppercase tracking-wides
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21l-7-7h14l-7 7z" /></svg>
             </div>
 
-            <div
-class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity duration-300 z-0 pointer-events-none"
-                 :style="{ backgroundColor: game.color || '#ffffff' }"
-                 :class="{ 'opacity-30': selectedGame === game.id }"/>
+
             
-            <div class="relative z-10 w-full flex items-end justify-center">
+            <div class="relative z-10 w-full flex items-end justify-center group-hover:drop-shadow-[3px_3px_0_var(--theme-color)] transition-all duration-300" :style="{ '--theme-color': playerStore.color }">
                <IconGameUno v-if="game.id === 'uno'" />
                <IconGameParchis v-else-if="game.id === 'parchis'" />
                <IconGameLiars v-else-if="game.id === 'liars'" />
@@ -77,6 +74,21 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
         <div v-if="game.disabled" class="absolute -top-2 -right-2 bg-red-600 text-white text-[8px] font-bold px-1 rounded shadow rotate-[15deg] z-40 border border-red-800 uppercase">
           En obras
         </div>
+
+        <!-- Tooltip de Información (Cartelito rústico) -->
+        <div v-if="!game.disabled" class="absolute -top-24 left-1/2 -translate-x-1/2 w-44 bg-[#3a2212] border-2 border-[#7d512a] p-2 rounded-lg text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 z-50 flex flex-col gap-1 shadow-[0_4px_0_rgba(0,0,0,0.5)] translate-y-2 group-hover:translate-y-0">
+           <div class="flex justify-between items-center border-b border-[#7d512a] pb-1">
+             <span class="font-bold text-[11px]">{{ game.name }}</span>
+             <svg v-if="game.botSupport" class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Soporta Bots">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+             </svg>
+             <svg v-else class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Sin Bots">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+             </svg>
+           </div>
+           <p class="text-[10px] text-gray-300 leading-tight text-left whitespace-normal break-words">{{ game.description }}</p>
+           <div class="text-[10px] text-yellow-500 font-semibold mt-1 text-left">{{ game.playersText }}</div>
+        </div>
       </button>
     </div>
     </div>
@@ -85,7 +97,9 @@ class="absolute inset-0 rounded-full blur-2xl opacity-0 transition-opacity durat
 
 <script setup lang="ts">
 import { useAppAudio } from '~/composables/useAppAudio';
+import { usePlayerStore } from '~/stores/playerStore';
 
+const playerStore = usePlayerStore();
 const { 
   playSelectUno, stopSelectUno, 
   playSelectParchis, stopSelectParchis, 

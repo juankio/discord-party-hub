@@ -15,6 +15,7 @@ const { state, playerState, handleAction, exitGame } = useParchisEngine(roomId)
     bg-class="p-4 md:p-8"
     :is-finished="state?.gameState === 'FINISHED'"
     :winner-message="state.winner === playerState.userId ? '¡Has ganado la partida!' : `El ganador es ${state.players.find((r: any) => r.userId === state.winner)?.nickname || 'un rival'}.`"
+    :rules="['Saca un 5 para sacar una ficha de la cárcel.', 'Cómete las fichas de los rivales para avanzar 20 casillas extra.', 'Mete una ficha en la meta para avanzar 10 casillas extra con otra.', 'No puedes pasar sobre barreras (dos fichas juntas).']"
     @leave="exitGame"
   >
     <!-- Overlay de Selección de Fichas -->

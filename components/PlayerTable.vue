@@ -56,7 +56,7 @@
             :is-host="isHost"
             :host-user-id="hostUserId"
             :local-player-color="playerStore.color"
-            @avatar-click="player.isEmpty ? $emit('change-seat', player.seatIndex) : $emit('avatar-click', player)"
+            @avatar-click="!player.isLocked && (player.isEmpty ? $emit('change-seat', player.seatIndex) : $emit('avatar-click', player))"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ const handleAddBot = () => { playBot(); emit('add-bot', 5) }
 const toast = useToast()
 const playerStore = usePlayerStore()
 const isCopied = ref(false)
-const allowBots = computed(() => ['uno', 'parchis'].includes(props.selectedGame))
+const allowBots = computed(() => ['uno', 'parchis', 'liars'].includes(props.selectedGame))
 const isHost = computed(() => props.hostUserId === playerStore.userId)
 
 const localPlayerSeatIndex = computed(() => {
@@ -99,28 +99,53 @@ const localPlayerSeatIndex = computed(() => {
   return me ? me.seatIndex : null
 })
 
-const paddedPlayers = computed(() => {
-  let cap = props.players.length;
+const maxAllowed = computed(() => {
+  let max = props.players.length;
   if (props.selectedGame === 'parchis') {
-    cap = playerStore.roomRules?.parchisBoardSize || 4;
+    max = playerStore.roomRules?.parchisBoardSize || 4;
   } else {
-    // Para otros juegos, el tablero renderiza hasta el maximo permitido
-    const maxAllowed = playerStore.roomRules?.extendedLobby ? 8 : 6;
-    cap = Math.max(props.players.length, maxAllowed);
+    max = playerStore.roomRules?.extendedLobby ? 8 : 6;
   }
-    
-  const current = new Array(cap).fill(null);
+  return max;
+})
+
+const paddedPlayers = computed(() => {
+  // Capacidad REAL permitida por las reglas actuales
+  const max = maxAllowed.value;
   
-  // Colocamos a los jugadores reales en sus sillas
+  // Pero el array visual SIEMPRE dibuja los 8 huecos de la mesa
+  const visualTotal = 8;
+  const current = new Array(visualTotal).fill(null);
+  
+  const isSeatLocked = (i: number, max: number) => {
+    let locked = false;
+    if (max < 8 && (i === 2 || i === 6)) locked = true; // Sillas de expansión (madera)
+    if (max <= 4 && (i === 0 || i === 4)) locked = true; // Centros (dejamos solo las esquinas)
+    return locked;
+  };
+
+  // Colocamos primero a los jugadores cuyas sillas sí son válidas y están libres
+  const playersWithoutValidSeat = [];
+  
   props.players.forEach(player => {
-    if (player.seatIndex !== undefined && player.seatIndex >= 0 && player.seatIndex < cap) {
+    if (
+      player.seatIndex !== undefined && 
+      player.seatIndex >= 0 && 
+      player.seatIndex < visualTotal && 
+      !isSeatLocked(player.seatIndex, max) &&
+      current[player.seatIndex] === null // Aseguramos no sobreescribir si ya está ocupada
+    ) {
       current[player.seatIndex] = player;
     } else {
-      // Si no tienen seatIndex válido, los metemos en el primer hueco
-      const emptyIdx = current.findIndex(p => p === null);
-      if (emptyIdx !== -1) {
-        current[emptyIdx] = { ...player, seatIndex: emptyIdx };
-      }
+      playersWithoutValidSeat.push(player);
+    }
+  });
+
+  // Acomodamos a los demás en los huecos disponibles
+  playersWithoutValidSeat.forEach(player => {
+    const emptyIdx = current.findIndex((p, i) => p === null && !isSeatLocked(i, max));
+    if (emptyIdx !== -1) {
+      current[emptyIdx] = { ...player, seatIndex: emptyIdx };
     }
   });
 
@@ -129,6 +154,7 @@ const paddedPlayers = computed(() => {
     if (current[i] === null) {
       current[i] = {
         isEmpty: true,
+        isLocked: isSeatLocked(i, max),
         seatIndex: i,
         userId: `empty-${i}`
       };
@@ -147,7 +173,7 @@ const getAvatarPosition = (index: number, total: number) => {
   return getAvatarPositionLogic(index, total, 0)
 }
 
-watch(() => paddedPlayers.value.length, (newLen, oldLen) => {
+watch(() => maxAllowed.value, (newLen, oldLen) => {
   if (oldLen > 0) {
     if (newLen > oldLen) playTableExpand();
     else if (newLen < oldLen) playTableShrink();
