@@ -26,8 +26,8 @@
           <div class="flex flex-col items-center gap-2 w-full mt-2">
             <div class="flex items-center gap-2 justify-center w-full">
               <button 
-                class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-300 border"
-                :class="isCopied ? 'bg-green-600 hover:bg-green-500 border-green-400 text-white' : 'bg-black/40 hover:bg-black/60 text-white border-white/20'"
+                class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[4px_4px_0_rgba(0,0,0,0.8)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]"
+                :class="isCopied ? 'bg-green-600 border-green-400 text-white shadow-green-500/50' : 'bg-black/60 text-white border-white/20 shadow-black/50'"
                 @click="copyLink"
               >
                 <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
@@ -35,7 +35,7 @@
               </button>
               <button
                 v-if="isHost && allowBots"
-                class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/40 hover:bg-blue-600/80 hover:scale-105 active:scale-95 text-white border-blue-400/50 shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_20px_rgba(37,99,235,0.6)]"
+                class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/60 hover:bg-blue-500 hover:scale-105 active:scale-95 hover:brightness-110 text-white border-blue-400/50 shadow-[4px_4px_0_rgba(0,0,0,0.8)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]"
                 @click="handleAddBot"
                 title="Añadir Bot"
               >
@@ -85,8 +85,8 @@ const emit = defineEmits<{
   (e: 'change-seat', seatIndex: number): void
 }>()
 
-const { playBot, playCopyLink, playSeatMove, playTableExpand, playTableShrink } = useAppAudio()
-const handleAddBot = () => { playBot(); emit('add-bot', 5) }
+const { playBot, playCopyLink, playSeatMove, playTableExpand, playTableShrink, playUiClick } = useAppAudio()
+const handleAddBot = () => { playUiClick(); playBot(); emit('add-bot', 5) }
 
 const toast = useToast()
 const playerStore = usePlayerStore()
@@ -125,7 +125,7 @@ const paddedPlayers = computed(() => {
   };
 
   // Colocamos primero a los jugadores cuyas sillas sí son válidas y están libres
-  const playersWithoutValidSeat = [];
+  const playersWithoutValidSeat: any[] = [];
   
   props.players.forEach(player => {
     if (
@@ -189,6 +189,7 @@ onMounted(() => {
 
 const copyLink = () => {
   if (import.meta.client) {
+    playUiClick()
     playCopyLink()
     navigator.clipboard.writeText(window.location.href)
     anime({ targets: '.copy-btn-anim', scale: [1, 1.15, 1], duration: 400, easing: 'easeInOutQuad' })

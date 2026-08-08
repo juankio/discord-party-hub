@@ -24,7 +24,7 @@
           type="text"
           placeholder="Escribe una nueva..." 
           @keyup.enter="addCategory"
-          class="flex-1 bg-[#2a1a0f] border-2 border-[#1a0f08] focus:border-[#d97706] rounded-lg px-4 py-2 text-white font-bold uppercase tracking-widest outline-none transition-all placeholder:text-[#5c3a21] text-xs shadow-inner"
+          class="flex-1 bg-[#2a1a0f] border-2 border-[#1a0f08] focus:border-[#d97706] rounded-lg px-4 py-2 text-white font-bold uppercase tracking-widest outline-none transition-all placeholder:text-[#5c3a21] text-base shadow-inner"
         />
         <button 
           @click="addCategory" 

@@ -4,7 +4,7 @@
     <div class="flex items-center bg-[#1f120a] rounded-md p-1.5 border-2 border-[#150c07] shadow-[inset_0_4px_8px_rgba(0,0,0,0.8)]">
       <button 
         @click="emitDecrementAmount"
-        class="w-10 h-10 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-2xl font-bold flex justify-center items-center transition-all select-none"
+        class="w-11 h-11 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-2xl font-bold flex justify-center items-center transition-all select-none"
         :disabled="!canDecrement"
         :class="{ 'opacity-50 cursor-not-allowed hover:bg-[#4a2e1b]': !canDecrement }"
       >
@@ -15,7 +15,7 @@
       </div>
       <button 
         @click="emitIncrementAmount"
-        class="w-10 h-10 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-2xl font-bold flex justify-center items-center transition-all select-none"
+        class="w-11 h-11 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-2xl font-bold flex justify-center items-center transition-all select-none"
         :disabled="!canIncrement"
         :class="{ 'opacity-50 cursor-not-allowed hover:bg-[#4a2e1b]': !canIncrement }"
       >
@@ -29,7 +29,7 @@
     <div class="flex items-center bg-[#1f120a] rounded-md p-1.5 border-2 border-[#150c07] shadow-[inset_0_4px_8px_rgba(0,0,0,0.8)]">
       <button 
         @click="emitDecrementFace"
-        class="w-10 h-10 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-xl font-bold flex justify-center items-center transition-all select-none"
+        class="w-11 h-11 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-xl font-bold flex justify-center items-center transition-all select-none"
         :disabled="face <= 1"
         :class="{ 'opacity-50 cursor-not-allowed hover:bg-[#4a2e1b]': face <= 1 }"
       >
@@ -73,7 +73,7 @@
       </div>
       <button 
         @click="emitIncrementFace"
-        class="w-10 h-10 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-xl font-bold flex justify-center items-center transition-all select-none"
+        class="w-11 h-11 md:w-12 md:h-12 bg-[#4a2e1b] hover:bg-[#5c3a21] active:bg-[#382214] border-b-[5px] border-[#25160d] active:border-b-0 active:translate-y-[5px] rounded text-xl font-bold flex justify-center items-center transition-all select-none"
         :disabled="face >= 6"
         :class="{ 'opacity-50 cursor-not-allowed hover:bg-[#4a2e1b]': face >= 6 }"
       >

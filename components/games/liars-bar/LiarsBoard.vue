@@ -8,7 +8,7 @@
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] h-[70%] border-2 border-[#d8a872]/10 rounded-[120px] pointer-events-none shadow-[inset_0_0_30px_rgba(255,255,255,0.02)]"></div>
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] h-[30%] border border-[#d8a872]/5 rounded-[60px] pointer-events-none"></div>
 
-    <div class="flex-1 overflow-y-auto flex flex-col justify-between p-4 md:p-8 relative z-10 w-full">
+    <div class="flex-1 overflow-y-auto overscroll-contain flex flex-col justify-between p-4 md:p-8 relative z-10 w-full">
       <!-- Top Row: Opponents -->
       <div class="flex justify-center flex-wrap gap-4 md:gap-12 w-full mb-4">
         <LiarsCup 

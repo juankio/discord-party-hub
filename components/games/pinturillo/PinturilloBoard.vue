@@ -70,7 +70,7 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
   <div class="flex-1 flex flex-col lg:flex-row h-full w-full gap-4 p-4 bg-[#f0e6d2] font-sans selection:bg-[#ffb0b0] overflow-hidden">
     
     <!-- Left Column: Players / Scores -->
-    <div class="w-full lg:w-64 flex flex-col gap-3 overflow-y-auto min-h-0">
+    <div class="w-full lg:w-64 flex flex-col gap-3 overflow-y-auto overscroll-contain min-h-0">
       <div class="bg-[#e4d5b7] p-4 rounded-xl border-b-[6px] border-[#cbbca0] shadow-sm flex flex-col gap-2">
         <h2 class="text-xl font-bold text-[#5c3a21] uppercase tracking-wider drop-shadow-sm">Jugadores</h2>
         <ul class="flex flex-col gap-2">
@@ -103,7 +103,7 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
     </div>
 
     <!-- Center Column: Canvas & Tools -->
-    <div class="flex-1 flex flex-col gap-4 min-w-0 overflow-y-auto min-h-0">
+    <div class="flex-1 flex flex-col gap-4 min-w-0 overflow-y-auto overscroll-contain min-h-0">
       
       <!-- Top Bar: Word to draw/guess -->
       <div class="bg-white p-4 rounded-xl border-b-[6px] border-gray-300 shadow-sm flex flex-col items-center justify-center relative min-h-[5rem]">
@@ -171,7 +171,7 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
         <h2 class="text-lg font-bold text-[#5c3a21] uppercase drop-shadow-sm">Adivinanzas</h2>
       </div>
       
-      <div class="flex-1 p-3 overflow-y-auto flex flex-col gap-2">
+      <div class="flex-1 p-3 overflow-y-auto overscroll-contain flex flex-col gap-2">
         <div v-for="(msg, i) in chatMessages" :key="i" class="flex flex-col gap-1">
           <template v-if="msg.isSystem">
             <div class="bg-green-100 border border-green-300 p-2 rounded text-sm text-green-800 font-bold shadow-sm">

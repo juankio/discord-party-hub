@@ -7,8 +7,6 @@
        :playable="isPlayable"
        class="hand-card cursor-pointer"
        @click="playCard($event)"
-       @mouseenter="$emit('hover-card', index)"
-       @mouseleave="$emit('hover-card', null)"
     />
   </div>
 </template>
@@ -20,35 +18,26 @@ const props = defineProps({
   card: { type: Object, required: true },
   index: { type: Number, required: true },
   total: { type: Number, required: true },
-  localHoverIndex: { type: Number, default: null },
   isPlayable: { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['play-card', 'hover-card'])
+const emit = defineEmits(['play-card'])
 
 const cardStyle = computed(() => {
   const isTooMany = props.total > 7
   const spreadAngle = isTooMany ? (props.total > 15 ? 1 : 2) : 5
-  // La elevación en Y ahora tiene un base negativo Fuerte para sacarlas del piso, 
-  // pero el cálculo del arco no necesita un yOffsetMultiplier gigante si usamos transformOrigin
   
   const middle = (props.total - 1) / 2
   const rotate = (props.index - middle) * spreadAngle
   
   // Usamos un simple cálculo cuadrático para el arco (parábola)
-  let translateY = (Math.pow(props.index - middle, 2) * 2) - 40 // -40 es el base offset para que suban
-  let scale = 1
+  let translateY = (Math.pow(props.index - middle, 2) * 2) - 40
   let zIndex = props.index
 
-  if (props.index === props.localHoverIndex) {
-    translateY -= 40
-    scale = 1.15
-    zIndex = 50
-  }
-  
   return {
-    transform: `translateY(${translateY}px) rotate(${rotate}deg) scale(${scale})`, // OJO: El TranslateY debe ir ANTES del rotate en CSS para que la rotación sea sobre el eje Y ya movido
-    transformOrigin: 'bottom center', // Esto es CRÍTICO para que roteen como un abanico desde abajo
+    '--card-ty': `${translateY}px`,
+    '--card-rot': `${rotate}deg`,
+    transformOrigin: 'bottom center',
     zIndex,
   }
 })
@@ -99,3 +88,16 @@ const playCard = (event: Event) => {
   })
 }
 </script>
+
+<style scoped>
+.card-wrapper {
+  transform: translateY(var(--card-ty)) rotate(var(--card-rot)) scale(1);
+}
+
+@media (hover: hover) {
+  .card-wrapper:hover {
+    transform: translateY(calc(var(--card-ty) - 40px)) rotate(var(--card-rot)) scale(1.15);
+    z-index: 50 !important;
+  }
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden relative">
+  <div class="h-[100dvh] w-full flex flex-col items-center justify-center p-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] overflow-hidden relative">
     
     <!-- Header Decorativo -->
-    <div ref="headerEl" class="absolute top-12 text-center opacity-0 -translate-y-5">
+    <div ref="headerEl" class="absolute text-center opacity-0 -translate-y-5 top-[max(3rem,env(safe-area-inset-top))]">
       <h1 class="text-4xl md:text-5xl font-black text-white pb-1 tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
         PARTY HUB
       </h1>

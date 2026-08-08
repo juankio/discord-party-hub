@@ -33,14 +33,14 @@
         @click="selectGame(game.id)"
       >
         <div
-class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 blur-[3px] rounded-[50%] transition-all duration-300 pointer-events-none z-0"
+class="absolute bottom-0 left-1/2 -translate-x-1/2 h-2 bg-black/80 rounded-[50%] transition-all duration-300 pointer-events-none z-0"
              :class="selectedGame === game.id ? 'w-24 opacity-30' : 'w-16 opacity-80 group-hover:w-20 group-hover:opacity-50'"/>
 
         <div
-class="relative w-full flex flex-col items-center justify-end transition-transform duration-300 ease-out z-30"
+class="relative w-full flex flex-col items-center justify-end transition-all duration-300 ease-out z-30"
              :class="[
                game.disabled || isReadOnly ? '' : 'group-hover:-translate-y-4',
-               selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[0_25px_25px_rgba(0,0,0,0.7)]' : 'drop-shadow-lg'
+               selectedGame === game.id ? '-translate-y-6 scale-110 drop-shadow-[4px_4px_0_rgba(0,0,0,0.7)]' : 'drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]'
              ]">
             
             <div

@@ -16,7 +16,7 @@
           v-for="i in 24" :key="i"
           class="shrink-0 rounded-full bg-black flex items-center justify-center transition-all duration-200 outline-none hover:scale-110"
           :class="[
-            compact ? 'w-8 h-8' : 'w-10 h-10',
+            compact ? 'w-11 h-11' : 'w-14 h-14',
             avatarId === i 
               ? 'ring-2 ring-offset-2 ring-offset-[#151515] z-10' 
               : 'opacity-50 hover:opacity-100 border border-white/10'
@@ -24,7 +24,7 @@
           :style="avatarId === i ? { '--tw-ring-color': 'var(--theme-color)' } : {}"
           @click="selectAvatar(i)"
       >
-        <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" :class="[compact ? 'w-6 h-6' : 'w-8 h-8']" class="object-contain" >
+        <img :src="`/avatars/avatar-${i}.svg?v=3`" :alt="`Avatar ${i}`" :class="[compact ? 'w-7 h-7' : 'w-10 h-10']" class="object-contain" >
       </button>
     </div>
   </div>
@@ -33,7 +33,7 @@
   <div class="flex gap-3 justify-center flex-wrap w-full">
     <button
       v-for="c in colors" :key="c.val"
-      class="w-6 h-6 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
+      class="w-11 h-11 rounded-full transition-all duration-200 outline-none hover:scale-110 shadow-inner"
       :style="{ backgroundColor: c.val }"
       :class="[
         color === c.val

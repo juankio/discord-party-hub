@@ -38,7 +38,7 @@ watch(() => props.gameState?.state, (newState) => {
     <!-- Wooden Table Background Texture (CSS grid/stripes) -->
     <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 42px);"></div>
     
-    <div class="relative z-10 w-full max-w-4xl overflow-y-auto max-h-full">
+    <div class="relative z-10 w-full max-w-4xl overflow-y-auto overscroll-contain max-h-full">
       <!-- State Routing -->
       <transition name="fade-slide" mode="out-in">
         <!-- WAITING -->

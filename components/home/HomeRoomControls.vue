@@ -2,7 +2,7 @@
   <div class="w-full">
     <div v-if="!showJoinInput" class="w-full flex items-center justify-between gap-4">
       <button 
-        class="text-gray-500 hover:text-white text-sm font-bold transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] pl-2"
+        class="text-gray-500 hover:text-white text-sm font-bold transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] pl-2 py-3"
         @click="showJoinInput = true"
       >
         Tengo Código
@@ -36,7 +36,7 @@
       </div>
       <div class="flex items-center justify-between w-full px-2">
         <button 
-          class="text-gray-500 hover:text-white text-xs font-bold transition-colors"
+          class="text-gray-500 hover:text-white text-xs font-bold transition-colors py-3 px-2"
           @click="showJoinInput = false"
         >
           CANCELAR

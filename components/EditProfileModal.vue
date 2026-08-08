@@ -6,7 +6,7 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="close"></div>
 
         <!-- Modal Wrapper (Billiard Aesthetic) -->
-        <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto overscroll-contain custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
           <!-- Inner Container -->
           <div class="bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)] p-4 relative flex flex-col w-full min-w-0 overflow-hidden">
             <!-- Glow Decorativo -->
@@ -73,7 +73,7 @@
                   <div class="flex gap-3 justify-center flex-wrap">
                     <button
                       v-for="c in colors" :key="c.val"
-                      class="w-8 h-8 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner"
+                      class="w-11 h-11 rounded-full transition-all duration-300 outline-none hover:scale-110 shadow-inner"
                       :style="{ backgroundColor: c.val }"
                       :class="[
                         localColor === c.val

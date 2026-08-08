@@ -19,7 +19,7 @@
               v-for="letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')" 
               :key="letter"
               @click="toggleBannedLetter(letter)"
-              class="w-7 h-7 sm:w-8 sm:h-8 rounded border-2 font-black text-[10px] sm:text-xs flex items-center justify-center transition-all shadow-sm"
+              class="w-11 h-11 sm:w-12 sm:h-12 rounded border-2 font-black text-[10px] sm:text-xs flex items-center justify-center transition-all shadow-sm"
               :class="rules.bannedLetters?.includes(letter) 
                 ? 'bg-[#991b1b] border-[#7f1d1d] text-white/50 shadow-inner' 
                 : 'bg-[#b48554] border-[#d4a373] text-[#4a2e1b] hover:bg-[#c49564] hover:-translate-y-0.5'"

@@ -36,7 +36,7 @@
         </div>
 
         <!-- Contenedor scrolleable de categorías -->
-        <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar-notebook pr-2 mt-6 relative z-10">
+        <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain custom-scrollbar-notebook pr-2 mt-6 relative z-10">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
             <div 
               v-for="(cat, idx) in categories" 

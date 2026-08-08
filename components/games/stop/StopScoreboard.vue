@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex-1 flex items-center justify-center p-4 sm:p-8 text-white relative overflow-y-auto" style="color: var(--theme-text-color, white);">
+  <div class="h-full w-full flex-1 flex items-center justify-center p-4 sm:p-8 text-white relative overflow-y-auto overscroll-contain" style="color: var(--theme-text-color, white);">
     
     <div class="w-full max-w-3xl bg-[#1e3f20]/95 backdrop-blur-lg border border-white/10 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden relative z-20 flex flex-col">
       <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
@@ -17,7 +17,7 @@
       </div>
 
       <!-- Body -->
-      <div class="p-6 sm:p-8 relative z-10 space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar">
+      <div class="p-6 sm:p-8 relative z-10 space-y-3 max-h-[60vh] overflow-y-auto overscroll-contain custom-scrollbar">
         <div 
           v-for="(player, idx) in sortedPlayers" 
           :key="player.userId"

@@ -12,18 +12,18 @@
       <div class="flex flex-row justify-center items-start -mt-2 relative z-10 mx-auto w-full max-w-lg px-8 sm:px-12">
         <button 
           @click="$emit('toggle-general')"
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg"
+          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-3 sm:py-3 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
         >
           <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ AJUSTES GENERALES</span>
-          <UIcon :name="isGeneralRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
+          <UIcon name="i-heroicons-chevron-down" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0 transition-transform duration-300" :class="{ 'rotate-180': isGeneralRulesOpen }" />
         </button>
 
         <button 
           @click="$emit('toggle-table')"
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-2 sm:py-3 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg"
+          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider sm:tracking-[0.1em] uppercase py-3 sm:py-3 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
         >
           <span class="mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">⚙️ REGLAS DE LA MESA</span>
-          <UIcon :name="isTableRulesOpen ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0" />
+          <UIcon name="i-heroicons-chevron-down" class="w-3 h-3 sm:w-4 sm:h-4 text-[#e6a15c] shrink-0 transition-transform duration-300" :class="{ 'rotate-180': isTableRulesOpen }" />
         </button>
       </div>
       

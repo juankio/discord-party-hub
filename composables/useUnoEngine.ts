@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, watch, computed } from 'vue'
+import { watch, computed } from 'vue'
 
 import { useUnoStore } from '~/stores/games/unoStore'
 import { usePlayerStore } from '~/stores/playerStore'
@@ -43,37 +43,49 @@ export const useUnoEngine = (roomId: string) => {
 
   watch(
     socket,
-    (newSocket) => {
+    (newSocket, oldSocket, onCleanup) => {
       if (newSocket) {
         newSocket.emit('uno:join', { roomId })
+
+        const handleGameMessage = (data: any) => {
+          toast.add({ 
+            title: data.message, 
+            timeout: 2500,
+            ui: {
+              wrapper: 'fixed bottom-24 left-1/2 -translate-x-1/2 w-auto pointer-events-none z-[100]',
+              container: 'items-center justify-center',
+              width: 'w-auto max-w-sm',
+              background: 'bg-black/70 backdrop-blur-sm',
+              ring: 'ring-1 ring-white/10',
+              padding: 'px-4 py-2',
+              rounded: 'rounded-full',
+              title: 'text-white text-sm font-medium text-center',
+              icon: { color: 'text-white/70' }
+            }
+          })
+        }
+
+        const handleGameStateUpdate = (data: any) => {
+          unoStore.updateState(data)
+        }
+
+        const handleRivalHover = (data: any) => {
+          unoStore.setRivalHover(data.userId, data.index)
+        }
+
+        newSocket.on('game_message', handleGameMessage)
+        newSocket.on('game_state_update', handleGameStateUpdate)
+        newSocket.on('uno:rival_hover', handleRivalHover)
+
+        onCleanup(() => {
+          newSocket.off('game_message', handleGameMessage)
+          newSocket.off('game_state_update', handleGameStateUpdate)
+          newSocket.off('uno:rival_hover', handleRivalHover)
+        })
       }
     },
     { immediate: true }
   )
-
-  onMounted(() => {
-    if (socket.value && isConnected.value) {
-      socket.value.emit('uno:join', { roomId })
-    }
-
-    socket.value?.on('game_message', (data: any) => {
-      toast.add({ title: 'UNO', description: data.message, color: 'primary', icon: 'i-lucide-info' })
-    })
-
-    socket.value?.on('game_state_update', (data: any) => {
-      unoStore.updateState(data)
-    })
-
-    socket.value?.on('uno:rival_hover', (data: any) => {
-      unoStore.setRivalHover(data.userId, data.index)
-    })
-  })
-
-  onUnmounted(() => {
-    socket.value?.off('game_message')
-    socket.value?.off('game_state_update')
-    socket.value?.off('uno:rival_hover')
-  })
 
   return {
     state: unoStore,

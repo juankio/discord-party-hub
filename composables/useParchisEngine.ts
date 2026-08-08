@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, watch, computed } from 'vue'
+import { watch, computed } from 'vue'
 
 import { useParchisStore } from '~/stores/games/parchisStore'
 import { usePlayerStore } from '~/stores/playerStore'
@@ -65,30 +65,23 @@ export const useParchisEngine = (roomId: string) => {
 
   watch(
     socket,
-    (newSocket) => {
+    (newSocket, oldSocket, onCleanup) => {
       if (newSocket) {
         newSocket.emit("parchis:join", { roomId })
+
+        const handleGameStateUpdate = (data: any) => {
+          parchisStore.updateState(data)
+        }
+
+        newSocket.on('game_state_update', handleGameStateUpdate)
+
+        onCleanup(() => {
+          newSocket.off('game_state_update', handleGameStateUpdate)
+        })
       }
     },
     { immediate: true }
   )
-
-  onMounted(() => {
-    if (socket.value && isConnected.value) {
-      socket.value.emit("parchis:join", { roomId })
-    }
-
-    socket.value?.on('game_state_update', (data: any) => {
-      parchisStore.updateState(data)
-    })
-  })
-
-  onUnmounted(() => {
-    socket.value?.off('game_state_update')
-    if (socket.value) {
-      // Optional leave logic if needed in the future
-    }
-  })
 
   const handleAction = {
     selectFigure: (figureId: string) => {

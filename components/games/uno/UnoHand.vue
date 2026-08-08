@@ -13,18 +13,16 @@ v-for="(card, index) in myHand" :key="card.id"
              :card="card"
              :index="index"
              :total="myHand.length"
-             :local-hover-index="localHoverIndex"
              :is-playable="isPlayable(card)"
              @play-card="$emit('play-card', $event.id)"
-             @hover-card="localHoverIndex = $event; $emit('hover-card', $event)"
         />
       </TransitionGroup>
     </div>
 
     <!-- Botón Yell UNO -->
-    <div v-if="myHand.length <= 2" class="absolute right-4 md:right-12 bottom-12">
+    <div v-if="myHand.length <= 2" class="absolute inset-x-0 -top-20 md:-top-24 flex justify-center z-50 pointer-events-none">
       <button
-class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform"
+class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform pointer-events-auto"
               @click="$emit('yell-uno')">
         UNO!
       </button>
@@ -38,8 +36,6 @@ import { usePlayerStore } from '~/stores/playerStore'
 
 const playerStore = usePlayerStore()
 
-const localHoverIndex = ref<number | undefined>(undefined)
-
 const props = defineProps({
   myHand: { type: Array as () => any[], required: true },
   isMyTurn: { type: Boolean, default: false },
@@ -48,7 +44,7 @@ const props = defineProps({
   pendingDraws: { type: Number, default: 0 }
 })
 
-const emit = defineEmits(['play-card', 'yell-uno', 'hover-card'])
+const emit = defineEmits(['play-card', 'yell-uno'])
 
 let enterTickCount = 0
 let enterTimeout: NodeJS.Timeout | null = null

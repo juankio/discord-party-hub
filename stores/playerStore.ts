@@ -89,11 +89,26 @@ export const usePlayerStore = defineStore("player", {
 			this.playersInRoom = players;
 			this.hostUserId = hostId;
 			if (rules) {
-				// Solo actualizamos si realmente hay un cambio para evitar el bucle infinito de Vue watch
-				const currentRulesStr = JSON.stringify(this.roomRules);
-				const newRulesStr = JSON.stringify({ ...this.roomRules, ...rules });
+				// Comparación optimizada (sin JSON.stringify) para ahorrar batería
+				let hasChanges = false;
+				for (const key in rules) {
+					const newVal = rules[key];
+					const oldVal = (this.roomRules as any)[key];
+					
+					if (newVal !== oldVal) {
+						if (Array.isArray(newVal) && Array.isArray(oldVal)) {
+							if (newVal.length !== oldVal.length || newVal.some((v, i) => v !== oldVal[i])) {
+								hasChanges = true;
+								break;
+							}
+						} else {
+							hasChanges = true;
+							break;
+						}
+					}
+				}
 
-				if (currentRulesStr !== newRulesStr) {
+				if (hasChanges) {
 					this.roomRules = { ...this.roomRules, ...rules };
 				}
 			}

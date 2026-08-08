@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen overflow-hidden">
-    <NuxtPage />
+  <div class="h-[100dvh] overflow-hidden w-full">
+    <NuxtPage v-if="hasSetup" />
 
     <!-- Modal Obligatorio si entra directo con link sin nickname -->
     <div v-if="showSetupModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
@@ -46,6 +46,10 @@
 
 <script setup lang="ts">
 import { usePlayerStore } from '~/stores/playerStore'
+import { useUnoStore } from '~/stores/games/unoStore'
+import { useStopStore } from '~/stores/games/stopStore'
+import { useParchisStore } from '~/stores/games/parchisStore'
+
 import { useAppAudio } from '~/composables/useAppAudio'
 import { useTheme } from '~/composables/useTheme'
 
@@ -99,8 +103,8 @@ const saveAndJoin = () => {
   playEnterLobby()
   playerStore.setPlayerSetup(tempNickname.value, tempAvatarId.value, tempColor.value)
   showSetupModal.value = false
+  initRoom()
   hasSetup.value = true
-  setTimeout(() => { initRoom() }, 50)
 }
 
 const initRoom = () => {
@@ -110,6 +114,9 @@ const initRoom = () => {
   socket.value?.on('game_started', (data) => {
     // Solo redirige si estamos en el lobby
     if (route.path.replace(/\/$/, '') === `/sala/${roomId}`) {
+      if (data.gameType === 'uno') useUnoStore().gameState = 'PLAYING';
+      if (data.gameType === 'stop') useStopStore().gameState = 'PLAYING';
+      if (data.gameType === 'parchis') useParchisStore().gameState = 'PLAYING';
       router.push(`/sala/${roomId}/${data.gameType}`)
     }
   })

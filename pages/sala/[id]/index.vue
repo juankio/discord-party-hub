@@ -1,12 +1,12 @@
 <template>
-  <div class="h-[100dvh] w-full overflow-hidden flex flex-col items-center pt-8 md:pt-16 p-4">
-    <div class="w-full max-w-6xl flex-1 overflow-y-auto">
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col items-center p-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:pt-[max(4rem,env(safe-area-inset-top))]">
+    <div class="w-full max-w-6xl flex-1 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <LobbyHeader 
         :room-id="roomId" 
         :players-count="players.length" 
         :max-players="playerStore.roomRules?.extendedLobby ? 8 : 6" 
         @open-edit="openEditProfile" 
-        @leave-room="leaveRoom" 
+        @leave-room="handleLeaveRoom" 
       />
 
       <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
@@ -44,10 +44,10 @@
                 @start-game="startGame"
               >
                 <template #rules>
-                  <GeneralRulesPanel v-model:rules="playerStore.roomRules" @change="emitRules" :is-host="isHost" :is-open="isGeneralRulesOpen" />
-                  <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" @change="emitRules" :is-open="isTableRulesOpen" />
-                  <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" @change="emitRules" :is-open="isTableRulesOpen" />
-                  <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" @change="emitRules" :is-host="isHost" :is-open="isTableRulesOpen" />
+                  <GeneralRulesPanel v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isGeneralRulesOpen" />
+                  <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
+                  <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
+                  <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isTableRulesOpen" />
                 </template>
               </LobbyControls>
             </Transition>
@@ -83,7 +83,7 @@ import LobbyControls from "~/components/LobbyControls.vue";
 const route = useRoute();
 const roomId = computed(() => route.params.id as string);
 const playerStore = usePlayerStore();
-const { playSettings, playEditProfile } = useAppAudio();
+const { playSettings, playEditProfile, playTableExpand, playTableShrink, playUiClick } = useAppAudio();
 
 const { 
   players, isHost, isStarting, selectedGame, 
@@ -106,18 +106,38 @@ const selectedBotForConfig = ref<any>(null);
 const toggleGeneralRules = () => {
   isGeneralRulesOpen.value = !isGeneralRulesOpen.value;
   isTableRulesOpen.value = false;
-  playSettings();
+  if (isGeneralRulesOpen.value) {
+    playTableExpand();
+  } else {
+    playTableShrink();
+  }
 };
 
 const toggleTableRules = () => {
   isTableRulesOpen.value = !isTableRulesOpen.value;
   isGeneralRulesOpen.value = false;
-  playSettings();
+  if (isTableRulesOpen.value) {
+    playTableExpand();
+  } else {
+    playTableShrink();
+  }
 };
 
 const openEditProfile = () => {
   isEditProfileOpen.value = true;
   playEditProfile();
+};
+
+const handleLeaveRoom = () => {
+  playUiClick();
+  leaveRoom();
+};
+
+const handleRuleChange = () => {
+  if (isHost.value) {
+    playUiClick();
+    emitRules();
+  }
 };
 
 const handleAvatarClick = (player: any) => {

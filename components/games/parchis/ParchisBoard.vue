@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-full flex flex-col items-center justify-start sm:justify-center gap-6 sm:gap-8 overflow-x-hidden overflow-y-auto pb-36 xl:pb-8 xl:overflow-hidden xl:flex-row xl:items-start xl:justify-center xl:p-8">
+  <div class="relative w-full h-full flex flex-col items-center justify-start sm:justify-center gap-6 sm:gap-8 overflow-x-hidden overflow-y-auto overscroll-contain pb-36 xl:pb-8 xl:overflow-hidden xl:flex-row xl:items-start xl:justify-center xl:p-8">
     
     <!-- Fondo oscurecido para selección de asientos (Zoro) -->
     <div 

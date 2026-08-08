@@ -117,37 +117,36 @@ watch(() => stopStore.gameState, (newState) => {
   }
 })
 
-onMounted(() => {
-  let joined = false
-  watchEffect(() => {
-    if (socket.value && !joined) {
-      // Auto-submit mechanism when someone else calls stop
-      socket.value.off('stop_called')
-      socket.value.on('stop_called', () => {
+watch(
+  socket,
+  (newSocket, oldSocket, onCleanup) => {
+    if (newSocket) {
+      const handleStopCalled = () => {
         panicMode.value = true
         playBasta()
         // Delay slighty to let user realize panic mode activated
         setTimeout(() => {
-          socket.value?.emit('stop:submit_answers', { answers: localAnswers })
+          newSocket.emit('stop:submit_answers', { answers: localAnswers })
         }, 1500)
-      })
+      }
 
-      socket.value.on('game_state_update', (data: any) => {
+      const handleGameStateUpdate = (data: any) => {
         stopStore.updateState(data)
+      }
+
+      newSocket.on('stop_called', handleStopCalled)
+      newSocket.on('game_state_update', handleGameStateUpdate)
+
+      newSocket.emit('stop:join', { roomId })
+
+      onCleanup(() => {
+        newSocket.off('stop_called', handleStopCalled)
+        newSocket.off('game_state_update', handleGameStateUpdate)
       })
-
-      socket.value.emit('stop:join', { roomId })
-      joined = true
     }
-  })
-})
-
-onUnmounted(() => {
-  if (socket.value) {
-    socket.value.off('stop_called')
-    socket.value.off('game_state_update')
-  }
-})
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

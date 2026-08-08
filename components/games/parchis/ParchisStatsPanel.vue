@@ -48,7 +48,7 @@ const getColor = (colorStr: string) => {
     </div>
 
     <!-- Stats List -->
-    <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-3 custom-scrollbar">
+    <div class="flex-1 overflow-y-auto overscroll-contain p-4 flex flex-col gap-3 custom-scrollbar">
       <div 
         v-for="(player, idx) in sortedPlayers" 
         :key="player.userId"

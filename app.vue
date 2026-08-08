@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
+import { Howler } from 'howler'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useAudioStore } from '~/stores/audioStore'
 import AppLoader from '~/components/core/AppLoader.vue'
@@ -58,6 +59,16 @@ onMounted(() => {
   audioStore.initAudio()
   updateThemeColor(playerStore.color || '#f97316')
 
+  const unlockAudio = () => {
+    if (Howler.ctx && Howler.ctx.state === 'suspended') {
+      Howler.ctx.resume()
+    }
+    document.removeEventListener('click', unlockAudio)
+    document.removeEventListener('touchstart', unlockAudio)
+  }
+  document.addEventListener('click', unlockAudio)
+  document.addEventListener('touchstart', unlockAudio)
+
   const config = useRuntimeConfig()
   const baseUrl = (config.public.socketUrl || 'http://localhost:3001').replace(/\/$/, '')
   const healthUrl = `${baseUrl}/api/health`
@@ -92,6 +103,11 @@ watch(() => playerStore.color, (newColor) => {
 }
 
 /* Estilos base Pro Max */
+* {
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 body {
   background-color: #0A0A0A !important; /* Discord dark */
   background-image: url('/doodles.svg');
@@ -100,21 +116,16 @@ body {
   color: #f2f3f5;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  overscroll-behavior: none;
+  user-select: none;
+}
+input, textarea, select {
+  user-select: auto;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0A0A0A; 
-}
-::-webkit-scrollbar-thumb {
-  background: #2b2d31; 
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #383a40; 
+  display: none;
 }
 
 .custom-scrollbar-wood::-webkit-scrollbar { width: 8px; }
