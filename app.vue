@@ -22,16 +22,6 @@ import { useAudioStore } from '~/stores/audioStore'
 import AppLoader from '~/components/core/AppLoader.vue'
 import GameAudioController from '~/components/core/GameAudioController.vue'
 
-useSeoMeta({
-  ogTitle: 'Discord Party Hub',
-  ogDescription: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!',
-  ogImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4',
-  ogImageWidth: 1200,
-  ogImageHeight: 630,
-  twitterCard: 'summary_large_image',
-  twitterImage: 'https://discord-party-hub.vercel.app/banner.jpg?v=4'
-})
-
 const isServerReady = ref(false)
 const showLayout = ref(false)
 

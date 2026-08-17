@@ -24,7 +24,14 @@ export default defineNuxtConfig({
       title: 'Discord Party Hub',
       meta: [
         { name: 'description', content: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!' },
-        { name: 'theme-color', content: '#f97316' }
+        { name: 'theme-color', content: '#f97316' },
+        { property: 'og:title', content: 'Discord Party Hub' },
+        { property: 'og:description', content: 'Tu hub de juegos en tiempo real. ¡Entra a jugar wachoo o te cagas!' },
+        { property: 'og:image', content: 'https://discord-party-hub.vercel.app/banner.jpg?v=4' },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: 'https://discord-party-hub.vercel.app/banner.jpg?v=4' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
