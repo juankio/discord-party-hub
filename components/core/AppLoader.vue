@@ -53,8 +53,8 @@ const phrases = [
   "Preparando la fiesta...",
   "Mezclando minijuegos...",
   "Lanzando los dados...",
-  "Repartiendo diversión...",
-  "Llamando a los jugadores...",
+  "Despertando los servidores gratuitos...",
+  "(Esto puede tardar unos 10 segundos)...",
   "Calentando motores..."
 ]
 

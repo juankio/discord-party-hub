@@ -1,0 +1,16 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    # Ejecutar cada 10 minutos
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Azure Container Apps Health Endpoint
+        run: |
+          echo "Haciendo ping al servidor para evitar Scale to Zero (Cold Start)..."
+          curl -I -s https://dcparty-backend-prod.yellowpebble-412d5619.eastus.azurecontainerapps.io/api/health
