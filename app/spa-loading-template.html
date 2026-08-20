@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/loader.css">
+</head>
+<body>
+  <div class="app-loader">
+    <div class="bg-doodles"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="dice-wrapper">
+      <div class="dice-bounce transform-style-3d">
+        <div class="dice-spin transform-style-3d">
+          <div class="face front"><div class="face-center"><div class="dot"></div></div></div>
+          <div class="face back"><div class="face-between"><div class="dot self-start"></div><div class="dot self-end"></div></div></div>
+          <div class="face right"><div class="face-between-col"><div class="dot self-start"></div><div class="dot self-center"></div><div class="dot self-end"></div></div></div>
+          <div class="face left">
+            <div class="face-between-col-2">
+              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+            </div>
+          </div>
+          <div class="face top">
+            <div class="pos-rel">
+              <div class="dot abs-tl"></div><div class="dot abs-tr"></div>
+              <div class="dot abs-center"></div>
+              <div class="dot abs-bl"></div><div class="dot abs-br"></div>
+            </div>
+          </div>
+          <div class="face bottom">
+            <div class="face-between-col-2">
+              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dice-shadow"></div>
+    </div>
+    
+    <div class="plaque-content">
+      <div class="text-container">
+        <span class="phrase">INICIALIZANDO CONEXIÓN...</span>
+      </div>
+      <div class="loading-bar-wrapper">
+        <div class="loading-bar-container">
+          <div class="loading-bar-progress" id="spa-bar"></div>
+        </div>
+        <div class="percentage-text" id="spa-percent">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let pct = 0;
+    const el = document.getElementById('spa-percent');
+    const bar = document.getElementById('spa-bar');
+    const intv = setInterval(() => {
+      // Simulate fast network then slow server wake-up
+      pct += Math.random() * 4;
+      if (pct > 88) pct = 88; // Wait for Vue to take over at ~88%
+      const rounded = Math.floor(pct);
+      el.innerText = rounded + '%';
+      bar.style.width = rounded + '%';
+    }, 150);
+  </script>
+</body>
+</html>
