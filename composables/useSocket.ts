@@ -9,6 +9,7 @@ import { useAppAudio } from '~/composables/useAppAudio'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
+const isReconnecting = ref(false)
 
 export const useSocket = () => {
   const config = useRuntimeConfig()
@@ -26,6 +27,7 @@ export const useSocket = () => {
 
     socket.value.on('connect', () => {
       isConnected.value = true
+      isReconnecting.value = false
       
       // Unirse a la sala enviando los datos guardados en Pinia
       socket.value?.emit('join_room', {
@@ -36,6 +38,24 @@ export const useSocket = () => {
         color: playerStore.color,
         totalWins: playerStore.totalWins
       })
+    })
+
+    socket.value.io.on('reconnect_attempt', () => {
+      isReconnecting.value = true
+    })
+
+    socket.value.io.on('reconnect', () => {
+      isReconnecting.value = false
+      isConnected.value = true
+    })
+
+    socket.value.on('connect_error', () => {
+      isConnected.value = false
+    })
+
+    socket.value.io.on('reconnect_failed', () => {
+      isReconnecting.value = false
+      isConnected.value = false
     })
 
     socket.value.on('room_update', (data) => {
@@ -93,6 +113,7 @@ export const useSocket = () => {
       socket.value.disconnect()
       socket.value = null
       isConnected.value = false
+      isReconnecting.value = false
     }
   }
 
@@ -105,6 +126,7 @@ export const useSocket = () => {
   return {
     socket,
     isConnected,
+    isReconnecting,
     connect,
     disconnect,
     updateProfile

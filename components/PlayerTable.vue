@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-[92%] sm:w-full max-w-4xl min-h-[220px] sm:min-h-[0px] aspect-[4/3] sm:aspect-[2/1] mx-auto mt-6 sm:mt-10 player-table-container">
+  <div class="relative w-[calc(100%-5rem)] sm:w-[calc(100%-6rem)] md:w-[calc(100%-4rem)] max-w-[800px] min-h-[160px] sm:min-h-[0px] aspect-[4/3] sm:aspect-[2/1] mx-auto mt-8 sm:mt-12 player-table-container">
     <div class="absolute inset-3 sm:inset-6 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-2xl flex p-2 sm:p-3 md:p-5 table-surface">
       <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2.5rem] shadow-inner relative flex items-center justify-center border-4 border-[#0a662c]">
         

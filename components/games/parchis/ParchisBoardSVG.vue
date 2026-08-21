@@ -25,7 +25,7 @@
     </defs>
 
     <!-- Base Madera -->
-    <polygon :points="basePolygonPoints" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" />
+    <polygon :points="basePolygonPoints" fill="#4a2e1b" stroke="#7a4b2b" stroke-width="24" stroke-linejoin="round" />
 
     <!-- Center Goal Polygon Background -->
     <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="8"/>
@@ -81,7 +81,7 @@
     </g>
 
     <!-- Wooden Frame Overlay (drawn on top of wedges to prevent overlap) -->
-    <polygon :points="basePolygonPoints" fill="none" stroke="#7a4b2b" stroke-width="40" stroke-linejoin="round" class="pointer-events-none" />
+    <polygon :points="basePolygonPoints" fill="none" stroke="#7a4b2b" stroke-width="24" stroke-linejoin="round" class="pointer-events-none" />
   </svg>
 </template>
 

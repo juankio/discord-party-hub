@@ -1,12 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
+  spaLoadingTemplate: 'app/spa-loading-template.html',
+  experimental: {
+    appManifest: false
+  },
   features: {
     inlineStyles: false
   },
   devtools: { enabled: false },
   modules: ['@nuxt/ui', '@pinia/nuxt'],
-  css: ['~/assets/css/uno-cards.css'],
+  css: ['~/assets/css/uno-cards.css', '~/public/loader.css'],
   colorMode: {
     preference: 'dark' // Forzar modo oscuro
   },

@@ -10,7 +10,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const innerRadius = (75 / M) - 50;
 		const R_max = innerRadius + 460; 
 		const trueRadius = R_max / Math.cos(Math.PI / N);
-		return { N, M, innerRadius, R_max, trueRadius, strokeMargin: 40 };
+		return { N, M, innerRadius, R_max, trueRadius, strokeMargin: 12 };
 	};
 
 	const dynamicViewBox = computed(() => {
@@ -58,7 +58,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 					: [ { x: 25, y: y_bot }, { x: 75, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
 				let cx = row === 0 ? (25 + Math.abs(y_bot - 25) * M) / 2 : 50;
 				let center = rotatePoint(cx, y_bot - 25, armAngle);
-				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: false, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
+				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? "#fcd34d" : "#f5ebd5", isSalida: false, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + row] = center;
 			}
 
@@ -77,7 +77,7 @@ export function useParchisBoardGeometry(sidesRef: any) {
 					: [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
 				let cx = row === 0 ? (-25 + -Math.abs(y_bot - 25) * M) / 2 : -50;
 				let center = rotatePoint(cx, y_bot - 25, armAngle);
-				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? "#fcd34d" : "#f5ebd5", isSalida: false, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
+				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: true, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + (16 - row)] = center;
 			}
 

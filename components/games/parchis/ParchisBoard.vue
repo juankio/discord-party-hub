@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-full flex flex-col items-center justify-start sm:justify-center gap-6 sm:gap-8 overflow-x-hidden overflow-y-auto overscroll-contain pb-36 xl:pb-8 xl:overflow-hidden xl:flex-row xl:items-start xl:justify-center xl:p-8">
+  <div class="relative w-full h-full flex flex-col items-center justify-between xl:justify-center overflow-x-hidden overflow-y-auto overscroll-contain pb-24 sm:pb-28 xl:pb-8 xl:overflow-hidden xl:flex-row xl:items-center xl:justify-center xl:p-8">
     
     <!-- Fondo oscurecido para selección de asientos (Zoro) -->
     <div 
@@ -9,12 +9,12 @@
 
     <!-- Tablero contenedor dinámico -->
     <div 
-      class="w-full flex items-center justify-center min-h-0 relative p-2 sm:p-4 mt-2 sm:mt-0 flex-1 transition-all duration-700"
+      class="w-full flex items-center justify-center min-h-0 relative p-0 sm:p-2 xl:p-8 flex-1 transition-all duration-700 my-auto"
       :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'z-10 scale-105 drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]' : 'z-0'"
     >
       <div 
-        class="relative mx-auto shrink-0" 
-        style="width: 100%; max-width: min(100%, calc(100dvh - 200px)); max-height: 1000px; aspect-ratio: 1/1;"
+        class="relative mx-auto shrink-0 flex items-center justify-center" 
+        style="width: 100vw; max-width: min(100vw, calc(100dvh - 120px)); max-height: 1000px; aspect-ratio: 1/1;"
       >
         <!-- UNIVERSAL PARCHÍS BOARD SVG COMPONENT -->
         <ParchisBoardSVG
