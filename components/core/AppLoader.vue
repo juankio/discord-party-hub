@@ -37,8 +37,8 @@
     <div class="plaque-content">
       <div class="text-container">
         <Transition name="phrase-fade" mode="out-in">
-          <span :key="currentPhraseIndex" class="phrase">
-            {{ phrases[currentPhraseIndex] }}
+          <span :key="currentPhraseText" class="phrase">
+            {{ currentPhraseText }}
           </span>
         </Transition>
       </div>
@@ -54,34 +54,74 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+
+const props = defineProps<{
+  isReady?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'finish'): void
+}>()
 
 const phrases = [
   "Preparando la fiesta...",
   "Mezclando minijuegos...",
   "Lanzando los dados...",
-  "Despertando los servidores gratuitos...",
-  "(Esto puede tardar unos 10 segundos)...",
+  "Despertando servidores...",
+  "Afinando los tableros...",
   "Calentando motores..."
 ]
 
 const currentPhraseIndex = ref(0)
-const percentage = ref(88) // Puntos de relevo exacto con el SPA
+const percentage = ref(70)
+const isCompleted = ref(false)
+
+const currentPhraseText = computed(() => {
+  if (isCompleted.value || props.isReady) {
+    return "¡FIESTA LISTA!"
+  }
+  return phrases[currentPhraseIndex.value]
+})
 
 let textInterval: ReturnType<typeof setInterval> | null = null
 let pctInterval: ReturnType<typeof setInterval> | null = null
 
+const completeLoading = () => {
+  if (isCompleted.value) return
+  isCompleted.value = true
+  
+  if (pctInterval) clearInterval(pctInterval)
+  if (textInterval) clearInterval(textInterval)
+  
+  // Animación rápida y satisfactoria a 100%
+  percentage.value = 100
+  
+  setTimeout(() => {
+    emit('finish')
+  }, 450)
+}
+
+watch(() => props.isReady, (ready) => {
+  if (ready) {
+    completeLoading()
+  }
+}, { immediate: true })
+
 onMounted(() => {
   textInterval = setInterval(() => {
-    currentPhraseIndex.value = (currentPhraseIndex.value + 1) % phrases.length
-  }, 2500)
-
-  pctInterval = setInterval(() => {
-    if (percentage.value < 99) {
-      percentage.value += Math.floor(Math.random() * 2)
-      if (percentage.value > 99) percentage.value = 99
+    if (!isCompleted.value) {
+      currentPhraseIndex.value = (currentPhraseIndex.value + 1) % phrases.length
     }
-  }, 400)
+  }, 2200)
+
+  // Avance orgánico mientras espera al backend (de 70% a 96%)
+  pctInterval = setInterval(() => {
+    if (!isCompleted.value && percentage.value < 96) {
+      percentage.value += Math.floor(Math.random() * 2) + 1
+      if (percentage.value > 96) percentage.value = 96
+    }
+  }, 350)
 })
 
 onUnmounted(() => {
@@ -93,16 +133,16 @@ onUnmounted(() => {
 <style scoped>
 .phrase-fade-enter-active,
 .phrase-fade-leave-active {
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .phrase-fade-enter-from {
   opacity: 0;
-  transform: translateY(8px);
-  filter: blur(4px);
+  transform: translateY(6px);
+  filter: blur(3px);
 }
 .phrase-fade-leave-to {
   opacity: 0;
-  transform: translateY(-8px);
-  filter: blur(4px);
+  transform: translateY(-6px);
+  filter: blur(3px);
 }
 </style>

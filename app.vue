@@ -1,10 +1,10 @@
 <template>
   <div>
     <Transition name="loader-fade" @after-leave="destroyLoader">
-      <AppLoader v-if="!isServerReady" />
+      <AppLoader v-if="!isLoaderDismissed" :is-ready="isServerReady" @finish="onLoaderFinish" />
     </Transition>
 
-    <div :class="{ 'opacity-0 h-0 overflow-hidden': !isServerReady, 'transition-opacity duration-1000 opacity-100': isServerReady }">
+    <div :class="{ 'opacity-0 h-0 overflow-hidden': !isLoaderDismissed, 'transition-opacity duration-1000 opacity-100': isLoaderDismissed }">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -22,14 +22,19 @@ import { useAudioStore } from '~/stores/audioStore'
 import AppLoader from '~/components/core/AppLoader.vue'
 import GameAudioController from '~/components/core/GameAudioController.vue'
 
-const isServerReady = ref(false)
-const showLayout = ref(false)
-
 const playerStore = usePlayerStore()
 const audioStore = useAudioStore()
 
+const isServerReady = ref(false)
+const isLoaderDismissed = ref(false)
+const showLayout = ref(false)
+
+const onLoaderFinish = () => {
+  isLoaderDismissed.value = true
+}
+
 const destroyLoader = () => {
-  showLayout.value = true;
+  showLayout.value = true
 }
 
 const hexToRgb = (hex: string) => {

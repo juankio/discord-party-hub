@@ -43,7 +43,7 @@
     
     <div class="plaque-content">
       <div class="text-container">
-        <span class="phrase">INICIALIZANDO CONEXIÓN...</span>
+        <span class="phrase">INICIALIZANDO FIESTA...</span>
       </div>
       <div class="loading-bar-wrapper">
         <div class="loading-bar-container">
@@ -59,13 +59,18 @@
     const el = document.getElementById('spa-percent');
     const bar = document.getElementById('spa-bar');
     const intv = setInterval(() => {
-      // Simulate fast network then slow server wake-up
-      pct += Math.random() * 4;
-      if (pct > 88) pct = 88; // Wait for Vue to take over at ~88%
+      if (pct < 60) {
+        pct += Math.random() * 8 + 4;
+      } else if (pct < 90) {
+        pct += Math.random() * 2 + 0.5;
+      } else if (pct < 95) {
+        pct += Math.random() * 0.4;
+      }
+      if (pct > 95) pct = 95;
       const rounded = Math.floor(pct);
-      el.innerText = rounded + '%';
-      bar.style.width = rounded + '%';
-    }, 150);
+      if (el) el.innerText = rounded + '%';
+      if (bar) bar.style.width = rounded + '%';
+    }, 120);
   </script>
 </body>
 </html>
