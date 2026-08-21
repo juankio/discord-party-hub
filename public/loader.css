@@ -1,0 +1,88 @@
+/* Global Loader CSS */
+body, html {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background-color: #0A0A0A;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+.app-loader {
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; background-color: #0A0A0A;
+}
+.bg-doodles {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  opacity: 0.4; mix-blend-mode: screen; pointer-events: none;
+  background-image: url('/doodles.svg'); background-size: 400px;
+  animation: slideBg 60s linear infinite;
+}
+@keyframes slideBg { 0% { background-position: 0 0; } 100% { background-position: 800px 800px; } }
+.bg-overlay {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  background-color: rgba(0, 0, 0, 0.4); pointer-events: none;
+}
+
+/* Dice - Cinematic size */
+.dice-wrapper { position: relative; width: 8rem; height: 8rem; display: flex; align-items: center; justify-content: center; perspective: 1200px; z-index: 10; }
+.transform-style-3d { transform-style: preserve-3d; }
+.dice-bounce { width: 4rem; height: 4rem; position: relative; animation: diceBounce 0.6s cubic-bezier(0.33, 1, 0.68, 1) alternate infinite; }
+.dice-spin { width: 100%; height: 100%; position: relative; animation: diceSpin 3.5s linear infinite; }
+.face {
+  position: absolute; width: 4rem; height: 4rem;
+  border-radius: 0.75rem; box-shadow: inset 0 0 20px rgba(0,0,0,0.15), 0 0 15px rgba(0,0,0,0.15);
+  backface-visibility: hidden; display: flex; border: 1px solid rgba(255,255,255,0.25);
+}
+.dot {
+  background-color: #fffff0; border-radius: 9999px; width: 0.6rem; height: 0.6rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.9);
+}
+.face-center { align-items: center; justify-content: center; width: 100%; height: 100%; display: flex; }
+.face-between { justify-content: space-between; padding: 0.5rem; width: 100%; height: 100%; display: flex; }
+.face-between-col { flex-direction: column; justify-content: space-between; padding: 0.4rem; width: 100%; height: 100%; display: flex; }
+.face-between-col-2 { flex-direction: column; justify-content: space-between; padding: 0.5rem; width: 100%; height: 100%; display: flex; }
+.front  { transform: translateZ(32px); background-color: #f43f5e; } 
+.back   { transform: rotateY(180deg) translateZ(32px); background-color: #0ea5e9; }
+.right  { transform: rotateY(90deg) translateZ(32px); background-color: #fbbf24; } 
+.left   { transform: rotateY(-90deg) translateZ(32px); background-color: #10b981; }
+.top    { transform: rotateX(90deg) translateZ(32px); background-color: #8b5cf6; } 
+.bottom { transform: rotateX(-90deg) translateZ(32px); background-color: #f97316; }
+
+.dice-shadow {
+  position: absolute; bottom: -1rem; width: 5rem; height: 1rem;
+  background-color: rgba(255, 255, 255, 0.25); border-radius: 50%; filter: blur(8px);
+  animation: diceShadow 0.6s cubic-bezier(0.33, 1, 0.68, 1) alternate infinite;
+}
+
+/* Text and Loader below dice */
+.plaque-content { 
+  margin-top: 3rem; width: 80%; max-width: 600px;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem; z-index: 20;
+}
+.text-container { display: flex; justify-content: center; align-items: center; height: 2rem; }
+.phrase { font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif; font-weight: 700; letter-spacing: 0.08em; font-size: 1.1rem; color: #ffffff; text-align: center; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.loading-bar-wrapper { display: flex; align-items: center; gap: 1.5rem; width: 100%; }
+.loading-bar-container {
+  flex-grow: 1; height: 8px; background-color: rgba(255,255,255,0.1);
+  border-radius: 9999px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.1); overflow: hidden; position: relative;
+}
+.loading-bar-progress {
+  width: 0%; height: 100%; border-radius: 9999px;
+  background: linear-gradient(90deg, #f43f5e, #fbbf24, #0ea5e9, #f43f5e); background-size: 200% 100%;
+  animation: neonFlow 2s linear infinite; transition: width 0.3s ease-out;
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
+}
+.percentage-text {
+  color: #ffffff; font-weight: 800; font-size: 1.1rem; width: 3.5rem; text-align: right; font-family: monospace; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+@keyframes neonFlow { 0% { background-position: 200% 0; } 100% { background-position: 0% 0; } }
+@keyframes diceBounce { 0% { transform: translateY(0); } 100% { transform: translateY(-90px); } }
+@keyframes diceSpin { 0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); } 100% { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); } }
+@keyframes diceShadow { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(0.3); opacity: 0.1; } }
+
+/* Utility classes */
+.self-start { align-self: flex-start; } .self-center { align-self: center; } .self-end { align-self: flex-end; }
+.flex { display: flex; } .justify-between { justify-content: space-between; }
+.pos-rel { position: relative; width: 100%; height: 100%; padding: 0.6rem; }
+.abs-tl { position: absolute; top: 0.6rem; left: 0.6rem; } .abs-tr { position: absolute; top: 0.6rem; right: 0.6rem; }
+.abs-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.abs-bl { position: absolute; bottom: 0.6rem; left: 0.6rem; } .abs-br { position: absolute; bottom: 0.6rem; right: 0.6rem; }

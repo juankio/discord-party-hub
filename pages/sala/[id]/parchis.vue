@@ -1,13 +1,38 @@
-<template>
-  <div class="min-h-screen flex flex-col items-center justify-center p-4">
-    <h1 class="text-4xl font-black text-white capitalize drop-shadow-md mb-4">parchis</h1>
-    <p class="text-gray-400">Cargando motor del juego...</p>
-    <UButton @click="$router.push(`/sala/${roomId}`)" color="gray" variant="soft" class="mt-8">Volver a la mesa</UButton>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+definePageMeta({ middleware: ["game-guard"] })
+
+
+import { useParchisEngine } from "~/composables/useParchisEngine"
+
 const route = useRoute()
 const roomId = route.params.id as string
+
+const { state, playerState, handleAction, exitGame } = useParchisEngine(roomId)
 </script>
+
+<template>
+  <GameLayout
+    bg-class="p-0 sm:p-4 md:p-8"
+    :is-finished="state?.gameState === 'FINISHED'"
+    :winner-message="state.winner === playerState.userId ? '¡Has ganado la partida!' : `El ganador es ${state.players.find((r: any) => r.userId === state.winner)?.nickname || 'un rival'}.`"
+    :rules="['Saca un 5 para sacar una ficha de la cárcel.', 'Cómete las fichas de los rivales para avanzar 20 casillas extra.', 'Mete una ficha en la meta para avanzar 10 casillas extra con otra.', 'No puedes pasar sobre barreras (dos fichas juntas).']"
+    @leave="exitGame"
+  >
+    <!-- Overlay de Selección de Fichas -->
+    <ParchisTokenSelector 
+      v-if="state.gameState === 'CHOOSING_TOKENS'" 
+      :players="state.players" 
+      :my-user-id="playerState.userId" 
+      @select_figure="handleAction.selectFigure" 
+    />
+    
+    <!-- Tablero de Juego Principal -->
+    <ParchisBoard v-else-if="['PLAYING', 'ROLLING_FOR_ORDER', 'CHOOSING_SEATS'].includes(state.gameState)" class="flex-grow" />
+
+    <ParchisInitiative v-if="state.gameState === 'ROLLING_FOR_ORDER'" :players="state.players" />
+
+
+    <!-- Estado de Espera u Otros -->
+    <GameLoading v-else-if="state.gameState === 'WAITING'" message="PREPARANDO TABLERO" icon="i-heroicons-cube-transparent" />
+  </GameLayout>
+</template>

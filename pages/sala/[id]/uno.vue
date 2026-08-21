@@ -1,241 +1,89 @@
 <template>
-  <div class="relative min-h-screen flex flex-col bg-transparent overflow-hidden text-white font-sans">
-    
-    <!-- Top Bar -->
-    <div class="absolute top-4 left-4 z-50 flex gap-4">
-      <UButton @click="surrender" color="red" variant="soft" icon="i-heroicons-flag">Rendirse</UButton>
-      <UButton @click="exitGame" color="gray" variant="ghost" icon="i-heroicons-arrow-left">Salir al Lobby</UButton>
+  <GameLayout
+    bg-class="bg-transparent text-white font-sans"
+    :is-finished="state.gameState === 'FINISHED'"
+    :winner-message="state.winner === playerState.userId ? '¡Has ganado la partida!' : `El ganador es ${state.rivals.find((r: any) => r.userId === state.winner)?.nickname || 'un rival'}.`"
+    :rules="['Combina cartas por color o número.', 'No olvides pulsar \&quot;UNO\&quot; cuando te quede una carta, o serás penalizado.', 'Si tiras un +2 o +4, el siguiente puede acumular tirando otro (si la regla está activa).']"
+    @leave="exitGame"
+  >
+    <!-- Botón Rendirse -->
+    <button 
+      @click="handleAction.surrender()"
+      class="absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] z-50 group flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+    >
+      <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
+      <UIcon name="i-heroicons-flag" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+      <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Rendirse</span>
+    </button>
+
+    <!-- Turn Banner -->
+    <div v-if="state.gameState !== 'WAITING'" class="absolute top-0 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-500" 
+         :class="isMyTurn ? 'scale-110' : 'scale-100 opacity-80'">
+      <div class="bg-black/80 backdrop-blur-md border-b-4 border-x-4 rounded-b-3xl px-4 py-2 sm:px-8 sm:py-3 flex flex-col items-center shadow-2xl transition-colors duration-500"
+           :class="isMyTurn ? 'border-yellow-500' : 'border-white/10'">
+        <span class="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 mb-1">Turno actual</span>
+        <h2 class="text-lg sm:text-3xl font-black tracking-widest uppercase whitespace-nowrap max-w-none"
+            :class="isMyTurn ? 'text-yellow-400' : 'text-white'">
+          {{ isMyTurn ? '¡TU TURNO!' : (state.rivals.find(r => r.userId === state.currentTurnUserId)?.nickname || 'Pensando...') }}
+        </h2>
+      </div>
     </div>
 
-    <!-- Rivals Area -->
-    <UnoRivals 
-      :rivals="unoStore.rivals" 
-      :current-turn-user-id="unoStore.currentTurnUserId"
-      @challenge="challengeUno"
-    />
+    <!-- Central Table & Game Area -->
+    <template v-if="state.gameState !== 'WAITING'">
+      <UnoTable 
+        :top-card="state.topCard"
+        :current-color="state.currentColor"
+        :pending-draws="state.pendingDraws"
+        :is-my-turn="isMyTurn"
+        :has-drawn-this-turn="state.hasDrawnThisTurn"
+        :my-hand="state.myHand"
+        :rivals="state.rivals"
+        :current-turn-user-id="state.currentTurnUserId"
+        @draw="handleAction.drawCard"
+        @pass-turn="handleAction.passTurn"
+        @challenge="handleAction.challengeUno"
+      />
 
-    <!-- Central Table -->
-    <UnoTable 
-      :top-card="unoStore.topCard"
-      :pending-draws="unoStore.pendingDraws"
-      :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
-      @draw="drawCard"
-    />
+      <UnoHand 
+        :my-hand="state.myHand"
+        :is-my-turn="isMyTurn"
+        :top-card="state.topCard"
+        :current-color="state.currentColor"
+        :pending-draws="state.pendingDraws"
+        @play-card="handleAction.playCard"
+        @yell-uno="handleAction.yellUno"
+        @hover-card="handleAction.onCardHover"
+      />
+    </template>
 
-    <!-- My Hand Area -->
-    <UnoHand 
-      :my-hand="unoStore.myHand"
-      :is-my-turn="unoStore.currentTurnUserId === playerStore.userId"
-      :top-card="unoStore.topCard"
-      :current-color="unoStore.currentColor"
-      :pending-draws="unoStore.pendingDraws"
-      @play-card="playCard"
-      @yell-uno="yellUno"
-      @hover-card="onCardHover"
-    />
+    <!-- Estado de Espera -->
+    <GameLoading v-else message="PREPARANDO LA MESA" icon="i-heroicons-arrow-path" />
 
     <!-- Color Modal -->
-    <div v-if="unoStore.gameState === 'CHOOSING_COLOR' && unoStore.actionRequiredFrom === playerStore.userId" 
-         class="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-      <h2 class="text-4xl font-black mb-8 drop-shadow-lg text-white">Elige un color</h2>
-      <div class="grid grid-cols-2 gap-6">
-        <div @click="declareColor('red')" class="w-32 h-32 bg-red-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(239,68,68,0.5)]"></div>
-        <div @click="declareColor('blue')" class="w-32 h-32 bg-blue-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(59,130,246,0.5)]"></div>
-        <div @click="declareColor('green')" class="w-32 h-32 bg-green-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(34,197,94,0.5)]"></div>
-        <div @click="declareColor('yellow')" class="w-32 h-32 bg-yellow-500 rounded-2xl cursor-pointer hover:scale-110 transition-transform shadow-[0_0_30px_rgba(234,179,8,0.5)]"></div>
-      </div>
-    </div>
+    <UnoColorModal 
+      :is-open="state.gameState === 'CHOOSING_COLOR' && state.actionRequiredFrom === playerState.userId"
+      @select="handleAction.declareColor"
+    />
 
-    <!-- Victory Modal -->
-    <div v-if="unoStore.gameState === 'FINISHED'" 
-         class="absolute inset-0 bg-black/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-center">
-      <div class="winner-anim transform scale-50 opacity-0">
-        <h2 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 drop-shadow-[0_0_30px_rgba(249,115,22,0.8)] mb-4">
-          ¡VICTORIA!
-        </h2>
-        <p class="text-2xl text-gray-300 font-bold mb-12">
-          {{ unoStore.winner === playerStore.userId ? '¡Has ganado la partida!' : `El ganador es ${unoStore.rivals.find(r => r.userId === unoStore.winner)?.nickname || 'un rival'}.` }}
-        </p>
-        <UButton 
-          v-if="playerStore.userId === playerStore.hostUserId"
-          size="xl" 
-          color="primary" 
-          class="px-12 h-16 text-xl font-bold shadow-[0_0_20px_rgba(88,101,242,0.5)] hover:scale-105 active:scale-95 transition-all"
-          @click="exitGame"
-        >
-          Volver al Lobby
-        </UButton>
-        <p v-else class="text-gray-500 font-medium animate-pulse">Esperando a que el Host vuelva al lobby...</p>
-      </div>
-    </div>
-  </div>
+    <!-- Swap Modal -->
+    <UnoSwapModal
+      :is-open="state.gameState === 'CHOOSING_PLAYER' && state.actionRequiredFrom === playerState.userId"
+      :rivals="state.rivals"
+      @select="handleAction.swapHands"
+    />
+  </GameLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { usePlayerStore } from '~/stores/playerStore'
-import { useUnoStore } from '~/stores/games/unoStore'
-import { useSocket } from '~/composables/useSocket'
-import UnoRivals from '~/components/games/uno/UnoRivals.vue'
-import UnoTable from '~/components/games/uno/UnoTable.vue'
-import UnoHand from '~/components/games/uno/UnoHand.vue'
-import anime from 'animejs'
+definePageMeta({ middleware: ["game-guard"] })
+
+
+import { useUnoEngine } from '~/composables/useUnoEngine'
 
 const route = useRoute()
-const router = useRouter()
 const roomId = route.params.id as string
 
-const playerStore = usePlayerStore()
-const unoStore = useUnoStore()
-const { socket } = useSocket()
-const toast = useToast()
-
-const playCard = (id: string) => {
-  // Emit event after UnoHand finishes animation
-  socket.value?.emit('uno:play_cards', [id])
-}
-
-const drawCard = () => {
-  // Animación de robar (vuela desde el centro hacia la mano)
-  const deckEl = document.querySelector('.deck-placeholder')
-  const handContainer = document.querySelector('.card-wrapper')
-  
-  if (deckEl) {
-    const rect = deckEl.getBoundingClientRect()
-    // Creamos una carta falsa que baja volando
-    const clone = document.createElement('div')
-    clone.className = 'w-20 h-32 bg-red-600 rounded-lg border-4 border-white shadow-xl fixed z-[9999]'
-    clone.style.top = `${rect.top}px`
-    clone.style.left = `${rect.left}px`
-    document.body.appendChild(clone)
-    
-    anime({
-      targets: clone,
-      top: window.innerHeight - 100, // Cae hacia abajo
-      left: window.innerWidth / 2,
-      scale: 0.5,
-      rotate: anime.random(-45, 45),
-      opacity: [1, 0],
-      duration: 400,
-      easing: 'easeInQuad',
-      complete: () => {
-        clone.remove()
-        socket.value?.emit('uno:draw_card')
-      }
-    })
-  } else {
-    socket.value?.emit('uno:draw_card')
-  }
-}
-
-const declareColor = (color: string) => {
-  socket.value?.emit('uno:declare_color', color)
-}
-
-const yellUno = () => {
-  socket.value?.emit('uno:yell_uno')
-}
-
-const challengeUno = (targetId: string) => {
-  socket.value?.emit('uno:challenge_uno', targetId)
-}
-
-// Sincronizar el mouse (Hover) con el backend
-const onCardHover = (index: number | null) => {
-  socket.value?.emit('uno:hover_card', index)
-}
-
-const surrender = () => {
-  socket.value?.emit('uno:surrender')
-}
-
-const exitGame = () => {
-  router.push(`/sala/${roomId}`)
-}
-
-watch(() => unoStore.topCard, async (newCard, oldCard) => {
-  if (newCard && newCard.id !== oldCard?.id) {
-    await nextTick()
-    anime({
-      targets: '.top-card-anim',
-      scale: [1.5, 1],
-      opacity: [0, 1],
-      rotate: () => anime.random(-15, 15),
-      duration: 400,
-      easing: 'easeOutBounce'
-    })
-  }
-}, { deep: true })
-
-onMounted(() => {
-  if (typeof window !== 'undefined') {
-    window.addEventListener('uno:action', handleRivalAnimation as EventListener)
-  }
-  
-  socket.value?.on('game_message', (data) => {
-    toast.add({
-      title: 'UNO',
-      description: data.message,
-      color: 'primary',
-      icon: 'i-lucide-info'
-    })
-  })
-})
-
-onUnmounted(() => {
-  if (typeof window !== 'undefined') {
-    window.removeEventListener('uno:action', handleRivalAnimation as EventListener)
-  }
-  socket.value?.off('game_message')
-})
-
-const handleRivalAnimation = (e: CustomEvent) => {
-  const { action, userId, cardsCount } = e.detail
-  
-  if (userId === playerStore.userId) return // Ignorar si soy yo
-
-  const rivalEl = document.querySelector(`.flex-col:has([style*="${unoStore.rivals.find(r=>r.userId===userId)?.color}"])`) // Fallback cutre para buscar el rival
-  // ... Aunque como no puedo inyectar ref fácilmente en el v-for del hijo, lo haremos con selectores CSS absolutos
-  
-  const topCardEl = document.querySelector('.top-card-placeholder')
-  const deckEl = document.querySelector('.deck-placeholder')
-  
-  if (action === 'rival_played' && topCardEl) {
-    const topRect = topCardEl.getBoundingClientRect()
-    // Animacion genérica que vuela de arriba hacia el centro
-    const clone = document.createElement('div')
-    clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]'
-    clone.style.top = `-50px` // Viene del top
-    clone.style.left = `${window.innerWidth / 2}px`
-    document.body.appendChild(clone)
-    
-    anime({
-      targets: clone,
-      top: topRect.top, left: topRect.left, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
-      duration: 400, easing: 'easeInCubic',
-      complete: () => clone.remove()
-    })
-  }
-  
-  if (action === 'rival_drew' && deckEl) {
-    const deckRect = deckEl.getBoundingClientRect()
-    for (let i = 0; i < cardsCount; i++) {
-      setTimeout(() => {
-        const clone = document.createElement('div')
-        clone.className = 'w-16 h-24 bg-red-800 rounded border-2 border-white fixed z-[9999]'
-        clone.style.top = `${deckRect.top}px`
-        clone.style.left = `${deckRect.left}px`
-        document.body.appendChild(clone)
-        
-        anime({
-          targets: clone,
-          top: -50, scale: 0.5, opacity: 0, rotate: anime.random(-45, 45),
-          duration: 400, easing: 'easeOutCubic',
-          complete: () => clone.remove()
-        })
-      }, i * 150)
-    }
-  }
-}
+const { state, playerState, isMyTurn, handleAction, exitGame } = useUnoEngine(roomId)
 </script>

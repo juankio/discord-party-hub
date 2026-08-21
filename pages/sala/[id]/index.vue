@@ -1,98 +1,162 @@
 <template>
-  <div class="flex flex-col items-center pt-8 md:pt-16 p-4">
-    <div class="w-full max-w-6xl">
-      <!-- Header de la Sala -->
-      <div class="flex items-center justify-between mb-8 header-anim opacity-0">
-        <h1 class="text-3xl font-black text-white">Sala: <span class="text-primary">{{ roomId }}</span></h1>
-        <UButton color="red" variant="soft" icon="i-lucide-log-out" @click="leaveRoom">Salir</UButton>
-      </div>
+  <div class="h-[100dvh] w-full overflow-hidden flex flex-col items-center p-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] md:pt-[max(4rem,env(safe-area-inset-top))]">
+    <div class="w-full max-w-6xl flex-1 overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <LobbyHeader 
+        :room-id="roomId" 
+        :players-count="players.length" 
+        :max-players="playerStore.roomRules?.extendedLobby ? 8 : 6" 
+        @open-edit="openEditProfile" 
+        @leave-room="handleLeaveRoom" 
+      />
 
-      <!-- Componente Mesa -->
-      <PlayerTable :room-id="roomId" :players="players" />
+      <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
+        <!-- Columna Izquierda (Mesa y Controles) -->
+        <div class="flex-1 w-full flex flex-col gap-4 lg:gap-0">
+          <PlayerTable 
+            :room-id="roomId" 
+            :players="players" 
+            :host-user-id="playerStore.hostUserId" 
+            :selected-game="selectedGame" 
+            @add-bot="addBot" 
+            @avatar-click="handleAvatarClick" 
+            @change-seat="changeSeat"
+          />
 
-      <!-- Zona de Control Dinámica -->
-      <div class="mt-16 w-full flex justify-center pb-24">
-        <Transition name="fade" mode="out-in">
-          <!-- Panel de Control (Host) -->
-          <div v-if="isHost" class="flex flex-col items-center w-full max-w-3xl relative">
-            <h3 class="text-white/30 mb-4 font-black uppercase tracking-[0.4em] text-xs">Selector de Juegos</h3>
-            
-            <!-- Estante de Billar (Flat 2D Vectorial) -->
-            <div class="relative w-full bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-20 flex flex-col justify-center">
-              <div class="absolute inset-2 bg-[#2a1a0f] rounded-xl shadow-[inset_0_5px_15px_rgba(0,0,0,0.9)]"></div>
-              <div class="absolute top-1/2 left-0 w-full h-3 bg-[#4a2e1b] -translate-y-1/2 border-y border-[#3a2212] shadow-[0_5px_5px_rgba(0,0,0,0.5)] z-0"></div>
-
-              <GameSelector :games="games" :selectedGame="selectedGame" @select="selectedGame = $event" />
-            </div>
-            
-            <!-- Panel de Reglas (Extensión de Madera Flat 2D) -->
-            <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="unoRules" />
-            
-            <!-- Botón Arcade 2D Macizo -->
-            <button 
-              class="mt-12 w-[280px] h-[60px] rounded-2xl text-lg font-black uppercase tracking-widest text-white transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
-              :disabled="players.length < 2 || selectedGame !== 'uno'"
-              @click="startGame"
-              style="
-                background-color: var(--theme-color); 
-                box-shadow: 0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4);
-              "
-              onmousedown="if(!this.disabled) { this.style.transform='translateY(8px)'; this.style.boxShadow='0 0px 0 rgba(0,0,0,0.6), 0 5px 10px rgba(0,0,0,0.4)'; }"
-              onmouseup="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4)'; }"
-              onmouseleave="if(!this.disabled) { this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4)'; }"
-            >
-              Empezar Partida
-            </button>
-            
-            <p v-if="players.length < 2" class="text-xs text-gray-500 mt-6 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
-            <p v-else-if="selectedGame !== 'uno'" class="text-xs text-red-500/80 mt-6 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
+          <div class="block lg:hidden w-full max-w-md mx-auto">
+            <TableHistoryBar :players="players" />
           </div>
-          
-          <!-- Panel de Espera (Invitados) -->
-          <div v-else class="text-center">
-            <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
-            <h3 class="text-xl font-bold text-gray-200">Esperando al Host...</h3>
-            <p class="text-gray-400">El creador de la sala elegirá el juego.</p>
+
+          <!-- Zona de Control -->
+          <div class="w-full flex justify-center pb-24 mt-8 lg:mt-4 relative z-10">
+            <Transition name="fade" mode="out-in">
+              <LobbyControls 
+                :is-host="isHost"
+                :is-starting="isStarting"
+                :players-count="players.length"
+                :selected-game="selectedGame"
+                :room-rules="playerStore.roomRules"
+                :games="gamesList"
+                :is-general-rules-open="isGeneralRulesOpen"
+                :is-table-rules-open="isTableRulesOpen"
+                @update:selected-game="selectedGame = $event"
+                @toggle-general="toggleGeneralRules"
+                @toggle-table="toggleTableRules"
+                @start-game="startGame"
+              >
+                <template #rules>
+                  <GeneralRulesPanel v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isGeneralRulesOpen" />
+                  <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
+                  <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
+                  <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isTableRulesOpen" />
+                </template>
+              </LobbyControls>
+            </Transition>
           </div>
-        </Transition>
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="hidden lg:block w-[320px] xl:w-[350px] shrink-0">
+          <TableHistoryBar :players="players" />
+        </div>
       </div>
     </div>
+
+    <EditProfileModal v-model:is-open="isEditProfileOpen" />
+    <BotConfigModal 
+      v-model:is-open="showBotConfigModal" 
+      :bot="selectedBotForConfig" 
+      @update-config="updateBotConfig" 
+      @kick-bot="kickBot"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { usePlayerStore } from '~/stores/playerStore'
-import { useSocket } from '~/composables/useSocket'
-import anime from 'animejs'
+import anime from "animejs";
+import { usePlayerStore } from "~/stores/playerStore";
+import { useAppAudio } from "~/composables/useAppAudio";
+import { useRoomLobby } from "~/composables/useRoomLobby";
+import { gamesList } from "~/constants/gamesList";
+import LobbyHeader from "~/components/LobbyHeader.vue";
+import LobbyControls from "~/components/LobbyControls.vue";
 
-const router = useRouter()
-const playerStore = usePlayerStore()
-const { socket } = useSocket()
-const roomId = playerStore.roomId
+const route = useRoute();
+const roomId = computed(() => route.params.id as string);
+const playerStore = usePlayerStore();
+const { playSettings, playEditProfile, playTableExpand, playTableShrink, playUiClick } = useAppAudio();
 
-const players = computed(() => playerStore.playersInRoom)
-const isHost = computed(() => playerStore.userId !== '' && playerStore.userId === playerStore.hostUserId)
+const { 
+  players, isHost, isStarting, selectedGame, 
+  emitRules, startGame, leaveRoom, addBot, updateBotConfig, kickBot, changeSeat
+} = useRoomLobby(roomId.value);
 
-const unoRules = ref({
-  stackDrawCards: true, playMultipleSame: true, zeroAndSevenRules: true, drawUntilPlayable: false, interceptExact: false
-})
-const selectedGame = ref('uno')
-const games = [
-  { id: 'uno', name: 'UNO', color: 'bg-red-500', textSize: 'text-xs', number: 'UNO', disabled: false },
-  { id: 'parchis', name: 'Parchís', color: 'bg-yellow-500', textSize: 'text-lg', number: '1', disabled: true },
-  { id: 'liars', name: 'Liar\'s Bar', color: 'bg-[#111111]', textSize: 'text-lg', number: '8', disabled: true },
-  { id: 'stop', name: 'Stop', color: 'bg-blue-500', textSize: 'text-lg', number: '4', disabled: true },
-  { id: 'pinturillo', name: 'Pinturillo', color: 'bg-purple-600', textSize: 'text-lg', number: '11', disabled: true },
-]
+useSeoMeta({
+  title: `Lobby: ${roomId.value} - Discord Party Hub`,
+  ogTitle: `Lobby: ${roomId.value} - Discord Party Hub`,
+  description: "La sala está abierta. ¡Entra a jugar wachoo o te cagas!",
+  ogImage: "https://discord-party-hub.vercel.app/banner.jpg?v=4"
+});
 
-const startGame = () => socket.value?.emit('start_game', { gameType: selectedGame.value, rules: unoRules.value })
-const leaveRoom = () => router.push('/')
+const isEditProfileOpen = ref(false);
+const showBotConfigModal = ref(false);
+const isGeneralRulesOpen = ref(false);
+const isTableRulesOpen = ref(false);
+const selectedBotForConfig = ref<any>(null);
+
+const toggleGeneralRules = () => {
+  isGeneralRulesOpen.value = !isGeneralRulesOpen.value;
+  isTableRulesOpen.value = false;
+  if (isGeneralRulesOpen.value) {
+    playTableExpand();
+  } else {
+    playTableShrink();
+  }
+};
+
+const toggleTableRules = () => {
+  isTableRulesOpen.value = !isTableRulesOpen.value;
+  isGeneralRulesOpen.value = false;
+  if (isTableRulesOpen.value) {
+    playTableExpand();
+  } else {
+    playTableShrink();
+  }
+};
+
+const openEditProfile = () => {
+  isEditProfileOpen.value = true;
+  playEditProfile();
+};
+
+const handleLeaveRoom = () => {
+  playUiClick();
+  leaveRoom();
+};
+
+const handleRuleChange = () => {
+  if (isHost.value) {
+    playUiClick();
+    emitRules();
+  }
+};
+
+const handleAvatarClick = (player: any) => {
+  if (player.isBot && isHost.value) {
+    selectedBotForConfig.value = player;
+    showBotConfigModal.value = true;
+    playEditProfile();
+  }
+};
 
 onMounted(() => {
-  setTimeout(() => anime({ targets: '.header-anim', opacity: [0, 1], translateY: [-20, 0], duration: 800, easing: 'easeOutExpo' }), 100)
-})
+  setTimeout(() => anime({
+    targets: ".header-anim",
+    opacity: [0, 1],
+    translateY: [-20, 0],
+    duration: 800,
+    easing: "easeOutExpo",
+  }), 100);
+});
 </script>
 
 <style scoped>
