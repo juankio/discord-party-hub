@@ -23,7 +23,7 @@ class="absolute w-6 h-6 bg-white rounded-full border-4 border-[#3a2212] transiti
                    :class="rules[key] ? 'right-0' : 'left-0'"/>
             </div>
             
-            <input v-model="rules[key]" @change="$emit('change')" type="checkbox" class="hidden" >
+            <input v-model="rules[key]" type="checkbox" class="hidden" @change="$emit('change')" >
           </label>
         </div>
       </div>

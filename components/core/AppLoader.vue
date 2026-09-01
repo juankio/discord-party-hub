@@ -1,37 +1,37 @@
 <template>
   <div class="app-loader">
-    <div class="bg-doodles"></div>
-    <div class="bg-overlay"></div>
+    <div class="bg-doodles"/>
+    <div class="bg-overlay"/>
 
     <div class="dice-wrapper">
       <div class="dice-bounce transform-style-3d">
         <div class="dice-spin transform-style-3d">
-          <div class="face front"><div class="face-center"><div class="dot"></div></div></div>
-          <div class="face back"><div class="face-between"><div class="dot self-start"></div><div class="dot self-end"></div></div></div>
-          <div class="face right"><div class="face-between-col"><div class="dot self-start"></div><div class="dot self-center"></div><div class="dot self-end"></div></div></div>
+          <div class="face front"><div class="face-center"><div class="dot"/></div></div>
+          <div class="face back"><div class="face-between"><div class="dot self-start"/><div class="dot self-end"/></div></div>
+          <div class="face right"><div class="face-between-col"><div class="dot self-start"/><div class="dot self-center"/><div class="dot self-end"/></div></div>
           <div class="face left">
             <div class="face-between-col-2">
-              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
-              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+              <div class="flex justify-between"><div class="dot"/><div class="dot"/></div>
+              <div class="flex justify-between"><div class="dot"/><div class="dot"/></div>
             </div>
           </div>
           <div class="face top">
             <div class="pos-rel">
-              <div class="dot abs-tl"></div><div class="dot abs-tr"></div>
-              <div class="dot abs-center"></div>
-              <div class="dot abs-bl"></div><div class="dot abs-br"></div>
+              <div class="dot abs-tl"/><div class="dot abs-tr"/>
+              <div class="dot abs-center"/>
+              <div class="dot abs-bl"/><div class="dot abs-br"/>
             </div>
           </div>
           <div class="face bottom">
             <div class="face-between-col-2">
-              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
-              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
-              <div class="flex justify-between"><div class="dot"></div><div class="dot"></div></div>
+              <div class="flex justify-between"><div class="dot"/><div class="dot"/></div>
+              <div class="flex justify-between"><div class="dot"/><div class="dot"/></div>
+              <div class="flex justify-between"><div class="dot"/><div class="dot"/></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="dice-shadow"></div>
+      <div class="dice-shadow"/>
     </div>
 
     <div class="plaque-content">
@@ -45,7 +45,7 @@
 
       <div class="loading-bar-wrapper">
         <div class="loading-bar-container">
-          <div class="loading-bar-progress" :style="{ width: `${percentage}%` }"></div>
+          <div class="loading-bar-progress" :style="{ width: `${percentage}%` }"/>
         </div>
         <div class="percentage-text">{{ percentage }}%</div>
       </div>

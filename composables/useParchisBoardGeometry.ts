@@ -52,31 +52,31 @@ export function useParchisBoardGeometry(sidesRef: any) {
 
 			// Right side of arm
 			for (let row = 0; row < 8; row++) {
-				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
-				let pts = row === 0 
+				const y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
+				const pts = row === 0 
 					? [ { x: 25, y: y_bot }, { x: Math.abs(y_bot) * M, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ]
 					: [ { x: 25, y: y_bot }, { x: 75, y: y_bot }, { x: 75, y: y_top }, { x: 25, y: y_top } ];
-				let cx = row === 0 ? (25 + Math.abs(y_bot - 25) * M) / 2 : 50;
-				let center = rotatePoint(cx, y_bot - 25, armAngle);
+				const cx = row === 0 ? (25 + Math.abs(y_bot - 25) * M) / 2 : 50;
+				const center = rotatePoint(cx, y_bot - 25, armAngle);
 				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? "#fcd34d" : "#f5ebd5", isSalida: false, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + row] = center;
 			}
 
 			// Tip
-			let tipY = -innerRadius - 400;
-			let tipPts = [ {x: -75, y: tipY}, {x: 75, y: tipY}, {x: 75, y: tipY - 50}, {x: -75, y: tipY - 50} ];
-			let tipCenter = rotatePoint(0, tipY - 25, armAngle);
+			const tipY = -innerRadius - 400;
+			const tipPts = [ {x: -75, y: tipY}, {x: 75, y: tipY}, {x: 75, y: tipY - 50}, {x: -75, y: tipY - 50} ];
+			const tipCenter = rotatePoint(0, tipY - 25, armAngle);
 			trackSquares.push({ points: toPts(tipPts, armAngle), fill: "#fcd34d", isSalida: false, isSeguro: true, isTip: true, cx: tipCenter.x, cy: tipCenter.y, rot: armAngle });
 			coordsMap.track[p * 17 + 8] = tipCenter;
 
 			// Left side of arm
 			for (let row = 7; row >= 0; row--) {
-				let y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
-				let pts = row === 0 
+				const y_bot = -innerRadius - row * rowHeight, y_top = -innerRadius - (row + 1) * rowHeight;
+				const pts = row === 0 
 					? [ { x: -Math.abs(y_bot) * M, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ]
 					: [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
-				let cx = row === 0 ? (-25 + -Math.abs(y_bot - 25) * M) / 2 : -50;
-				let center = rotatePoint(cx, y_bot - 25, armAngle);
+				const cx = row === 0 ? (-25 + -Math.abs(y_bot - 25) * M) / 2 : -50;
+				const center = rotatePoint(cx, y_bot - 25, armAngle);
 				trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: true, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.track[p * 17 + (16 - row)] = center;
 			}
@@ -84,24 +84,24 @@ export function useParchisBoardGeometry(sidesRef: any) {
 			// Meta paths
 			coordsMap.meta[p] = [];
 			for (let row = 0; row < 8; row++) {
-				let y_bot = -innerRadius - 400 + (row + 1) * 50, y_top = -innerRadius - 400 + row * 50;
-				let pts = [ {x: -25, y: y_bot}, {x: 25, y: y_bot}, {x: 25, y: y_top}, {x: -25, y: y_top} ];
-				let center = rotatePoint(0, y_bot - 25, armAngle);
+				const y_bot = -innerRadius - 400 + (row + 1) * 50, y_top = -innerRadius - 400 + row * 50;
+				const pts = [ {x: -25, y: y_bot}, {x: 25, y: y_bot}, {x: 25, y: y_top}, {x: -25, y: y_top} ];
+				const center = rotatePoint(0, y_bot - 25, armAngle);
 				llegadaPaths.push({ points: toPts(pts, armAngle), color: baseColor, isFinal: row === 7, cx: center.x, cy: center.y, rot: armAngle });
 				coordsMap.meta[p]![row] = center;
 			}
 
 			// Wedges (Home bases)
-			let p1 = rotatePoint(75, -innerRadius - 50, armAngle);
-			let pTrackL = rotatePoint(75, -R_max, armAngle);
-			let pCorner = rotatePoint(R_max * Math.tan(Math.PI / N), -R_max, armAngle);
-			let pTrackR = rotatePoint(75, -R_max, armAngle + 360 / N);
+			const p1 = rotatePoint(75, -innerRadius - 50, armAngle);
+			const pTrackL = rotatePoint(75, -R_max, armAngle);
+			const pCorner = rotatePoint(R_max * Math.tan(Math.PI / N), -R_max, armAngle);
+			const pTrackR = rotatePoint(75, -R_max, armAngle + 360 / N);
 			
-			let cx = (p1.x + pTrackL.x + pCorner.x + pTrackR.x) / 4;
-			let cy = (p1.y + pTrackL.y + pCorner.y + pTrackR.y) / 4;
+			const cx = (p1.x + pTrackL.x + pCorner.x + pTrackR.x) / 4;
+			const cy = (p1.y + pTrackL.y + pCorner.y + pTrackR.y) / 4;
 			
-			let spotOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
-			let spots = [
+			const spotOffset = N === 4 ? 30 : N === 6 ? 24 : 18;
+			const spots = [
 				{ x: cx - spotOffset, y: cy - spotOffset }, { x: cx + spotOffset, y: cy - spotOffset },
 				{ x: cx - spotOffset, y: cy + spotOffset }, { x: cx + spotOffset, y: cy + spotOffset },
 			];
@@ -114,9 +114,9 @@ export function useParchisBoardGeometry(sidesRef: any) {
 		const polyPts = [];
 		for (let p = 0; p < N; p++) {
 			const armAngle = -p * (360 / N);
-			let p1 = rotatePoint(-25, -innerRadius, armAngle);
-			let p2 = rotatePoint(25, -innerRadius, armAngle);
-			let intersectionPt = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
+			const p1 = rotatePoint(-25, -innerRadius, armAngle);
+			const p2 = rotatePoint(25, -innerRadius, armAngle);
+			const intersectionPt = rotatePoint(0, -innerRadius / Math.cos(Math.PI / N), armAngle - 180 / N);
 			polyPts.push(`${p1.x},${p1.y}`, `${p2.x},${p2.y}`, `${intersectionPt.x},${intersectionPt.y}`);
 		}
 

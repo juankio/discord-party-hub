@@ -44,8 +44,8 @@ defineEmits<{
 
         <div class="mt-6 pt-4 border-t-2 border-dashed border-[#a6977a] flex justify-end">
           <button 
-            @click="$emit('ready')"
             class="bg-[#8b3a3a] hover:bg-[#a54a4a] text-white font-black uppercase px-6 py-3 border-2 border-[#3e2723] border-b-[6px] active:border-b-2 active:translate-y-[4px] transition-all"
+            @click="$emit('ready')"
           >
             Entendido
           </button>

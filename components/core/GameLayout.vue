@@ -20,14 +20,15 @@ const isRulesOpen = ref(false)
   <div class="h-[100dvh] w-full overflow-hidden flex flex-col relative pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]" :class="bgClass || 'bg-zinc-950'">
     <GameExitButton @leave="$emit('leave')" />
     
-    <div v-if="rules && rules.length > 0" 
+    <div
+v-if="rules && rules.length > 0" 
          class="absolute right-4 z-[100] top-[max(1rem,env(safe-area-inset-top))]"
          @mouseleave="isRulesOpen = false">
       <button 
         class="w-12 h-12 rounded-full border-[4px] border-[#5c3a21] bg-[#f4e4bc] flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform"
+        aria-label="Reglas del Juego"
         @click="isRulesOpen = !isRulesOpen"
         @mouseenter="isRulesOpen = true"
-        aria-label="Reglas del Juego"
       >
         <ScrollText class="w-6 h-6 text-[#5c3a21]" />
       </button>
@@ -41,7 +42,7 @@ const isRulesOpen = ref(false)
         </div>
         <ul class="space-y-2.5 text-[#5c3a21] font-medium text-sm md:text-base max-h-[60vh] overflow-y-auto overscroll-contain custom-scrollbar-notebook pb-2 pr-1">
           <li v-for="(rule, index) in rules" :key="index" class="flex items-start gap-2.5">
-            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#5c3a21] shrink-0"></span>
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#5c3a21] shrink-0"/>
             <span class="leading-snug">{{ rule }}</span>
           </li>
         </ul>

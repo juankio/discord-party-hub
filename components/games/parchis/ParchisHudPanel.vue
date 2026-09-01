@@ -4,8 +4,8 @@
     <div class="flex flex-col sm:flex-row xl:flex-col items-center justify-between xl:justify-center gap-2 sm:gap-4 xl:gap-8 bg-[#1a0f08]/95 backdrop-blur-2xl px-3 py-2 sm:px-6 sm:py-3 xl:py-8 rounded-2xl sm:rounded-[1.5rem] border border-white/10 shadow-[0_10px_50px_rgba(0,0,0,0.8)] relative overflow-hidden ring-1 ring-white/5">
       
       <!-- Glow ambiental -->
-      <div class="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/20 blur-[50px] rounded-full pointer-events-none"></div>
-      <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none"></div>
+      <div class="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/20 blur-[50px] rounded-full pointer-events-none"/>
+      <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none"/>
 
       <!-- Avatares de Jugadores -->
       <div class="flex items-center gap-1 sm:gap-3 relative z-10 w-full sm:w-auto xl:w-full justify-center flex-wrap xl:grid xl:grid-cols-4 xl:gap-3">
@@ -18,13 +18,13 @@
           :style="{ backgroundColor: getColor(player.color), backgroundImage: player.avatar ? `url(/avatars/avatar-${player.avatar}.svg)` : 'none' }"
         >
           <!-- Turn Indicator Dot -->
-          <div v-if="idx === parchisStore.currentTurnIndex" class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-green-500 rounded-full border-2 border-[#1a0f08] shadow-[0_0_10px_rgba(74,222,128,0.8)] animate-pulse"></div>
+          <div v-if="idx === parchisStore.currentTurnIndex" class="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-green-500 rounded-full border-2 border-[#1a0f08] shadow-[0_0_10px_rgba(74,222,128,0.8)] animate-pulse"/>
         </div>
       </div>
       
       <!-- Separator Desktop/Tablet -->
-      <div class="hidden sm:block xl:hidden h-10 w-[1px] bg-white/10 relative z-10"></div>
-      <div class="hidden xl:block w-full h-[1px] bg-white/10 relative z-10"></div>
+      <div class="hidden sm:block xl:hidden h-10 w-[1px] bg-white/10 relative z-10"/>
+      <div class="hidden xl:block w-full h-[1px] bg-white/10 relative z-10"/>
       
       <!-- Mobile Bottom Row / Desktop Vertical Stack: Dice + Button -->
       <div class="flex w-full sm:w-auto xl:w-full flex-row sm:flex-row xl:flex-col items-center justify-between sm:justify-center xl:justify-center gap-2 sm:gap-4 xl:gap-6">
@@ -32,13 +32,13 @@
         <!-- Indicator: Tu Color -->
         <div v-if="myPlayer" class="hidden xl:flex items-center gap-2 relative z-10 bg-black/40 px-3 py-1.5 rounded-lg border border-white/5 w-full justify-center">
           <span class="text-xs font-bold text-white/50 tracking-wider">TU COLOR</span>
-          <div class="w-3 h-3 rounded-full shadow-[0_0_8px_currentColor]" :style="{ backgroundColor: getColor(myPlayer.color), color: getColor(myPlayer.color) }"></div>
+          <div class="w-3 h-3 rounded-full shadow-[0_0_8px_currentColor]" :style="{ backgroundColor: getColor(myPlayer.color), color: getColor(myPlayer.color) }"/>
           <span class="text-xs font-black uppercase" :style="{ color: getColor(myPlayer.color) }">{{ colorNameEs(myPlayer.color) }}</span>
         </div>
 
         <!-- Zona Central: Dados y Move Text -->
         <div v-if="parchisStore.gameState === 'PLAYING'" class="flex flex-col items-center justify-center gap-0.5 sm:gap-1.5 relative z-10 min-h-[44px] sm:min-h-[50px] flex-1 sm:flex-none xl:w-full">
-          <ParchisDice :diceValues="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
+          <ParchisDice :dice-values="parchisStore.diceValue.length ? parchisStore.diceValue : []" />
           
           <div class="h-[18px] sm:h-[24px] flex items-center justify-center"> <!-- Espacio fijo UI -->
             <Transition
@@ -56,17 +56,16 @@
           </div>
         </div>
 
-        <div class="hidden sm:block xl:hidden h-10 w-[1px] bg-white/10 relative z-10"></div>
+        <div class="hidden sm:block xl:hidden h-10 w-[1px] bg-white/10 relative z-10"/>
         
         <!-- Indicator: Tu Color (Mobile) -->
         <div v-if="myPlayer" class="xl:hidden flex items-center gap-1.5 relative z-10 px-1 sm:px-2">
-          <div class="w-2.5 h-2.5 rounded-full shadow-[0_0_5px_currentColor]" :style="{ backgroundColor: getColor(myPlayer.color), color: getColor(myPlayer.color) }"></div>
+          <div class="w-2.5 h-2.5 rounded-full shadow-[0_0_5px_currentColor]" :style="{ backgroundColor: getColor(myPlayer.color), color: getColor(myPlayer.color) }"/>
         </div>
 
         <!-- Botón de Tirar Dados -->
         <button 
           v-if="parchisStore.gameState === 'PLAYING'"
-          @click="rollDice"
           :disabled="!parchisStore.isMyTurn || parchisStore.availableMoves.length > 0"
           :class="[
             'flex-1 sm:flex-none xl:w-full px-3 py-1.5 sm:px-6 sm:py-3 xl:py-4 text-[11px] sm:text-base font-black tracking-wide rounded-xl sm:rounded-2xl transition-all duration-300 relative z-10 overflow-hidden group',
@@ -74,8 +73,9 @@
               ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-[0_5px_20px_rgba(245,158,11,0.4)] hover:shadow-[0_10px_30px_rgba(245,158,11,0.6)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95 border border-orange-400/50 cursor-pointer' 
               : 'bg-white/5 text-white/30 cursor-not-allowed border border-white/5'
           ]"
+          @click="rollDice"
         >
-          <div v-if="parchisStore.isMyTurn && parchisStore.availableMoves.length === 0" class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+          <div v-if="parchisStore.isMyTurn && parchisStore.availableMoves.length === 0" class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"/>
           <span class="relative flex items-center justify-center gap-1 sm:gap-2 drop-shadow-md whitespace-nowrap">
             <UIcon v-if="parchisStore.isMyTurn && parchisStore.availableMoves.length === 0" name="i-heroicons-sparkles" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-200" />
             TIRAR DADOS

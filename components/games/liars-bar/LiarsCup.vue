@@ -15,7 +15,7 @@
       @click="toggleReveal"
     >
       <!-- Base Shadow (stays on table) -->
-      <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-[80%] h-6 bg-black/40 blur-md rounded-[50%]"></div>
+      <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-[80%] h-6 bg-black/40 blur-md rounded-[50%]"/>
 
       <!-- Dice inside (revealed when cup is lifted) -->
       <div class="absolute bottom-0 left-0 w-full h-full flex flex-wrap justify-center items-center content-center gap-1.5 md:gap-2 p-2">
@@ -26,36 +26,36 @@
             class="w-7 h-7 md:w-10 md:h-10 bg-[#e8e4d9] rounded-md shadow-[2px_3px_0px_#8a7f6c,inset_-1px_-2px_4px_rgba(0,0,0,0.3)] flex items-center justify-center relative border border-[#d3cebe]"
           >
             <!-- Dot rendering based on value -->
-            <div v-if="val === 1" class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
+            <div v-if="val === 1" class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
             <div v-else-if="val === 2" class="w-full h-full p-1.5 md:p-2 flex flex-col justify-between items-center">
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-end shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-start shadow-inner"></div>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-end shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-start shadow-inner"/>
             </div>
             <div v-else-if="val === 3" class="w-full h-full p-1.5 md:p-2 flex flex-col justify-between items-center">
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-end shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-start shadow-inner"></div>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-end shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full self-start shadow-inner"/>
             </div>
             <div v-else-if="val === 4" class="w-full h-full p-1.5 md:p-2 grid grid-cols-2 gap-1 place-items-center">
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
             </div>
             <div v-else-if="val === 5" class="w-full h-full p-1.5 md:p-2 grid grid-cols-2 gap-1 place-items-center relative">
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
             </div>
             <div v-else-if="val === 6" class="w-full h-full p-1 md:p-1.5 grid grid-cols-2 gap-0.5 place-items-center">
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
-              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"></div>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
+              <div class="w-1.5 h-1.5 md:w-2 md:h-2 bg-[#2c2620] rounded-full shadow-inner"/>
             </div>
           </div>
         </template>
@@ -95,13 +95,13 @@
         "
       >
         <!-- Cup rim -->
-        <div class="absolute top-0 left-0 w-full h-3 md:h-4 bg-[#2a170b] rounded-t-md border-b border-[#4a2e19] shadow-inner"></div>
+        <div class="absolute top-0 left-0 w-full h-3 md:h-4 bg-[#2a170b] rounded-t-md border-b border-[#4a2e19] shadow-inner"/>
         <!-- Leather stitching decorative lines -->
-        <div class="absolute top-8 left-3 right-3 h-0 border-t-2 border-dotted border-[#9c6a46] opacity-40"></div>
-        <div class="absolute bottom-10 left-5 right-5 h-0 border-t-2 border-dotted border-[#9c6a46] opacity-40"></div>
+        <div class="absolute top-8 left-3 right-3 h-0 border-t-2 border-dotted border-[#9c6a46] opacity-40"/>
+        <div class="absolute bottom-10 left-5 right-5 h-0 border-t-2 border-dotted border-[#9c6a46] opacity-40"/>
         <!-- Scratch mark detail -->
-        <div class="absolute top-1/2 left-1/4 w-1/4 h-0.5 bg-black/30 transform rotate-12 rounded"></div>
-        <div class="absolute top-1/2 left-1/4 w-1/6 h-0.5 bg-[#8a5f3e]/20 transform rotate-12 -translate-y-0.5 rounded"></div>
+        <div class="absolute top-1/2 left-1/4 w-1/4 h-0.5 bg-black/30 transform rotate-12 rounded"/>
+        <div class="absolute top-1/2 left-1/4 w-1/6 h-0.5 bg-[#8a5f3e]/20 transform rotate-12 -translate-y-0.5 rounded"/>
       </div>
     </div>
   </div>

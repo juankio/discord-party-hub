@@ -53,7 +53,7 @@
     
     <!-- FINISHED -->
     <div v-else-if="gameState === 'FINISHED'" class="bg-[#d8a872] text-[#25160d] p-8 md:p-12 rounded-xl border-8 border-[#25160d] shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center relative overflow-hidden">
-      <div class="absolute inset-0 bg-[#e3ba8f] transform -skew-y-12 translate-y-1/2 opacity-20"></div>
+      <div class="absolute inset-0 bg-[#e3ba8f] transform -skew-y-12 translate-y-1/2 opacity-20"/>
       <h2 class="text-4xl md:text-5xl font-black uppercase tracking-widest mb-4 relative z-10 drop-shadow-md">Fin de Partida</h2>
       <p class="text-2xl md:text-3xl font-bold relative z-10">¡<span class="text-[#8b2323] font-black">{{ winnerName }}</span> sobrevive!</p>
     </div>

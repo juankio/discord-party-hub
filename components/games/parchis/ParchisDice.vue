@@ -14,21 +14,21 @@
       <div 
         class="absolute -inset-4 sm:-inset-5 rounded-2xl border-4 border-yellow-400/0 transition-all duration-300 pointer-events-none"
         :class="{'border-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] bg-yellow-500/10 scale-100': index === parchisStore.selectedDiceIndex, 'scale-90': index !== parchisStore.selectedDiceIndex}"
-      ></div>
+      />
 
       <!-- The 3D Cube -->
       <div 
-        class="dice-cube relative w-12 h-12 sm:w-16 sm:h-16"
         :ref="(el) => { if (el) diceElements[index] = el as HTMLElement; }"
+        class="dice-cube relative w-12 h-12 sm:w-16 sm:h-16"
         style="transform-style: preserve-3d;"
       >
         <!-- 6 Faces -->
-        <div class="dice-face front"  v-html="getDotsHtml(1)"></div>
-        <div class="dice-face back"   v-html="getDotsHtml(6)"></div>
-        <div class="dice-face right"  v-html="getDotsHtml(2)"></div>
-        <div class="dice-face left"   v-html="getDotsHtml(5)"></div>
-        <div class="dice-face top"    v-html="getDotsHtml(3)"></div>
-        <div class="dice-face bottom" v-html="getDotsHtml(4)"></div>
+        <div class="dice-face front"  v-html="getDotsHtml(1)"/>
+        <div class="dice-face back"   v-html="getDotsHtml(6)"/>
+        <div class="dice-face right"  v-html="getDotsHtml(2)"/>
+        <div class="dice-face left"   v-html="getDotsHtml(5)"/>
+        <div class="dice-face top"    v-html="getDotsHtml(3)"/>
+        <div class="dice-face bottom" v-html="getDotsHtml(4)"/>
       </div>
     </div>
   </div>

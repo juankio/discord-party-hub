@@ -1,8 +1,8 @@
 <script setup lang="ts">
-definePageMeta({ middleware: ["game-guard"] })
-
-
 import { useParchisEngine } from "~/composables/useParchisEngine"
+
+
+definePageMeta({ middleware: ["game-guard"] })
 
 const route = useRoute()
 const roomId = route.params.id as string

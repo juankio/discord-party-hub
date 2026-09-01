@@ -57,18 +57,18 @@ const handleSelect = (figureId: string) => {
 
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8">
-    <div class="absolute inset-0 bg-[#0f0805]/80 backdrop-blur-md animate-pulse-slow pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[#0f0805]/80 backdrop-blur-md animate-pulse-slow pointer-events-none"/>
     
     <div ref="modalRef" class="relative w-full max-w-5xl rounded-[2.5rem] bg-[#8b5a2b] border-4 border-[#5c3a21] shadow-[0_20px_0_rgba(26,15,8,0.8),0_40px_80px_rgba(0,0,0,0.8)] p-2 sm:p-3">
       <div class="relative w-full h-full bg-[#2a1a0f] rounded-2xl sm:rounded-[2rem] overflow-hidden flex flex-col items-center p-6 sm:p-10 md:p-16 shadow-inner">
       
         <!-- Top Neon Glows & Wood screws -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[4px] bg-gradient-to-r from-transparent via-[#e6a15c]/50 to-transparent rounded-b-full"></div>
-        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#e6a15c]/10 blur-[100px] rounded-full pointer-events-none"></div>
-        <div class="absolute top-6 left-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] rotate-45"></div></div>
-        <div class="absolute top-6 right-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] -rotate-45"></div></div>
-        <div class="absolute bottom-6 left-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] rotate-12"></div></div>
-        <div class="absolute bottom-6 right-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] -rotate-12"></div></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[4px] bg-gradient-to-r from-transparent via-[#e6a15c]/50 to-transparent rounded-b-full"/>
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#e6a15c]/10 blur-[100px] rounded-full pointer-events-none"/>
+        <div class="absolute top-6 left-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] rotate-45"/></div>
+        <div class="absolute top-6 right-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] -rotate-45"/></div>
+        <div class="absolute bottom-6 left-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] rotate-12"/></div>
+        <div class="absolute bottom-6 right-6 w-4 h-4 rounded-full bg-[#1a0f08] border-2 border-[#3e2723] flex items-center justify-center shadow-inner hidden sm:flex"><div class="w-full h-[2px] bg-[#3e2723] -rotate-12"/></div>
 
         <!-- Header -->
         <div class="text-center mb-10 sm:mb-16 relative z-10 w-full">
@@ -78,7 +78,7 @@ const handleSelect = (figureId: string) => {
           <p class="anim-header text-[#a88a70] text-base sm:text-lg md:text-xl font-bold tracking-wide">
             <span v-if="myPlayerInfo?.hasChosenFigure" class="text-emerald-400 font-black flex flex-col sm:flex-row items-center justify-center gap-2 drop-shadow-md bg-[#0a1a0f]/50 py-2 sm:py-2 px-4 sm:px-6 rounded-2xl sm:rounded-full inline-flex border border-emerald-500/20 shadow-[inset_0_2px_10px_rgba(16,185,129,0.1)] text-center text-sm sm:text-base max-w-full">
               <UIcon name="i-lucide-check-circle-2" class="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-              <span>¡Ficha asegurada! <br class="sm:hidden" />Esperando rivales...</span>
+              <span>¡Ficha asegurada! <br class="sm:hidden" >Esperando rivales...</span>
             </span>
             <span v-else class="bg-[#2a1a0f]/50 py-2 px-4 sm:px-6 rounded-2xl sm:rounded-full inline-flex border border-[#3e2723] shadow-inner text-center text-sm sm:text-base max-w-full">
               Escoge un avatar para dominar el tablero.
@@ -92,8 +92,8 @@ const handleSelect = (figureId: string) => {
             v-for="fig in figures"
             :key="fig.id"
             :fig="fig"
-            :isChosenByMe="!!myPlayerInfo?.hasChosenFigure"
-            :chosenByPlayer="getPlayerWhoChose(fig.id) as any"
+            :is-chosen-by-me="!!myPlayerInfo?.hasChosenFigure"
+            :chosen-by-player="getPlayerWhoChose(fig.id) as any"
             @select="handleSelect(fig.id)"
           />
         </div>

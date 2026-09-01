@@ -10,7 +10,7 @@ export const getAvatarPositionLogic = (index: number, total: number, _unused: nu
     { left: 'calc(100% - var(--hole-offset-x) + 1.5rem)', top: '50%', transform: 'translate(-50%, -50%)' } // 7 (Ext Der)
   ];
 
-  let mapping: number[] = [];
+  let mapping: number[];
   if (total <= 1) mapping = [0];
   else if (total === 2) mapping = [0, 1];
   else if (total === 3) mapping = [0, 2, 3]; // CentroAbajo, SupIzq, SupDer

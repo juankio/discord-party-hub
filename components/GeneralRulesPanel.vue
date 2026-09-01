@@ -24,7 +24,7 @@
                 :class="rules[key] ? 'right-0' : 'left-0'"/>
             </div>
             
-            <input v-model="rules[key]" @change="$emit('change')" type="checkbox" :disabled="!isHost" class="hidden" >
+            <input v-model="rules[key]" type="checkbox" :disabled="!isHost" class="hidden" @change="$emit('change')" >
           </label>
         </div>
       </div>

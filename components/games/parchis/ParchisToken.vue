@@ -12,11 +12,12 @@
     }"
     @click="onTokenClick"
   >
-    <div class="token-body relative w-full h-full flex items-center justify-center"
+    <div
+class="token-body relative w-full h-full flex items-center justify-center"
          :class="[ isClickable ? 'z-20 animate-pulse scale-110 drop-shadow-[0_0_10px_rgba(255,255,255,1)]' : 'z-10 drop-shadow-[4px_4px_0_rgba(0,0,0,0.7)]' ]">
        
        <ParchisTokenSVG 
-         :figureId="figureId" 
+         :figure-id="figureId" 
          :color="token.color" 
        />
 

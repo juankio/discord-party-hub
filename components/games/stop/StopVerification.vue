@@ -5,7 +5,7 @@
       <!-- Header Pizarra -->
       <div class="bg-[#1e3f20] p-6 pb-8 border-[12px] border-[#8b5a2b] rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_10px_20px_rgba(0,0,0,0.6)] relative overflow-hidden">
         <!-- Textura de Pizarra (Ruido/Tiza) -->
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"/>
         
         <div class="text-center sm:text-left relative z-10 w-full flex justify-between items-center">
           <div>
@@ -25,13 +25,13 @@
             class="h-full transition-none shadow-[0_0_10px_rgba(250,204,21,0.5)]"
             :class="localTimeRemaining <= 10 ? 'bg-red-500' : 'bg-yellow-400'"
             :style="{ width: `${progressPercentage}%` }"
-          ></div>
+          />
         </div>
       </div>
 
       <!-- Scrollable Matrix Pizarra -->
       <div class="w-full bg-[#1e3f20] rounded-lg border-[12px] border-[#8b5a2b] overflow-x-auto custom-scrollbar shadow-[0_15px_30px_rgba(0,0,0,0.8),inset_0_0_20px_rgba(0,0,0,0.5)] relative">
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"/>
 
         <table class="w-full text-left border-collapse min-w-[800px] relative z-10">
           <thead>

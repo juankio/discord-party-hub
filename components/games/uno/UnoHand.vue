@@ -3,10 +3,10 @@
     <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-24 pt-32 px-4 md:px-0 flex justify-start md:justify-center snap-x">
       <TransitionGroup 
         tag="div" 
-        @enter="onCardEnter" 
-        :css="false"
-        class="flex items-end min-w-max mx-auto px-4 md:px-0" 
-        :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')"
+        :css="false" 
+        class="flex items-end min-w-max mx-auto px-4 md:px-0"
+        :class="myHand.length > 12 ? '-space-x-14 sm:-space-x-16' : (myHand.length > 7 ? '-space-x-12 sm:-space-x-14' : '-space-x-10 sm:-space-x-12')" 
+        @enter="onCardEnter"
       >
         <UnoHandCard
 v-for="(card, index) in myHand" :key="card.id" 

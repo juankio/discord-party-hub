@@ -42,7 +42,8 @@ function selectThickness(val: number) {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row items-center justify-between bg-[#4a3628] p-4 rounded-xl border-b-[8px] border-[#2e2016] shadow-xl gap-6"
+  <div
+class="flex flex-col md:flex-row items-center justify-between bg-[#4a3628] p-4 rounded-xl border-b-[8px] border-[#2e2016] shadow-xl gap-6"
        :class="{ 'opacity-50 pointer-events-none': disabled }">
     
     <!-- Colors (Watercolor Pans) -->
@@ -50,12 +51,12 @@ function selectThickness(val: number) {
       <button
         v-for="color in colors"
         :key="color"
-        @click="selectColor(color)"
         class="relative w-12 h-12 bg-[#d2b48c] rounded-md border-b-4 border-[#8b5a2b] flex items-center justify-center transition-transform hover:-translate-y-1 active:translate-y-0 active:border-b-0"
         :class="currentColor === color ? '-translate-y-2 drop-shadow-md border-b-[6px]' : ''"
         :title="color"
+        @click="selectColor(color)"
       >
-        <div class="w-8 h-8 rounded-sm shadow-inner" :style="{ backgroundColor: color, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }"></div>
+        <div class="w-8 h-8 rounded-sm shadow-inner" :style="{ backgroundColor: color, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }"/>
         <span class="sr-only">Seleccionar color {{ color }}</span>
       </button>
     </div>
@@ -63,19 +64,19 @@ function selectThickness(val: number) {
     <div class="flex flex-wrap items-center justify-center gap-4 shrink-0">
       <!-- Eraser (Physical Pink Rubber) -->
       <button
-        @click="selectColor('#f4e4bc')"
         class="shrink-0 w-16 h-11 bg-[#f4a7a7] rounded-md border-b-[6px] border-[#c07a7a] flex items-center justify-center transition-transform hover:-translate-y-1 active:translate-y-0 active:border-b-0 shadow-md"
         :class="currentColor === '#f4e4bc' ? '-translate-y-2 drop-shadow-lg' : ''"
         title="Goma de borrar"
+        @click="selectColor('#f4e4bc')"
       >
         <span class="text-xs font-black text-white uppercase drop-shadow-sm rotate-[-5deg]">Goma</span>
       </button>
 
       <!-- Clear Canvas (Trash Can) -->
       <button
-        @click="emit('clear')"
         class="shrink-0 px-4 py-2 bg-[#d32f2f] text-white font-bold rounded-md border-b-[6px] border-[#9a0007] flex items-center justify-center transition-transform hover:-translate-y-1 active:translate-y-0 active:border-b-0 shadow-md"
         title="Limpiar Lienzo"
+        @click="emit('clear')"
       >
         <span class="text-lg leading-none">🗑️</span>
       </button>
@@ -85,11 +86,11 @@ function selectThickness(val: number) {
         <button
           v-for="t in thicknesses"
           :key="t.value"
-          @click="selectThickness(t.value)"
           class="flex items-center justify-center w-11 h-11 rounded-md bg-[#8b5a2b] border-b-4 border-[#5c3a21] transition-transform hover:-translate-y-1 active:translate-y-0 active:border-b-0"
           :class="currentThickness === t.value ? '-translate-y-1 drop-shadow-md' : ''"
+          @click="selectThickness(t.value)"
         >
-          <div class="bg-[#2e2016] rounded-full shadow-inner" :style="{ width: t.value + 'px', height: t.value + 'px' }"></div>
+          <div class="bg-[#2e2016] rounded-full shadow-inner" :style="{ width: t.value + 'px', height: t.value + 'px' }"/>
         </button>
       </div>
     </div>

@@ -49,9 +49,9 @@ const leaveCard = (e: MouseEvent) => {
 <template>
   <div 
     class="player-card opacity-0 flex flex-col items-center gap-4 relative"
+    style="transform-style: preserve-3d;"
     @mousemove="hoverCard($event)"
     @mouseleave="leaveCard"
-    style="transform-style: preserve-3d;"
   >
     <!-- "TÚ" Indicator -->
     <div 
@@ -70,7 +70,7 @@ const leaveCard = (e: MouseEvent) => {
           parchisStore.initiativeRolls[player.userId] ? 'bg-orange-500' : (player.userId === playerStore.userId ? 'bg-amber-500 animate-pulse' : 'bg-transparent')
         ]"
         style="transform: translateZ(-10px);"
-      ></div>
+      />
 
       <!-- Avatar Container -->
       <div 
@@ -80,7 +80,7 @@ const leaveCard = (e: MouseEvent) => {
         ]"
         style="transform: translateZ(20px);"
       >
-        <img v-if="player.avatarId" :src="`/avatars/avatar-${player.avatarId}.svg`" alt="Avatar" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" />
+        <img v-if="player.avatarId" :src="`/avatars/avatar-${player.avatarId}.svg`" alt="Avatar" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" >
         <UIcon v-else name="i-heroicons-user" class="w-10 h-10 text-amber-500/30" />
 
         <!-- Dice result overlay -->

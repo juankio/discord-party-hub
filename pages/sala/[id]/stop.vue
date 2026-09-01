@@ -51,10 +51,10 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ["game-guard"] })
-
 import { usePlayerStore } from '~/stores/playerStore'
 import { useStopStore } from '~/stores/games/stopStore'
+
+definePageMeta({ middleware: ["game-guard"] })
 
 // Components
 

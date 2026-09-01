@@ -8,22 +8,25 @@
   >
     <!-- Botón Rendirse -->
     <button 
-      @click="handleAction.surrender()"
       class="absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] z-50 group flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-red-950/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 rounded-xl border border-red-500/10 hover:border-red-500/40 transition-all duration-300 active:scale-95 shadow-lg overflow-hidden font-bold text-sm backdrop-blur-md outline-none focus:outline-none focus-visible:outline-none focus:ring-0"
+      @click="handleAction.surrender()"
     >
-      <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"></div>
-      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none"/>
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] rounded-xl pointer-events-none"/>
       <UIcon name="i-heroicons-flag" class="w-5 h-5 sm:w-4 sm:h-4 relative z-10 transition-transform group-hover:scale-110 text-red-500 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
       <span class="hidden sm:inline-block relative z-10 tracking-wide drop-shadow-md">Rendirse</span>
     </button>
 
     <!-- Turn Banner -->
-    <div v-if="state.gameState !== 'WAITING'" class="absolute top-0 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-500" 
+    <div
+v-if="state.gameState !== 'WAITING'" class="absolute top-0 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-500" 
          :class="isMyTurn ? 'scale-110' : 'scale-100 opacity-80'">
-      <div class="bg-black/80 backdrop-blur-md border-b-4 border-x-4 rounded-b-3xl px-4 py-2 sm:px-8 sm:py-3 flex flex-col items-center shadow-2xl transition-colors duration-500"
+      <div
+class="bg-black/80 backdrop-blur-md border-b-4 border-x-4 rounded-b-3xl px-4 py-2 sm:px-8 sm:py-3 flex flex-col items-center shadow-2xl transition-colors duration-500"
            :class="isMyTurn ? 'border-yellow-500' : 'border-white/10'">
         <span class="text-[10px] font-black tracking-[0.4em] uppercase text-gray-400 mb-1">Turno actual</span>
-        <h2 class="text-lg sm:text-3xl font-black tracking-widest uppercase whitespace-nowrap max-w-none"
+        <h2
+class="text-lg sm:text-3xl font-black tracking-widest uppercase whitespace-nowrap max-w-none"
             :class="isMyTurn ? 'text-yellow-400' : 'text-white'">
           {{ isMyTurn ? '¡TU TURNO!' : (state.rivals.find(r => r.userId === state.currentTurnUserId)?.nickname || 'Pensando...') }}
         </h2>
@@ -77,10 +80,10 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ["game-guard"] })
-
-
 import { useUnoEngine } from '~/composables/useUnoEngine'
+
+
+definePageMeta({ middleware: ["game-guard"] })
 
 const route = useRoute()
 const roomId = route.params.id as string

@@ -3,7 +3,7 @@
     <Transition name="fade">
       <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="close"></div>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="close"/>
 
         <!-- Modal Wrapper (Billiard Aesthetic) -->
         <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto overscroll-contain custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
@@ -95,7 +95,7 @@
                 >
                   Guardar Cambios
                 </button>
-                <button @click="close" class="w-full px-4 py-4 bg-[#5c3a21] hover:bg-[#6c4a31] text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none">Cerrar</button>
+                <button class="w-full px-4 py-4 bg-[#5c3a21] hover:bg-[#6c4a31] text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none" @click="close">Cerrar</button>
               </div>
             </div>
           </div>

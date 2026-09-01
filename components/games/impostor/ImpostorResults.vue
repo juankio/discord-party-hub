@@ -24,7 +24,7 @@ const isFinished = computed(() => props.gameState?.state === 'FINISHED');
       <div class="border-2 border-double border-gray-600 p-8 min-h-[400px] flex flex-col items-center text-center relative">
         
         <!-- Paper texture overlay -->
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 4px 4px;"></div>
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 4px 4px;"/>
 
         <div class="border-b-2 border-gray-500 pb-2 mb-6 w-full relative z-10">
           <h1 class="text-4xl font-serif font-black uppercase tracking-widest text-[#2a1a17]">
@@ -64,7 +64,8 @@ const isFinished = computed(() => props.gameState?.state === 'FINISHED');
             </div>
             
             <div v-if="latestResult.eliminatedUserId" class="mt-4">
-              <span class="font-black text-3xl px-4 py-2 border-4"
+              <span
+class="font-black text-3xl px-4 py-2 border-4"
                     :class="latestResult.wasImpostor ? 'border-green-600 text-green-700 transform rotate-3 inline-block shadow-[4px_4px_0_rgba(0,0,0,0.5)] bg-green-100' : 'border-red-600 text-red-700 transform -rotate-2 inline-block shadow-[4px_4px_0_rgba(0,0,0,0.5)] bg-red-100'">
                 {{ latestResult.wasImpostor ? 'ERA EL IMPOSTOR' : 'NO ERA EL IMPOSTOR' }}
               </span>
@@ -75,8 +76,8 @@ const isFinished = computed(() => props.gameState?.state === 'FINISHED');
         <div class="mt-8 pt-6 border-t-2 border-gray-500 w-full flex justify-center relative z-10">
           <button 
             v-if="!isFinished"
-            @click="emit('ready')"
             class="bg-[#2a1a17] text-[#dcd3b6] font-mono font-bold uppercase px-8 py-3 border-2 border-black border-b-[6px] active:border-b-2 active:translate-y-[4px] hover:bg-[#3e2723] transition-all"
+            @click="emit('ready')"
           >
             Siguiente Fase
           </button>

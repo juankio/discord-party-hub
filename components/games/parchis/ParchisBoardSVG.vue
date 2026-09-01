@@ -31,9 +31,10 @@
     <polygon :points="centerPolygon" fill="#111" stroke="#333" stroke-width="8"/>
 
     <!-- Wedges (Territories) -->
-    <g v-for="(wedge, i) in wedges" :key="'wedge'+i"
-       @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
+    <g
+v-for="(wedge, i) in wedges" :key="'wedge'+i"
        :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
+       @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
        @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event, i) : null"
        @mouseleave="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeLeave($event) : null"
     >
@@ -41,7 +42,8 @@
       <polygon :points="wedge.points" :fill="wedge.color" stroke="#111" stroke-width="4" opacity="0.95" />
       
       <!-- Inner Glow Overlay (animated) -->
-      <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
+      <polygon
+v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
                :points="wedge.points" 
                fill="#ffffff"
                class="wedge-inner-glow pointer-events-none"
@@ -49,7 +51,8 @@
                opacity="0" />
 
       <!-- Traveling Pro Line (animated) -->
-      <polygon v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
+      <polygon
+v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
                :points="wedge.points" 
                fill="none" 
                stroke="#ffffff" 

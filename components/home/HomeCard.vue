@@ -42,7 +42,7 @@
         
         <!-- Botones de Jugar si ya está logueado -->
         <div v-if="playerStore.isLoggedIn" class="w-full mt-4 pt-4 border-t border-white/5">
-          <HomeRoomControls v-model:roomCode="roomCode" :isValid="isValid" @createRoom="handleCreateRoom" @joinRoom="handleJoinRoom" />
+          <HomeRoomControls v-model:room-code="roomCode" :is-valid="isValid" @create-room="handleCreateRoom" @join-room="handleJoinRoom" />
         </div>
       </template>
     </div>

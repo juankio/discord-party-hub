@@ -2,7 +2,7 @@
   <div class="h-full w-full flex-1 flex items-center justify-center p-4 sm:p-8 text-white relative overflow-y-auto overscroll-contain" style="color: var(--theme-text-color, white);">
     
     <div class="w-full max-w-3xl bg-[#1e3f20]/95 backdrop-blur-lg border border-white/10 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden relative z-20 flex flex-col">
-      <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"></div>
+      <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: overlay;"/>
       
       <!-- Header -->
       <div class="bg-[#173119]/80 p-6 border-b border-white/10 relative z-10 text-center">
@@ -28,7 +28,7 @@
           <div 
             class="absolute left-0 top-0 bottom-0 w-2 flex items-center justify-center"
             :class="idx === 0 ? 'bg-[#fbbf24]' : idx === 1 ? 'bg-[#94a3b8]' : idx === 2 ? 'bg-[#b45309]' : 'bg-transparent'"
-          ></div>
+          />
 
           <div class="flex items-center gap-4 pl-6">
             <div class="text-3xl font-black w-10 text-center font-['Comic_Sans_MS',_cursive,sans-serif]" :class="idx === 0 ? 'text-[#fbbf24] drop-shadow-md' : 'text-white/30 drop-shadow-sm'">
@@ -36,17 +36,17 @@
             </div>
             
             <div class="relative">
-              <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-12 h-12 rounded-full bg-[#1a0f08] p-1 border-2 shadow-inner" :style="{ borderColor: player.color }" />
+              <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-12 h-12 rounded-full bg-[#1a0f08] p-1 border-2 shadow-inner" :style="{ borderColor: player.color }" >
             </div>
             
             <div class="flex flex-col">
               <div class="font-black text-xl tracking-wider uppercase drop-shadow-sm font-['Comic_Sans_MS',_cursive,sans-serif]" :class="player.userId === myUserId ? 'text-yellow-300' : 'text-white'">
                 {{ player.nickname }}
               </div>
-              <div class="text-[10px] font-black uppercase tracking-widest text-[#4ade80] mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]" v-if="!isFinal && getRoundScore(player.userId) > 0">
+              <div v-if="!isFinal && getRoundScore(player.userId) > 0" class="text-[10px] font-black uppercase tracking-widest text-[#4ade80] mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]">
                 +{{ getRoundScore(player.userId) }} esta ronda
               </div>
-              <div class="text-[10px] font-black uppercase tracking-widest text-red-400 mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]" v-else-if="!isFinal">
+              <div v-else-if="!isFinal" class="text-[10px] font-black uppercase tracking-widest text-red-400 mt-1 font-['Comic_Sans_MS',_cursive,sans-serif]">
                 0 esta ronda
               </div>
             </div>
@@ -61,7 +61,7 @@
       <!-- Podium of Shame -->
       <div v-if="isFinal && mostInvalidatedPlayer" class="mx-auto mb-6 bg-black/20 border border-white/10 rounded-full px-6 py-2 flex items-center justify-center gap-3 relative z-10 shadow-sm backdrop-blur-sm w-max">
         <div class="relative z-10 text-white/50">
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         </div>
         <div class="relative z-10 flex items-center gap-2">
           <div class="text-white/60 font-medium tracking-wide text-xs">Mente en Blanco:</div>
@@ -82,7 +82,7 @@
           Siguiente Ronda ({{ currentRound + 1 }}/{{ totalRounds }})
         </button>
         <div v-else class="flex flex-col items-center justify-center gap-2 py-2">
-          <div class="w-8 h-8 rounded-full border-4 border-white/20 border-t-yellow-400 animate-spin"></div>
+          <div class="w-8 h-8 rounded-full border-4 border-white/20 border-t-yellow-400 animate-spin"/>
           <span class="text-gray-300 uppercase tracking-widest text-[10px] font-black font-['Comic_Sans_MS',_cursive,sans-serif]">Esperando al Host...</span>
         </div>
       </div>

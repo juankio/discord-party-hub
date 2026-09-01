@@ -15,12 +15,12 @@
         <div class="absolute -top-12 w-[40px] h-[60px] sm:w-[56px] sm:h-[80px] flex flex-col items-center -z-10 opacity-90 drop-shadow-xl" style="perspective: 200px;">
           <!-- Respaldar (3 Listones verticales) -->
           <div class="w-[85%] h-[60%] border-4 border-[#7a4b2b] rounded-t-lg bg-[#8b5a2b] flex justify-evenly p-0.5 shadow-inner" style="transform: rotateX(20deg); transform-origin: bottom;">
-             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"></div>
-             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"></div>
-             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"></div>
+             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"/>
+             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"/>
+             <div class="w-[20%] h-full bg-[#5c3a21] rounded-sm"/>
           </div>
           <!-- Asiento (Trapezoide con curva) -->
-          <div class="w-full h-[40%] bg-[#7a4b2b] border-b-[6px] border-[#5c3a21] rounded-b-2xl shadow-[inset_0_5px_10px_rgba(0,0,0,0.5)] -mt-1 z-10"></div>
+          <div class="w-full h-[40%] bg-[#7a4b2b] border-b-[6px] border-[#5c3a21] rounded-b-2xl shadow-[inset_0_5px_10px_rgba(0,0,0,0.5)] -mt-1 z-10"/>
         </div>
 
         <!-- Nombre del rival (Debajo del avatar) -->
@@ -116,7 +116,7 @@ const getRivalPosition = (index: number, total: number) => {
   // Calcular rotación en grados para que la silla mire al centro (50, 50 aprox)
   const dx = 50 - x;
   const dy = 50 - y;
-  let rot = Math.atan2(dy, dx) * (180 / Math.PI) - 90;
+  const rot = Math.atan2(dy, dx) * (180 / Math.PI) - 90;
 
   return { x, y, rot };
 }

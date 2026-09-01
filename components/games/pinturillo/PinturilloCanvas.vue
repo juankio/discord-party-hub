@@ -158,10 +158,10 @@ const stopDrawing = () => {
         @touchmove="draw"
         @touchend="stopDrawing"
         @touchcancel="stopDrawing"
-      ></canvas>
+      />
       
       <!-- Overlay for waiting/results (not drawing) -->
-      <div v-if="!isDrawer" class="absolute inset-0 pointer-events-none" style="background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.02) 10px, rgba(0,0,0,0.02) 20px);"></div>
+      <div v-if="!isDrawer" class="absolute inset-0 pointer-events-none" style="background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.02) 10px, rgba(0,0,0,0.02) 20px);"/>
     </div>
   </div>
 </template>

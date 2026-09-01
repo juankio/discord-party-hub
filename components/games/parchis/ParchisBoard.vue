@@ -5,7 +5,7 @@
     <div 
       class="fixed inset-0 z-0 bg-black/70 backdrop-blur-md pointer-events-none transition-all duration-700"
       :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'opacity-100' : 'opacity-0'"
-    ></div>
+    />
 
     <!-- Tablero contenedor dinámico -->
     <div 
@@ -18,11 +18,11 @@
       >
         <!-- UNIVERSAL PARCHÍS BOARD SVG COMPONENT -->
         <ParchisBoardSVG
-          :dynamicViewBox="dynamicViewBox"
-          :basePolygonPoints="basePolygonPoints"
-          :centerPolygon="boardGeometry.centerPolygon"
-          :llegadaPaths="boardGeometry.llegadaPaths"
-          :trackSquares="boardGeometry.trackSquares"
+          :dynamic-view-box="dynamicViewBox"
+          :base-polygon-points="basePolygonPoints"
+          :center-polygon="boardGeometry.centerPolygon"
+          :llegada-paths="boardGeometry.llegadaPaths"
+          :track-squares="boardGeometry.trackSquares"
           :wedges="boardGeometry.wedges"
           @hover-wedge="handleWedgeHover"
         />
@@ -40,7 +40,7 @@
             >
               <ParchisTokenSVG 
                 :color="myPlayerColorHex"
-                :figureId="myPlayerFigure"
+                :figure-id="myPlayerFigure"
               />
             </div>
           </div>
@@ -52,9 +52,9 @@
             v-for="tokenObj in allTokens" 
             :key="`${tokenObj.player.userId}-${tokenObj.token.id}`"
             :token="tokenObj.data"
-            :figureId="tokenObj.player.selectedFigure"
+            :figure-id="tokenObj.player.selectedFigure"
             :coordinates="tokenObj.coords"
-            :boardSize="dynamicBoardSize"
+            :board-size="dynamicBoardSize"
           />
         </div>
       </div>

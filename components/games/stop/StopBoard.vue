@@ -8,7 +8,7 @@
         
         <!-- Scoreboard/Round tag -->
         <div class="bg-[#3a2212] p-4 sm:p-5 rounded-2xl border-4 border-[#2a180c] shadow-[0_5px_15px_rgba(0,0,0,0.6)] flex items-center gap-4 relative overflow-hidden">
-          <div class="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px);"></div>
+          <div class="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #000 10px, #000 20px);"/>
           <div class="relative z-10 flex flex-col">
             <span class="text-[#cdab84] font-black uppercase tracking-[0.3em] text-[10px] mb-1">Ronda</span>
             <span class="text-3xl font-black text-white drop-shadow-md leading-none">{{ currentRound }}<span class="text-xl text-[#7d512a]">/{{ totalRounds }}</span></span>
@@ -19,18 +19,18 @@
         <StopLetterReel :letter="letter" @rolling="(val) => isRolling = val" />
 
         <!-- Filler -->
-        <div class="w-24 sm:w-32"></div>
+        <div class="w-24 sm:w-32"/>
       </div>
 
       <!-- Cuaderno Grid -->
       <div class="bg-[#e2d5c5] p-6 sm:p-8 rounded-3xl border-8 border-[#c9b29a] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex-1 relative overflow-hidden flex flex-col">
         <!-- Espiral superior del cuaderno -->
         <div class="absolute top-0 left-0 right-0 h-4 bg-black/10 flex justify-around">
-            <div v-for="i in 15" :key="i" class="w-4 h-8 bg-gray-400 rounded-full border-2 border-gray-600 shadow-sm -mt-2"></div>
+            <div v-for="i in 15" :key="i" class="w-4 h-8 bg-gray-400 rounded-full border-2 border-gray-600 shadow-sm -mt-2"/>
         </div>
         
         <!-- Alerta Pánico (Basta) -->
-        <div v-if="panicMode" class="absolute inset-0 bg-red-600/20 z-0 pointer-events-none animate-pulse"></div>
+        <div v-if="panicMode" class="absolute inset-0 bg-red-600/20 z-0 pointer-events-none animate-pulse"/>
         <div v-if="panicMode" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none rotate-12 opacity-30">
           <span class="text-8xl md:text-9xl font-black text-red-600 border-8 border-red-600 px-4 rounded-xl drop-shadow-lg">¡TIEMPO!</span>
         </div>
@@ -44,7 +44,7 @@
               class="group flex flex-col gap-1 border-b-4 border-blue-300/40 relative"
             >
               <!-- Lineas de cuaderno -->
-              <div class="absolute bottom-0 w-full h-px bg-blue-300/60"></div>
+              <div class="absolute bottom-0 w-full h-px bg-blue-300/60"/>
               
               <label class="text-[#8c6b5d] font-black uppercase tracking-widest text-xs sm:text-sm pl-2">{{ cat }}</label>
               <input 
@@ -53,10 +53,10 @@
                 type="text"
                 class="w-full bg-transparent border-none outline-none text-[#2d201a] font-bold text-xl sm:text-2xl px-2 py-1 placeholder:text-[#bca495] placeholder:italic disabled:opacity-50 uppercase"
                 placeholder="..."
-                @input="checkCompletion"
                 autocomplete="off"
                 spellcheck="false"
-              />
+                @input="checkCompletion"
+              >
             </div>
           </div>
         </div>
@@ -71,10 +71,10 @@
       <div class="mt-4 flex justify-center pb-8 relative z-20 shrink-0">
         <button 
           ref="stopBtn"
-          @click.prevent="callStop"
           :disabled="!canStop || isRolling || isFinished || panicMode || localFinished"
           class="relative w-full sm:w-[400px] h-[80px] rounded-3xl text-2xl sm:text-3xl font-black uppercase tracking-[0.2em] transition-all duration-150 flex items-center justify-center border-t-4 border-white/20 disabled:border-t-0 active:scale-95"
           :class="canStop && !isFinished && !panicMode && !localFinished ? 'bg-gradient-to-b from-[#ef4444] to-[#b91c1c] text-white hover:from-[#f87171] hover:to-[#dc2626] shadow-[0_8px_0_#7f1d1d,0_15px_20px_rgba(220,38,38,0.5)] active:translate-y-[8px] active:shadow-[0_0px_0_#7f1d1d,0_5px_10px_rgba(220,38,38,0.4)] cursor-pointer ring-4 ring-red-400/50' : 'bg-[#3a2212] text-[#cdab84] shadow-[0_8px_0_#2a180c,0_15px_20px_rgba(0,0,0,0.5)] cursor-not-allowed opacity-80'"
+          @click.prevent="callStop"
         >
           <span class="relative z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">{{ panicMode ? 'RECOLECTANDO...' : (localFinished ? '¡ESPERANDO!' : '¡Basta para Mí!') }}</span>
         </button>

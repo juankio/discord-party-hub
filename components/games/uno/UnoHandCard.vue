@@ -1,5 +1,6 @@
 <template>
-  <div class="card-wrapper transition-all duration-300"
+  <div
+class="card-wrapper transition-all duration-300"
        :style="cardStyle"
        :data-index="index">
     <UnoCard
@@ -31,8 +32,8 @@ const cardStyle = computed(() => {
   const rotate = (props.index - middle) * spreadAngle
   
   // Usamos un simple cálculo cuadrático para el arco (parábola)
-  let translateY = (Math.pow(props.index - middle, 2) * 2) - 40
-  let zIndex = props.index
+  const translateY = (Math.pow(props.index - middle, 2) * 2) - 40
+  const zIndex = props.index
 
   return {
     '--card-ty': `${translateY}px`,

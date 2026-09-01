@@ -22,7 +22,7 @@
         <UnoCard
              v-if="topCard"
              :card="topCard"
-             :currentColor="currentColor"
+             :current-color="currentColor"
              class="top-card-anim top-card-placeholder transition-shadow duration-300"
         />
       </div>

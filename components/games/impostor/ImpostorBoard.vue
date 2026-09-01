@@ -13,9 +13,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'vote', targetId: string): void;
-  (e: 'ready'): void;
-  (e: 'leave'): void;
+  vote: [targetId: string];
+  ready: [];
+  leave: [];
 }>();
 
 const currentState = computed(() => props.gameState?.state || 'WAITING');
@@ -36,7 +36,7 @@ watch(() => props.gameState?.state, (newState) => {
 <template>
   <div class="relative w-full h-full flex-1 flex flex-col items-center justify-center bg-[#8b5a2b] p-6 shadow-[inset_0_0_100px_rgba(0,0,0,0.5)] overflow-hidden font-mono text-[#3e2723]">
     <!-- Wooden Table Background Texture (CSS grid/stripes) -->
-    <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 42px);"></div>
+    <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.1) 40px, rgba(0,0,0,0.1) 42px);"/>
     
     <div class="relative z-10 w-full max-w-4xl overflow-y-auto overscroll-contain max-h-full">
       <!-- State Routing -->

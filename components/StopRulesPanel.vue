@@ -6,7 +6,7 @@
         <!-- Categorias Grid -->
         <StopCategoriesEditor v-model:rules="rules" @change="$emit('change')" />
 
-        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"/>
 
         <!-- Letras Prohibidas -->
         <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
@@ -18,18 +18,18 @@
             <button 
               v-for="letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')" 
               :key="letter"
-              @click="toggleBannedLetter(letter)"
               class="w-11 h-11 sm:w-12 sm:h-12 rounded border-2 font-black text-[10px] sm:text-xs flex items-center justify-center transition-all shadow-sm"
               :class="rules.bannedLetters?.includes(letter) 
                 ? 'bg-[#991b1b] border-[#7f1d1d] text-white/50 shadow-inner' 
                 : 'bg-[#b48554] border-[#d4a373] text-[#4a2e1b] hover:bg-[#c49564] hover:-translate-y-0.5'"
+              @click="toggleBannedLetter(letter)"
             >
               {{ letter }}
             </button>
           </div>
         </div>
 
-        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"/>
 
         <!-- Rondas -->
         <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
@@ -39,18 +39,18 @@
           </label>
           <div class="flex items-center gap-4 w-full">
             <input 
-              type="range" 
               v-model.number="rules.stopRounds" 
+              type="range" 
               min="1" 
               max="10" 
-              @change="$emit('change')"
               class="w-full h-4 bg-[#2a1a0f] rounded-full outline-none appearance-none border-2 border-[#1a0f08] shadow-inner"
               style="--thumb-color: #f97316;"
-            />
+              @change="$emit('change')"
+            >
           </div>
         </div>
 
-        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"></div>
+        <div class="h-1 w-full bg-[#5c3a21] rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"/>
 
         <!-- Tiempo de Revisión -->
         <div class="flex flex-col items-center gap-4 bg-[#6d4621] p-4 rounded-xl border-4 border-[#5c3a21] shadow-inner relative z-10">
@@ -62,11 +62,11 @@
             <button 
               v-for="time in [15, 30, 45, 60]" 
               :key="time"
-              @click="rules.verificationTime = time; $emit('change')"
               class="flex-1 py-2 rounded-lg border-2 font-black text-xs sm:text-sm flex items-center justify-center transition-all shadow-sm"
               :class="rules.verificationTime === time 
                 ? 'bg-[#991b1b] border-[#7f1d1d] text-white shadow-inner scale-105' 
                 : 'bg-[#b48554] border-[#d4a373] text-[#4a2e1b] hover:bg-[#c49564] hover:-translate-y-0.5'"
+              @click="rules.verificationTime = time; $emit('change')"
             >
               {{ time }}s
             </button>

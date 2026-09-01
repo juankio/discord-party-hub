@@ -3,7 +3,7 @@
     <Transition name="fade">
       <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4">
         <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="closeModal"></div>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="closeModal"/>
 
         <!-- Modal Wrapper (Billiard Aesthetic) -->
         <div class="relative w-full max-w-sm max-h-[90vh] overflow-y-auto overscroll-contain custom-scrollbar bg-[#8b5a2b] rounded-2xl border-4 border-[#5c3a21] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
@@ -16,7 +16,7 @@
               Configurar Bot
             </h3>
 
-            <div class="space-y-4 w-full min-w-0" v-if="bot">
+            <div v-if="bot" class="space-y-4 w-full min-w-0">
               <!-- Bot Info -->
               <ProfileSetup 
                 v-model:nickname="tempNickname" 
@@ -39,8 +39,8 @@
                   :max="10" 
                   :step="1"
                   color="orange"
-                  @change="playBotDifficulty"
                   class="w-full"
+                  @change="playBotDifficulty"
                 />
                 <div class="flex justify-between text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
                   <span>Fácil</span>
@@ -51,21 +51,21 @@
               <!-- Action Buttons -->
               <div class="flex flex-col gap-4 pt-2">
                 <button 
-                  @click="saveConfig"
                   class="w-full px-4 py-4 bg-green-600 hover:bg-green-500 text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none"
+                  @click="saveConfig"
                 >
                   Guardar Cambios
                 </button>
                 <button 
-                  @click="kickBot"
                   class="w-full flex items-center justify-center gap-2 px-4 py-4 bg-red-600 hover:bg-red-500 text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none group"
+                  @click="kickBot"
                 >
                   <UIcon name="i-lucide-user-x" class="w-5 h-5 group-hover:scale-110 transition-transform" />
                   Expulsar Bot
                 </button>
                 <button 
-                  @click="closeModal"
                   class="w-full px-4 py-4 bg-[#5c3a21] hover:bg-[#6c4a31] text-white rounded-2xl border-t-2 border-white/20 transition-all duration-100 font-black text-sm tracking-widest uppercase shadow-[0_6px_0_rgba(0,0,0,0.6),0_10px_15px_rgba(0,0,0,0.4)] active:translate-y-[6px] active:shadow-none"
+                  @click="closeModal"
                 >
                   Cerrar
                 </button>

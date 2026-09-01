@@ -13,10 +13,10 @@
 
         <!-- Sillas Externas -->
         <div v-if="paddedPlayers.length >= 7" class="absolute -left-12 sm:-left-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
-          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"></div>
+          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
         <div v-if="paddedPlayers.length === 8" class="absolute -right-12 sm:-right-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
-          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"></div>
+          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
 
         <!-- Info central -->
@@ -36,8 +36,8 @@
               <button
                 v-if="isHost && allowBots"
                 class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/60 hover:bg-blue-500 hover:scale-105 active:scale-95 hover:brightness-110 text-white border-blue-400/50 shadow-[4px_4px_0_rgba(0,0,0,0.8)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]"
-                @click="handleAddBot"
                 title="Añadir Bot"
+                @click="handleAddBot"
               >
                 <UIcon name="i-lucide-bot" class="w-4 h-4" />
                 <span class="hidden sm:inline">Añadir Bot</span>
@@ -49,7 +49,7 @@
         <!-- Avatares -->
         <div class="absolute inset-0 pointer-events-none z-20">
           <PlayerSeat
-            v-for="(player, index) in paddedPlayers" 
+            v-for="player in paddedPlayers" 
             :key="player.userId"
             :player="player"
             :position="getAvatarPosition(player.seatIndex, paddedPlayers.length)"
@@ -80,9 +80,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'add-bot', difficulty: number): void
-  (e: 'avatar-click', player: any): void
-  (e: 'change-seat', seatIndex: number): void
+  'add-bot': [difficulty: number]
+  'avatar-click': [player: any]
+  'change-seat': [seatIndex: number]
 }>()
 
 const { playBot, playCopyLink, playSeatMove, playTableExpand, playTableShrink, playUiClick } = useAppAudio()

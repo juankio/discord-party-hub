@@ -75,10 +75,11 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
         <h2 class="text-xl font-bold text-[#5c3a21] uppercase tracking-wider drop-shadow-sm">Jugadores</h2>
         <ul class="flex flex-col gap-2">
           <!-- Mocking players based on scores map -->
-          <li v-for="(score, userId) in gameState?.scores || {}" :key="userId" 
+          <li
+v-for="(score, userId) in gameState?.scores || {}" :key="userId" 
               class="flex items-center justify-between p-2 bg-white rounded border-b-2 border-gray-300">
             <div class="flex items-center gap-2">
-              <div class="w-8 h-8 bg-blue-400 rounded-full border-2 border-[#5c3a21] shadow-inner"></div>
+              <div class="w-8 h-8 bg-blue-400 rounded-full border-2 border-[#5c3a21] shadow-inner"/>
               <span class="font-bold text-gray-800" :class="{ 'text-green-600': gameState?.guessedPlayers?.includes(userId) }">
                 Player {{ userId.substring(0, 4) }}
               </span>
@@ -118,8 +119,8 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
             <div class="flex gap-4 justify-center flex-wrap">
               <button 
                 v-for="(w, index) in wordOptions" :key="w" 
-                @click="emit('chooseWord', index)"
                 class="px-6 py-2 bg-yellow-400 font-bold text-[#5c3a21] rounded-lg border-b-4 border-yellow-600 hover:-translate-y-1 active:translate-y-0 active:border-b-0 transition-transform shadow-md uppercase"
+                @click="emit('chooseWord', index)"
               >
                 {{ w }}
               </button>
@@ -144,11 +145,11 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
       <!-- The Canvas -->
       <div class="flex-1 min-h-[150px]">
         <PinturilloCanvas
-          :isDrawer="isDrawer && gameState?.state === 'DRAWING'"
-          :currentColor="currentColor"
-          :currentThickness="currentThickness"
-          :strokesToRender="strokesToRender"
-          :clearCanvasSignal="clearCanvasSignal"
+          :is-drawer="isDrawer && gameState?.state === 'DRAWING'"
+          :current-color="currentColor"
+          :current-thickness="currentThickness"
+          :strokes-to-render="strokesToRender"
+          :clear-canvas-signal="clearCanvasSignal"
           @draw="handleDraw"
         />
       </div>
@@ -156,8 +157,8 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
       <!-- Tools (Only enabled if drawer) -->
       <div :class="{ 'opacity-50 pointer-events-none': !isDrawer || gameState?.state !== 'DRAWING' }">
         <PinturilloTools
-          :currentColor="currentColor"
-          :currentThickness="currentThickness"
+          :current-color="currentColor"
+          :current-thickness="currentThickness"
           @update:color="currentColor = $event"
           @update:thickness="currentThickness = $event"
           @clear="handleClear"
@@ -188,14 +189,14 @@ watch(() => props.gameState?.scores?.[props.myUserId], (newScore, oldScore) => {
       </div>
 
       <div class="p-3 bg-[#e4d5b7] border-t-4 border-[#cbbca0]">
-        <form @submit.prevent="submitGuess" class="flex gap-2">
+        <form class="flex gap-2" @submit.prevent="submitGuess">
           <input 
             v-model="guessInput"
             type="text" 
             placeholder="Escribe aquí..." 
             class="flex-1 min-w-0 px-3 py-2 rounded border-2 border-[#bca17d] focus:outline-none focus:border-[#8b5a2b] shadow-inner font-bold text-gray-700"
             :disabled="isDrawer || gameState?.state !== 'DRAWING'"
-          />
+          >
           <button 
             type="submit"
             class="shrink-0 px-4 py-2 bg-green-500 text-white font-bold rounded border-b-4 border-green-700 hover:-translate-y-1 active:translate-y-0 active:border-b-0 transition-transform shadow-md"

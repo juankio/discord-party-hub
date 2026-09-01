@@ -47,10 +47,10 @@ const avatarUrl = computed(() => {
       :class="[sizeClasses, player.isOffline ? 'opacity-70 grayscale' : '']"
       :style="{ borderColor: player.color || '#52525b' }"
     >
-      <img :src="avatarUrl" alt="Avatar" class="w-full h-full object-cover" />
+      <img :src="avatarUrl" alt="Avatar" class="w-full h-full object-cover" >
       
       <div v-if="player.isOffline" class="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-[1px]">
-        <div class="i-lucide-wifi-off text-red-500 w-1/2 h-1/2 drop-shadow-md"></div>
+        <div class="i-lucide-wifi-off text-red-500 w-1/2 h-1/2 drop-shadow-md"/>
       </div>
     </div>
     

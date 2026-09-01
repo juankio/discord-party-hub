@@ -11,7 +11,7 @@ defineProps<{
     <div class="bg-[#f4e4bc] w-full max-w-3xl border-4 border-[#3e2723] border-b-[8px] rounded-sm p-8 shadow-[12px_12px_0_rgba(0,0,0,0.6)] relative overflow-hidden">
       
       <!-- Lined paper background -->
-      <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(transparent 95%, #cbd5e1 95%); background-size: 100% 2rem;"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(transparent 95%, #cbd5e1 95%); background-size: 100% 2rem;"/>
 
       <div class="relative z-10 flex justify-between items-end border-b-4 border-[#3e2723] pb-4 mb-6">
         <div>
@@ -26,7 +26,8 @@ defineProps<{
       </div>
 
       <div class="relative z-10 flex flex-wrap gap-6 justify-center mt-8">
-        <div v-for="p in players || []" :key="p.userId || p.id" 
+        <div
+v-for="p in players || []" :key="p.userId || p.id" 
              class="flex flex-col items-center bg-[#fdfbf3] border-2 border-[#3e2723] border-b-4 p-4 shadow-[4px_4px_0_rgba(0,0,0,0.4)] transition-transform hover:-translate-y-1 hover:rotate-1"
              :class="{ 'opacity-50 grayscale': !p.isAlive }">
           

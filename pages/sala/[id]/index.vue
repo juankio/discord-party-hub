@@ -44,10 +44,10 @@
                 @start-game="startGame"
               >
                 <template #rules>
-                  <GeneralRulesPanel v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isGeneralRulesOpen" />
-                  <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
-                  <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-open="isTableRulesOpen" />
-                  <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" @change="handleRuleChange" :is-host="isHost" :is-open="isTableRulesOpen" />
+                  <GeneralRulesPanel v-model:rules="playerStore.roomRules" :is-host="isHost" :is-open="isGeneralRulesOpen" @change="handleRuleChange" />
+                  <UnoRulesPanel v-if="selectedGame === 'uno'" v-model:rules="playerStore.roomRules" :is-open="isTableRulesOpen" @change="handleRuleChange" />
+                  <StopRulesPanel v-if="selectedGame === 'stop'" v-model:rules="playerStore.roomRules" :is-open="isTableRulesOpen" @change="handleRuleChange" />
+                  <ParchisRulesPanel v-if="selectedGame === 'parchis'" v-model:rules="playerStore.roomRules" :is-host="isHost" :is-open="isTableRulesOpen" @change="handleRuleChange" />
                 </template>
               </LobbyControls>
             </Transition>

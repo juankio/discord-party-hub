@@ -1,7 +1,6 @@
 <template>
   <div class="fixed bottom-6 right-6 z-50 flex items-center justify-center">
     <button
-      @click="toggleAudio"
       class="group relative flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black/50 backdrop-blur-md transition-all duration-500 ease-out hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 overflow-hidden"
       :class="[
         !audioStore.isMuted 
@@ -9,18 +8,19 @@
           : 'shadow-none border-white/5 opacity-50 hover:opacity-100 grayscale'
       ]"
       aria-label="Toggle Audio"
+      @click="toggleAudio"
     >
       <!-- Glow Underlay -->
       <div 
         class="absolute inset-0 rounded-full blur-xl transition-opacity duration-500 ease-out"
         :style="{ backgroundColor: 'var(--theme-color)' }"
         :class="audioStore.isMuted ? 'opacity-0' : 'opacity-20 group-hover:opacity-40'"
-      ></div>
+      />
 
       <!-- Inner Ring / Pro Max styling -->
       <div 
         class="absolute inset-0 rounded-full border border-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-      ></div>
+      />
 
       <!-- Icon Container -->
       <div 
@@ -41,7 +41,7 @@
       </div>
 
       <!-- Sweep Effect -->
-      <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-sweep"></div>
+      <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-sweep"/>
     </button>
   </div>
 </template>

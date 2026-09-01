@@ -25,24 +25,24 @@ defineEmits<{
     @click="$emit('select')"
   >
     <!-- Subtle wood texture overlay -->
-    <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] pointer-events-none mix-blend-overlay"></div>
+    <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] pointer-events-none mix-blend-overlay"/>
 
     <!-- Dynamic Glow per figure -->
     <div 
       v-if="!chosenByPlayer && !isChosenByMe"
       class="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-500 bg-gradient-to-b mix-blend-screen"
       :class="fig.theme"
-    ></div>
+    />
     
     <!-- Background solid color when chosen -->
     <div 
       v-if="chosenByPlayer"
       class="absolute inset-0 opacity-20"
       :style="{ backgroundColor: chosenByPlayer.color }"
-    ></div>
+    />
 
     <!-- Pro Line sweep effect on hover -->
-    <div class="pro-line hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"></div>
+    <div class="pro-line hidden sm:block absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"/>
 
     <!-- Icon container (Wood piece) -->
     <div class="relative mb-3 sm:mb-4 bg-gradient-to-b from-[#4a3222] to-[#2a1a0f] p-3 sm:p-4 rounded-full border border-[#5c3a21] shadow-[0_4px_10px_rgba(0,0,0,0.5),inset_0_2px_5px_rgba(255,255,255,0.05)] transition-transform duration-300 group-hover:scale-110">

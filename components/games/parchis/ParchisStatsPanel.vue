@@ -40,7 +40,7 @@ const getColor = (colorStr: string) => {
   <div class="hidden xl:flex flex-col w-[320px] h-[600px] bg-[#1a0f08]/90 backdrop-blur-xl border border-orange-900/30 rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] ring-1 ring-white/5 relative z-10 shrink-0">
     <!-- Header -->
     <div class="relative bg-gradient-to-b from-orange-900/40 to-transparent p-5 border-b border-orange-900/30">
-      <div class="absolute inset-0 bg-orange-500/5 blur-[30px]"></div>
+      <div class="absolute inset-0 bg-orange-500/5 blur-[30px]"/>
       <h3 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-orange-400 drop-shadow-md flex items-center gap-3 relative z-10">
         <UIcon name="i-heroicons-chart-bar" class="w-6 h-6 text-amber-400" />
         CLASIFICACIÓN
@@ -55,7 +55,7 @@ const getColor = (colorStr: string) => {
         class="flex flex-col gap-2 p-3 bg-black/40 rounded-xl border border-white/5 hover:border-orange-500/30 transition-all duration-300 relative overflow-hidden group"
         :class="idx === 0 ? 'bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/30' : ''"
       >
-        <div v-if="idx === 0" class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/20 blur-[30px] rounded-full pointer-events-none"></div>
+        <div v-if="idx === 0" class="absolute -top-10 -right-10 w-24 h-24 bg-amber-500/20 blur-[30px] rounded-full pointer-events-none"/>
 
         <!-- Player Info -->
         <div class="flex items-center gap-3 relative z-10">
@@ -64,11 +64,11 @@ const getColor = (colorStr: string) => {
               class="w-10 h-10 rounded-full border-2 bg-cover bg-center shadow-lg bg-[#1a0f08]"
               :class="getColor(player.color).replace('bg-', 'border-')"
               :style="{ backgroundImage: player.avatar ? `url(/avatars/avatar-${player.avatar}.svg)` : 'none' }"
-            ></div>
+            />
             <div 
               class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#1a0f08] shadow-inner"
               :class="getColor(player.color)"
-            ></div>
+            />
           </div>
           
           <div class="flex-1 min-w-0">

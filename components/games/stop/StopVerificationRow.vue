@@ -3,7 +3,7 @@
     <td class="p-5 border-b border-r border-white/20 sticky left-0 bg-[#1e3f20] group-hover:bg-[#254b27] z-10 font-bold shadow-[4px_0_10px_rgba(0,0,0,0.5)]">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-10 h-10 rounded-full bg-[#1a0f08] p-1 border-2 shadow-inner" :style="{ borderColor: player.color }" />
+          <img :src="`/avatars/avatar-${player.avatarId}.svg`" class="w-10 h-10 rounded-full bg-[#1a0f08] p-1 border-2 shadow-inner" :style="{ borderColor: player.color }" >
         </div>
         <span class="tracking-wider uppercase text-xs font-['Comic_Sans_MS',_cursive,sans-serif]" :class="player.userId === myUserId ? 'text-yellow-300' : 'text-white'">
           {{ player.nickname }}
@@ -31,14 +31,14 @@
             class="absolute top-1/2 left-[-10%] h-2 bg-red-500 origin-left rounded rotate-[-2deg] transition-transform duration-500 ease-out pointer-events-none z-10"
             :class="isVetoed(catData, player.userId) ? 'scale-x-100' : 'scale-x-0'"
             style="width: 120%; margin-top: -4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);"
-          ></div>
+          />
         </span>
         
         <button 
           v-if="player.userId !== myUserId && getAnswerObj(catData, player.userId)?.answer && !isAutoInvalid(catData, player.userId)"
-          @click.stop="toggleVeto(player.userId, catData.category)"
           class="text-[10px] font-black uppercase tracking-widest flex items-center gap-1 px-3 py-1.5 rounded transition-all border-2 font-['Comic_Sans_MS',_cursive,sans-serif] active:scale-95 z-20 relative"
           :class="hasMyVeto(catData, player.userId) ? 'bg-[#991b1b] text-white border-[#7f1d1d] shadow-[inset_0_3px_6px_rgba(0,0,0,0.6)]' : 'bg-[#173119] text-gray-300 border-white/20 hover:bg-[#254b27] hover:text-white shadow-[0_4px_0_rgba(0,0,0,0.3)] active:translate-y-[4px] active:shadow-none'"
+          @click.stop="toggleVeto(player.userId, catData.category)"
         >
           INVALIDAR ({{ getVetoCount(catData, player.userId) }})
         </button>

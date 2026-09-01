@@ -30,7 +30,7 @@ const confirmVote = () => {
       
       <!-- Spiral binding holes simulation -->
       <div class="absolute left-[-10px] top-0 bottom-0 flex flex-col justify-around py-4">
-        <div v-for="i in 12" :key="i" class="w-4 h-4 bg-[#3e2723] rounded-full border-2 border-[#5c3a21] shadow-inner"></div>
+        <div v-for="i in 12" :key="i" class="w-4 h-4 bg-[#3e2723] rounded-full border-2 border-[#5c3a21] shadow-inner"/>
       </div>
 
       <div class="pl-6">
@@ -55,13 +55,13 @@ const confirmVote = () => {
           <button 
             v-for="p in alivePlayers" 
             :key="p.userId || p.id"
-            @click="selectedPlayer = p.userId || p.id"
             class="flex items-center gap-4 p-3 border-2 transition-all relative overflow-hidden"
             :class="[
               selectedPlayer === (p.userId || p.id)
                 ? 'border-[#3e2723] bg-yellow-200 border-b-[6px] shadow-[4px_4px_0_rgba(0,0,0,0.5)] transform -translate-y-1' 
                 : 'border-gray-400 bg-[#f4e4bc] hover:bg-[#e8d5a5] border-b-[4px]'
             ]"
+            @click="selectedPlayer = p.userId || p.id"
           >
             <div class="w-12 h-12 border-2 border-black flex-shrink-0 flex items-center justify-center text-xl" :style="{ backgroundColor: p.color }">
               🧑‍✈️
@@ -80,7 +80,6 @@ const confirmVote = () => {
 
         <div v-if="!me?.hasVoted" class="mt-8 flex justify-end pt-4 border-t-2 border-dashed border-gray-400">
           <button 
-            @click="confirmVote"
             :disabled="!selectedPlayer"
             class="font-black uppercase px-8 py-4 border-2 border-black border-b-[6px] transition-all"
             :class="[
@@ -88,6 +87,7 @@ const confirmVote = () => {
                 ? 'bg-[#3e2723] text-[#f4e4bc] hover:bg-[#2a1a17] active:border-b-2 active:translate-y-[4px]' 
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed border-b-2 translate-y-[4px]'
             ]"
+            @click="confirmVote"
           >
             Sellar Voto
           </button>

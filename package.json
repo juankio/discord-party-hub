@@ -9,8 +9,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "bun run --bun eslint .",
+    "lint:fix": "bun run --bun eslint . --fix",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

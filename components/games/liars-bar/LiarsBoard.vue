@@ -2,11 +2,11 @@
   <div class="h-full flex-1 flex flex-col overflow-hidden bg-[#1a3822] rounded-xl border-[12px] md:border-[20px] border-[#3a2211] relative shadow-[inset_0_0_120px_rgba(0,0,0,0.9),0_20px_40px_rgba(0,0,0,0.5)] font-sans">
     
     <!-- Felt Texture Overlay -->
-    <div class="absolute inset-0 opacity-[0.15] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: multiply;"></div>
+    <div class="absolute inset-0 opacity-[0.15] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: multiply;"/>
     
     <!-- Table center markings (decorative) -->
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] h-[70%] border-2 border-[#d8a872]/10 rounded-[120px] pointer-events-none shadow-[inset_0_0_30px_rgba(255,255,255,0.02)]"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] h-[30%] border border-[#d8a872]/5 rounded-[60px] pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] h-[70%] border-2 border-[#d8a872]/10 rounded-[120px] pointer-events-none shadow-[inset_0_0_30px_rgba(255,255,255,0.02)]"/>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[40%] h-[30%] border border-[#d8a872]/5 rounded-[60px] pointer-events-none"/>
 
     <div class="flex-1 overflow-y-auto overscroll-contain flex flex-col justify-between p-4 md:p-8 relative z-10 w-full">
       <!-- Top Row: Opponents -->

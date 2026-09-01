@@ -11,7 +11,7 @@
     />
 
     <!-- Botones (Crear / Unirse) -->
-    <HomeRoomControls class="mt-2" :roomCode="roomCode" @update:roomCode="$emit('update:roomCode', $event)" :isValid="isValid" @createRoom="$emit('createRoom')" @joinRoom="$emit('joinRoom')" />
+    <HomeRoomControls class="mt-2" :room-code="roomCode" :is-valid="isValid" @update:room-code="$emit('update:roomCode', $event)" @create-room="$emit('createRoom')" @join-room="$emit('joinRoom')" />
   </div>
 </template>
 
