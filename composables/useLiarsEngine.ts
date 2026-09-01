@@ -19,7 +19,7 @@ export const useLiarsEngine = (roomId: string) => {
   });
 
   const handleAction = {
-    placeBid: (count: number, face: number) => socket.value?.emit('liars:place_bid', { count, face }),
+    placeBid: (count: number, face: number) => socket.value?.emit('liars:place_bid', { count, amount: count, face }),
     callLiar: () => socket.value?.emit('liars:call_liar')
   };
 

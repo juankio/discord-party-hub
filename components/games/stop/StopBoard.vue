@@ -113,6 +113,7 @@ const canStop = computed(() => {
 const checkCompletion = () => {
   emit('update_answers', answers.value)
   if (canStop.value && stopBtn.value && !props.isFinished && !props.panicMode && !localFinished.value) {
+    anime.remove(stopBtn.value)
     anime({
       targets: stopBtn.value,
       scale: [1, 1.02],
@@ -153,6 +154,12 @@ watch(() => props.letter, (newVal, oldVal) => {
   if (newVal && newVal !== oldVal) {
     // Clear answers
     Object.keys(answers.value).forEach(k => answers.value[k] = '')
+  }
+})
+
+onUnmounted(() => {
+  if (stopBtn.value) {
+    anime.remove(stopBtn.value)
   }
 })
 </script>

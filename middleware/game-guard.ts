@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   }
 
   // Verificamos el estado del juego actual
-  let gameState = 'WAITING';
+  let gameState: string | null = null;
   if (to.path.includes('/uno')) {
     gameState = useUnoStore().gameState;
   } else if (to.path.includes('/stop')) {
@@ -24,8 +24,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
     gameState = useParchisStore().gameState;
   }
 
-  // Si está en WAITING, lo mandamos al lobby
-  if (gameState === 'WAITING') {
+  // Si está en WAITING o LOBBY, lo mandamos al lobby
+  if (gameState === 'WAITING' || gameState === 'LOBBY') {
     return navigateTo(`/sala/${roomId}`)
   }
 })

@@ -9,6 +9,7 @@ import { usePinturilloAudio } from '@/composables/usePinturilloAudio';
 const props = defineProps<{
   gameState: PinturilloPublicState;
   myUserId: string;
+  strokesToRender?: DrawEvent[];
   chatMessages?: any[];
 }>();
 
@@ -24,7 +25,6 @@ const currentColor = ref('#000000');
 const currentThickness = ref(5);
 const clearCanvasSignal = ref(0);
 const guessInput = ref('');
-const strokesToRender = ref<DrawEvent[]>([]); // Normally fed from WS
 
 const isDrawer = computed(() => props.gameState?.currentDrawerId === props.myUserId);
 
@@ -148,7 +148,7 @@ v-for="(score, userId) in gameState?.scores || {}" :key="userId"
           :is-drawer="isDrawer && gameState?.state === 'DRAWING'"
           :current-color="currentColor"
           :current-thickness="currentThickness"
-          :strokes-to-render="strokesToRender"
+          :strokes-to-render="props.strokesToRender || []"
           :clear-canvas-signal="clearCanvasSignal"
           @draw="handleDraw"
         />

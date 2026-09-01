@@ -14,10 +14,10 @@
         <LiarsCup 
           v-for="opp in opponents" 
           :key="opp.id"
-          :player-name="opp.name"
+          :player-name="opp.name || opp.nickname || opp.username || 'Rival'"
           :dice-count="opp.diceCount"
-          :dice-values="gameState?.state === 'RESOLUTION' ? opp.diceValues : undefined"
-          :is-current-turn="gameState?.currentTurnId === opp.id"
+          :dice-values="gameState?.state === 'RESOLUTION' ? (opp.diceValues || opp.dice) : undefined"
+          :is-current-turn="activeTurnId === opp.id || activeTurnId === opp.userId"
           :force-reveal="gameState?.state === 'RESOLUTION'"
         />
       </div>
@@ -54,11 +54,11 @@
         <div class="flex justify-center w-full pointer-events-auto mt-auto">
           <LiarsCup 
             v-if="localPlayer"
-            :player-name="'TÚ (' + localPlayer.name + ')'"
+            :player-name="'TÚ (' + (localPlayer.name || localPlayer.nickname || localPlayer.username || 'Tú') + ')'"
             :dice-count="localPlayer.diceCount"
-            :dice-values="gameState?.myDice || localPlayer.diceValues"
+            :dice-values="gameState?.myDice || localPlayer.diceValues || localPlayer.dice"
             :is-local="true"
-            :is-current-turn="gameState?.currentTurnId === localPlayer.id"
+            :is-current-turn="activeTurnId === localPlayer.id || activeTurnId === localPlayer.userId"
             :force-reveal="gameState?.state === 'RESOLUTION'"
           />
         </div>
@@ -80,24 +80,33 @@ export interface Player {
   id: string;
   userId?: string;
   name: string;
+  nickname?: string;
+  username?: string;
   diceCount: number;
+  dice?: number[];
   diceValues?: number[];
 }
 
 export interface Bet {
-  amount: number;
+  amount?: number;
+  count?: number;
   face: number;
-  playerId: string;
+  playerId?: string;
+  userId?: string;
 }
 
 export interface GameState {
   state: LiarsState;
   players: Player[];
-  currentTurnId: string;
+  currentTurnId?: string;
+  currentTurn?: string;
+  currentPlayerId?: string;
   currentBet: Bet | null;
-  totalDiceCount: number;
+  totalDiceCount?: number;
   loserId?: string;
+  loser?: string | { id?: string; userId?: string; name?: string };
   winnerId?: string;
+  winner?: string | { id?: string; userId?: string; name?: string };
   myDice?: number[];
 }
 
@@ -107,7 +116,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'action', action: { type: 'BET'; amount: number; face: number } | { type: 'CALL_LIAR' }): void;
+  (e: 'action', action: { type: 'BET'; amount: number; count: number; face: number } | { type: 'CALL_LIAR' }): void;
   (e: 'leave'): void;
 }>();
 
@@ -119,27 +128,50 @@ watch(() => props.gameState?.state, (newState) => {
   }
 });
 
-const localPlayer = computed(() => props.gameState?.players?.find(p => p.userId === props.localPlayerId || p.id === props.localPlayerId));
-const opponents = computed(() => props.gameState?.players?.filter(p => p.userId !== props.localPlayerId && p.id !== props.localPlayerId) || []);
+const localPlayer = computed(() => {
+  if (!props.gameState?.players) return null;
+  return props.gameState.players.find(p => p.userId === props.localPlayerId || p.id === props.localPlayerId) || null;
+});
 
-const isMyTurn = computed(() => props.gameState?.currentTurnId === props.localPlayerId || props.gameState?.currentTurnId === localPlayer.value?.id);
+const opponents = computed(() => {
+  if (!props.gameState?.players) return [];
+  return props.gameState.players.filter(p => p.userId !== props.localPlayerId && p.id !== props.localPlayerId);
+});
+
+const activeTurnId = computed(() => {
+  return props.gameState?.currentTurnId || props.gameState?.currentTurn || props.gameState?.currentPlayerId || '';
+});
+
+const isMyTurn = computed(() => {
+  const activeId = activeTurnId.value;
+  if (!activeId) return false;
+  return activeId === props.localPlayerId || activeId === localPlayer.value?.id || activeId === localPlayer.value?.userId;
+});
 
 const betPlayerName = computed(() => {
   if (!props.gameState?.currentBet) return '';
-  const p = props.gameState?.players?.find(p => p.id === props.gameState.currentBet!.playerId);
-  return p ? p.name : 'Alguien';
+  const betPlayerId = props.gameState.currentBet.playerId || props.gameState.currentBet.userId;
+  if (!betPlayerId) return 'Alguien';
+  const p = props.gameState.players?.find(p => p.id === betPlayerId || p.userId === betPlayerId);
+  return p ? (p.name || p.nickname || p.username || 'Alguien') : 'Alguien';
 });
 
 const loserName = computed(() => {
-  if (!props.gameState?.loserId) return '';
-  const p = props.gameState?.players?.find(p => p.id === props.gameState.loserId);
-  return p ? p.name : 'Alguien';
+  const loser = props.gameState?.loserId || props.gameState?.loser;
+  if (!loser) return '';
+  if (typeof loser === 'object' && loser.name) return loser.name;
+  const loserId = typeof loser === 'object' ? (loser.id || loser.userId) : loser;
+  const p = props.gameState.players?.find(p => p.id === loserId || p.userId === loserId);
+  return p ? (p.name || p.nickname || p.username || 'Alguien') : (typeof loser === 'string' && isNaN(Number(loser)) ? loser : 'Alguien');
 });
 
 const winnerName = computed(() => {
-  if (!props.gameState?.winnerId) return '';
-  const p = props.gameState?.players?.find(p => p.id === props.gameState.winnerId);
-  return p ? p.name : 'Alguien';
+  const winner = props.gameState?.winnerId || props.gameState?.winner;
+  if (!winner) return '';
+  if (typeof winner === 'object' && winner.name) return winner.name;
+  const winnerId = typeof winner === 'object' ? (winner.id || winner.userId) : winner;
+  const p = props.gameState.players?.find(p => p.id === winnerId || p.userId === winnerId);
+  return p ? (p.name || p.nickname || p.username || 'Alguien') : (typeof winner === 'string' && isNaN(Number(winner)) ? winner : 'Alguien');
 });
 
 // Calculate total dice on the board matching the bet (wildcard 1 + actual face)
@@ -148,8 +180,9 @@ const totalDiceFaceCount = computed(() => {
   const targetFace = props.gameState.currentBet.face;
   let count = 0;
   for (const player of props.gameState.players) {
-    if (player.diceValues) {
-      for (const val of player.diceValues) {
+    const diceList = player.diceValues || player.dice;
+    if (diceList && Array.isArray(diceList)) {
+      for (const val of diceList) {
         if (val === targetFace || val === 1) { // 1 is usually wildcard
           count++;
         }
@@ -159,8 +192,9 @@ const totalDiceFaceCount = computed(() => {
   return count;
 });
 
-const handlePlaceBet = (bet: { amount: number, face: number }) => {
-  emit('action', { type: 'BET', ...bet });
+const handlePlaceBet = (bet: { amount?: number; count?: number; face: number }) => {
+  const count = bet.count ?? bet.amount ?? 1;
+  emit('action', { type: 'BET', amount: count, count, face: bet.face });
 };
 
 const handleCallLiar = () => {

@@ -16,14 +16,14 @@
     <div v-else-if="gameState === 'BETTING'" class="text-center">
       <div v-if="currentBet" class="bg-[#25160d]/95 p-6 md:p-8 rounded-xl border-4 border-[#4a2e19] shadow-[0_15px_50px_rgba(0,0,0,0.9),inset_0_0_20px_rgba(0,0,0,0.5)] transform md:scale-110">
         <p class="text-[#d8a872]/80 uppercase text-xs md:text-sm tracking-widest mb-3 font-bold border-b border-[#d8a872]/20 pb-2">
-          Apuesta Actual ({{ betPlayerName }})
+          Apuesta Actual ({{ betPlayerName || 'Alguien' }})
         </p>
         <div class="flex items-center justify-center gap-4 md:gap-6">
-           <span class="text-5xl md:text-6xl font-black text-amber-50 drop-shadow-[0_4px_4px_rgba(0,0,0,1)]">{{ currentBet.amount }}</span>
+           <span class="text-5xl md:text-6xl font-black text-amber-50 drop-shadow-[0_4px_4px_rgba(0,0,0,1)]">{{ betAmount }}</span>
            <span class="text-3xl font-bold text-[#d8a872]">X</span>
            <!-- Simple dice representation -->
            <div class="w-14 h-14 md:w-16 md:h-16 bg-[#e8e4d9] rounded shadow-[2px_5px_0px_#8a7f6c,inset_-2px_-3px_5px_rgba(0,0,0,0.3)] flex items-center justify-center border border-[#d3cebe]">
-             <span class="text-3xl md:text-4xl font-black text-[#2c2620] drop-shadow-sm">{{ currentBet.face }}</span>
+             <span class="text-3xl md:text-4xl font-black text-[#2c2620] drop-shadow-sm">{{ betFace }}</span>
            </div>
         </div>
       </div>
@@ -38,8 +38,8 @@
       
       <div class="bg-black/30 rounded p-4 mb-4 border border-red-950 shadow-inner">
         <p class="text-xl md:text-3xl font-bold text-red-200 uppercase tracking-wide">
-          Había <span class="text-white text-3xl md:text-4xl mx-1 font-black">{{ totalDiceFaceCount }}</span> dados con cara 
-          <span class="inline-block bg-[#e8e4d9] text-[#2c2620] px-2 py-0.5 rounded shadow-sm mx-1 text-2xl font-black">{{ currentBet?.face }}</span>
+          Había <span class="text-white text-3xl md:text-4xl mx-1 font-black">{{ totalDiceFaceCount ?? 0 }}</span> dados con cara 
+          <span class="inline-block bg-[#e8e4d9] text-[#2c2620] px-2 py-0.5 rounded shadow-sm mx-1 text-2xl font-black">{{ betFace }}</span>
         </p>
         <p class="text-sm mt-2 text-red-200/70 font-bold tracking-widest uppercase">
           (Contando comodines "1")
@@ -47,7 +47,7 @@
       </div>
 
       <p class="text-xl md:text-2xl font-black text-white bg-red-950/50 inline-block px-6 py-2 rounded-full border border-red-900 shadow-md">
-        {{ loserName }} pierde un dado
+        {{ loserName || 'Alguien' }} pierde un dado
       </p>
     </div>
     
@@ -55,20 +55,40 @@
     <div v-else-if="gameState === 'FINISHED'" class="bg-[#d8a872] text-[#25160d] p-8 md:p-12 rounded-xl border-8 border-[#25160d] shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center relative overflow-hidden">
       <div class="absolute inset-0 bg-[#e3ba8f] transform -skew-y-12 translate-y-1/2 opacity-20"/>
       <h2 class="text-4xl md:text-5xl font-black uppercase tracking-widest mb-4 relative z-10 drop-shadow-md">Fin de Partida</h2>
-      <p class="text-2xl md:text-3xl font-bold relative z-10">¡<span class="text-[#8b2323] font-black">{{ winnerName }}</span> sobrevive!</p>
+      <p class="text-2xl md:text-3xl font-bold relative z-10">¡<span class="text-[#8b2323] font-black">{{ winnerName || 'Alguien' }}</span> sobrevive!</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { LiarsState, Bet } from './LiarsBoard.vue';
+import { computed } from 'vue';
 
-defineProps<{
-  gameState?: LiarsState;
+export interface Bet {
+  amount?: number;
+  count?: number;
+  face?: number;
+  playerId?: string;
+  userId?: string;
+}
+
+const props = defineProps<{
+  gameState?: string;
   currentBet?: Bet | null;
   betPlayerName?: string;
   totalDiceFaceCount?: number;
   loserName?: string;
   winnerName?: string;
 }>();
+
+const betAmount = computed(() => {
+  if (!props.currentBet) return 1;
+  const val = props.currentBet.count ?? props.currentBet.amount ?? 1;
+  return typeof val === 'number' && !Number.isNaN(val) ? val : 1;
+});
+
+const betFace = computed(() => {
+  if (!props.currentBet) return 2;
+  const val = props.currentBet.face ?? 2;
+  return typeof val === 'number' && !Number.isNaN(val) ? val : 2;
+});
 </script>

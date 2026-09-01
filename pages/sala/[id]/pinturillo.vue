@@ -13,6 +13,7 @@
       :strokes-to-render="strokesToRender"
       :chat-messages="chatMessages"
       @draw="handleAction.draw" 
+      @clear="handleAction.clear"
       @choose-word="handleAction.chooseWord"
       @guess="handleAction.guess"
       @leave="$router.push(`/sala/${roomId}`)"

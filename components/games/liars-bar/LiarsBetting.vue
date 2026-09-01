@@ -56,27 +56,42 @@ import LiarsBettingControls from './LiarsBettingControls.vue';
 import { useLiarsAudio } from '@/composables/useLiarsAudio';
 
 const props = defineProps<{
-  currentBet?: { amount: number, face: number } | null;
+  currentBet?: { amount?: number; count?: number; face?: number; playerId?: string; userId?: string } | null;
   totalDiceCount?: number;
 }>();
 
 const emit = defineEmits<{
-  (e: 'place-bet', bet: { amount: number, face: number }): void;
+  (e: 'place-bet', bet: { amount: number; count: number; face: number }): void;
   (e: 'call-liar'): void;
 }>();
 
+// Helper to extract normalized bet count/amount
+const getBetAmount = (bet?: { amount?: number; count?: number } | null): number => {
+  if (!bet) return 0;
+  const val = bet.count ?? bet.amount ?? 0;
+  return typeof val === 'number' && !Number.isNaN(val) ? val : 0;
+};
+
+const getBetFace = (bet?: { face?: number } | null): number => {
+  if (!bet) return 0;
+  const val = bet.face ?? 0;
+  return typeof val === 'number' && !Number.isNaN(val) ? val : 0;
+};
+
 // Initialize states
 const amount = ref(1);
-const face = ref(2); // In Liar's dice usually 1 is wild, so start at 2 or 1. Let's start at 2 for visual.
+const face = ref(2); // In Liar's dice usually 1 is wild, so start at 2
 
 // Update local state when currentBet changes (from backend)
 watch(() => props.currentBet, (newVal) => {
   if (newVal) {
-    if (newVal.face < 6) {
-      amount.value = newVal.amount;
-      face.value = newVal.face + 1;
+    const curAmount = getBetAmount(newVal);
+    const curFace = getBetFace(newVal);
+    if (curFace > 0 && curFace < 6) {
+      amount.value = curAmount > 0 ? curAmount : 1;
+      face.value = curFace + 1;
     } else {
-      amount.value = newVal.amount + 1;
+      amount.value = (curAmount > 0 ? curAmount : 1) + 1;
       face.value = 2; // wrap around to non-wild face
     }
   } else {
@@ -87,11 +102,13 @@ watch(() => props.currentBet, (newVal) => {
 
 // Validations
 const canDecrement = computed(() => {
-  if (!props.currentBet) return amount.value > 1;
+  const curAmount = getBetAmount(props.currentBet);
+  const curFace = getBetFace(props.currentBet);
+  if (!props.currentBet || curAmount === 0) return amount.value > 1;
   
-  if (amount.value > props.currentBet.amount + 1) return true;
-  if (amount.value === props.currentBet.amount + 1 && face.value <= props.currentBet.face) return true;
-  if (amount.value === props.currentBet.amount) return false;
+  if (amount.value > curAmount + 1) return true;
+  if (amount.value === curAmount + 1 && face.value <= curFace) return true;
+  if (amount.value <= curAmount) return false;
   
   return true; // fallback
 });
@@ -99,10 +116,12 @@ const canDecrement = computed(() => {
 const canIncrement = computed(() => amount.value < (props.totalDiceCount || 30));
 
 const isValidBet = computed(() => {
-  if (!props.currentBet) return amount.value >= 1;
+  const curAmount = getBetAmount(props.currentBet);
+  const curFace = getBetFace(props.currentBet);
+  if (!props.currentBet || curAmount === 0) return amount.value >= 1;
   
-  if (amount.value > props.currentBet.amount) return true;
-  if (amount.value === props.currentBet.amount && face.value > props.currentBet.face) return true;
+  if (amount.value > curAmount) return true;
+  if (amount.value === curAmount && face.value > curFace) return true;
   
   return false;
 });
@@ -112,21 +131,25 @@ const canCallLiar = computed(() => !!props.currentBet);
 // Actions
 const incrementAmount = () => { if (canIncrement.value) amount.value++; };
 const decrementAmount = () => { 
+  const curAmount = getBetAmount(props.currentBet);
+  const curFace = getBetFace(props.currentBet);
   if (amount.value > 1) { // Basic sanity
     amount.value--; 
     // If decrementing makes the bet invalid due to face, fix face
-    if (props.currentBet && amount.value === props.currentBet.amount && face.value <= props.currentBet.face) {
-      face.value = Math.min(6, props.currentBet.face + 1);
+    if (props.currentBet && amount.value === curAmount && face.value <= curFace) {
+      face.value = Math.min(6, curFace + 1);
     }
   }
 };
 const incrementFace = () => { if (face.value < 6) face.value++; };
 const decrementFace = () => { 
+  const curAmount = getBetAmount(props.currentBet);
+  const curFace = getBetFace(props.currentBet);
   if (face.value > 1) {
     // Basic sanity
     face.value--; 
     // If decrementing makes the bet invalid, bump amount
-    if (props.currentBet && amount.value === props.currentBet.amount && face.value <= props.currentBet.face) {
+    if (props.currentBet && amount.value === curAmount && face.value <= curFace) {
       if (canIncrement.value) amount.value++;
       else face.value++; // revert if we can't increment amount
     }
@@ -138,7 +161,7 @@ const { playBet, playCall } = useLiarsAudio();
 const onPlaceBet = () => {
   if (isValidBet.value) {
     playBet();
-    emit('place-bet', { amount: amount.value, face: face.value });
+    emit('place-bet', { amount: amount.value, count: amount.value, face: face.value });
   }
 };
 

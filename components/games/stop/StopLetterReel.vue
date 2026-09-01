@@ -28,7 +28,17 @@ const isRolling = ref(true)
 const displayLetter = ref('?')
 const letterReel = ref(null)
 
+let rollTimeout: ReturnType<typeof setTimeout> | null = null
+
+const clearRollTimeout = () => {
+  if (rollTimeout !== null) {
+    clearTimeout(rollTimeout)
+    rollTimeout = null
+  }
+}
+
 const rollLetter = () => {
+  clearRollTimeout()
   isRolling.value = true
   emit('rolling', true)
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -39,8 +49,9 @@ const rollLetter = () => {
     displayLetter.value = alphabet[Math.floor(Math.random() * alphabet.length)] || 'A'
     currentLoop++
     if (currentLoop < dummyLoops) {
-      setTimeout(tick, 50 + (currentLoop * 5))
+      rollTimeout = setTimeout(tick, 50 + (currentLoop * 5))
     } else {
+      rollTimeout = null
       displayLetter.value = props.letter ?? 'A'
       isRolling.value = false
       emit('rolling', false)
@@ -48,6 +59,7 @@ const rollLetter = () => {
       // Pop animation for letter
       nextTick(() => {
         if (letterReel.value) {
+          anime.remove(letterReel.value)
           anime({
             targets: letterReel.value,
             scale: [0.5, 1.3, 1],
@@ -72,6 +84,13 @@ watch(() => props.letter, (newVal, oldVal) => {
 onMounted(() => {
   if (props.letter) {
     rollLetter()
+  }
+})
+
+onUnmounted(() => {
+  clearRollTimeout()
+  if (letterReel.value) {
+    anime.remove(letterReel.value)
   }
 })
 </script>

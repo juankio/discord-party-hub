@@ -25,6 +25,42 @@ const lastPos = ref<{ x: number; y: number } | null>(null);
 const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 600;
 
+let renderedCount = 0;
+
+const drawSingleStroke = (event: DrawEvent) => {
+  if (!ctx.value) return;
+  ctx.value.beginPath();
+  ctx.value.moveTo(event.startX, event.startY);
+  ctx.value.lineTo(event.endX, event.endY);
+  ctx.value.strokeStyle = event.color;
+  ctx.value.lineWidth = event.thickness;
+  ctx.value.lineCap = 'round';
+  ctx.value.lineJoin = 'round';
+  ctx.value.stroke();
+  ctx.value.closePath();
+};
+
+const renderIncomingStrokes = (strokes: DrawEvent[]) => {
+  if (!ctx.value) return;
+  if (!strokes || strokes.length === 0) {
+    clearCanvas();
+    return;
+  }
+
+  // If strokes array was reset or truncated, clear and start over
+  if (strokes.length < renderedCount) {
+    clearCanvas();
+  }
+
+  for (let i = renderedCount; i < strokes.length; i++) {
+    const stroke = strokes[i];
+    if (stroke) {
+      drawSingleStroke(stroke);
+    }
+  }
+  renderedCount = strokes.length;
+};
+
 onMounted(() => {
   if (canvasRef.value) {
     ctx.value = canvasRef.value.getContext('2d');
@@ -32,6 +68,9 @@ onMounted(() => {
       ctx.value.lineCap = 'round';
       ctx.value.lineJoin = 'round';
       clearCanvas();
+      if (props.strokesToRender && props.strokesToRender.length > 0) {
+        renderIncomingStrokes(props.strokesToRender);
+      }
     }
   }
 });
@@ -42,22 +81,12 @@ watch(() => props.clearCanvasSignal, () => {
 
 watch(() => props.strokesToRender, (newStrokes) => {
   if (!ctx.value) return;
-  // This is a naive re-render or just appending.
-  // Ideally, we just draw the newly added strokes if we manage it externally.
-  // Assuming this prop is just the latest stroke or we draw all of them.
-  // Let's assume strokesToRender are events we just need to draw immediately.
+  renderIncomingStrokes(newStrokes || []);
 }, { deep: true });
 
 // For now we will expose a method to draw an incoming event directly
 const drawIncomingEvent = (event: DrawEvent) => {
-  if (!ctx.value) return;
-  ctx.value.beginPath();
-  ctx.value.moveTo(event.startX, event.startY);
-  ctx.value.lineTo(event.endX, event.endY);
-  ctx.value.strokeStyle = event.color;
-  ctx.value.lineWidth = event.thickness;
-  ctx.value.stroke();
-  ctx.value.closePath();
+  drawSingleStroke(event);
 };
 
 defineExpose({
@@ -69,6 +98,7 @@ function clearCanvas() {
   if (ctx.value && canvasRef.value) {
     ctx.value.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   }
+  renderedCount = 0;
 }
 
 function getCoords(e: MouseEvent | TouchEvent) {

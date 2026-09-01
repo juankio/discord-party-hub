@@ -25,6 +25,8 @@ import ImpostorBoard from '~/components/games/impostor/ImpostorBoard.vue';
 import { usePlayerStore } from '~/stores/playerStore';
 import { computed } from 'vue';
 
+definePageMeta({ middleware: ["game-guard"] });
+
 const route = useRoute();
 const roomId = route.params.id as string;
 const { state, handleAction } = useImpostorEngine(roomId);

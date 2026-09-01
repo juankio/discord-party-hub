@@ -109,11 +109,8 @@ export const useParchisEngine = (roomId: string) => {
     }
   }
 
-  // Not directly requested, but aligns with Engine pattern
   const isMyTurn = computed(() => {
-    // Current turn logic for Parchis if needed.
-    // If currentTurnUserId exists on parchisStore:
-    return (parchisStore as any).currentTurnUserId === playerStore.userId
+    return parchisStore.isMyTurn
   })
 
   return {
