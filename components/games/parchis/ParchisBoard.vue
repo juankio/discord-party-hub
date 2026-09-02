@@ -145,9 +145,15 @@ const giantTokenStyle = computed(() => {
     };
   }
 
-  const N = sides.value;
-  const angleDeg = (hoveredWedgeIndex.value * (360 / N)) - 135;
-  const angleRad = angleDeg * (Math.PI / 180);
+  const wedge = boardGeometry.value.wedges[hoveredWedgeIndex.value];
+  if (!wedge) {
+    return {
+      ...baseStyle,
+      transform: 'translate(0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)'
+    };
+  }
+
+  const angleRad = Math.atan2(wedge.cy, wedge.cx);
 
   const moveDist = 65; 
   const tx = Math.cos(angleRad) * moveDist;

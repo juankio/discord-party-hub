@@ -91,11 +91,11 @@ export function useParchisBoardGeometry(sidesRef: any) {
 				coordsMap.meta[p]![row] = center;
 			}
 
-			// Wedges (Home bases)
-			const p1 = rotatePoint(75, -innerRadius - 50, armAngle);
-			const pTrackL = rotatePoint(75, -R_max, armAngle);
-			const pCorner = rotatePoint(R_max * Math.tan(Math.PI / N), -R_max, armAngle);
-			const pTrackR = rotatePoint(75, -R_max, armAngle + 360 / N);
+			// Wedges (Home bases) - aligned to Left side of Arm p (adjacent to Salida p)
+			const p1 = rotatePoint(-75, -innerRadius - 50, armAngle);
+			const pTrackL = rotatePoint(-75, -R_max, armAngle);
+			const pCorner = rotatePoint(-R_max * Math.tan(Math.PI / N), -R_max, armAngle);
+			const pTrackR = rotatePoint(75, -R_max, armAngle - 360 / N);
 			
 			const cx = (p1.x + pTrackL.x + pCorner.x + pTrackR.x) / 4;
 			const cy = (p1.y + pTrackL.y + pCorner.y + pTrackR.y) / 4;
