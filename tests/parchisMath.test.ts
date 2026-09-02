@@ -1,7 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { ref } from "vue";
-import { rotatePoint, PARCHIS_COLORS } from "../composables/parchisMath";
-import { useParchisBoardGeometry } from "../composables/useParchisBoardGeometry";
+import { rotatePoint, PARCHIS_COLORS, computeParchisGeometry } from "../composables/parchisMath";
 
 function pointInPolygon(point: { x: number; y: number }, vs: { x: number; y: number }[]) {
   const x = point.x, y = point.y;
@@ -156,9 +154,8 @@ describe("parchisMath", () => {
 
   describe("Parchis Board Geometry & Salidas Alignment", () => {
     const checkAlignment = (N: number) => {
-      const sidesRef = ref(N);
-      const { boardGeometry, colorPalette } = useParchisBoardGeometry(sidesRef);
-      const { trackSquares, llegadaPaths, wedges, coordsMap } = boardGeometry.value;
+      const { boardGeometry, colorPalette } = computeParchisGeometry(N);
+      const { trackSquares, llegadaPaths, wedges, coordsMap } = boardGeometry;
 
       expect(trackSquares.length).toBe(N * 17);
       expect(llegadaPaths.length).toBe(N * 8);
