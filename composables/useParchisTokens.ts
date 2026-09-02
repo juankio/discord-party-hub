@@ -67,14 +67,14 @@ export function useParchisTokens(sides: ComputedRef<number>, boardGeometry: Comp
 						let offsetY = 0;
 						if (occupants > 1) {
 							const offsets = [
-								{x: -12, y: -12},
-								{x: 12, y: 12},
-								{x: -12, y: 12},
-								{x: 12, y: -12},
-								{x: 0, y: -16},
-								{x: 0, y: 16},
-								{x: -16, y: 0},
-								{x: 16, y: 0}
+								{x: -22, y: -22},
+								{x: 22, y: 22},
+								{x: -22, y: 22},
+								{x: 22, y: -22},
+								{x: 0, y: -22},
+								{x: 0, y: 22},
+								{x: -22, y: 0},
+								{x: 22, y: 0}
 							];
 							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
 							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;
@@ -93,10 +93,10 @@ export function useParchisTokens(sides: ComputedRef<number>, boardGeometry: Comp
 						let offsetY = 0;
 						if (occupants > 1) {
 							const offsets = [
-								{x: -8, y: -8},
-								{x: 8, y: 8},
-								{x: -8, y: 8},
-								{x: 8, y: -8}
+								{x: -16, y: -16},
+								{x: 16, y: 16},
+								{x: -16, y: 16},
+								{x: 16, y: -16}
 							];
 							offsetX = offsets[Math.abs(myIndexInCell) % offsets.length]?.x || 0;
 							offsetY = offsets[Math.abs(myIndexInCell) % offsets.length]?.y || 0;

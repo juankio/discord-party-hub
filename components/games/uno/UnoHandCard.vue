@@ -13,6 +13,7 @@ class="card-wrapper transition-all duration-300"
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import anime from 'animejs'
 
 const props = defineProps({
@@ -24,15 +25,37 @@ const props = defineProps({
 
 const emit = defineEmits(['play-card'])
 
+const isMobile = ref(false)
+const updateIsMobile = () => {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < 640
+  }
+}
+
+onMounted(() => {
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', updateIsMobile)
+  }
+})
+
 const cardStyle = computed(() => {
   const isTooMany = props.total > 7
-  const spreadAngle = isTooMany ? (props.total > 15 ? 1 : 2) : 5
+  const spreadAngle = isMobile.value
+    ? (isTooMany ? (props.total > 15 ? 0.8 : 1.2) : 2.5)
+    : (isTooMany ? (props.total > 15 ? 1 : 2) : 5)
   
   const middle = (props.total - 1) / 2
   const rotate = (props.index - middle) * spreadAngle
   
-  // Usamos un simple cálculo cuadrático para el arco (parábola)
-  const translateY = (Math.pow(props.index - middle, 2) * 2) - 40
+  // Suavizar el factor de curvatura parabólica en pantallas pequeñas (isMobile ? 0.8 : 2.0)
+  const curveFactor = isMobile.value ? 0.8 : 2.0
+  const baseOffset = isMobile.value ? -15 : -40
+  const translateY = (Math.pow(props.index - middle, 2) * curveFactor) + baseOffset
   const zIndex = props.index
 
   return {

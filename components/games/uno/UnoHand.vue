@@ -1,6 +1,6 @@
 <template>
   <div class="flex-none flex justify-center items-end z-10 relative w-full max-w-full">
-    <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-24 pt-32 px-4 md:px-0 flex justify-start md:justify-center snap-x">
+    <div ref="handContainer" class="w-full overflow-x-auto scrollbar-hide pb-16 sm:pb-24 pt-16 sm:pt-28 px-4 md:px-0 flex justify-start md:justify-center snap-x">
       <TransitionGroup 
         tag="div" 
         :css="false" 
@@ -9,21 +9,22 @@
         @enter="onCardEnter"
       >
         <UnoHandCard
-v-for="(card, index) in myHand" :key="card.id" 
-             :card="card"
-             :index="index"
-             :total="myHand.length"
-             :is-playable="isPlayable(card)"
-             @play-card="$emit('play-card', $event.id)"
+          v-for="(card, index) in myHand" :key="card.id" 
+          :card="card"
+          :index="index"
+          :total="myHand.length"
+          :is-playable="isPlayable(card)"
+          @play-card="$emit('play-card', $event.id)"
         />
       </TransitionGroup>
     </div>
 
-    <!-- Botón Yell UNO -->
-    <div v-if="myHand.length <= 2" class="absolute inset-x-0 -top-20 md:-top-24 flex justify-center z-50 pointer-events-none">
+    <!-- Botón Yell UNO (Mínimo 44px de target táctil y posicionado para no tapar la carta central) -->
+    <div v-if="myHand.length <= 2" class="absolute inset-x-0 -top-14 sm:-top-20 md:-top-24 flex justify-center z-50 pointer-events-none">
       <button
-class="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-4 border-white text-white font-black text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform pointer-events-auto"
-              @click="$emit('yell-uno')">
+        class="min-w-[44px] min-h-[44px] w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-red-600 rounded-full border-2 sm:border-4 border-white text-white font-black text-sm sm:text-xl md:text-2xl shadow-[0_0_30px_rgba(239,68,68,0.8)] hover:scale-110 active:scale-95 transition-transform pointer-events-auto flex items-center justify-center cursor-pointer"
+        @click="$emit('yell-uno')"
+      >
         UNO!
       </button>
     </div>

@@ -70,14 +70,14 @@
           </div>
         </div>
         
-        <!-- Botón de Denuncia -->
-        <div v-if="rival.cardCount === 1 && !rival.hasYelledUno" class="absolute -bottom-20 z-50 flex justify-center" :style="{ transform: 'rotate(' + -getRivalPosition(index, rivals.length).rot + 'deg)' }">
-          <UButton
-            size="2xs" color="red" class="whitespace-nowrap animate-bounce shadow-lg text-[9px] sm:text-xs px-2 py-1"
+        <!-- Botón de Denuncia (Touch target mínimo 44px) -->
+        <div v-if="rival.cardCount === 1 && !rival.hasYelledUno" class="absolute -bottom-20 z-50 flex justify-center pointer-events-auto" :style="{ transform: 'rotate(' + -getRivalPosition(index, rivals.length).rot + 'deg)' }">
+          <button
+            class="min-h-[44px] min-w-[44px] px-3 py-2 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl whitespace-nowrap animate-bounce shadow-[0_0_15px_rgba(239,68,68,0.8)] border-2 border-white flex items-center justify-center transition-transform cursor-pointer"
             @click="$emit('challenge', rival.userId)"
           >
             ¡Denunciar!
-          </UButton>
+          </button>
         </div>
       </div>
   </div>
@@ -95,20 +95,21 @@ defineEmits(['challenge'])
 
 const getRivalPosition = (index: number, total: number) => {
   if (total === 0) return { x: 50, y: 5, rot: 0 };
-  if (total === 1) return { x: 50, y: 0, rot: 0 };
+  if (total === 1) return { x: 50, y: 16, rot: 0 };
   
   // Ángulos base (apertura de la U)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const isTablet = typeof window !== 'undefined' && window.innerWidth >= 640 && window.innerWidth < 1024;
   
-  // PC: Ángulos abiertos para que rodeen los laterales de la mesa sin dar la vuelta por abajo
-  const minAngle = isMobile ? Math.PI + 0.8 : Math.PI + 0.15; 
-  const maxAngle = isMobile ? -0.8 : -0.15;       
+  // PC / Tablet: Ángulos abiertos para que rodeen los laterales de la mesa sin dar la vuelta por abajo
+  const minAngle = isMobile ? Math.PI + 0.8 : (isTablet ? Math.PI + 0.35 : Math.PI + 0.15); 
+  const maxAngle = isMobile ? -0.8 : (isTablet ? -0.35 : -0.15);       
   const angleStep = (minAngle - maxAngle) / (total - 1);
   const angle = minAngle - (index * angleStep);
 
-  const radiusX = isMobile ? 48 : 55; // Expandimos para que envuelvan la mesa
-  const radiusY = isMobile ? 70 : 65; // Alto pronunciado para escapar de la madera
-  const centerY = isMobile ? 45 : 80; // Centro hundido hacia el fondo para que el arco suba solo hasta el borde
+  const radiusX = isMobile ? 48 : (isTablet ? 46 : 55); // Expandimos para que envuelvan la mesa
+  const radiusY = isMobile ? 70 : (isTablet ? 56 : 65); // Alto ajustado en tablet para evitar colisión con Turn Banner y botón rendirse
+  const centerY = isMobile ? 45 : (isTablet ? 72 : 80); // Centro adecuado para no chocar arriba
 
   const x = 50 + radiusX * Math.cos(angle);
   const y = centerY - radiusY * Math.sin(angle); 

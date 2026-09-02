@@ -22,7 +22,11 @@ export const useSocket = () => {
     if (socket.value) return
 
     socket.value = io(config.public.socketUrl, {
-      transports: ['websocket']
+      transports: ['websocket'],
+      auth: {
+        token: playerStore.token || '',
+        guestId: playerStore.userId || ''
+      }
     })
 
     socket.value.on('connect', () => {
