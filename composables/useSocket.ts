@@ -6,6 +6,7 @@ import { useRuntimeConfig } from '#app'
 import { usePlayerStore } from '~/stores/playerStore'
 
 import { useAppAudio } from '~/composables/useAppAudio'
+import { useAppAlert } from '~/composables/useAppAlert'
 
 const socket = ref<Socket | null>(null)
 const isConnected = ref(false)
@@ -84,12 +85,42 @@ export const useSocket = () => {
     })
 
     socket.value.on('player_waiting_in_lobby', (data: { nickname: string, avatarId: number, color: string }) => {
-      useToast().add({
+      useAppAlert().showAlert({
         title: '¡Amigo en el Lobby!',
         description: `${data.nickname} se ha unido a la sala y está esperando a que termine la partida.`,
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-user-check'
       })
+    })
+
+    socket.value.on('player_status_change', (data: { userId: string, nickname: string, isOffline?: boolean, wasEvicted?: boolean, gracePeriodSec?: number }) => {
+      if (data.userId === playerStore.userId) return
+
+      if (data.wasEvicted) {
+        useAppAlert().showAlert({
+          title: 'Jugador Retirado',
+          description: `${data.nickname} no regresó a tiempo (30s) y ha sido retirado de la partida.`,
+          type: 'error',
+          icon: 'i-lucide-user-x',
+          autoCloseMs: 4000
+        })
+      } else if (data.isOffline) {
+        useAppAlert().showAlert({
+          title: 'Jugador Desconectado',
+          description: `${data.nickname} se ha desconectado. Esperando reconexión (${data.gracePeriodSec || 30}s)...`,
+          type: 'warning',
+          icon: 'i-lucide-wifi-off',
+          autoCloseMs: 4000
+        })
+      } else if (data.isOffline === false) {
+        useAppAlert().showAlert({
+          title: '¡Jugador Reconectado!',
+          description: `${data.nickname} ha vuelto a la partida.`,
+          type: 'success',
+          icon: 'i-lucide-wifi',
+          autoCloseMs: 3000
+        })
+      }
     })
 
     socket.value.on('game_started', () => {
@@ -123,13 +154,23 @@ export const useSocket = () => {
     socket.value.on('room_not_found', () => {
       disconnect()
       playerStore.updateRoomState([], '')
-      useToast().add({ title: 'Sala Cerrada', description: 'La sala que buscas no existe o fue cerrada.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      useAppAlert().showAlert({
+        title: 'Sala Cerrada',
+        description: 'La sala que buscas no existe o fue cerrada.',
+        type: 'error',
+        icon: 'i-lucide-alert-circle'
+      })
       router.push('/')
     })
 
     socket.value.on('room_full', () => {
       disconnect()
-      useToast().add({ title: 'Sala Llena', description: 'La sala ha alcanzado su límite de jugadores.', color: 'red', icon: 'i-heroicons-exclamation-triangle' })
+      useAppAlert().showAlert({
+        title: 'Sala Llena',
+        description: 'La sala ha alcanzado su límite de jugadores.',
+        type: 'error',
+        icon: 'i-lucide-alert-circle'
+      })
       router.push('/')
     })
 

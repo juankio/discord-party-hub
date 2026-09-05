@@ -39,6 +39,7 @@ describe("authStorage", () => {
   let mockStorage: MockLocalStorage;
   const originalLocalStorage = globalThis.localStorage;
   const originalWindow = (globalThis as any).window;
+  const originalDocument = (globalThis as any).document;
 
   beforeEach(() => {
     mockStorage = new MockLocalStorage();
@@ -48,6 +49,7 @@ describe("authStorage", () => {
   afterEach(() => {
     (globalThis as any).localStorage = originalLocalStorage;
     (globalThis as any).window = originalWindow;
+    (globalThis as any).document = originalDocument;
   });
 
   describe("generateId", () => {

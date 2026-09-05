@@ -10,6 +10,7 @@
       </NuxtLayout>
       <UNotifications />
       <GameAudioController />
+      <AppAlertModal />
     </div>
   </div>
 </template>
@@ -21,6 +22,7 @@ import { usePlayerStore } from '~/stores/playerStore'
 import { useAudioStore } from '~/stores/audioStore'
 import AppLoader from '~/components/core/AppLoader.vue'
 import GameAudioController from '~/components/core/GameAudioController.vue'
+import AppAlertModal from '~/components/core/AppAlertModal.vue'
 
 const playerStore = usePlayerStore()
 const audioStore = useAudioStore()

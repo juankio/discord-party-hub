@@ -4,14 +4,14 @@ import { useUnoStore } from '~/stores/games/unoStore'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useSocket } from '~/composables/useSocket'
 import { useUnoAnimations } from '~/composables/useUnoAnimations'
-import { useToast } from '#imports'
+import { useAppAlert } from '~/composables/useAppAlert'
 
 export const useUnoEngine = (roomId: string) => {
   const router = useRouter()
   const playerStore = usePlayerStore()
   const unoStore = useUnoStore()
   const { socket, isConnected } = useSocket()
-  const toast = useToast()
+  const { showAlert } = useAppAlert()
 
   const { playCardAnimation, drawCardAnimation } = useUnoAnimations(unoStore, playerStore, socket)
 
@@ -48,20 +48,11 @@ export const useUnoEngine = (roomId: string) => {
         newSocket.emit('uno:join', { roomId })
 
         const handleGameMessage = (data: any) => {
-          toast.add({ 
-            title: data.message, 
-            timeout: 2500,
-            ui: {
-              wrapper: 'fixed bottom-24 left-1/2 -translate-x-1/2 w-auto pointer-events-none z-[100]',
-              container: 'items-center justify-center',
-              width: 'w-auto max-w-sm',
-              background: 'bg-black/70 backdrop-blur-sm',
-              ring: 'ring-1 ring-white/10',
-              padding: 'px-4 py-2',
-              rounded: 'rounded-full',
-              title: 'text-white text-sm font-medium text-center',
-              icon: { color: 'text-white/70' }
-            }
+          showAlert({ 
+            title: 'Partida UNO', 
+            description: data.message,
+            type: 'info',
+            autoCloseMs: 2500
           })
         }
 

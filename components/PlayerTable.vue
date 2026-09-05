@@ -74,7 +74,7 @@ defineEmits<{
 }>()
 
 const { playTableExpand, playTableShrink, playUiClick } = useAppAudio()
-const toast = useToast()
+const { showAlert } = useAppAlert()
 const playerStore = usePlayerStore()
 const allowBots = computed(() => ['uno', 'parchis', 'liars'].includes(props.selectedGame))
 const isHost = computed(() => props.hostUserId === playerStore.userId)
@@ -96,25 +96,25 @@ const handleLockedClick = (player: any) => {
   playUiClick()
   if (isHost.value) {
     if (props.selectedGame === 'parchis' && canExpandLobby.value) {
-      toast.add({
+      showAlert({
         title: 'Asiento de Parchís bloqueado',
         description: 'Abre "Reglas de la Mesa" y amplía el tablero a 6 u 8 puestos para habilitarlo.',
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-lock'
       })
     } else if (canExpandLobby.value) {
-      toast.add({
+      showAlert({
         title: 'Asiento bloqueado (Lobby 6 Jugadores)',
         description: 'Abre "Ajustes Generales" y activa "Lobby Extendido" para desbloquear los puestos 7 y 8.',
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-lock'
       })
     }
   } else {
-    toast.add({
+    showAlert({
       title: 'Asiento bloqueado',
       description: 'Pídele al anfitrión que amplíe la capacidad de la sala en los ajustes.',
-      color: 'amber',
+      type: 'warning',
       icon: 'i-lucide-lock'
     })
   }

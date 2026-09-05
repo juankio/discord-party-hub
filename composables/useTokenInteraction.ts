@@ -2,7 +2,7 @@ import { computed } from "vue";
 import { useParchisStore } from "~/stores/games/parchisStore";
 import { usePlayerStore } from "~/stores/playerStore";
 import { useSocket } from "~/composables/useSocket";
-import { useToast } from "#imports";
+import { useAppAlert } from "~/composables/useAppAlert";
 
 export function useTokenInteraction(props: {
 	token: {
@@ -16,7 +16,7 @@ export function useTokenInteraction(props: {
 	const parchisStore = useParchisStore();
 	const playerStore = usePlayerStore();
 	const { socket } = useSocket();
-	const toast = useToast();
+	const { showAlert } = useAppAlert();
 
 	const isClickable = computed(() => {
 		if (
@@ -50,15 +50,15 @@ export function useTokenInteraction(props: {
 
 	const onTokenClick = () => {
 		if (!parchisStore.isMyTurn) {
-			toast.add({ title: "No es tu turno", color: "red" });
+			showAlert({ title: "No es tu turno", description: "Espera a que sea tu turno para jugar.", type: "error" });
 			return;
 		}
 		if (playerStore.userId !== props.token.ownerId) {
-			toast.add({ title: "Esta no es tu ficha", color: "red" });
+			showAlert({ title: "Esta no es tu ficha", description: "Solo puedes interactuar con tus propias fichas.", type: "error" });
 			return;
 		}
 		if (!parchisStore.diceValue || parchisStore.diceValue.length === 0) {
-			toast.add({ title: "Tira los dados primero", color: "orange" });
+			showAlert({ title: "Tira los dados primero", description: "Debes lanzar los dados antes de mover.", type: "warning" });
 			return;
 		}
 
@@ -72,17 +72,19 @@ export function useTokenInteraction(props: {
 						parchisStore.diceValue[0] !== undefined &&
 						parchisStore.availableMoves?.includes(parchisStore.diceValue[0]);
 				if (!hasPairs) {
-					toast.add({
-						title: "Necesitas sacar pares para salir del nido",
-						color: "amber",
+					showAlert({
+						title: "Ficha en Casa",
+						description: "Necesitas sacar pares para salir del nido.",
+						type: "warning",
 					});
 					return;
 				}
 			} else {
 				if (!parchisStore.availableMoves?.includes(5)) {
-					toast.add({
-						title: "Necesitas un 5 para salir del nido",
-						color: "amber",
+					showAlert({
+						title: "Ficha en Casa",
+						description: "Necesitas un 5 para salir del nido.",
+						type: "warning",
 					});
 					return;
 				}
@@ -90,12 +92,12 @@ export function useTokenInteraction(props: {
 		} else if (props.token.state === "META") {
 			const validMoves = parchisStore.availableMoves?.filter(move => props.token.position + (move ?? 0) <= 8);
 			if (!validMoves || validMoves.length === 0) {
-				toast.add({ title: "No puedes mover esta ficha (se pasa de la meta)", color: "orange" });
+				showAlert({ title: "Movimiento Inválido", description: "No puedes mover esta ficha porque se pasa de la meta.", type: "warning" });
 				return;
 			}
 		} else {
 			if (!parchisStore.availableMoves || parchisStore.availableMoves.length === 0) {
-				toast.add({ title: "No tienes movimientos disponibles", color: "orange" });
+				showAlert({ title: "Sin Movimientos", description: "No tienes movimientos disponibles con tus dados actuales.", type: "warning" });
 				return;
 			}
 		}
@@ -124,7 +126,7 @@ export function useTokenInteraction(props: {
 				moveVal = parchisStore.availableMoves[parchisStore.selectedDiceIndex] as number;
 				if (moveVal === undefined) return;
 				if (props.token.position + moveVal > 8) {
-					toast.add({ title: "El dado seleccionado te pasa de la meta", color: "orange" });
+					showAlert({ title: "Dado Inválido", description: "El dado seleccionado te pasa de la meta.", type: "warning" });
 					return;
 				}
 			} else {

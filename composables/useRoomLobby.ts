@@ -2,14 +2,14 @@ import { ref, computed, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePlayerStore } from '~/stores/playerStore';
 import { useSocket } from '~/composables/useSocket';
-import { useToast } from '#imports';
+import { useAppAlert } from '~/composables/useAppAlert';
 import { useAppAudio } from '~/composables/useAppAudio';
 
 export const useRoomLobby = (roomId: string) => {
   const router = useRouter();
   const playerStore = usePlayerStore();
   const { socket } = useSocket();
-  const toast = useToast();
+  const { showAlert } = useAppAlert();
   const { playCountdown, playBotConfig, playSeatMove } = useAppAudio();
 
   const isStarting = ref(false);
@@ -25,7 +25,7 @@ export const useRoomLobby = (roomId: string) => {
       if (isHost.value) {
         const hasBots = players.value.some((p: any) => p.isBot);
         if (hasBots && !['uno', 'parchis', 'liars'].includes(val)) {
-          toast.add({ title: 'Bots no compatibles', description: 'Expulsa a los bots primero para jugar este juego.', color: 'red' });
+          showAlert({ title: 'Bots no compatibles', description: 'Expulsa a los bots primero para jugar este juego.', type: 'error' });
           return;
         }
         playerStore.selectedGame = val;
@@ -47,7 +47,7 @@ export const useRoomLobby = (roomId: string) => {
     if (selectedGame.value === 'parchis') {
       const boardSize = playerStore.roomRules?.parchisBoardSize || 4;
       if (players.value.length > boardSize) {
-        toast.add({ title: 'Mesa llena', description: 'Hay más jugadores que espacios en el tablero. Aumenta el tamaño del tablero de Parchís o expulsa a alguien.', color: 'red' });
+        showAlert({ title: 'Mesa llena', description: 'Hay más jugadores que espacios en el tablero. Aumenta el tamaño del tablero de Parchís o expulsa a alguien.', type: 'error' });
         isStarting.value = false;
         return;
       }

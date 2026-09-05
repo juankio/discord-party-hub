@@ -56,6 +56,7 @@ import { useTheme } from '~/composables/useTheme'
 
 const emit = defineEmits(['redirecting'])
 const playerStore = usePlayerStore()
+const { showAlert } = useAppAlert()
 const { playTabSwitch, playCreateRoom, playJoinRoom } = useAppAudio()
 const { updateThemeColors } = useTheme()
 
@@ -106,8 +107,7 @@ const handleCreateRoom = async () => {
     }) as any
     savePlayerAndRedirect(res.data.roomId)
   } catch (error) {
-    // Assuming useToast exists or I should import it if not. The prompt says useToast().add(...)
-    useToast().add({ title: 'Error', description: 'No se pudo crear la sala', color: 'red' })
+    showAlert({ title: 'Error', description: 'No se pudo crear la sala', type: 'error' })
   }
 }
 

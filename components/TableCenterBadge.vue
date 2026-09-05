@@ -55,7 +55,7 @@ const emit = defineEmits<{
   'add-bot': [difficulty: number]
 }>()
 
-const toast = useToast()
+const { showAlert } = useAppAlert()
 const isCopied = ref(false)
 const { playBot, playCopyLink, playUiClick } = useAppAudio()
 
@@ -69,24 +69,24 @@ const handleAddBot = () => {
       easing: 'easeInOutQuad'
     })
     if (props.selectedGame === 'parchis' && props.canExpandLobby) {
-      toast.add({
+      showAlert({
         title: `Mesa de Parchís completa (${props.playersCount}/${props.maxAllowed})`,
         description: 'Abre "Reglas de la Mesa" para ampliar el tablero a 6 u 8 puestos.',
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-info'
       })
     } else if (props.canExpandLobby) {
-      toast.add({
+      showAlert({
         title: `Mesa llena (${props.playersCount}/${props.maxAllowed})`,
         description: 'Abre "Ajustes Generales" y activa el Lobby Extendido para añadir hasta 8 participantes.',
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-info'
       })
     } else {
-      toast.add({
+      showAlert({
         title: 'Capacidad máxima alcanzada (8/8)',
         description: 'La sala ha alcanzado el límite físico de 8 jugadores.',
-        color: 'red',
+        type: 'error',
         icon: 'i-lucide-ban'
       })
     }
@@ -105,16 +105,21 @@ const copyLink = () => {
     isCopied.value = true
     setTimeout(() => { isCopied.value = false }, 2500)
     if (props.isTableFull) {
-      toast.add({
+      showAlert({
         title: '¡Link copiado! (Mesa Completa)',
         description: props.canExpandLobby 
           ? `La sala está completa (${props.playersCount}/${props.maxAllowed}). Recuerda activar el Lobby Extendido en las reglas para que puedan unirse.`
           : 'La sala está al límite máximo (8/8). Alguien debe salir para que otro pueda entrar.',
-        color: 'amber',
+        type: 'warning',
         icon: 'i-lucide-alert-triangle'
       })
     } else {
-      toast.add({ title: '¡Link copiado!', description: 'Envíalo a tus amigos por Discord para que se unan.', color: 'primary', icon: 'i-lucide-check-circle' })
+      showAlert({
+        title: '¡Link copiado!',
+        description: 'Envíalo a tus amigos por Discord para que se unan.',
+        type: 'success',
+        icon: 'i-lucide-check-circle'
+      })
     }
   }
 }
