@@ -1,6 +1,6 @@
 <template>
-  <div class="relative w-full max-w-[740px] aspect-[4/3] sm:aspect-[16/9] mx-auto mt-4 sm:mt-6 px-10 sm:px-14 md:px-16 player-table-container">
-    <div class="absolute inset-y-0 left-8 right-8 sm:left-12 sm:right-12 md:left-14 md:right-14 bg-[#b87333] rounded-[2rem] md:rounded-[2.5rem] shadow-2xl flex p-2 sm:p-3 md:p-3.5 table-surface">
+  <div class="relative w-full max-w-[820px] mx-auto mt-3 sm:mt-5 px-12 sm:px-14 flex items-center justify-center player-table-container">
+    <div class="relative w-full aspect-[2/1] bg-[#b87333] rounded-[2rem] md:rounded-[2.5rem] shadow-2xl flex p-2.5 sm:p-3.5 table-surface">
       <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2rem] shadow-inner relative flex items-center justify-center border-4 border-[#0a662c]">
         
         <!-- Buchacas -->
@@ -12,10 +12,10 @@
         <div class="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
 
         <!-- Sillas Externas (Con margen lateral protegido para evitar recortes) -->
-        <div v-if="paddedPlayers.length >= 7" class="absolute -left-9 sm:-left-12 md:-left-14 top-1/2 -translate-y-1/2 w-11 sm:w-14 md:w-16 h-20 sm:h-24 md:h-28 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
+        <div v-if="paddedPlayers.length >= 7" class="absolute -left-9 sm:-left-12 top-1/2 -translate-y-1/2 w-11 sm:w-14 h-20 sm:h-24 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
           <div class="w-3.5 sm:w-4 h-10 sm:h-14 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
-        <div v-if="paddedPlayers.length === 8" class="absolute -right-9 sm:-right-12 md:-right-14 top-1/2 -translate-y-1/2 w-11 sm:w-14 md:w-16 h-20 sm:h-24 md:h-28 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
+        <div v-if="paddedPlayers.length === 8" class="absolute -right-9 sm:-right-12 top-1/2 -translate-y-1/2 w-11 sm:w-14 h-20 sm:h-24 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
           <div class="w-3.5 sm:w-4 h-10 sm:h-14 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
 

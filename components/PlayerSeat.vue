@@ -63,7 +63,8 @@
     <!-- Etiqueta de Nombre / Estado -->
     <span 
       v-if="!player.isLocked"
-      class="absolute left-1/2 -translate-x-1/2 text-[10px] sm:text-[11px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[70px] sm:max-w-[100px] truncate transition-colors duration-200 pointer-events-none"
+      :title="player.nickname"
+      class="absolute left-1/2 -translate-x-1/2 z-30 text-[10px] sm:text-[11px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[130px] sm:max-w-[160px] md:max-w-[180px] truncate transition-colors duration-200 pointer-events-none"
       :class="[
         isTopSeat ? '-top-5 sm:-top-6' : '-bottom-5 sm:-bottom-6',
         player.isEmpty ? (isHovered ? (localPlayerColorSafe === '#ffffff' ? 'text-black' : 'text-white') : 'text-white/60 bg-black/60') : (playerColor === '#ffffff' ? 'text-black' : 'text-white')

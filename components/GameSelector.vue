@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full max-w-2xl mx-auto border-[6px] sm:border-[10px] border-[#a06d40] bg-[#4a2e1b] rounded-xl sm:rounded-2xl shadow-xl overflow-x-auto flex flex-col shadow-inner custom-scrollbar relative z-10">
-    <div class="min-w-[320px] flex flex-col">
+  <div class="w-full max-w-2xl mx-auto border-[6px] sm:border-[10px] border-[#a06d40] bg-[#4a2e1b] rounded-xl sm:rounded-2xl shadow-xl overflow-visible flex flex-col shadow-inner relative z-10">
+    <div class="w-full flex flex-col overflow-visible">
       <div
         v-for="(row, idx) in [games.slice(0,3), games.slice(3,6)]" 
         :key="idx" 
         class="relative w-full flex justify-center gap-3 sm:gap-6 items-end pb-3 sm:pb-4 pt-10 sm:pt-14 bg-[#382012]"
+        :class="idx === 0 ? 'z-20' : 'z-10'"
       >
         <!-- Soga -->
         <div class="absolute left-0 right-0 h-2 sm:h-2.5 z-[25] pointer-events-none bottom-[26px] sm:bottom-[30px]">
