@@ -1,8 +1,9 @@
 <template>
   <div
+    ref="seatRef"
     class="player-avatar pointer-events-auto absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] flex flex-col items-center justify-center rounded-full border-3 md:border-4 overflow-visible will-change-[top,left,transform]"
     :class="[
-      player.isLocked ? 'cursor-not-allowed bg-black/80 border-red-500/60 shadow-none' : 
+      player.isLocked ? 'cursor-pointer bg-black/80 border-red-500/60 shadow-none' : 
       (player.isEmpty ? 'cursor-pointer bg-black/40 border-dashed border-gray-600/50 shadow-none' : 'bg-black'),
       { 'cursor-pointer hover:z-50': isBot && isHost && !player.isEmpty && !player.isLocked }
     ]"
@@ -23,7 +24,7 @@
     }"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
-    @click="!player.isLocked && $emit('avatar-click', player)"
+    @click="handleClick"
   >
     <!-- Tooltip Asiento Bloqueado -->
     <div 
@@ -78,6 +79,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import anime from 'animejs';
 
 const props = defineProps<{
   player: any;
@@ -87,11 +89,13 @@ const props = defineProps<{
   localPlayerColor?: string;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'avatar-click', player: any): void;
+  (e: 'locked-click', player: any): void;
 }>();
 
 const isHovered = ref(false);
+const seatRef = ref<HTMLElement | null>(null);
 
 const isBot = computed(() => props.player.isBot);
 const isHostPlayer = computed(() => props.player.userId === props.hostUserId);
@@ -104,4 +108,20 @@ const isTopSeat = computed(() => {
   }
   return !props.position?.top?.includes('100%') && !props.position?.top?.includes('50%');
 });
+
+const handleClick = () => {
+  if (props.player.isLocked) {
+    if (seatRef.value) {
+      anime({
+        targets: seatRef.value,
+        translateX: [-4, 4, -2, 2, 0],
+        duration: 300,
+        easing: 'easeInOutQuad'
+      });
+    }
+    emit('locked-click', props.player);
+    return;
+  }
+  emit('avatar-click', props.player);
+};
 </script>

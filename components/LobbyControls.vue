@@ -37,7 +37,7 @@
     <button 
       v-if="isHost"
       class="mt-6 sm:mt-8 w-[240px] sm:w-[280px] h-[52px] sm:h-[58px] rounded-2xl text-base sm:text-lg font-black uppercase tracking-widest transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 relative border-t-2 border-white/20"
-      :disabled="isStarting || playersCount < 2 || !['uno', 'stop', 'parchis', 'liars', 'pinturillo', 'impostor'].includes(selectedGame) || isMissingStopCategories"
+      :disabled="isStarting || playersCount < 2 || !['uno', 'stop', 'parchis', 'liars', 'pinturillo', 'impostor'].includes(selectedGame) || isMissingStopCategories || isOverCapacityParchis || isUnderCapacityImpostor"
       style="
         background-color: var(--theme-color); 
         color: var(--theme-text-color, white);
@@ -68,7 +68,9 @@
     
     <p v-if="playersCount < 2" class="text-xs text-gray-500 mt-4 sm:mt-5 font-bold tracking-[0.2em] uppercase">Esperando más jugadores...</p>
     <p v-else-if="!['uno', 'stop', 'parchis', 'liars', 'pinturillo', 'impostor'].includes(selectedGame)" class="text-xs text-red-500/80 mt-4 sm:mt-5 font-bold tracking-[0.2em] uppercase">Juego no disponible aún</p>
-    <p v-else-if="isMissingStopCategories" class="text-xs text-red-500/80 mt-4 sm:mt-5 font-bold tracking-[0.2em] uppercase">Faltan categorías para Stop</p>
+    <p v-else-if="isMissingStopCategories" class="text-xs text-red-500/80 mt-4 sm:mt-5 font-bold tracking-[0.2em] uppercase flex items-center justify-center gap-1.5"><UIcon name="i-lucide-alert-circle" class="w-4 h-4" /> Faltan categorías para Stop</p>
+    <p v-else-if="isOverCapacityParchis" class="text-xs text-amber-400 mt-4 sm:mt-5 font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-1.5 text-center px-4"><UIcon name="i-lucide-alert-triangle" class="w-4 h-4 shrink-0" /> Hay más jugadores ({{ playersCount }}) que puestos en Parchís ({{ roomRules?.parchisBoardSize || 4 }}). Amplía el tablero en Reglas.</p>
+    <p v-else-if="isUnderCapacityImpostor" class="text-xs text-amber-400 mt-4 sm:mt-5 font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-1.5 text-center px-4"><UIcon name="i-lucide-alert-triangle" class="w-4 h-4 shrink-0" /> Impostor requiere mínimo 4 jugadores (tienes {{ playersCount }}).</p>
   </div>
 </template>
 
@@ -90,5 +92,13 @@ defineEmits(['update:selectedGame', 'toggle-general', 'toggle-table', 'start-gam
 
 const isMissingStopCategories = computed(() => {
   return props.selectedGame === 'stop' && (!props.roomRules?.stopCategories || props.roomRules.stopCategories.length < 3);
+});
+
+const isOverCapacityParchis = computed(() => {
+  return props.selectedGame === 'parchis' && props.playersCount > (props.roomRules?.parchisBoardSize || 4);
+});
+
+const isUnderCapacityImpostor = computed(() => {
+  return props.selectedGame === 'impostor' && props.playersCount < 4;
 });
 </script>

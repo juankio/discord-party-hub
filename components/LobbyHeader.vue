@@ -1,8 +1,11 @@
 <template>
   <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 header-anim w-full">
-    <h1 class="text-2xl sm:text-3xl font-black text-white text-center sm:text-left">
-      Sala: <span class="text-primary">{{ roomId }}</span> 
-      <span class="text-gray-500 text-lg sm:text-xl ml-2">{{ playersCount }}/{{ maxPlayers }}</span>
+    <h1 class="text-2xl sm:text-3xl font-black text-white text-center sm:text-left flex items-center justify-center sm:justify-start flex-wrap gap-2">
+      <span>Sala: <span class="text-primary">{{ roomId }}</span></span>
+      <span class="text-gray-500 text-lg sm:text-xl">{{ playersCount }}/{{ maxPlayers }}</span>
+      <span v-if="playersCount >= maxPlayers" class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 tracking-wider inline-flex items-center gap-1 shadow-sm">
+        <UIcon name="i-lucide-users" class="w-3 h-3" /> Mesa Llena
+      </span>
     </h1>
     <div class="flex items-center gap-2 sm:gap-3">
       <!-- Botón Editar Perfil -->

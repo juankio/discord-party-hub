@@ -20,29 +20,17 @@
         </div>
 
         <!-- Info central -->
-        <div class="text-center relative z-10 flex flex-col items-center p-2.5 sm:p-3 md:p-3.5 bg-black/40 backdrop-blur-[2px] rounded-xl sm:rounded-2xl border border-white/15 w-[85%] sm:w-auto max-w-[280px] sm:max-w-[340px] shadow-lg">
-          <p class="text-[8px] sm:text-[9px] md:text-[10px] text-green-200/90 mb-0.5 uppercase tracking-[0.25em] sm:tracking-[0.35em] font-black drop-shadow">Código de la sala</p>
-          <h2 class="text-lg sm:text-2xl md:text-4xl font-mono font-black text-white tracking-[0.12em] sm:tracking-[0.2em] drop-shadow-md mb-1.5 sm:mb-2 truncate w-full px-2">{{ roomId }}</h2>
-          <div class="flex items-center gap-2 justify-center w-full">
-            <button 
-              class="copy-btn-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
-              :class="isCopied ? 'bg-green-600 border-green-400 text-white shadow-green-500/50' : 'bg-black/60 text-white border-white/20 shadow-black/50'"
-              @click="copyLink"
-            >
-              <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-3.5 h-3.5" />
-              {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
-            </button>
-            <button
-              v-if="isHost && allowBots"
-              class="add-bot-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border bg-blue-600/70 hover:bg-blue-500 hover:scale-105 active:scale-95 hover:brightness-110 text-white border-blue-400/50 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
-              title="Añadir Bot"
-              @click="handleAddBot"
-            >
-              <UIcon name="i-lucide-bot" class="w-3.5 h-3.5" />
-              <span class="hidden sm:inline">Añadir Bot</span>
-            </button>
-          </div>
-        </div>
+        <TableCenterBadge
+          :room-id="roomId"
+          :is-host="isHost"
+          :allow-bots="allowBots"
+          :is-table-full="isTableFull"
+          :can-expand-lobby="canExpandLobby"
+          :players-count="players.length"
+          :max-allowed="maxAllowed"
+          :selected-game="selectedGame"
+          @add-bot="$emit('add-bot', $event)"
+        />
 
         <!-- Avatares -->
         <div class="absolute inset-0 pointer-events-none z-20">
@@ -55,6 +43,7 @@
             :host-user-id="hostUserId"
             :local-player-color="playerStore.color"
             @avatar-click="!player.isLocked && (player.isEmpty ? $emit('change-seat', player.seatIndex) : $emit('avatar-click', player))"
+            @locked-click="handleLockedClick"
           />
         </div>
       </div>
@@ -63,11 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import anime from 'animejs'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useAppAudio } from '~/composables/useAppAudio'
 import PlayerSeat from './PlayerSeat.vue'
+import TableCenterBadge from './TableCenterBadge.vue'
 import { getAvatarPositionLogic } from '~/utils/tableGeometry'
 
 const props = defineProps({
@@ -77,18 +67,15 @@ const props = defineProps({
   selectedGame: { type: String, required: true }
 })
 
-const emit = defineEmits<{
+defineEmits<{
   'add-bot': [difficulty: number]
   'avatar-click': [player: any]
   'change-seat': [seatIndex: number]
 }>()
 
-const { playBot, playCopyLink, playTableExpand, playTableShrink, playUiClick } = useAppAudio()
-const handleAddBot = () => { playUiClick(); playBot(); emit('add-bot', 5) }
-
+const { playTableExpand, playTableShrink, playUiClick } = useAppAudio()
 const toast = useToast()
 const playerStore = usePlayerStore()
-const isCopied = ref(false)
 const allowBots = computed(() => ['uno', 'parchis', 'liars'].includes(props.selectedGame))
 const isHost = computed(() => props.hostUserId === playerStore.userId)
 
@@ -96,6 +83,42 @@ const maxAllowed = computed(() => {
   if (props.selectedGame === 'parchis') return playerStore.roomRules?.parchisBoardSize || 4
   return playerStore.roomRules?.extendedLobby ? 8 : 6
 })
+
+const isTableFull = computed(() => props.players.length >= maxAllowed.value)
+const canExpandLobby = computed(() => {
+  if (props.selectedGame === 'parchis') {
+    return (playerStore.roomRules?.parchisBoardSize || 4) < 8
+  }
+  return !playerStore.roomRules?.extendedLobby
+})
+
+const handleLockedClick = (player: any) => {
+  playUiClick()
+  if (isHost.value) {
+    if (props.selectedGame === 'parchis' && canExpandLobby.value) {
+      toast.add({
+        title: 'Asiento de Parchís bloqueado',
+        description: 'Abre "Reglas de la Mesa" y amplía el tablero a 6 u 8 puestos para habilitarlo.',
+        color: 'amber',
+        icon: 'i-lucide-lock'
+      })
+    } else if (canExpandLobby.value) {
+      toast.add({
+        title: 'Asiento bloqueado (Lobby 6 Jugadores)',
+        description: 'Abre "Ajustes Generales" y activa "Lobby Extendido" para desbloquear los puestos 7 y 8.',
+        color: 'amber',
+        icon: 'i-lucide-lock'
+      })
+    }
+  } else {
+    toast.add({
+      title: 'Asiento bloqueado',
+      description: 'Pídele al anfitrión que amplíe la capacidad de la sala en los ajustes.',
+      color: 'amber',
+      icon: 'i-lucide-lock'
+    })
+  }
+}
 
 const paddedPlayers = computed(() => {
   const max = maxAllowed.value
@@ -153,18 +176,6 @@ onMounted(() => {
     duration: 1000, easing: 'easeOutExpo'
   })
 })
-
-const copyLink = () => {
-  if (import.meta.client) {
-    playUiClick()
-    playCopyLink()
-    navigator.clipboard.writeText(window.location.href)
-    anime({ targets: '.copy-btn-anim', scale: [1, 1.15, 1], duration: 400, easing: 'easeInOutQuad' })
-    isCopied.value = true
-    setTimeout(() => { isCopied.value = false }, 2500)
-    toast.add({ title: '¡Link copiado!', description: 'Envíalo a tus amigos por Discord para que se unan.', color: 'primary', icon: 'i-lucide-check-circle' })
-  }
-}
 </script>
 
 <style scoped>
