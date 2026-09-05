@@ -4,14 +4,12 @@ import { useUnoStore } from '~/stores/games/unoStore'
 import { usePlayerStore } from '~/stores/playerStore'
 import { useSocket } from '~/composables/useSocket'
 import { useUnoAnimations } from '~/composables/useUnoAnimations'
-import { useAppAlert } from '~/composables/useAppAlert'
 
 export const useUnoEngine = (roomId: string) => {
   const router = useRouter()
   const playerStore = usePlayerStore()
   const unoStore = useUnoStore()
   const { socket, isConnected } = useSocket()
-  const { showAlert } = useAppAlert()
 
   const { playCardAnimation, drawCardAnimation } = useUnoAnimations(unoStore, playerStore, socket)
 
@@ -47,15 +45,6 @@ export const useUnoEngine = (roomId: string) => {
       if (newSocket) {
         newSocket.emit('uno:join', { roomId })
 
-        const handleGameMessage = (data: any) => {
-          showAlert({ 
-            title: 'Partida UNO', 
-            description: data.message,
-            type: 'info',
-            autoCloseMs: 2500
-          })
-        }
-
         const handleGameStateUpdate = (data: any) => {
           unoStore.updateState(data)
         }
@@ -64,12 +53,10 @@ export const useUnoEngine = (roomId: string) => {
           unoStore.setRivalHover(data.userId, data.index)
         }
 
-        newSocket.on('game_message', handleGameMessage)
         newSocket.on('game_state_update', handleGameStateUpdate)
         newSocket.on('uno:rival_hover', handleRivalHover)
 
         onCleanup(() => {
-          newSocket.off('game_message', handleGameMessage)
           newSocket.off('game_state_update', handleGameStateUpdate)
           newSocket.off('uno:rival_hover', handleRivalHover)
         })

@@ -128,6 +128,30 @@ export const useSocket = () => {
       playStart()
     })
 
+    socket.value.on('game_message', (data: any) => {
+      const message = typeof data === 'string' ? data : (data?.message || data?.text)
+      if (message) {
+        const gameTitles: Record<string, string> = {
+          uno: 'Partida UNO',
+          parchis: 'Parchís',
+          stop: 'Stop (Basta)',
+          liars: "Liar's Bar",
+          pinturillo: 'Pinturillo',
+          impostor: 'Impostor'
+        }
+        const activeType = playerStore.activeGameType || playerStore.selectedGame || ''
+        const title = gameTitles[activeType] || 'Aviso de Partida'
+
+        useAppAlert().showAlert({
+          title,
+          description: message,
+          type: 'info',
+          icon: 'i-lucide-gamepad-2',
+          autoCloseMs: 3000
+        })
+      }
+    })
+
     socket.value.on('game_action', (data) => {
       // Usaremos un custom event para que los componentes puedan reaccionar a acciones físicas
       try {
@@ -181,6 +205,7 @@ export const useSocket = () => {
 
   const disconnect = () => {
     if (socket.value) {
+      socket.value.off('game_message')
       socket.value.disconnect()
       socket.value = null
       isConnected.value = false

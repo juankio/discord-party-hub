@@ -8,7 +8,6 @@
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
-      <UNotifications />
       <GameAudioController />
       <AppAlertModal />
     </div>
