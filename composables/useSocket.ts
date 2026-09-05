@@ -80,6 +80,7 @@ export const useSocket = () => {
     socket.value.on('game_in_progress', (data: { gameType: string, playersCount: number }) => {
       playerStore.isGameActive = true
       playerStore.activeGameType = data.gameType
+      playerStore.isWaitingInLobby = true
     })
 
     socket.value.on('player_waiting_in_lobby', (data: { nickname: string, avatarId: number, color: string }) => {
@@ -92,6 +93,7 @@ export const useSocket = () => {
     })
 
     socket.value.on('game_started', () => {
+      playerStore.isWaitingInLobby = false
       playStart()
     })
 
@@ -111,6 +113,7 @@ export const useSocket = () => {
     socket.value.on('return_to_lobby', () => {
       playerStore.isGameActive = false
       playerStore.activeGameType = null
+      playerStore.isWaitingInLobby = false
       const targetPath = `/sala/${roomId}`
       if (window.location.pathname !== targetPath) {
         window.location.href = targetPath // Fuerza navegacion nativa para evitar bloqueos del router de Vue

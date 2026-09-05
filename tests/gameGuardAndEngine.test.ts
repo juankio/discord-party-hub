@@ -33,6 +33,8 @@ describe("Game Guard Navigation Logic", () => {
     path: string;
     nickname: string;
     playersInRoom: any[];
+    isWaitingInLobby?: boolean;
+    isGameActive?: boolean;
     unoState?: string;
     stopState?: string;
     parchisState?: string;
@@ -40,6 +42,15 @@ describe("Game Guard Navigation Logic", () => {
     const roomId = "test-room-123";
 
     if (!params.nickname || params.playersInRoom.length === 0) {
+      return { allowed: false, redirectUrl: `/sala/${roomId}` };
+    }
+
+    if (params.isWaitingInLobby === true) {
+      return { allowed: false, redirectUrl: `/sala/${roomId}` };
+    }
+
+    const isGameActive = params.isGameActive !== undefined ? params.isGameActive : true;
+    if (!isGameActive) {
       return { allowed: false, redirectUrl: `/sala/${roomId}` };
     }
 
@@ -75,6 +86,31 @@ describe("Game Guard Navigation Logic", () => {
       playersInRoom: [],
     });
     expect(res2.allowed).toBe(false);
+  });
+
+  it("should block access if player is waiting in lobby (isWaitingInLobby === true)", () => {
+    const res = evaluateGameGuard({
+      path: "/sala/test-room-123/uno",
+      nickname: "Zoro",
+      playersInRoom: [{ id: "p1" }],
+      isWaitingInLobby: true,
+      isGameActive: true,
+      unoState: "PLAYING",
+    });
+    expect(res.allowed).toBe(false);
+    expect(res.redirectUrl).toBe("/sala/test-room-123");
+  });
+
+  it("should block access if game is not active (isGameActive === false)", () => {
+    const res = evaluateGameGuard({
+      path: "/sala/test-room-123/uno",
+      nickname: "Zoro",
+      playersInRoom: [{ id: "p1" }],
+      isGameActive: false,
+      unoState: "PLAYING",
+    });
+    expect(res.allowed).toBe(false);
+    expect(res.redirectUrl).toBe("/sala/test-room-123");
   });
 
   it("should redirect when game is in initial WAITING or LOBBY state", () => {
@@ -136,6 +172,70 @@ describe("Game Guard Navigation Logic", () => {
     });
     expect(resLiars.allowed).toBe(true);
   });
+
+  it("should cover and allow access for all 6 games when conditions are valid", () => {
+    const allGames = [
+      { path: "/sala/test-room-123/uno", unoState: "PLAYING" },
+      { path: "/sala/test-room-123/stop", stopState: "PLAYING" },
+      { path: "/sala/test-room-123/parchis", parchisState: "PLAYING" },
+      { path: "/sala/test-room-123/liars" },
+      { path: "/sala/test-room-123/pinturillo" },
+      { path: "/sala/test-room-123/impostor" },
+    ];
+
+    for (const game of allGames) {
+      const res = evaluateGameGuard({
+        path: game.path,
+        nickname: "Zoro",
+        playersInRoom: [{ id: "p1" }],
+        isGameActive: true,
+        isWaitingInLobby: false,
+        unoState: game.unoState,
+        stopState: game.stopState,
+        parchisState: game.parchisState,
+      });
+      expect(res.allowed).toBe(true);
+    }
+  });
+
+  it("should block all 6 games if user is waiting in lobby or game is inactive", () => {
+    const paths = [
+      "/sala/test-room-123/uno",
+      "/sala/test-room-123/stop",
+      "/sala/test-room-123/parchis",
+      "/sala/test-room-123/liars",
+      "/sala/test-room-123/pinturillo",
+      "/sala/test-room-123/impostor",
+    ];
+
+    for (const path of paths) {
+      const resWaiting = evaluateGameGuard({
+        path,
+        nickname: "Zoro",
+        playersInRoom: [{ id: "p1" }],
+        isWaitingInLobby: true,
+        isGameActive: true,
+        unoState: "PLAYING",
+        stopState: "PLAYING",
+        parchisState: "PLAYING",
+      });
+      expect(resWaiting.allowed).toBe(false);
+      expect(resWaiting.redirectUrl).toBe("/sala/test-room-123");
+
+      const resInactive = evaluateGameGuard({
+        path,
+        nickname: "Zoro",
+        playersInRoom: [{ id: "p1" }],
+        isWaitingInLobby: false,
+        isGameActive: false,
+        unoState: "PLAYING",
+        stopState: "PLAYING",
+        parchisState: "PLAYING",
+      });
+      expect(resInactive.allowed).toBe(false);
+      expect(resInactive.redirectUrl).toBe("/sala/test-room-123");
+    }
+  });
 });
 
 describe("Lobby Waiting In Progress Resolution", () => {
@@ -168,27 +268,39 @@ describe("Lobby Waiting In Progress Resolution", () => {
     expect(resolveGameDisplayName("custom_game")).toBe("CUSTOM_GAME");
   });
 
-  it("should update room state with active game flags", () => {
+  it("should update room state with active game flags and lobby waiting status", () => {
     const state = {
       isGameActive: false,
       activeGameType: null as string | null,
+      isWaitingInLobby: false,
     };
 
-    const updateRoomState = (isGameActive?: boolean, activeGameType?: string | null) => {
-      if (isGameActive !== undefined) state.isGameActive = isGameActive;
+    const updateRoomState = (
+      isGameActive?: boolean,
+      activeGameType?: string | null,
+      isWaitingInLobby?: boolean,
+    ) => {
+      if (isGameActive !== undefined) {
+        state.isGameActive = isGameActive;
+        if (!isGameActive) state.isWaitingInLobby = false;
+      }
       if (activeGameType !== undefined) state.activeGameType = activeGameType;
+      if (isWaitingInLobby !== undefined) state.isWaitingInLobby = isWaitingInLobby;
     };
 
-    updateRoomState(true, "uno");
+    updateRoomState(true, "uno", true);
     expect(state.isGameActive).toBe(true);
     expect(state.activeGameType).toBe("uno");
+    expect(state.isWaitingInLobby).toBe(true);
 
     updateRoomState(undefined, undefined);
     expect(state.isGameActive).toBe(true);
     expect(state.activeGameType).toBe("uno");
+    expect(state.isWaitingInLobby).toBe(true);
 
     updateRoomState(false, null);
     expect(state.isGameActive).toBe(false);
     expect(state.activeGameType).toBeNull();
+    expect(state.isWaitingInLobby).toBe(false);
   });
 });

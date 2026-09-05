@@ -24,6 +24,7 @@ export const usePlayerStore = defineStore("player", {
 		selectedGame: "uno",
 		isGameActive: false,
 		activeGameType: null as string | null,
+		isWaitingInLobby: false,
 		roomRules: {
 			stackDrawCards: true,
 			playMultipleSame: true,
@@ -89,6 +90,7 @@ export const usePlayerStore = defineStore("player", {
 			selectedGame?: string,
 			isGameActive?: boolean,
 			activeGameType?: string | null,
+			isWaitingInLobby?: boolean,
 		) {
 			this.playersInRoom = players;
 			this.hostUserId = hostId;
@@ -117,8 +119,17 @@ export const usePlayerStore = defineStore("player", {
 				}
 			}
 			this.selectedGame = selectedGame || "uno";
-			if (isGameActive !== undefined) this.isGameActive = isGameActive;
+			if (isGameActive !== undefined) {
+				this.isGameActive = isGameActive;
+				if (!isGameActive) this.isWaitingInLobby = false;
+			}
 			if (activeGameType !== undefined) this.activeGameType = activeGameType;
+			if (isWaitingInLobby !== undefined) {
+				this.isWaitingInLobby = isWaitingInLobby;
+			}
+			if (players.length === 0) {
+				this.isWaitingInLobby = false;
+			}
 		},
 		setAccountAuth(token: string, user: any) {
 			this.isLoggedIn = true;
@@ -173,6 +184,7 @@ export const usePlayerStore = defineStore("player", {
 			this.token = "";
 			this.isLoggedIn = false;
 			this.userId = generateId();
+			this.isWaitingInLobby = false;
 
 			saveUserToStorage({
 				userId: this.userId,

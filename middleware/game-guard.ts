@@ -14,7 +14,17 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo(`/sala/${roomId}`)
   }
 
-  // Verificamos el estado del juego actual
+  // Si está esperando en el lobby mientras hay partida en curso
+  if (playerStore.isWaitingInLobby === true) {
+    return navigateTo(`/sala/${roomId}`)
+  }
+
+  // Si la partida no está activa
+  if (!playerStore.isGameActive) {
+    return navigateTo(`/sala/${roomId}`)
+  }
+
+  // Verificamos el estado del juego actual en juegos con store
   let gameState: string | null = null;
   if (to.path.includes('/uno')) {
     gameState = useUnoStore().gameState;

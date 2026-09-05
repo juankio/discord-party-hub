@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: ["game-guard"] });
+
 import { useRoute } from 'vue-router';
 import { usePinturilloEngine } from '~/composables/usePinturilloEngine';
 import PinturilloBoard from '~/components/games/pinturillo/PinturilloBoard.vue';
