@@ -6,8 +6,8 @@ export const getAvatarPositionLogic = (index: number, total: number, _unused: nu
     { left: 'calc(100% - var(--hole-offset-x))', top: 'var(--hole-offset-y)', transform: 'translate(-50%, -50%)' },  // 3 (Sup Der)
     { left: 'var(--hole-offset-x)', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' },  // 4 (Inf Izq)
     { left: 'calc(100% - var(--hole-offset-x))', top: 'calc(100% - var(--hole-offset-y))', transform: 'translate(-50%, -50%)' }, // 5 (Inf Der)
-    { left: 'calc(var(--hole-offset-x) - 1.5rem)', top: '50%', transform: 'translate(-50%, -50%)' }, // 6 (Ext Izq)
-    { left: 'calc(100% - var(--hole-offset-x) + 1.5rem)', top: '50%', transform: 'translate(-50%, -50%)' } // 7 (Ext Der)
+    { left: 'calc(var(--hole-offset-x) - var(--side-chair-offset, 1.75rem))', top: '50%', transform: 'translate(-50%, -50%)' }, // 6 (Ext Izq)
+    { left: 'calc(100% - var(--hole-offset-x) + var(--side-chair-offset, 1.75rem))', top: '50%', transform: 'translate(-50%, -50%)' } // 7 (Ext Der)
   ];
 
   let mapping: number[];

@@ -9,8 +9,8 @@ describe("tableGeometry", () => {
     { left: "calc(100% - var(--hole-offset-x))", top: "var(--hole-offset-y)", transform: "translate(-50%, -50%)" }, // Slot 3
     { left: "var(--hole-offset-x)", top: "calc(100% - var(--hole-offset-y))", transform: "translate(-50%, -50%)" }, // Slot 4
     { left: "calc(100% - var(--hole-offset-x))", top: "calc(100% - var(--hole-offset-y))", transform: "translate(-50%, -50%)" }, // Slot 5
-    { left: "calc(var(--hole-offset-x) - 1.5rem)", top: "50%", transform: "translate(-50%, -50%)" }, // Slot 6
-    { left: "calc(100% - var(--hole-offset-x) + 1.5rem)", top: "50%", transform: "translate(-50%, -50%)" }, // Slot 7
+    { left: "calc(var(--hole-offset-x) - var(--side-chair-offset, 1.75rem))", top: "50%", transform: "translate(-50%, -50%)" }, // Slot 6
+    { left: "calc(100% - var(--hole-offset-x) + var(--side-chair-offset, 1.75rem))", top: "50%", transform: "translate(-50%, -50%)" }, // Slot 7
   ];
 
   describe("Player slot mappings (1 to 8 players)", () => {

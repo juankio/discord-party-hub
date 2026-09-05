@@ -1,48 +1,46 @@
 <template>
-  <div class="relative w-[calc(100%-5rem)] sm:w-[calc(100%-6rem)] md:w-[calc(100%-4rem)] max-w-[800px] min-h-[160px] sm:min-h-[0px] aspect-[4/3] sm:aspect-[2/1] mx-auto mt-8 sm:mt-12 player-table-container">
-    <div class="absolute inset-3 sm:inset-6 md:inset-8 bg-[#b87333] rounded-[2rem] md:rounded-[3rem] shadow-2xl flex p-2 sm:p-3 md:p-5 table-surface">
-      <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2.5rem] shadow-inner relative flex items-center justify-center border-4 border-[#0a662c]">
+  <div class="relative w-full max-w-[740px] aspect-[4/3] sm:aspect-[16/9] mx-auto mt-4 sm:mt-6 px-10 sm:px-14 md:px-16 player-table-container">
+    <div class="absolute inset-y-0 left-8 right-8 sm:left-12 sm:right-12 md:left-14 md:right-14 bg-[#b87333] rounded-[2rem] md:rounded-[2.5rem] shadow-2xl flex p-2 sm:p-3 md:p-3.5 table-surface">
+      <div class="w-full h-full bg-[#109041] rounded-[1.5rem] md:rounded-[2rem] shadow-inner relative flex items-center justify-center border-4 border-[#0a662c]">
         
         <!-- Buchacas -->
-        <div class="absolute -top-4 -left-4 sm:-top-5 sm:-left-5 md:-top-6 md:-left-6 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
-        <div class="absolute -top-4 sm:-top-5 md:-top-6 left-1/2 -translate-x-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
-        <div class="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 md:-top-6 md:-right-6 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
-        <div class="absolute -bottom-4 -left-4 sm:-bottom-5 sm:-left-5 md:-bottom-6 md:-left-6 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
-        <div class="absolute -bottom-4 sm:-bottom-5 md:-bottom-6 left-1/2 -translate-x-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
-        <div class="absolute -bottom-4 -right-4 sm:-bottom-5 sm:-right-5 md:-bottom-6 md:-right-6 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
+        <div class="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-[#111] rounded-full shadow-inner border border-black/50"/>
 
-        <!-- Sillas Externas -->
-        <div v-if="paddedPlayers.length >= 7" class="absolute -left-12 sm:-left-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
-          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
+        <!-- Sillas Externas (Con margen lateral protegido para evitar recortes) -->
+        <div v-if="paddedPlayers.length >= 7" class="absolute -left-9 sm:-left-12 md:-left-14 top-1/2 -translate-y-1/2 w-11 sm:w-14 md:w-16 h-20 sm:h-24 md:h-28 bg-[#b87333] rounded-l-[2rem] shadow-[inset_-3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-l-4 border-[#8f5825] -z-10 flex items-center justify-start pl-2 sm:pl-3 transition-all duration-500">
+          <div class="w-3.5 sm:w-4 h-10 sm:h-14 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
-        <div v-if="paddedPlayers.length === 8" class="absolute -right-12 sm:-right-16 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-20 sm:h-24 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
-          <div class="w-4 h-12 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
+        <div v-if="paddedPlayers.length === 8" class="absolute -right-9 sm:-right-12 md:-right-14 top-1/2 -translate-y-1/2 w-11 sm:w-14 md:w-16 h-20 sm:h-24 md:h-28 bg-[#b87333] rounded-r-[2rem] shadow-[inset_3px_0_8px_rgba(0,0,0,0.3)] border-y-4 border-r-4 border-[#8f5825] -z-10 flex items-center justify-end pr-2 sm:pr-3 transition-all duration-500">
+          <div class="w-3.5 sm:w-4 h-10 sm:h-14 bg-[#8f5825] rounded-full shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)] opacity-80"/>
         </div>
 
         <!-- Info central -->
-        <div class="text-center relative z-10 flex flex-col items-center p-3 sm:p-6 bg-black/30 rounded-2xl sm:rounded-3xl border border-white/10 w-[90%] sm:w-auto max-w-full">
-          <p class="text-[9px] sm:text-[10px] md:text-xs text-green-100 mb-1 sm:mb-2 uppercase tracking-[0.2em] sm:tracking-[0.4em] font-black drop-shadow-md">Código de la sala</p>
-          <h2 class="text-2xl sm:text-5xl md:text-7xl font-mono font-black text-white tracking-[0.1em] sm:tracking-[0.2em] drop-shadow-md mb-3 sm:mb-4 truncate w-full px-2">{{ roomId }}</h2>
-          <div class="flex flex-col items-center gap-2 w-full mt-2">
-            <div class="flex items-center gap-2 justify-center w-full">
-              <button 
-                class="copy-btn-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[4px_4px_0_rgba(0,0,0,0.8)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]"
-                :class="isCopied ? 'bg-green-600 border-green-400 text-white shadow-green-500/50' : 'bg-black/60 text-white border-white/20 shadow-black/50'"
-                @click="copyLink"
-              >
-                <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-4 h-4" />
-                {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
-              </button>
-              <button
-                v-if="isHost && allowBots"
-                class="add-bot-anim flex items-center gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 border bg-blue-600/60 hover:bg-blue-500 hover:scale-105 active:scale-95 hover:brightness-110 text-white border-blue-400/50 shadow-[4px_4px_0_rgba(0,0,0,0.8)] hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]"
-                title="Añadir Bot"
-                @click="handleAddBot"
-              >
-                <UIcon name="i-lucide-bot" class="w-4 h-4" />
-                <span class="hidden sm:inline">Añadir Bot</span>
-              </button>
-            </div>
+        <div class="text-center relative z-10 flex flex-col items-center p-2.5 sm:p-3 md:p-3.5 bg-black/40 backdrop-blur-[2px] rounded-xl sm:rounded-2xl border border-white/15 w-[85%] sm:w-auto max-w-[280px] sm:max-w-[340px] shadow-lg">
+          <p class="text-[8px] sm:text-[9px] md:text-[10px] text-green-200/90 mb-0.5 uppercase tracking-[0.25em] sm:tracking-[0.35em] font-black drop-shadow">Código de la sala</p>
+          <h2 class="text-lg sm:text-2xl md:text-4xl font-mono font-black text-white tracking-[0.12em] sm:tracking-[0.2em] drop-shadow-md mb-1.5 sm:mb-2 truncate w-full px-2">{{ roomId }}</h2>
+          <div class="flex items-center gap-2 justify-center w-full">
+            <button 
+              class="copy-btn-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
+              :class="isCopied ? 'bg-green-600 border-green-400 text-white shadow-green-500/50' : 'bg-black/60 text-white border-white/20 shadow-black/50'"
+              @click="copyLink"
+            >
+              <UIcon :name="isCopied ? 'i-lucide-check' : 'i-lucide-copy'" class="w-3.5 h-3.5" />
+              {{ isCopied ? '¡Copiado!' : 'Copiar Link' }}
+            </button>
+            <button
+              v-if="isHost && allowBots"
+              class="add-bot-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border bg-blue-600/70 hover:bg-blue-500 hover:scale-105 active:scale-95 hover:brightness-110 text-white border-blue-400/50 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
+              title="Añadir Bot"
+              @click="handleAddBot"
+            >
+              <UIcon name="i-lucide-bot" class="w-3.5 h-3.5" />
+              <span class="hidden sm:inline">Añadir Bot</span>
+            </button>
           </div>
         </div>
 
@@ -85,7 +83,7 @@ const emit = defineEmits<{
   'change-seat': [seatIndex: number]
 }>()
 
-const { playBot, playCopyLink, playSeatMove, playTableExpand, playTableShrink, playUiClick } = useAppAudio()
+const { playBot, playCopyLink, playTableExpand, playTableShrink, playUiClick } = useAppAudio()
 const handleAddBot = () => { playUiClick(); playBot(); emit('add-bot', 5) }
 
 const toast = useToast()
@@ -94,91 +92,60 @@ const isCopied = ref(false)
 const allowBots = computed(() => ['uno', 'parchis', 'liars'].includes(props.selectedGame))
 const isHost = computed(() => props.hostUserId === playerStore.userId)
 
-const localPlayerSeatIndex = computed(() => {
-  const me = props.players.find(p => p.userId === playerStore.userId)
-  return me ? me.seatIndex : null
-})
-
 const maxAllowed = computed(() => {
-  let max = props.players.length;
-  if (props.selectedGame === 'parchis') {
-    max = playerStore.roomRules?.parchisBoardSize || 4;
-  } else {
-    max = playerStore.roomRules?.extendedLobby ? 8 : 6;
-  }
-  return max;
+  if (props.selectedGame === 'parchis') return playerStore.roomRules?.parchisBoardSize || 4
+  return playerStore.roomRules?.extendedLobby ? 8 : 6
 })
 
 const paddedPlayers = computed(() => {
-  // Capacidad REAL permitida por las reglas actuales
-  const max = maxAllowed.value;
+  const max = maxAllowed.value
+  const visualTotal = 8
+  const current = new Array(visualTotal).fill(null)
   
-  // Pero el array visual SIEMPRE dibuja los 8 huecos de la mesa
-  const visualTotal = 8;
-  const current = new Array(visualTotal).fill(null);
-  
-  const isSeatLocked = (i: number, max: number) => {
-    let locked = false;
-    if (max < 8 && (i === 2 || i === 6)) locked = true; // Sillas de expansión (madera)
-    if (max <= 4 && (i === 0 || i === 4)) locked = true; // Centros (dejamos solo las esquinas)
-    return locked;
-  };
+  const isSeatLocked = (i: number, m: number) => {
+    if (m < 8 && (i === 2 || i === 6)) return true
+    if (m <= 4 && (i === 0 || i === 4)) return true
+    return false
+  }
 
-  // Colocamos primero a los jugadores cuyas sillas sí son válidas y están libres
-  const playersWithoutValidSeat: any[] = [];
-  
+  const playersWithoutValidSeat: any[] = []
   props.players.forEach(player => {
     if (
       player.seatIndex !== undefined && 
       player.seatIndex >= 0 && 
       player.seatIndex < visualTotal && 
       !isSeatLocked(player.seatIndex, max) &&
-      current[player.seatIndex] === null // Aseguramos no sobreescribir si ya está ocupada
+      current[player.seatIndex] === null
     ) {
-      current[player.seatIndex] = player;
+      current[player.seatIndex] = player
     } else {
-      playersWithoutValidSeat.push(player);
+      playersWithoutValidSeat.push(player)
     }
-  });
+  })
 
-  // Acomodamos a los demás en los huecos disponibles
   playersWithoutValidSeat.forEach(player => {
-    const emptyIdx = current.findIndex((p, i) => p === null && !isSeatLocked(i, max));
-    if (emptyIdx !== -1) {
-      current[emptyIdx] = { ...player, seatIndex: emptyIdx };
-    }
-  });
+    const emptyIdx = current.findIndex((p, i) => p === null && !isSeatLocked(i, max))
+    if (emptyIdx !== -1) current[emptyIdx] = { ...player, seatIndex: emptyIdx }
+  })
 
-  // Rellenamos los nulls con huecos vacíos (fantasmas)
   for (let i = 0; i < current.length; i++) {
     if (current[i] === null) {
-      current[i] = {
-        isEmpty: true,
-        isLocked: isSeatLocked(i, max),
-        seatIndex: i,
-        userId: `empty-${i}`
-      };
+      current[i] = { isEmpty: true, isLocked: isSeatLocked(i, max), seatIndex: i, userId: `empty-${i}` }
     } else if (current[i].seatIndex === undefined) {
-      // Asegurar que el objeto renderizado sepa su seatIndex final si no lo trajo
-      current[i] = { ...current[i], seatIndex: i };
+      current[i] = { ...current[i], seatIndex: i }
     }
   }
-
-  return current;
+  return current
 })
 
-const getAvatarPosition = (index: number, total: number) => {
-  // En el Lobby, usamos posiciones absolutas (normalizedMyIndex = 0)
-  // para que si el jugador cambia a la silla 3, se vea físicamente viajar a la silla 3.
-  return getAvatarPositionLogic(index, total, 0)
-}
+const getAvatarPosition = (index: number, total: number) => getAvatarPositionLogic(index, total, 0)
 
 watch(() => maxAllowed.value, (newLen, oldLen) => {
   if (oldLen > 0) {
-    if (newLen > oldLen) playTableExpand();
-    else if (newLen < oldLen) playTableShrink();
+    if (newLen > oldLen) playTableExpand()
+    else if (newLen < oldLen) playTableShrink()
   }
-});
+})
 
 onMounted(() => {
   anime({
@@ -193,7 +160,8 @@ const copyLink = () => {
     playCopyLink()
     navigator.clipboard.writeText(window.location.href)
     anime({ targets: '.copy-btn-anim', scale: [1, 1.15, 1], duration: 400, easing: 'easeInOutQuad' })
-    isCopied.value = true; setTimeout(() => { isCopied.value = false }, 2500)
+    isCopied.value = true
+    setTimeout(() => { isCopied.value = false }, 2500)
     toast.add({ title: '¡Link copiado!', description: 'Envíalo a tus amigos por Discord para que se unan.', color: 'primary', icon: 'i-lucide-check-circle' })
   }
 }
@@ -201,11 +169,19 @@ const copyLink = () => {
 
 <style scoped>
 .player-table-container {
-  --hole-offset-x: 0.25rem;
-  --hole-offset-y: 0.25rem;
+  --hole-offset-x: 0rem;
+  --hole-offset-y: 0rem;
   --hole-mid-y: 0rem;
+  --side-chair-offset: 1.5rem;
+}
+@media (min-width: 640px) {
+  .player-table-container {
+    --side-chair-offset: 1.75rem;
+  }
 }
 @media (min-width: 768px) {
-  .player-table-container { --hole-offset-x: 0.5rem; --hole-offset-y: 0.5rem; --hole-mid-y: 0.25rem; }
+  .player-table-container {
+    --side-chair-offset: 2rem;
+  }
 }
 </style>
