@@ -13,7 +13,7 @@
       :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'z-10 scale-105 drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]' : 'z-0'"
     >
       <div 
-        class="relative mx-auto shrink-0 flex items-center justify-center max-w-[min(100vw,calc(100dvh-190px))] sm:max-w-[min(100vw,calc(100dvh-160px))] xl:max-w-[min(100vw,calc(100dvh-120px))] max-h-[1000px]" 
+        class="relative mx-auto shrink-0 flex items-center justify-center max-w-[min(calc(100vw-32px),calc(100dvh-200px))] sm:max-w-[min(calc(100vw-64px),calc(100dvh-180px))] xl:max-w-[min(calc(100vw-680px),calc(100dvh-160px))] max-h-[850px]" 
         style="width: 100vw; aspect-ratio: 1/1;"
       >
         <!-- UNIVERSAL PARCHÍS BOARD SVG COMPONENT -->

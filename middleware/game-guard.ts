@@ -19,11 +19,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo(`/sala/${roomId}`)
   }
 
-  // Si la partida no está activa
-  if (!playerStore.isGameActive) {
-    return navigateTo(`/sala/${roomId}`)
-  }
-
   // Verificamos el estado del juego actual en juegos con store
   let gameState: string | null = null;
   if (to.path.includes('/uno')) {
@@ -32,6 +27,16 @@ export default defineNuxtRouteMiddleware((to, from) => {
     gameState = useStopStore().gameState;
   } else if (to.path.includes('/parchis')) {
     gameState = useParchisStore().gameState;
+  }
+
+  // Si el store ya está en PLAYING (por evento game_started), aseguramos sincronía
+  if (gameState === 'PLAYING') {
+    playerStore.isGameActive = true;
+  }
+
+  // Si la partida no está activa
+  if (!playerStore.isGameActive && gameState !== 'PLAYING') {
+    return navigateTo(`/sala/${roomId}`)
   }
 
   // Si está en WAITING o LOBBY, lo mandamos al lobby

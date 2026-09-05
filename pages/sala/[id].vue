@@ -112,6 +112,9 @@ const initRoom = () => {
   connect(roomId)
   
   socket.value?.on('game_started', (data) => {
+    playerStore.isGameActive = true
+    if (data?.gameType) playerStore.activeGameType = data.gameType
+    playerStore.isWaitingInLobby = false
     // Solo redirige si estamos en el lobby
     if (route.path.replace(/\/$/, '') === `/sala/${roomId}`) {
       if (data.gameType === 'uno') useUnoStore().gameState = 'PLAYING';

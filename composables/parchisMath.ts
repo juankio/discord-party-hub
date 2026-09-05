@@ -98,7 +98,7 @@ export function computeParchisGeometry(sides: number) {
 				: [ { x: -75, y: y_bot }, { x: -25, y: y_bot }, { x: -25, y: y_top }, { x: -75, y: y_top } ];
 			const cx = row === 0 ? (-25 + -Math.abs(y_bot - 25) * M) / 2 : -50;
 			const center = rotatePoint(cx, y_bot - 25, armAngle);
-			trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: true, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
+			trackSquares.push({ points: toPts(pts, armAngle), fill: row === 4 ? baseColor : "#f5ebd5", isSalida: row === 4, isSeguro: row === 4, isTip: false, cx: center.x, cy: center.y, rot: armAngle });
 			coordsMap.track[p * 17 + (16 - row)] = center;
 		}
 

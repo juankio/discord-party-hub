@@ -223,5 +223,25 @@ describe("parchisMath", () => {
     it("should strictly align bases with their own salidas for 8-player board", () => {
       checkAlignment(8);
     });
+
+    it("should only have stars on Salida, lateral Seguro, and tip Seguro (3 stars per arm, no star clutter)", () => {
+      [4, 6, 8].forEach(sides => {
+        const { boardGeometry } = computeParchisGeometry(sides);
+        const { trackSquares } = boardGeometry;
+        
+        for (let p = 0; p < sides; p++) {
+          const armSquares = trackSquares.slice(p * 17, (p + 1) * 17);
+          const starredSquares = armSquares.filter(sq => sq.isSeguro || sq.isSalida);
+          
+          // Exactly 3 squares per arm should have stars (Salida at index 12, Seguro at index 4, Tip at index 8)
+          expect(starredSquares.length).toBe(3);
+          expect(armSquares[4]!.isSeguro).toBe(true);
+          expect(armSquares[8]!.isTip).toBe(true);
+          expect(armSquares[8]!.isSeguro).toBe(true);
+          expect(armSquares[12]!.isSalida).toBe(true);
+          expect(armSquares[12]!.isSeguro).toBe(true);
+        }
+      });
+    });
   });
 });

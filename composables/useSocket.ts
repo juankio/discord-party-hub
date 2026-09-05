@@ -123,7 +123,9 @@ export const useSocket = () => {
       }
     })
 
-    socket.value.on('game_started', () => {
+    socket.value.on('game_started', (data?: any) => {
+      playerStore.isGameActive = true
+      if (data?.gameType) playerStore.activeGameType = data.gameType
       playerStore.isWaitingInLobby = false
       playStart()
     })

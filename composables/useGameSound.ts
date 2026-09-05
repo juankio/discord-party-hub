@@ -1,5 +1,6 @@
 import { useSound } from '@vueuse/sound';
 import { computed, watch, ref } from 'vue';
+import { Howler } from 'howler';
 import { useAudioStore } from '~/stores/audioStore';
 
 export function useGameSound(url: string, options: any = {}) {
@@ -37,7 +38,15 @@ export function useGameSound(url: string, options: any = {}) {
 
   const play = (opts?: any) => {
     if (!audioStore.isMuted) {
-      // Forzar que el volumen sea correcto antes de reproducir, por si acaso
+      if (typeof window !== 'undefined' && Howler.ctx && Howler.ctx.state === 'suspended') {
+        Howler.ctx.resume().then(() => {
+          if (sound.value && typeof sound.value.volume === 'function') {
+            sound.value.volume(volume.value);
+          }
+          originalPlay(opts);
+        }).catch(() => {});
+        return;
+      }
       if (sound.value && typeof sound.value.volume === 'function') {
         sound.value.volume(volume.value);
       }
