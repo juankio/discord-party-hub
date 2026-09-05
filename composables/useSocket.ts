@@ -64,10 +64,31 @@ export const useSocket = () => {
 
     socket.value.on('room_update', (data) => {
       const prevPlayers = playerStore.playersInRoom.length
-      playerStore.updateRoomState(data.users, data.hostUserId, data.roomRules, data.selectedGame)
+      playerStore.updateRoomState(
+        data.users,
+        data.hostUserId,
+        data.roomRules,
+        data.selectedGame,
+        data.isGameActive,
+        data.activeGameType
+      )
       if (data.users && data.users.length > prevPlayers) {
         playJoin()
       }
+    })
+
+    socket.value.on('game_in_progress', (data: { gameType: string, playersCount: number }) => {
+      playerStore.isGameActive = true
+      playerStore.activeGameType = data.gameType
+    })
+
+    socket.value.on('player_waiting_in_lobby', (data: { nickname: string, avatarId: number, color: string }) => {
+      useToast().add({
+        title: '¡Amigo en el Lobby!',
+        description: `${data.nickname} se ha unido a la sala y está esperando a que termine la partida.`,
+        color: 'amber',
+        icon: 'i-lucide-user-check'
+      })
     })
 
     socket.value.on('game_started', () => {
@@ -88,6 +109,8 @@ export const useSocket = () => {
     })
 
     socket.value.on('return_to_lobby', () => {
+      playerStore.isGameActive = false
+      playerStore.activeGameType = null
       const targetPath = `/sala/${roomId}`
       if (window.location.pathname !== targetPath) {
         window.location.href = targetPath // Fuerza navegacion nativa para evitar bloqueos del router de Vue

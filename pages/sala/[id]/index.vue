@@ -9,6 +9,11 @@
         @leave-room="handleLeaveRoom" 
       />
 
+      <LobbyWaitingBanner 
+        v-if="playerStore.isGameActive" 
+        :game-type="playerStore.activeGameType || selectedGame" 
+      />
+
       <div class="flex flex-col lg:flex-row gap-8 w-full items-start">
         <!-- Columna Izquierda (Mesa y Controles) -->
         <div class="flex-1 w-full flex flex-col gap-4 lg:gap-0">
@@ -78,6 +83,7 @@ import { useAppAudio } from "~/composables/useAppAudio";
 import { useRoomLobby } from "~/composables/useRoomLobby";
 import { gamesList } from "~/constants/gamesList";
 import LobbyHeader from "~/components/LobbyHeader.vue";
+import LobbyWaitingBanner from "~/components/LobbyWaitingBanner.vue";
 import LobbyControls from "~/components/LobbyControls.vue";
 
 const route = useRoute();

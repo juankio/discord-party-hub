@@ -22,6 +22,8 @@ export const usePlayerStore = defineStore("player", {
 		lastPlayed: null as Date | string | null,
 		picture: "",
 		selectedGame: "uno",
+		isGameActive: false,
+		activeGameType: null as string | null,
 		roomRules: {
 			stackDrawCards: true,
 			playMultipleSame: true,
@@ -85,6 +87,8 @@ export const usePlayerStore = defineStore("player", {
 			hostId: string,
 			rules?: any,
 			selectedGame?: string,
+			isGameActive?: boolean,
+			activeGameType?: string | null,
 		) {
 			this.playersInRoom = players;
 			this.hostUserId = hostId;
@@ -113,6 +117,8 @@ export const usePlayerStore = defineStore("player", {
 				}
 			}
 			this.selectedGame = selectedGame || "uno";
+			if (isGameActive !== undefined) this.isGameActive = isGameActive;
+			if (activeGameType !== undefined) this.activeGameType = activeGameType;
 		},
 		setAccountAuth(token: string, user: any) {
 			this.isLoggedIn = true;

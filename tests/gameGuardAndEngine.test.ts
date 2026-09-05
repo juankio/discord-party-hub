@@ -137,3 +137,58 @@ describe("Game Guard Navigation Logic", () => {
     expect(resLiars.allowed).toBe(true);
   });
 });
+
+describe("Lobby Waiting In Progress Resolution", () => {
+  const resolveGameDisplayName = (gameType?: string | null): string => {
+    if (!gameType) return "Partida";
+    const games = [
+      { id: "uno", name: "UNO" },
+      { id: "parchis", name: "Parchís" },
+      { id: "liars", name: "Liar's Bar" },
+      { id: "stop", name: "Stop" },
+      { id: "pinturillo", name: "Pinturillo" },
+      { id: "impostor", name: "Impostor" },
+    ];
+    const found = games.find((g) => g.id.toLowerCase() === gameType?.toLowerCase());
+    return found?.name || gameType.toUpperCase();
+  };
+
+  it("should resolve clean display names for supported game types", () => {
+    expect(resolveGameDisplayName("uno")).toBe("UNO");
+    expect(resolveGameDisplayName("parchis")).toBe("Parchís");
+    expect(resolveGameDisplayName("liars")).toBe("Liar's Bar");
+    expect(resolveGameDisplayName("stop")).toBe("Stop");
+    expect(resolveGameDisplayName("pinturillo")).toBe("Pinturillo");
+    expect(resolveGameDisplayName("impostor")).toBe("Impostor");
+  });
+
+  it("should fallback gracefully when gameType is null or custom", () => {
+    expect(resolveGameDisplayName(null)).toBe("Partida");
+    expect(resolveGameDisplayName(undefined)).toBe("Partida");
+    expect(resolveGameDisplayName("custom_game")).toBe("CUSTOM_GAME");
+  });
+
+  it("should update room state with active game flags", () => {
+    const state = {
+      isGameActive: false,
+      activeGameType: null as string | null,
+    };
+
+    const updateRoomState = (isGameActive?: boolean, activeGameType?: string | null) => {
+      if (isGameActive !== undefined) state.isGameActive = isGameActive;
+      if (activeGameType !== undefined) state.activeGameType = activeGameType;
+    };
+
+    updateRoomState(true, "uno");
+    expect(state.isGameActive).toBe(true);
+    expect(state.activeGameType).toBe("uno");
+
+    updateRoomState(undefined, undefined);
+    expect(state.isGameActive).toBe(true);
+    expect(state.activeGameType).toBe("uno");
+
+    updateRoomState(false, null);
+    expect(state.isGameActive).toBe(false);
+    expect(state.activeGameType).toBeNull();
+  });
+});
