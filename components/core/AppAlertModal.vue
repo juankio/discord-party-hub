@@ -12,7 +12,7 @@
 
         <button
           type="button"
-          class="absolute top-3 right-3 p-1.5 text-stone-400 hover:text-white rounded-lg hover:bg-black/30 transition-colors"
+          class="absolute top-2 right-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-stone-400 hover:text-white rounded-lg hover:bg-black/30 transition-colors"
           aria-label="Cerrar alerta"
           @click="closeAlert"
         >
@@ -33,7 +33,7 @@
 
         <button
           type="button"
-          class="px-6 py-2.5 rounded-xl font-black uppercase text-xs tracking-wider transition-all duration-200 shadow-md active:scale-95"
+          class="min-h-[44px] px-6 py-2.5 rounded-xl font-black uppercase text-xs tracking-wider transition-all duration-200 shadow-md active:scale-95 flex items-center justify-center"
           :class="currentTheme.btn"
           @click="handleAction"
         >

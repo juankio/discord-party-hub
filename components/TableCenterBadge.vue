@@ -1,12 +1,12 @@
 <template>
-  <div class="text-center relative z-10 flex flex-col items-center p-2.5 sm:p-3 md:p-3.5 bg-black/40 backdrop-blur-[2px] rounded-xl sm:rounded-2xl border border-white/15 w-[85%] sm:w-auto max-w-[280px] sm:max-w-[340px] shadow-lg">
+  <div class="text-center relative z-10 flex flex-col items-center p-2 sm:p-2.5 md:p-3.5 bg-black/40 backdrop-blur-[2px] rounded-xl sm:rounded-2xl border border-white/15 w-[85%] sm:w-auto max-w-[240px] sm:max-w-[280px] md:max-w-[340px] shadow-lg">
     <p class="text-[8px] sm:text-[9px] md:text-[10px] text-green-200/90 mb-0.5 uppercase tracking-[0.25em] sm:tracking-[0.35em] font-black drop-shadow">Código de la sala</p>
-    <h2 class="text-lg sm:text-2xl md:text-4xl font-mono font-black text-white tracking-[0.12em] sm:tracking-[0.2em] drop-shadow-md mb-1.5 sm:mb-2 truncate w-full px-2">{{ roomId }}</h2>
+    <h2 class="text-base sm:text-xl md:text-4xl font-mono font-black text-white tracking-[0.12em] sm:tracking-[0.2em] drop-shadow-md mb-1.5 sm:mb-2 truncate w-full px-2">{{ roomId }}</h2>
     
     <div class="flex items-center gap-2 justify-center w-full">
       <!-- Botón Copiar Link -->
       <button 
-        class="copy-btn-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
+        class="copy-btn-anim flex items-center justify-center gap-1.5 sm:gap-2 min-h-[36px] sm:min-h-[40px] px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all duration-300 border hover:scale-105 active:scale-95 hover:brightness-110 shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
         :class="isCopied ? 'bg-green-600 border-green-400 text-white shadow-green-500/50' : 'bg-black/60 text-white border-white/20 shadow-black/50'"
         @click="copyLink"
       >
@@ -17,7 +17,7 @@
       <!-- Botón Añadir Bot con feedback pro -->
       <button
         v-if="isHost && allowBots"
-        class="add-bot-anim flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 border shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
+        class="add-bot-anim flex items-center justify-center gap-1.5 sm:gap-2 min-h-[36px] sm:min-h-[40px] px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold transition-all duration-300 border shadow-[3px_3px_0_rgba(0,0,0,0.8)]"
         :class="[
           isTableFull 
             ? (canExpandLobby 

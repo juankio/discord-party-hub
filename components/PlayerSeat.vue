@@ -1,7 +1,7 @@
 <template>
   <div
     ref="seatRef"
-    class="player-avatar pointer-events-auto absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] flex flex-col items-center justify-center rounded-full border-3 md:border-4 overflow-visible will-change-[top,left,transform]"
+    class="player-avatar pointer-events-auto absolute w-10 h-10 sm:w-14 sm:h-14 md:w-[72px] md:h-[72px] flex flex-col items-center justify-center rounded-full border-3 md:border-4 overflow-visible will-change-[top,left,transform]"
     :class="[
       player.isLocked ? 'cursor-pointer bg-black/80 border-red-500/60 shadow-none' : 
       (player.isEmpty ? 'cursor-pointer bg-black/40 border-dashed border-gray-600/50 shadow-none' : 'bg-black'),
@@ -65,7 +65,7 @@
     <span 
       v-if="!player.isLocked"
       :title="player.nickname"
-      class="absolute left-1/2 -translate-x-1/2 z-30 text-[10px] sm:text-[11px] font-black whitespace-nowrap px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[130px] sm:max-w-[160px] md:max-w-[180px] truncate transition-colors duration-200 pointer-events-none"
+      class="absolute left-1/2 -translate-x-1/2 z-30 text-[9px] sm:text-[10px] md:text-[11px] font-black whitespace-nowrap px-1.5 sm:px-2 py-0.5 rounded-md tracking-wider shadow-sm max-w-[85px] sm:max-w-[140px] md:max-w-[180px] truncate transition-colors duration-200 pointer-events-none"
       :class="[
         isTopSeat ? '-top-5 sm:-top-6' : '-bottom-5 sm:-bottom-6',
         player.isEmpty ? (isHovered ? (localPlayerColorSafe === '#ffffff' ? 'text-black' : 'text-white') : 'text-white/60 bg-black/60') : (playerColor === '#ffffff' ? 'text-black' : 'text-white')

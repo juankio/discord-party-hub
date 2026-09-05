@@ -11,7 +11,7 @@
 
       <div class="flex flex-row justify-center items-start -mt-1.5 relative z-10 mx-auto w-full max-w-md px-4 sm:px-8">
         <button 
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider uppercase py-2 sm:py-2.5 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
+          class="flex-1 w-full min-h-[42px] sm:min-h-[44px] bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider uppercase py-2 sm:py-2.5 px-2 sm:px-3 rounded-bl-lg sm:rounded-bl-xl border-l-2 border-b-2 border-r-[1px] sm:border-l-4 sm:border-b-4 sm:border-r-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
           @click="$emit('toggle-general')"
         >
           <UIcon name="i-lucide-sliders" class="w-3.5 h-3.5 text-[#e6a15c] shrink-0" />
@@ -20,7 +20,7 @@
         </button>
 
         <button 
-          class="flex-1 w-full bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider uppercase py-2 sm:py-2.5 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
+          class="flex-1 w-full min-h-[42px] sm:min-h-[44px] bg-[#6d4621] hover:bg-[#7d512a] text-[#f4d0a4] font-black text-[9px] sm:text-[10px] md:text-xs tracking-wider uppercase py-2 sm:py-2.5 px-2 sm:px-3 rounded-br-lg sm:rounded-br-xl border-r-2 border-b-2 border-l-[1px] sm:border-r-4 sm:border-b-4 sm:border-l-2 border-t-0 border-[#5c3a21] transition-all flex items-center justify-center gap-1.5 cursor-pointer relative shadow-lg active:scale-95"
           @click="$emit('toggle-table')"
         >
           <UIcon name="i-lucide-scroll" class="w-3.5 h-3.5 text-[#e6a15c] shrink-0" />
