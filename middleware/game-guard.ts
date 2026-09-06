@@ -1,0 +1,46 @@
+import { usePlayerStore } from '~/stores/playerStore'
+import { useUnoStore } from '~/stores/games/unoStore'
+import { useStopStore } from '~/stores/games/stopStore'
+import { useParchisStore } from '~/stores/games/parchisStore'
+
+export default defineNuxtRouteMiddleware((to, from) => {
+  if (import.meta.server) return // Solo ejecutar en el cliente
+
+  const playerStore = usePlayerStore()
+  const roomId = to.params.id as string
+  
+  // Si no hay jugador o no hay jugadores en la sala
+  if (!playerStore.nickname || playerStore.playersInRoom.length === 0) {
+    return navigateTo(`/sala/${roomId}`)
+  }
+
+  // Si está esperando en el lobby mientras hay partida en curso
+  if (playerStore.isWaitingInLobby === true) {
+    return navigateTo(`/sala/${roomId}`)
+  }
+
+  // Verificamos el estado del juego actual en juegos con store
+  let gameState: string | null = null;
+  if (to.path.includes('/uno')) {
+    gameState = useUnoStore().gameState;
+  } else if (to.path.includes('/stop')) {
+    gameState = useStopStore().gameState;
+  } else if (to.path.includes('/parchis')) {
+    gameState = useParchisStore().gameState;
+  }
+
+  // Si el store ya está en PLAYING (por evento game_started), aseguramos sincronía
+  if (gameState === 'PLAYING') {
+    playerStore.isGameActive = true;
+  }
+
+  // Si la partida no está activa
+  if (!playerStore.isGameActive && gameState !== 'PLAYING') {
+    return navigateTo(`/sala/${roomId}`)
+  }
+
+  // Si está en WAITING o LOBBY, lo mandamos al lobby
+  if (gameState === 'WAITING' || gameState === 'LOBBY') {
+    return navigateTo(`/sala/${roomId}`)
+  }
+})
