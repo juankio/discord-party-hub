@@ -133,6 +133,13 @@ export const useSocket = () => {
     socket.value.on('game_message', (data: any) => {
       const message = typeof data === 'string' ? data : (data?.message || data?.text)
       if (message) {
+        const activeType = playerStore.activeGameType || playerStore.selectedGame || ''
+        
+        // En Liar's Bar las apuestas se ven directamente en el tapete. No saturar la UI con modales invasivos
+        if (activeType === 'liars' && !message.includes('Lobby') && !message.includes('desconect') && !message.includes('ganado') && !message.includes('sobrevive')) {
+          return
+        }
+
         const gameTitles: Record<string, string> = {
           uno: 'Partida UNO',
           parchis: 'Parchís',
@@ -141,7 +148,6 @@ export const useSocket = () => {
           pinturillo: 'Pinturillo',
           impostor: 'Impostor'
         }
-        const activeType = playerStore.activeGameType || playerStore.selectedGame || ''
         const title = gameTitles[activeType] || 'Aviso de Partida'
 
         useAppAlert().showAlert({

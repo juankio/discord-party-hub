@@ -1,8 +1,8 @@
 <template>
-  <div class="h-full flex-1 flex flex-col overflow-hidden bg-[#1a3822] rounded-xl border-[12px] md:border-[20px] border-[#3a2211] relative shadow-[inset_0_0_120px_rgba(0,0,0,0.9),0_20px_40px_rgba(0,0,0,0.5)] font-sans">
+  <div class="h-full flex-1 flex flex-col overflow-hidden bg-[#152d1c] rounded-xl border-[8px] md:border-[16px] border-[#3a2211] relative shadow-[inset_0_0_80px_rgba(0,0,0,0.8),0_15px_30px_rgba(0,0,0,0.5)] font-sans">
     
-    <!-- Felt Texture Overlay -->
-    <div class="absolute inset-0 opacity-[0.15] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E'); mix-blend-mode: multiply;"/>
+    <!-- Felt Texture Overlay (GPU-accelerated pure gradient, zero CPU overhead) -->
+    <div class="absolute inset-0 pointer-events-none opacity-80" style="background: radial-gradient(ellipse at center, #224b2e 0%, #173320 60%, #0d1e13 100%);"/>
     
     <!-- Table center markings (decorative) -->
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] h-[70%] border-2 border-[#d8a872]/10 rounded-[120px] pointer-events-none shadow-[inset_0_0_30px_rgba(255,255,255,0.02)]"/>
@@ -36,16 +36,17 @@
       />
 
       <!-- Bottom Row: Local Player & Controls -->
-      <div class="flex flex-col items-center justify-end w-full mt-4">
+      <div class="flex flex-col items-center justify-end w-full mt-2 sm:mt-4">
         
         <!-- Turn Indicator -->
-        <div v-if="gameState?.state === 'BETTING' && isMyTurn" class="mb-4 text-center animate-bounce">
-          <span class="bg-green-500 text-white font-black text-xl md:text-3xl uppercase px-6 py-2 rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.8)] border-4 border-white/20 tracking-widest block">
+        <div v-if="gameState?.state === 'BETTING' && isMyTurn" class="mb-2 sm:mb-3 text-center">
+          <span class="bg-green-600/90 text-white font-black text-xs sm:text-sm md:text-base uppercase px-4 sm:px-6 py-1.5 rounded-full border border-green-400/50 shadow-[0_0_15px_rgba(34,197,94,0.4)] tracking-widest inline-flex items-center gap-2">
+            <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white animate-pulse" />
             ¡Es tu turno! Haz tu apuesta
           </span>
         </div>
 
-        <div v-if="gameState?.state === 'BETTING' && isMyTurn" class="mb-6 md:mb-10 w-full flex justify-center animate-in slide-in-from-bottom-12 duration-500 pointer-events-auto">
+        <div v-if="gameState?.state === 'BETTING' && isMyTurn" class="mb-4 sm:mb-6 md:mb-8 w-full flex justify-center animate-in slide-in-from-bottom-6 duration-300 pointer-events-auto">
           <LiarsBetting 
             :current-bet="gameState?.currentBet"
             :total-dice-count="gameState?.totalDiceCount"
