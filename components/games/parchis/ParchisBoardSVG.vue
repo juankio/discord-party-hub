@@ -32,40 +32,48 @@
 
     <!-- Wedges (Territories) -->
     <g
-v-for="(wedge, i) in wedges" :key="'wedge'+i"
-       :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
-       @click="!parchisStore.takenSeats?.includes(i) && chooseSeat(i)"
-       @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event, i) : null"
-       @mouseleave="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeLeave($event) : null"
+      v-for="(wedge, i) in wedges" :key="'wedge'+i"
+      :class="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? 'cursor-pointer group' : ''"
+      @click="chooseSeat(i)"
+      @mouseenter="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeEnter($event, i) : null"
+      @mouseleave="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i) ? onWedgeLeave($event) : null"
     >
       <!-- Main Wedge -->
-      <polygon :points="wedge.points" :fill="wedge.color" stroke="#111" stroke-width="4" opacity="0.95" />
+      <polygon 
+        :points="wedge.points" 
+        :fill="wedge.color" 
+        stroke="#111" 
+        stroke-width="4" 
+        opacity="0.95" 
+        class="cursor-pointer"
+        @click.stop="chooseSeat(i)"
+      />
       
       <!-- Inner Glow Overlay (animated) -->
       <polygon
-v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
-               :points="wedge.points" 
-               fill="#ffffff"
-               class="wedge-inner-glow pointer-events-none"
-               style="mix-blend-mode: overlay;"
-               opacity="0" />
+        v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
+        :points="wedge.points" 
+        fill="#ffffff"
+        class="wedge-inner-glow pointer-events-none"
+        style="mix-blend-mode: overlay;"
+        opacity="0" />
 
       <!-- Traveling Pro Line (animated) -->
       <polygon
-v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
-               :points="wedge.points" 
-               fill="none" 
-               stroke="#ffffff" 
-               stroke-width="6" 
-               class="wedge-pro-line pointer-events-none"
-               filter="url(#pro-glow)"
-               opacity="0" />
+        v-if="isSeatChoosingAndMyTurn && !parchisStore.takenSeats?.includes(i)" 
+        :points="wedge.points" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="6" 
+        class="wedge-pro-line pointer-events-none"
+        filter="url(#pro-glow)"
+        opacity="0" />
       
       <!-- Taken Indicator -->
-      <polygon v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="#000" opacity="0.6" />
+      <polygon v-if="parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.takenSeats?.includes(i)" :points="wedge.points" fill="#000" opacity="0.6" class="pointer-events-none" />
 
       <!-- Token spots -->
-      <circle v-for="(spot, spotIdx) in wedge.spots" :key="'spot'+spotIdx" :cx="spot.x" :cy="spot.y" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" />
+      <circle v-for="(spot, spotIdx) in wedge.spots" :key="'spot'+spotIdx" :cx="spot.x" :cy="spot.y" r="22" fill="#000" opacity="0.3" filter="url(#inner-shadow)" class="pointer-events-none" />
     </g>
 
     <!-- Meta / Llegadas (Middle column of each arm) -->
@@ -120,9 +128,27 @@ const isSeatChoosingAndMyTurn = computed(() => {
 });
 
 const chooseSeat = (index: number) => {
-	if (isSeatChoosingAndMyTurn.value) {
-		socket.value?.emit("parchis:choose_seat", { targetColorIndex: index });
+	if (parchisStore.gameState !== 'CHOOSING_SEATS') return;
+	if (parchisStore.takenSeats?.includes(index)) {
+		useAppAlert().showAlert({
+			title: 'Territorio Ocupado',
+			description: 'Este color ya fue elegido por otro jugador.',
+			type: 'warning',
+			autoCloseMs: 2000
+		});
+		return;
 	}
+	if (!isSeatChoosingAndMyTurn.value) {
+		const currentPicker = parchisStore.players.find(p => p.userId === parchisStore.firstPickerUserId);
+		useAppAlert().showAlert({
+			title: 'Turno de Elección',
+			description: `Espera a que ${currentPicker?.nickname || 'el rival'} elija su territorio.`,
+			type: 'info',
+			autoCloseMs: 2500
+		});
+		return;
+	}
+	socket.value?.emit("parchis:choose_seat", { targetColorIndex: index });
 };
 
 const onWedgeEnter = (e: MouseEvent, index: number) => {

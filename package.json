@@ -11,6 +11,7 @@
     "preview": "nuxt preview",
     "lint": "bun run --bun eslint .",
     "lint:fix": "bun run --bun eslint . --fix",
+    "qa:brave": "bun scripts/live-brave-qa.ts",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

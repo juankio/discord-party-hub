@@ -7,6 +7,18 @@
       :class="parchisStore.gameState === 'CHOOSING_SEATS' ? 'opacity-100' : 'opacity-0'"
     />
 
+    <!-- Banner de Estado en Selección de Asiento -->
+    <div 
+      v-if="parchisStore.gameState === 'CHOOSING_SEATS'"
+      class="absolute top-4 left-1/2 -translate-x-1/2 z-40 px-4 py-2 rounded-2xl border-2 shadow-2xl backdrop-blur-md transition-all duration-300 pointer-events-none"
+      :class="isSeatChoosingAndMyTurn ? 'bg-amber-500/20 border-amber-400 text-amber-200 animate-pulse' : 'bg-black/80 border-white/20 text-gray-300'"
+    >
+      <span class="text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-2">
+        <UIcon :name="isSeatChoosingAndMyTurn ? 'i-lucide-sparkles' : 'i-lucide-hourglass'" class="w-4 h-4" />
+        {{ isSeatChoosingAndMyTurn ? '¡Tu turno! Elige tu territorio en el tablero' : `Esperando a que ${currentPickerNickname} elija territorio...` }}
+      </span>
+    </div>
+
     <!-- Tablero contenedor dinámico -->
     <div 
       class="w-full flex items-center justify-center min-h-0 relative p-0 sm:p-2 xl:p-8 flex-1 transition-all duration-700 my-auto"
@@ -116,6 +128,11 @@ const { allTokens } = useParchisTokens(sides, boardGeometry, colorPalette);
 
 const isSeatChoosingAndMyTurn = computed(() => {
   return parchisStore.gameState === 'CHOOSING_SEATS' && parchisStore.firstPickerUserId === playerStore.userId;
+});
+
+const currentPickerNickname = computed(() => {
+  const p = parchisStore.players.find(pl => pl.userId === parchisStore.firstPickerUserId);
+  return p?.nickname || 'el otro jugador';
 });
 
 const myPlayerInfo = computed(() => {
