@@ -1,13 +1,13 @@
 import { chromium } from 'playwright';
 
-console.log(`\n🦁 Iniciando demostración interactiva en Brave Browser...`);
+console.log(`\n🦁 Iniciando automatización en vivo en Brave Browser...`);
 console.log(`Observa tu pantalla: el bot automatizado jugará los turnos de Parchís de forma continua.\n`);
 
 (async () => {
   const browser = await chromium.launch({
     executablePath: '/usr/bin/brave',
     headless: false,
-    slowMo: 450, // Pausa para que cada movimiento y animación sea visible para el usuario
+    slowMo: 450,
     args: ['--start-maximized']
   });
 
@@ -96,12 +96,12 @@ console.log(`Observa tu pantalla: el bot automatizado jugará los turnos de Parc
       // C. Fase: SELECCIÓN DE ASIENTO (Wedges en el tablero)
       const isChoosingSeats = await page.locator('.animate-float-token, text=territorio').first().isVisible({ timeout: 400 }).catch(() => false);
       if (isChoosingSeats) {
-        // Clic en polígono del wedge o en el grupo de territorio libre
-        const clickableWedge = page.locator('g.cursor-pointer polygon.cursor-pointer, g.cursor-pointer polygon, g.cursor-pointer').first();
-        if (await clickableWedge.isVisible({ timeout: 500 }).catch(() => false)) {
+        // Clic directo en el polígono de territorio rojo o disponible
+        const wedge = page.locator('polygon[fill="#ef4444"], g.cursor-pointer polygon, g.cursor-pointer').first();
+        if (await wedge.isVisible({ timeout: 500 }).catch(() => false)) {
           console.log('🪑 ¡Eligiendo territorio en el tablero!');
-          await clickableWedge.click({ force: true }).catch(() => {});
-          await page.waitForTimeout(2000);
+          await wedge.click({ force: true }).catch(() => {});
+          await page.waitForTimeout(1800);
         }
       }
 
@@ -121,7 +121,6 @@ console.log(`Observa tu pantalla: el bot automatizado jugará los turnos de Parc
       const hasMoves = await page.locator('text=MUEVE:').isVisible({ timeout: 400 }).catch(() => false);
       if (hasMoves) {
         console.log('♟️ ¡Tirada disponible! Seleccionando ficha para mover...');
-        // Buscar ficha pulsante (isClickable) o fichas del jugador
         const tokenToMove = page.locator('.token-body.animate-pulse, .parchis-token').first();
         if (await tokenToMove.isVisible({ timeout: 500 }).catch(() => false)) {
           await tokenToMove.click({ force: true }).catch(() => {});
